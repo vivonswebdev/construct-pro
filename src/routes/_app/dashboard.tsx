@@ -49,7 +49,23 @@ function Dashboard() {
 
   if (isLoading || !data) return <DashboardSkeleton />;
 
-  const { chantiers, personnel, affectations } = data;
+  const { chantiers, personnel, affectations, salaries, precomptes, onss, quarter } = data;
+
+  // Compliance metrics for active workers under contract
+  const eligibleWorkers = personnel.filter((p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""));
+  const totalElig = eligibleWorkers.length;
+  const unpaidSalaries = totalElig - salaries.filter((s: any) => s.paid).length;
+  const unpaidPrecompte = totalElig - precomptes.filter((s: any) => s.paid).length;
+  const precompteAmount = precomptes.filter((s: any) => !s.paid).reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
+  const onssPaidCount = onss.filter((s: any) => s.paid).length;
+  const onssAmount = onss.filter((s: any) => !s.paid).reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
+  const onssDue = totalElig > 0 && onssPaidCount < totalElig;
+  const now = new Date();
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 15);
+  const onssDueDate = quarter === 1 ? new Date(now.getFullYear(), 3, 30)
+    : quarter === 2 ? new Date(now.getFullYear(), 6, 31)
+    : quarter === 3 ? new Date(now.getFullYear(), 9, 31)
+    : new Date(now.getFullYear() + 1, 0, 31);
 
   // Auto-detect late chantiers
   const late = chantiers.filter((c) => {
@@ -68,7 +84,6 @@ function Dashboard() {
 
   // Chart: aggregate by month (last 6 months, approximation from start_date)
   const months: { name: string; CA: number; Coûts: number }[] = [];
-  const now = new Date();
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const label = d.toLocaleDateString("fr-BE", { month: "short" }).replace(".", "");
