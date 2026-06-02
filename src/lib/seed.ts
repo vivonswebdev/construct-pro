@@ -270,7 +270,7 @@ export async function seedDataIfEmpty(companyId: string) {
       ],
     },
     {
-      type: "facture", number: `FAC-${year}-0002`, status: "Envoyée",
+      type: "facture", number: `FAC-${currentY}-0002`, status: "Envoyée",
       client_name: chantiers[1].client_name, client_address: chantiers[1].address, client_vat: "BE0456789012",
       chantier_id: chantiers[1].id,
       issue_date: inDays(-20), due_date: inDays(10),
@@ -281,7 +281,7 @@ export async function seedDataIfEmpty(companyId: string) {
       ],
     },
     {
-      type: "facture", number: `FAC-${year}-0003`, status: "En retard",
+      type: "facture", number: `FAC-${currentY}-0003`, status: "En retard",
       client_name: "Construction Mahieu SA", client_address: "Rue de l'Industrie 5, 4040 Herstal",
       client_vat: "BE0234567890",
       chantier_id: null,
@@ -292,7 +292,7 @@ export async function seedDataIfEmpty(companyId: string) {
       ],
     },
     {
-      type: "devis", number: `DEV-${year}-0007`, status: "Envoyé",
+      type: "devis", number: `DEV-${currentY}-0007`, status: "Envoyé",
       client_name: "Bureau d'architecture Mertens", client_address: "Place Saint-Lambert 12, 4000 Liège",
       client_vat: "BE0345678901",
       chantier_id: null,
@@ -304,7 +304,7 @@ export async function seedDataIfEmpty(companyId: string) {
       ],
     },
     {
-      type: "devis", number: `DEV-${year}-0008`, status: "Accepté",
+      type: "devis", number: `DEV-${currentY}-0008`, status: "Accepté",
       client_name: chantiers[0].client_name, client_address: chantiers[0].address, client_vat: "BE0123456789",
       chantier_id: chantiers[0].id,
       issue_date: inDays(-100), due_date: inDays(-70),
