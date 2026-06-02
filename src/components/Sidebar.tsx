@@ -9,6 +9,8 @@ import {
   Calculator,
   LogOut,
   UserCircle,
+  ShieldCheck,
+  Landmark,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -18,6 +20,8 @@ const ACTIVE_NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chantiers", label: "Chantiers", icon: HardHat },
   { to: "/personnel", label: "Personnel", icon: Users },
+  { to: "/conformite-tva", label: "Conformité TVA", icon: ShieldCheck },
+  { to: "/precompte", label: "Précompte & ONSS", icon: Landmark },
   { to: "/profil", label: "Mon profil", icon: UserCircle },
 ] as const;
 
