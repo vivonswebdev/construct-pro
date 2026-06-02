@@ -258,10 +258,9 @@ export async function seedDataIfEmpty(companyId: string) {
   if (onssRows.length) await supabase.from("onss_payments").insert(onssRows);
 
   // Factures & Devis seed
-  const year = currentY;
   const factSeed = [
     {
-      type: "facture", number: `FAC-${year}-0001`, status: "Payée",
+      type: "facture", number: `FAC-${currentY}-0001`, status: "Payée",
       client_name: chantiers[0].client_name, client_address: chantiers[0].address, client_vat: "BE0123456789",
       chantier_id: chantiers[0].id,
       issue_date: inDays(-75), due_date: inDays(-45), paid_date: inDays(-40), payment_reference: "VIR-2025-0001",
