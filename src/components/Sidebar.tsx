@@ -21,6 +21,7 @@ const ACTIVE_NAV = [
   { to: "/chantiers", label: "Chantiers", icon: HardHat },
   { to: "/personnel", label: "Personnel", icon: Users },
   { to: "/vehicules", label: "Véhicules", icon: Truck },
+  { to: "/stock", label: "Stock", icon: Package },
   { to: "/facturation", label: "Devis & Factures", icon: FileText },
   { to: "/conformite-tva", label: "Conformité TVA", icon: ShieldCheck },
   { to: "/precompte", label: "Précompte & ONSS", icon: Landmark },
@@ -28,7 +29,6 @@ const ACTIVE_NAV = [
 ] as const;
 
 const COMING_SOON = [
-  { key: "stock", label: "Stock", icon: Package },
   { key: "belcotax", label: "Belcotax", icon: Calculator },
 ] as const;
 
