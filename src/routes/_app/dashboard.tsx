@@ -27,13 +27,14 @@ function Dashboard() {
       const ym = now.getFullYear();
       const mm = now.getMonth() + 1;
       const quarter = Math.floor((mm - 1) / 3) + 1;
-      const [chantiersRes, personnelRes, affRes, salRes, precRes, onssRes] = await Promise.all([
+      const [chantiersRes, personnelRes, affRes, salRes, precRes, onssRes, vehRes] = await Promise.all([
         supabase.from("chantiers").select("*").eq("company_id", companyId!),
         supabase.from("personnel").select("*").eq("company_id", companyId!),
         supabase.from("affectations").select("personnel_id, chantier_id"),
         supabase.from("salary_payments").select("personnel_id, paid").eq("company_id", companyId!).eq("period_year", ym).eq("period_month", mm),
         supabase.from("precompte_payments").select("personnel_id, amount, paid").eq("company_id", companyId!).eq("period_year", ym).eq("period_month", mm),
         supabase.from("onss_payments").select("personnel_id, amount, paid").eq("company_id", companyId!).eq("year", ym).eq("quarter", quarter),
+        supabase.from("vehicules").select("id, plate, ct_date, insurance_date").eq("company_id", companyId!),
       ]);
       return {
         chantiers: chantiersRes.data ?? [],
@@ -42,6 +43,7 @@ function Dashboard() {
         salaries: salRes.data ?? [],
         precomptes: precRes.data ?? [],
         onss: onssRes.data ?? [],
+        vehicules: vehRes.data ?? [],
         quarter,
       };
     },
@@ -49,7 +51,7 @@ function Dashboard() {
 
   if (isLoading || !data) return <DashboardSkeleton />;
 
-  const { chantiers, personnel, affectations, salaries, precomptes, onss, quarter } = data;
+  const { chantiers, personnel, affectations, salaries, precomptes, onss, vehicules, quarter } = data;
 
   // Compliance metrics for active workers under contract
   const eligibleWorkers = personnel.filter((p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""));
