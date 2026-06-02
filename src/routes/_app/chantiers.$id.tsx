@@ -31,17 +31,18 @@ function ChantierDetail() {
   const { data, isLoading } = useQuery({
     queryKey: ["chantier", id],
     queryFn: async () => {
-      const [cRes, eRes, aRes] = await Promise.all([
+      const [cRes, eRes, aRes, vaRes] = await Promise.all([
         supabase.from("chantiers").select("*").eq("id", id).maybeSingle(),
         supabase.from("etapes").select("*").eq("chantier_id", id).order("order_index"),
         supabase.from("affectations").select("*, personnel(id, full_name)").eq("chantier_id", id),
+        supabase.from("vehicule_affectations").select("*, vehicules(id, plate, brand, model, cost_per_km, current_km)").eq("chantier_id", id),
       ]);
-      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [] };
+      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations: vaRes.data ?? [] };
     },
   });
 
   if (isLoading || !data) return <div className="p-6"><div className="h-40 animate-pulse rounded-xl bg-muted" /></div>;
-  const { chantier, etapes, affectations } = data;
+  const { chantier, etapes, affectations, vehAffectations } = data;
   if (!chantier) return <div>Chantier introuvable.</div>;
 
   const benefice = Number(chantier.budget ?? 0) - Number(chantier.actual_costs ?? 0);
