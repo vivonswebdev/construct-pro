@@ -129,16 +129,17 @@ function ChantierDetail() {
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-4">
           <Metric label="Budget" value={formatEUR(chantier.budget)} />
-          <Metric label="Dépenses" value={formatEUR(chantier.actual_costs)} />
+          <Metric label="Dépenses totales" value={formatEUR(totalCosts)} badge="temps réel" />
+          <Metric label="dont matériaux" value={formatEUR(materialCosts)} />
           <Metric
             label="Bénéfice"
             value={formatEUR(benefice)}
             tone={benefice >= 0 ? "success" : "danger"}
-            badge="temps réel"
           />
         </div>
+
 
         <div className="mt-5">
           <div className="mb-1 flex items-center justify-between text-xs">
