@@ -234,9 +234,68 @@ function ChantierDetail() {
           </div>
         )}
       </div>
+
+      {/* Matériaux */}
+      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            <Package className="h-5 w-5 text-primary" /> Matériaux consommés
+          </h2>
+          <Link to="/stock" className="text-xs font-semibold text-primary hover:underline">
+            Gérer le stock →
+          </Link>
+        </div>
+        {mouvements.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Aucun mouvement de stock lié à ce chantier.</p>
+        ) : (
+          <div className="overflow-hidden rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="px-3 py-2 text-left">Date</th>
+                  <th className="px-3 py-2 text-left">Type</th>
+                  <th className="px-3 py-2 text-left">Matériau</th>
+                  <th className="px-3 py-2 text-right">Qté</th>
+                  <th className="px-3 py-2 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mouvements.map((m: any) => {
+                  const tStyles: Record<string, string> = {
+                    achat: "bg-emerald-100 text-emerald-700",
+                    sortie: "bg-cyan-100 text-cyan-700",
+                    retour: "bg-amber-100 text-amber-700",
+                  };
+                  const tLabels: Record<string, string> = { achat: "Achat", sortie: "Sortie", retour: "Retour" };
+                  return (
+                    <tr key={m.id} className="border-t border-border">
+                      <td className="px-3 py-2">{formatDateBE(m.date)}</td>
+                      <td className="px-3 py-2">
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tStyles[m.type] ?? "bg-muted"}`}>
+                          {tLabels[m.type] ?? m.type}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 font-medium">{m.materiau?.name ?? "—"}</td>
+                      <td className="px-3 py-2 text-right">{Number(m.quantity).toLocaleString("fr-BE")} {m.materiau?.unit ?? ""}</td>
+                      <td className={`px-3 py-2 text-right font-semibold ${m.type === "retour" ? "text-amber-600" : ""}`}>
+                        {m.type === "retour" ? "−" : ""}{formatEUR(m.total)}
+                      </td>
+                    </tr>
+                  );
+                })}
+                <tr className="border-t-2 border-border bg-muted/20">
+                  <td colSpan={4} className="px-3 py-2 text-right text-xs font-semibold uppercase text-muted-foreground">Total matériaux</td>
+                  <td className="px-3 py-2 text-right font-bold text-primary">{formatEUR(materialCosts)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
 
 function Metric({ label, value, tone, badge }: { label: string; value: string; tone?: "success" | "danger"; badge?: string }) {
   const color = tone === "success" ? "text-success" : tone === "danger" ? "text-danger" : "text-foreground";
