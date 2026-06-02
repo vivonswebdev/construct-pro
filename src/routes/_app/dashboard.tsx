@@ -256,6 +256,24 @@ function Dashboard() {
               {formatEUR(onssAmount)} à verser à l'ONSS
             </AlertCard>
           )}
+          {(() => {
+            const ctExpired = vehicules.filter((v: any) => v.ct_date && daysUntil(v.ct_date)! < 0);
+            const insSoon = vehicules.filter((v: any) => v.insurance_date && daysUntil(v.insurance_date)! >= 0 && daysUntil(v.insurance_date)! < 30);
+            return (
+              <>
+                {ctExpired.length > 0 && (
+                  <AlertCard tone="danger" title={`🚛 ${ctExpired.length} véhicule${ctExpired.length > 1 ? "s" : ""} avec CT expiré`}>
+                    {ctExpired.slice(0, 2).map((v: any) => v.plate).join(", ")}
+                  </AlertCard>
+                )}
+                {insSoon.length > 0 && (
+                  <AlertCard tone="warning" title={`⚠️ Assurance véhicule à renouveler`}>
+                    {insSoon.slice(0, 2).map((v: any) => `${v.plate} (${daysUntil(v.insurance_date)} j)`).join(", ")}
+                  </AlertCard>
+                )}
+              </>
+            );
+          })()}
         </div>
       </Card>
     </div>
