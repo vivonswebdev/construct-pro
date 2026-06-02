@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppProfilRouteImport } from './routes/_app/profil'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
@@ -31,6 +32,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppProfilRoute = AppProfilRouteImport.update({
+  id: '/profil',
+  path: '/profil',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
@@ -62,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AppDashboardRoute
+  '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/chantiers/': typeof AppChantiersIndexRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AppDashboardRoute
+  '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/chantiers': typeof AppChantiersIndexRoute
@@ -82,6 +90,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/profil': typeof AppProfilRoute
   '/_app/chantiers/$id': typeof AppChantiersIdRoute
   '/_app/personnel/$id': typeof AppPersonnelIdRoute
   '/_app/chantiers/': typeof AppChantiersIndexRoute
@@ -93,6 +102,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/profil'
     | '/chantiers/$id'
     | '/personnel/$id'
     | '/chantiers/'
@@ -102,6 +112,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/dashboard'
+    | '/profil'
     | '/chantiers/$id'
     | '/personnel/$id'
     | '/chantiers'
@@ -112,6 +123,7 @@ export interface FileRouteTypes {
     | '/_app'
     | '/login'
     | '/_app/dashboard'
+    | '/_app/profil'
     | '/_app/chantiers/$id'
     | '/_app/personnel/$id'
     | '/_app/chantiers/'
@@ -146,6 +158,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/profil': {
+      id: '/_app/profil'
+      path: '/profil'
+      fullPath: '/profil'
+      preLoaderRoute: typeof AppProfilRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/dashboard': {
       id: '/_app/dashboard'
@@ -187,6 +206,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppProfilRoute: typeof AppProfilRoute
   AppChantiersIdRoute: typeof AppChantiersIdRoute
   AppPersonnelIdRoute: typeof AppPersonnelIdRoute
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
@@ -195,6 +215,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppProfilRoute: AppProfilRoute,
   AppChantiersIdRoute: AppChantiersIdRoute,
   AppPersonnelIdRoute: AppPersonnelIdRoute,
   AppChantiersIndexRoute: AppChantiersIndexRoute,
@@ -211,3 +232,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
