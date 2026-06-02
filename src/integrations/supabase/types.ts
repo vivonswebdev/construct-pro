@@ -14,13 +14,308 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affectations: {
+        Row: {
+          chantier_id: string
+          end_date: string | null
+          id: string
+          personnel_id: string
+          role: string | null
+          start_date: string | null
+        }
+        Insert: {
+          chantier_id: string
+          end_date?: string | null
+          id?: string
+          personnel_id: string
+          role?: string | null
+          start_date?: string | null
+        }
+        Update: {
+          chantier_id?: string
+          end_date?: string | null
+          id?: string
+          personnel_id?: string
+          role?: string | null
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affectations_chantier_id_fkey"
+            columns: ["chantier_id"]
+            isOneToOne: false
+            referencedRelation: "chantiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affectations_personnel_id_fkey"
+            columns: ["personnel_id"]
+            isOneToOne: false
+            referencedRelation: "personnel"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      chantiers: {
+        Row: {
+          actual_costs: number | null
+          address: string | null
+          budget: number | null
+          client_name: string | null
+          company_id: string
+          created_at: string
+          description: string | null
+          end_date: string | null
+          id: string
+          name: string
+          progress: number
+          start_date: string | null
+          status: string
+        }
+        Insert: {
+          actual_costs?: number | null
+          address?: string | null
+          budget?: number | null
+          client_name?: string | null
+          company_id: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name: string
+          progress?: number
+          start_date?: string | null
+          status?: string
+        }
+        Update: {
+          actual_costs?: number | null
+          address?: string | null
+          budget?: number | null
+          client_name?: string | null
+          company_id?: string
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          id?: string
+          name?: string
+          progress?: number
+          start_date?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chantiers_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      companies: {
+        Row: {
+          address: string | null
+          bce_number: string | null
+          created_at: string
+          id: string
+          logo_url: string | null
+          name: string
+        }
+        Insert: {
+          address?: string | null
+          bce_number?: string | null
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name: string
+        }
+        Update: {
+          address?: string | null
+          bce_number?: string | null
+          created_at?: string
+          id?: string
+          logo_url?: string | null
+          name?: string
+        }
+        Relationships: []
+      }
+      etapes: {
+        Row: {
+          chantier_id: string
+          end_date: string | null
+          id: string
+          name: string
+          notes: string | null
+          order_index: number
+          progress: number
+          start_date: string | null
+          status: string
+        }
+        Insert: {
+          chantier_id: string
+          end_date?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          order_index?: number
+          progress?: number
+          start_date?: string | null
+          status?: string
+        }
+        Update: {
+          chantier_id?: string
+          end_date?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          order_index?: number
+          progress?: number
+          start_date?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "etapes_chantier_id_fkey"
+            columns: ["chantier_id"]
+            isOneToOne: false
+            referencedRelation: "chantiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personnel: {
+        Row: {
+          company_id: string
+          contract_type: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          hourly_rate: number | null
+          id: string
+          nrn: string | null
+          phone: string | null
+          photo_url: string | null
+          status: string
+        }
+        Insert: {
+          company_id: string
+          contract_type?: string | null
+          created_at?: string
+          email?: string | null
+          full_name: string
+          hourly_rate?: number | null
+          id?: string
+          nrn?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          status?: string
+        }
+        Update: {
+          company_id?: string
+          contract_type?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          hourly_rate?: number | null
+          id?: string
+          nrn?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personnel_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      presence: {
+        Row: {
+          chantier_id: string | null
+          date: string
+          hours: number | null
+          id: string
+          personnel_id: string
+          status: string
+        }
+        Insert: {
+          chantier_id?: string | null
+          date: string
+          hours?: number | null
+          id?: string
+          personnel_id: string
+          status: string
+        }
+        Update: {
+          chantier_id?: string | null
+          date?: string
+          hours?: number | null
+          id?: string
+          personnel_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "presence_chantier_id_fkey"
+            columns: ["chantier_id"]
+            isOneToOne: false
+            referencedRelation: "chantiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "presence_personnel_id_fkey"
+            columns: ["personnel_id"]
+            isOneToOne: false
+            referencedRelation: "personnel"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          company_id: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          role: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          role?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          company_id?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_company_id: { Args: { _user_id: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
