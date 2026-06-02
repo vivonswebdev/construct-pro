@@ -138,4 +138,104 @@ export async function seedDataIfEmpty(companyId: string) {
     { personnel_id: personnel[2].id, chantier_id: chantiers[1].id, start_date: inDays(-90), role: "Maçon" },
     { personnel_id: personnel[3].id, chantier_id: chantiers[0].id, start_date: inDays(-30), role: "Manœuvre" },
   ]);
+
+  // TVA checks seed: 2 green, 1 red
+  await supabase.from("tva_checks").insert([
+    {
+      company_id: companyId,
+      client_name: "Immobilière Dumont SA",
+      client_vat_number: "BE0123456789",
+      is_eligible: true,
+      raw_response: { message: "Aucune retenue obligatoire" },
+    },
+    {
+      company_id: companyId,
+      client_name: "TechLog BVBA",
+      client_vat_number: "BE0456789012",
+      is_eligible: true,
+      raw_response: { message: "Aucune retenue obligatoire" },
+    },
+    {
+      company_id: companyId,
+      client_name: "Sous-traitant Dubois SPRL",
+      client_vat_number: "BE0789012345",
+      is_eligible: false,
+      raw_response: { message: "Retenue obligatoire — dettes fiscales détectées" },
+    },
+  ]);
+
+  // Salary / précompte / ONSS seed
+  const contractWorkers = personnel.filter((p) => ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""));
+  const currentY = now.getFullYear();
+  const currentM = now.getMonth() + 1; // 1-12
+  const currentQuarter = Math.floor((currentM - 1) / 3) + 1;
+
+  const salaryRows: any[] = [];
+  const precompteRows: any[] = [];
+  for (const w of contractWorkers) {
+    const gross = Number(w.hourly_rate ?? 20) * 8 * 22;
+    const net = Math.round(gross * 0.69 * 100) / 100;
+    const prec = Math.round(gross * 0.18 * 100) / 100;
+    // Current month: unpaid
+    salaryRows.push({
+      company_id: companyId, personnel_id: w.id,
+      period_month: currentM, period_year: currentY,
+      gross_amount: gross, net_amount: net, paid: false,
+    });
+    precompteRows.push({
+      company_id: companyId, personnel_id: w.id,
+      period_month: currentM, period_year: currentY,
+      amount: prec, paid: false,
+    });
+    // Previous 2 months: paid
+    for (let back = 1; back <= 2; back++) {
+      const d = new Date(currentY, currentM - 1 - back, 1);
+      salaryRows.push({
+        company_id: companyId, personnel_id: w.id,
+        period_month: d.getMonth() + 1, period_year: d.getFullYear(),
+        gross_amount: gross, net_amount: net, paid: true,
+        paid_date: new Date(d.getFullYear(), d.getMonth(), 28).toISOString().slice(0, 10),
+        reference: `VIR-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+      });
+      precompteRows.push({
+        company_id: companyId, personnel_id: w.id,
+        period_month: d.getMonth() + 1, period_year: d.getFullYear(),
+        amount: prec, paid: true,
+        paid_date: new Date(d.getFullYear(), d.getMonth() + 1, 14).toISOString().slice(0, 10),
+        reference: `SPF-${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`,
+      });
+    }
+  }
+  if (salaryRows.length) await supabase.from("salary_payments").insert(salaryRows);
+  if (precompteRows.length) await supabase.from("precompte_payments").insert(precompteRows);
+
+  // ONSS: Q1 paid, current quarter unpaid for everyone
+  const onssRows: any[] = [];
+  for (const w of contractWorkers) {
+    const gross = Number(w.hourly_rate ?? 20) * 8 * 22;
+    const amt = Math.round(gross * 3 * 0.40 * 100) / 100;
+    if (currentQuarter > 1) {
+      onssRows.push({
+        company_id: companyId, personnel_id: w.id,
+        quarter: 1, year: currentY,
+        amount: amt, paid: true,
+        paid_date: `${currentY}-04-25`,
+        reference: `ONSS-${currentY}-Q1`,
+      });
+    }
+    if (currentQuarter >= 2) {
+      onssRows.push({
+        company_id: companyId, personnel_id: w.id,
+        quarter: currentQuarter, year: currentY,
+        amount: amt, paid: false,
+      });
+    } else {
+      onssRows.push({
+        company_id: companyId, personnel_id: w.id,
+        quarter: 1, year: currentY,
+        amount: amt, paid: false,
+      });
+    }
+  }
+  if (onssRows.length) await supabase.from("salary_payments" === "salary_payments" ? "onss_payments" : "onss_payments").insert(onssRows);
 }
