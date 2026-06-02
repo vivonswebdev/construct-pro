@@ -237,5 +237,5 @@ export async function seedDataIfEmpty(companyId: string) {
       });
     }
   }
-  if (onssRows.length) await supabase.from("salary_payments" === "salary_payments" ? "onss_payments" : "onss_payments").insert(onssRows);
+  if (onssRows.length) await supabase.from("onss_payments").insert(onssRows);
 }
