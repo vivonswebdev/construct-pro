@@ -23,11 +23,14 @@ function VehiculesPage() {
     queryKey: ["vehicules", companyId],
     enabled: !!companyId,
     queryFn: async () => {
-      const [vRes, aRes] = await Promise.all([
+      const [vRes, aRes, cRes] = await Promise.all([
         supabase.from("vehicules").select("*").eq("company_id", companyId!).order("created_at", { ascending: false }),
-        supabase.from("vehicule_affectations").select("*, chantiers(id, name)").is("end_date", null),
+        supabase.from("vehicule_affectations").select("*").is("end_date", null),
+        supabase.from("chantiers").select("id, name").eq("company_id", companyId!),
       ]);
-      return { vehicules: vRes.data ?? [], affectations: aRes.data ?? [] };
+      const chMap = new Map((cRes.data ?? []).map((c) => [c.id, c]));
+      const affs = (aRes.data ?? []).map((a) => ({ ...a, chantier: chMap.get(a.chantier_id) }));
+      return { vehicules: vRes.data ?? [], affectations: affs };
     },
   });
 
@@ -110,7 +113,7 @@ function VehiculeCard({ v, affectation }: { v: any; affectation: any }) {
       <div className="mt-3">
         {affectation ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-info/10 px-2 py-0.5 text-xs font-medium text-info">
-            🏗 {affectation.chantiers?.name ?? "Affecté"}
+            🏗 {affectation.chantier?.name ?? "Affecté"}
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">

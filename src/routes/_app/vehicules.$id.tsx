@@ -23,10 +23,12 @@ function VehiculeDetail() {
     queryFn: async () => {
       const [vRes, aRes, cRes] = await Promise.all([
         supabase.from("vehicules").select("*").eq("id", id).maybeSingle(),
-        supabase.from("vehicule_affectations").select("*, chantiers(id, name)").eq("vehicule_id", id).order("start_date", { ascending: false }),
+        supabase.from("vehicule_affectations").select("*").eq("vehicule_id", id).order("start_date", { ascending: false }),
         supabase.from("chantiers").select("id, name").eq("company_id", companyId ?? "").order("name"),
       ]);
-      return { v: vRes.data, affectations: aRes.data ?? [], chantiers: cRes.data ?? [] };
+      const chMap = new Map((cRes.data ?? []).map((c) => [c.id, c]));
+      const affs = (aRes.data ?? []).map((a) => ({ ...a, chantier: chMap.get(a.chantier_id) }));
+      return { v: vRes.data, affectations: affs, chantiers: cRes.data ?? [] };
     },
     enabled: !!companyId,
   });
@@ -42,7 +44,7 @@ function VehiculeDetail() {
     const newDate = field === "maintenance_date"
       ? now
       : new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
-    const { error } = await supabase.from("vehicules").update({ [field]: newDate.toISOString().slice(0, 10) }).eq("id", id);
+    const { error } = await supabase.from("vehicules").update({ [field]: newDate.toISOString().slice(0, 10) } as any).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Mis à jour");
     qc.invalidateQueries({ queryKey: ["vehicule", id] });
@@ -98,7 +100,7 @@ function VehiculeDetail() {
           </div>
           <div className="flex items-center gap-2">
             {current ? (
-              <span className="rounded-full bg-info/10 px-3 py-1 text-xs font-semibold text-info">🏗 {current.chantiers?.name}</span>
+              <span className="rounded-full bg-info/10 px-3 py-1 text-xs font-semibold text-info">🏗 {current.chantier?.name}</span>
             ) : (
               <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">● Disponible</span>
             )}
@@ -154,7 +156,7 @@ function VehiculeDetail() {
                     <tr key={a.id} className="border-t border-border">
                       <td className="py-2 font-medium">
                         <Link to="/chantiers/$id" params={{ id: a.chantier_id }} className="hover:text-primary">
-                          {a.chantiers?.name ?? "—"}
+                          {a.chantier?.name ?? "—"}
                         </Link>
                       </td>
                       <td className="py-2 text-muted-foreground">
