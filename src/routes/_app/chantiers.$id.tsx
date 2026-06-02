@@ -48,7 +48,7 @@ function ChantierDetail() {
   const days = daysUntil(chantier.end_date);
   const completed = etapes.filter((e) => e.progress >= 100).length;
 
-  const updateEtape = async (etapeId: string, patch: Record<string, any>) => {
+  const updateEtape = async (etapeId: string, patch: { progress?: number; status?: string; notes?: string }) => {
     const { error } = await supabase.from("etapes").update(patch).eq("id", etapeId);
     if (error) { toast.error(error.message); return; }
 
@@ -130,7 +130,7 @@ function ChantierDetail() {
               etape={e}
               index={i}
               isLast={i === etapes.length - 1}
-              onUpdate={(patch) => updateEtape(e.id, patch)}
+              onUpdate={(patch: { progress?: number; status?: string; notes?: string }) => updateEtape(e.id, patch)}
             />
           ))}
         </div>
