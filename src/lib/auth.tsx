@@ -9,7 +9,7 @@ type Profile = {
   role: string;
 };
 
-type Company = { id: string; name: string };
+type Company = { id: string; name: string; bce_number?: string | null; address?: string | null; logo_url?: string | null };
 
 type AuthCtx = {
   user: User | null;
@@ -39,7 +39,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (p?.company_id) {
       const { data: c } = await supabase
         .from("companies")
-        .select("id, name")
+        .select("id, name, bce_number, address, logo_url")
         .eq("id", p.company_id)
         .maybeSingle();
       setCompany(c as Company | null);
