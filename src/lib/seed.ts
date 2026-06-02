@@ -108,12 +108,12 @@ export async function seedDataIfEmpty(companyId: string) {
   // Presence for current month
   const presenceRows: any[] = [];
   const now = new Date();
-  const year = now.getFullYear();
+  const yr = now.getFullYear();
   const month = now.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInMonth = new Date(yr, month + 1, 0).getDate();
   for (const p of personnel) {
     for (let d = 1; d <= Math.min(daysInMonth, now.getDate()); d++) {
-      const date = new Date(year, month, d);
+      const date = new Date(yr, month, d);
       const dow = date.getDay();
       if (dow === 0 || dow === 6) continue;
       const r = Math.random();
