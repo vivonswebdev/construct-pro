@@ -256,4 +256,83 @@ export async function seedDataIfEmpty(companyId: string) {
     }
   }
   if (onssRows.length) await supabase.from("onss_payments").insert(onssRows);
+
+  // Factures & Devis seed
+  const year = currentY;
+  const factSeed = [
+    {
+      type: "facture", number: `FAC-${year}-0001`, status: "Payée",
+      client_name: chantiers[0].client_name, client_address: chantiers[0].address, client_vat: "BE0123456789",
+      chantier_id: chantiers[0].id,
+      issue_date: inDays(-75), due_date: inDays(-45), paid_date: inDays(-40), payment_reference: "VIR-2025-0001",
+      vat_rate: 21, subtotal_ht: 35000, vat_amount: 7350, total_ttc: 42350,
+      lignes: [
+        { description: "Acompte travaux Résidence Les Acacias (30%)", quantity: 1, unit_price: 35000 },
+      ],
+    },
+    {
+      type: "facture", number: `FAC-${year}-0002`, status: "Envoyée",
+      client_name: chantiers[1].client_name, client_address: chantiers[1].address, client_vat: "BE0456789012",
+      chantier_id: chantiers[1].id,
+      issue_date: inDays(-20), due_date: inDays(10),
+      vat_rate: 21, subtotal_ht: 18500, vat_amount: 3885, total_ttc: 22385,
+      lignes: [
+        { description: "Travaux gros œuvre - entrepôt", quantity: 1, unit_price: 12500 },
+        { description: "Fourniture matériaux divers", quantity: 1, unit_price: 6000 },
+      ],
+    },
+    {
+      type: "facture", number: `FAC-${year}-0003`, status: "En retard",
+      client_name: "Construction Mahieu SA", client_address: "Rue de l'Industrie 5, 4040 Herstal",
+      client_vat: "BE0234567890",
+      chantier_id: null,
+      issue_date: inDays(-60), due_date: inDays(-25),
+      vat_rate: 6, subtotal_ht: 8200, vat_amount: 492, total_ttc: 8692,
+      lignes: [
+        { description: "Rénovation toiture (TVA 6% bâtiment > 10 ans)", quantity: 1, unit_price: 8200 },
+      ],
+    },
+    {
+      type: "devis", number: `DEV-${year}-0007`, status: "Envoyé",
+      client_name: "Bureau d'architecture Mertens", client_address: "Place Saint-Lambert 12, 4000 Liège",
+      client_vat: "BE0345678901",
+      chantier_id: null,
+      issue_date: inDays(-5), due_date: inDays(25),
+      vat_rate: 21, subtotal_ht: 56000, vat_amount: 11760, total_ttc: 67760,
+      lignes: [
+        { description: "Gros œuvre extension villa - 180m²", quantity: 1, unit_price: 42000 },
+        { description: "Couverture toiture inclinée", quantity: 1, unit_price: 14000 },
+      ],
+    },
+    {
+      type: "devis", number: `DEV-${year}-0008`, status: "Accepté",
+      client_name: chantiers[0].client_name, client_address: chantiers[0].address, client_vat: "BE0123456789",
+      chantier_id: chantiers[0].id,
+      issue_date: inDays(-100), due_date: inDays(-70),
+      vat_rate: 21, subtotal_ht: 245000, vat_amount: 51450, total_ttc: 296450,
+      lignes: [
+        { description: "Construction immeuble résidentiel 12 appartements - prestations globales", quantity: 1, unit_price: 245000 },
+      ],
+    },
+  ];
+
+  for (const f of factSeed) {
+    const { lignes, ...factRow } = f as any;
+    const { data: inserted } = await (supabase.from("factures" as any) as any)
+      .insert({ ...factRow, company_id: companyId })
+      .select()
+      .single();
+    if (inserted && lignes) {
+      await (supabase.from("facture_lignes" as any) as any).insert(
+        (lignes as any[]).map((l, i) => ({
+          facture_id: inserted.id,
+          description: l.description,
+          quantity: l.quantity,
+          unit_price: l.unit_price,
+          total_ht: l.quantity * l.unit_price,
+          order_index: i,
+        }))
+      );
+    }
+  }
 }
