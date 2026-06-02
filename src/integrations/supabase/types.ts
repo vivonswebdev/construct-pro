@@ -475,6 +475,93 @@ export type Database = {
         }
         Relationships: []
       }
+      vehicule_affectations: {
+        Row: {
+          chantier_id: string
+          created_at: string
+          end_date: string | null
+          end_km: number | null
+          id: string
+          start_date: string | null
+          start_km: number | null
+          vehicule_id: string
+        }
+        Insert: {
+          chantier_id: string
+          created_at?: string
+          end_date?: string | null
+          end_km?: number | null
+          id?: string
+          start_date?: string | null
+          start_km?: number | null
+          vehicule_id: string
+        }
+        Update: {
+          chantier_id?: string
+          created_at?: string
+          end_date?: string | null
+          end_km?: number | null
+          id?: string
+          start_date?: string | null
+          start_km?: number | null
+          vehicule_id?: string
+        }
+        Relationships: []
+      }
+      vehicules: {
+        Row: {
+          brand: string | null
+          company_id: string
+          cost_per_km: number
+          created_at: string
+          ct_date: string | null
+          current_km: number
+          id: string
+          insurance_date: string | null
+          maintenance_date: string | null
+          model: string | null
+          photo_url: string | null
+          plate: string
+          status: string
+          type: string
+          year: number | null
+        }
+        Insert: {
+          brand?: string | null
+          company_id: string
+          cost_per_km?: number
+          created_at?: string
+          ct_date?: string | null
+          current_km?: number
+          id?: string
+          insurance_date?: string | null
+          maintenance_date?: string | null
+          model?: string | null
+          photo_url?: string | null
+          plate: string
+          status?: string
+          type?: string
+          year?: number | null
+        }
+        Update: {
+          brand?: string | null
+          company_id?: string
+          cost_per_km?: number
+          created_at?: string
+          ct_date?: string | null
+          current_km?: number
+          id?: string
+          insurance_date?: string | null
+          maintenance_date?: string | null
+          model?: string | null
+          photo_url?: string | null
+          plate?: string
+          status?: string
+          type?: string
+          year?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

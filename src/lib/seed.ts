@@ -139,6 +139,24 @@ export async function seedDataIfEmpty(companyId: string) {
     { personnel_id: personnel[3].id, chantier_id: chantiers[0].id, start_date: inDays(-30), role: "Manœuvre" },
   ]);
 
+  // Vehicules
+  const vehiculesData = [
+    { company_id: companyId, type: "Camionnette", brand: "Renault", model: "Master", year: 2021, plate: "1-ABC-123", current_km: 84300, cost_per_km: 0.42, ct_date: inDays(120), insurance_date: inDays(45), maintenance_date: inDays(-180), status: "Affecté" },
+    { company_id: companyId, type: "Camion", brand: "Mercedes", model: "Actros", year: 2019, plate: "1-XYZ-789", current_km: 152800, cost_per_km: 0.95, ct_date: inDays(-12), insurance_date: inDays(220), maintenance_date: inDays(-95), status: "Disponible" },
+    { company_id: companyId, type: "Voiture", brand: "Volkswagen", model: "Caddy", year: 2022, plate: "2-DEF-456", current_km: 41200, cost_per_km: 0.30, ct_date: inDays(18), insurance_date: inDays(310), maintenance_date: inDays(-60), status: "Disponible" },
+    { company_id: companyId, type: "Engin", brand: "Bobcat", model: "S550", year: 2020, plate: "ENG-001", current_km: 2150, cost_per_km: 1.80, ct_date: inDays(200), insurance_date: inDays(95), maintenance_date: inDays(-400), status: "Affecté" },
+  ];
+  const { data: vehicules } = await supabase.from("vehicules").insert(vehiculesData).select();
+  if (vehicules && vehicules.length >= 4) {
+    await supabase.from("vehicule_affectations").insert([
+      { vehicule_id: vehicules[0].id, chantier_id: chantiers[0].id, start_date: inDays(-60), start_km: 76800 },
+      { vehicule_id: vehicules[3].id, chantier_id: chantiers[1].id, start_date: inDays(-30), start_km: 1900 },
+      // Historique clôturé
+      { vehicule_id: vehicules[1].id, chantier_id: chantiers[2].id, start_date: inDays(-180), end_date: inDays(-20), start_km: 140200, end_km: 152800 },
+    ]);
+  }
+
+
   // TVA checks seed: 2 green, 1 red
   await supabase.from("tva_checks").insert([
     {

@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play } from "lucide-react";
+import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play, Truck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatEUR, formatDateBE, daysUntil, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
@@ -31,17 +31,25 @@ function ChantierDetail() {
   const { data, isLoading } = useQuery({
     queryKey: ["chantier", id],
     queryFn: async () => {
-      const [cRes, eRes, aRes] = await Promise.all([
+      const [cRes, eRes, aRes, vaRes] = await Promise.all([
         supabase.from("chantiers").select("*").eq("id", id).maybeSingle(),
         supabase.from("etapes").select("*").eq("chantier_id", id).order("order_index"),
         supabase.from("affectations").select("*, personnel(id, full_name)").eq("chantier_id", id),
+        supabase.from("vehicule_affectations").select("*").eq("chantier_id", id),
       ]);
-      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [] };
+      const vIds = Array.from(new Set((vaRes.data ?? []).map((va) => va.vehicule_id)));
+      const vMap = new Map<string, any>();
+      if (vIds.length) {
+        const { data: vehs } = await supabase.from("vehicules").select("id, plate, brand, model, cost_per_km, current_km").in("id", vIds);
+        (vehs ?? []).forEach((v) => vMap.set(v.id, v));
+      }
+      const vehAffectations = (vaRes.data ?? []).map((va) => ({ ...va, vehicule: vMap.get(va.vehicule_id) }));
+      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations };
     },
   });
 
   if (isLoading || !data) return <div className="p-6"><div className="h-40 animate-pulse rounded-xl bg-muted" /></div>;
-  const { chantier, etapes, affectations } = data;
+  const { chantier, etapes, affectations, vehAffectations } = data;
   if (!chantier) return <div>Chantier introuvable.</div>;
 
   const benefice = Number(chantier.budget ?? 0) - Number(chantier.actual_costs ?? 0);
@@ -154,6 +162,48 @@ function ChantierDetail() {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+      </div>
+
+      {/* Véhicules */}
+      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+          <Truck className="h-5 w-5 text-primary" /> Véhicules affectés
+        </h2>
+        {vehAffectations.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Aucun véhicule affecté.</p>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {vehAffectations.map((va: any) => {
+              const v = va.vehicule;
+              if (!v) return null;
+              const km = va.end_km && va.start_km ? va.end_km - va.start_km
+                : !va.end_date && va.start_km ? v.current_km - va.start_km
+                : null;
+              const cost = km ? km * Number(v.cost_per_km) : null;
+              return (
+                <Link
+                  key={va.id}
+                  to="/vehicules/$id"
+                  params={{ id: v.id }}
+                  className="block rounded-lg border border-border p-3 transition hover:bg-muted/30"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono text-xs font-bold">{v.plate}</span>
+                    {!va.end_date && <span className="rounded-full bg-info/10 px-2 py-0.5 text-[10px] font-semibold text-info">En cours</span>}
+                  </div>
+                  <p className="mt-1 text-sm font-semibold">{v.brand} {v.model}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatDateBE(va.start_date)} → {va.end_date ? formatDateBE(va.end_date) : "—"}
+                  </p>
+                  <div className="mt-2 flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">{km !== null ? `${km.toLocaleString("fr-BE")} km` : "—"}</span>
+                    <span className="font-semibold text-primary">{cost !== null ? formatEUR(cost) : "—"}</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         )}
       </div>
