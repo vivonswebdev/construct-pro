@@ -232,16 +232,28 @@ function Dashboard() {
           <AlertTriangle className="h-5 w-5 text-warning" />
           <h3 className="text-base font-semibold">Alertes & Actions requises</h3>
         </div>
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           <AlertCard tone="danger" title={`${late.length} chantier${late.length > 1 ? "s" : ""} en retard`}>
             {late.length === 0 ? "Aucun retard 🎉" : late.slice(0, 2).map((c) => c.name).join(", ")}
           </AlertCard>
           <AlertCard tone="warning" title={`${unassigned.length} ouvrier${unassigned.length > 1 ? "s" : ""} sans affectation`}>
             {unassigned.length === 0 ? "Tous affectés" : unassigned.slice(0, 2).map((p) => p.full_name).join(", ")}
           </AlertCard>
-          <AlertCard tone="info" title="Module Véhicules">
-            Disponible prochainement
-          </AlertCard>
+          {unpaidSalaries > 0 && (
+            <AlertCard tone="warning" title={`${unpaidSalaries} salaire${unpaidSalaries > 1 ? "s" : ""} non payé${unpaidSalaries > 1 ? "s" : ""} ce mois`}>
+              Voir le module Précompte & ONSS pour régulariser
+            </AlertCard>
+          )}
+          {unpaidPrecompte > 0 && (
+            <AlertCard tone="danger" title={`Précompte dû avant le ${nextMonth.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}>
+              {formatEUR(precompteAmount)} à verser au SPF Finances
+            </AlertCard>
+          )}
+          {onssDue && (
+            <AlertCard tone="danger" title={`ONSS Q${quarter} dû avant le ${onssDueDate.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}>
+              {formatEUR(onssAmount)} à verser à l'ONSS
+            </AlertCard>
+          )}
         </div>
       </Card>
     </div>
