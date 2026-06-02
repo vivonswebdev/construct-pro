@@ -90,6 +90,7 @@ function ChantiersList() {
             Nouveau chantier
           </button>
         </div>
+      </div>
 
       <div className="flex flex-wrap items-center gap-3">
         <div className="relative flex-1 min-w-[240px]">
