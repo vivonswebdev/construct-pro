@@ -31,11 +31,12 @@ function ChantierDetail() {
   const { data, isLoading } = useQuery({
     queryKey: ["chantier", id],
     queryFn: async () => {
-      const [cRes, eRes, aRes, vaRes] = await Promise.all([
+      const [cRes, eRes, aRes, vaRes, smRes] = await Promise.all([
         supabase.from("chantiers").select("*").eq("id", id).maybeSingle(),
         supabase.from("etapes").select("*").eq("chantier_id", id).order("order_index"),
         supabase.from("affectations").select("*, personnel(id, full_name)").eq("chantier_id", id),
         supabase.from("vehicule_affectations").select("*").eq("chantier_id", id),
+        supabase.from("stock_mouvements" as any).select("*").eq("chantier_id", id).order("date", { ascending: false }),
       ]);
       const vIds = Array.from(new Set((vaRes.data ?? []).map((va) => va.vehicule_id)));
       const vMap = new Map<string, any>();
@@ -44,15 +45,40 @@ function ChantierDetail() {
         (vehs ?? []).forEach((v) => vMap.set(v.id, v));
       }
       const vehAffectations = (vaRes.data ?? []).map((va) => ({ ...va, vehicule: vMap.get(va.vehicule_id) }));
-      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations };
+
+      const mouvements = (smRes.data ?? []) as any[];
+      const matIds = Array.from(new Set(mouvements.map((m) => m.materiau_id)));
+      const matMap = new Map<string, any>();
+      if (matIds.length) {
+        const { data: mats } = await supabase.from("materiaux" as any).select("id, name, unit").in("id", matIds);
+        (mats ?? []).forEach((m: any) => matMap.set(m.id, m));
+      }
+      const mouvementsWithMat = mouvements.map((m) => ({ ...m, materiau: matMap.get(m.materiau_id) }));
+
+      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations, mouvements: mouvementsWithMat };
     },
   });
 
   if (isLoading || !data) return <div className="p-6"><div className="h-40 animate-pulse rounded-xl bg-muted" /></div>;
-  const { chantier, etapes, affectations, vehAffectations } = data;
+  const { chantier, etapes, affectations, vehAffectations, mouvements } = data;
   if (!chantier) return <div>Chantier introuvable.</div>;
 
-  const benefice = Number(chantier.budget ?? 0) - Number(chantier.actual_costs ?? 0);
+  // Live material costs from stock movements (achat + sortie counted as expense, retour subtracted)
+  const materialCosts = mouvements.reduce((s: number, m: any) => {
+    if (m.type === "retour") return s - Number(m.total);
+    return s + Number(m.total);
+  }, 0);
+  const vehicleCosts = vehAffectations.reduce((s: number, va: any) => {
+    const v = va.vehicule;
+    if (!v) return s;
+    const km = va.end_km && va.start_km ? va.end_km - va.start_km
+      : !va.end_date && va.start_km ? v.current_km - va.start_km
+      : 0;
+    return s + (km > 0 ? km * Number(v.cost_per_km) : 0);
+  }, 0);
+  const totalCosts = Number(chantier.actual_costs ?? 0) + materialCosts + vehicleCosts;
+  const benefice = Number(chantier.budget ?? 0) - totalCosts;
+
   const days = daysUntil(chantier.end_date);
   const completed = etapes.filter((e) => e.progress >= 100).length;
 
