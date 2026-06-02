@@ -20,13 +20,13 @@ const ACTIVE_NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chantiers", label: "Chantiers", icon: HardHat },
   { to: "/personnel", label: "Personnel", icon: Users },
+  { to: "/vehicules", label: "Véhicules", icon: Truck },
   { to: "/conformite-tva", label: "Conformité TVA", icon: ShieldCheck },
   { to: "/precompte", label: "Précompte & ONSS", icon: Landmark },
   { to: "/profil", label: "Mon profil", icon: UserCircle },
 ] as const;
 
 const COMING_SOON = [
-  { key: "vehicules", label: "Véhicules", icon: Truck },
   { key: "facturation", label: "Devis & Factures", icon: FileText },
   { key: "stock", label: "Stock", icon: Package },
   { key: "belcotax", label: "Belcotax", icon: Calculator },

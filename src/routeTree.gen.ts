@@ -16,8 +16,10 @@ import { Route as AppProfilRouteImport } from './routes/_app/profil'
 import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
+import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
+import { Route as AppVehiculesIdRouteImport } from './routes/_app/vehicules.$id'
 import { Route as AppPersonnelIdRouteImport } from './routes/_app/personnel.$id'
 import { Route as AppChantiersIdRouteImport } from './routes/_app/chantiers.$id'
 
@@ -55,6 +57,11 @@ const AppConformiteTvaRoute = AppConformiteTvaRouteImport.update({
   path: '/conformite-tva',
   getParentRoute: () => AppRoute,
 } as any)
+const AppVehiculesIndexRoute = AppVehiculesIndexRouteImport.update({
+  id: '/vehicules/',
+  path: '/vehicules/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPersonnelIndexRoute = AppPersonnelIndexRouteImport.update({
   id: '/personnel/',
   path: '/personnel/',
@@ -63,6 +70,11 @@ const AppPersonnelIndexRoute = AppPersonnelIndexRouteImport.update({
 const AppChantiersIndexRoute = AppChantiersIndexRouteImport.update({
   id: '/chantiers/',
   path: '/chantiers/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppVehiculesIdRoute = AppVehiculesIdRouteImport.update({
+  id: '/vehicules/$id',
+  path: '/vehicules/$id',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPersonnelIdRoute = AppPersonnelIdRouteImport.update({
@@ -85,8 +97,10 @@ export interface FileRoutesByFullPath {
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
+  '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers/': typeof AppChantiersIndexRoute
   '/personnel/': typeof AppPersonnelIndexRoute
+  '/vehicules/': typeof AppVehiculesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -97,8 +111,10 @@ export interface FileRoutesByTo {
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
+  '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers': typeof AppChantiersIndexRoute
   '/personnel': typeof AppPersonnelIndexRoute
+  '/vehicules': typeof AppVehiculesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -111,8 +127,10 @@ export interface FileRoutesById {
   '/_app/profil': typeof AppProfilRoute
   '/_app/chantiers/$id': typeof AppChantiersIdRoute
   '/_app/personnel/$id': typeof AppPersonnelIdRoute
+  '/_app/vehicules/$id': typeof AppVehiculesIdRoute
   '/_app/chantiers/': typeof AppChantiersIndexRoute
   '/_app/personnel/': typeof AppPersonnelIndexRoute
+  '/_app/vehicules/': typeof AppVehiculesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -125,8 +143,10 @@ export interface FileRouteTypes {
     | '/profil'
     | '/chantiers/$id'
     | '/personnel/$id'
+    | '/vehicules/$id'
     | '/chantiers/'
     | '/personnel/'
+    | '/vehicules/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -137,8 +157,10 @@ export interface FileRouteTypes {
     | '/profil'
     | '/chantiers/$id'
     | '/personnel/$id'
+    | '/vehicules/$id'
     | '/chantiers'
     | '/personnel'
+    | '/vehicules'
   id:
     | '__root__'
     | '/'
@@ -150,8 +172,10 @@ export interface FileRouteTypes {
     | '/_app/profil'
     | '/_app/chantiers/$id'
     | '/_app/personnel/$id'
+    | '/_app/vehicules/$id'
     | '/_app/chantiers/'
     | '/_app/personnel/'
+    | '/_app/vehicules/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -211,6 +235,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConformiteTvaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/vehicules/': {
+      id: '/_app/vehicules/'
+      path: '/vehicules'
+      fullPath: '/vehicules/'
+      preLoaderRoute: typeof AppVehiculesIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/personnel/': {
       id: '/_app/personnel/'
       path: '/personnel'
@@ -223,6 +254,13 @@ declare module '@tanstack/react-router' {
       path: '/chantiers'
       fullPath: '/chantiers/'
       preLoaderRoute: typeof AppChantiersIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/vehicules/$id': {
+      id: '/_app/vehicules/$id'
+      path: '/vehicules/$id'
+      fullPath: '/vehicules/$id'
+      preLoaderRoute: typeof AppVehiculesIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/personnel/$id': {
@@ -249,8 +287,10 @@ interface AppRouteChildren {
   AppProfilRoute: typeof AppProfilRoute
   AppChantiersIdRoute: typeof AppChantiersIdRoute
   AppPersonnelIdRoute: typeof AppPersonnelIdRoute
+  AppVehiculesIdRoute: typeof AppVehiculesIdRoute
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
   AppPersonnelIndexRoute: typeof AppPersonnelIndexRoute
+  AppVehiculesIndexRoute: typeof AppVehiculesIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -260,8 +300,10 @@ const AppRouteChildren: AppRouteChildren = {
   AppProfilRoute: AppProfilRoute,
   AppChantiersIdRoute: AppChantiersIdRoute,
   AppPersonnelIdRoute: AppPersonnelIdRoute,
+  AppVehiculesIdRoute: AppVehiculesIdRoute,
   AppChantiersIndexRoute: AppChantiersIndexRoute,
   AppPersonnelIndexRoute: AppPersonnelIndexRoute,
+  AppVehiculesIndexRoute: AppVehiculesIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
