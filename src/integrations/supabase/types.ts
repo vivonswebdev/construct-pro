@@ -183,6 +183,105 @@ export type Database = {
           },
         ]
       }
+      facture_lignes: {
+        Row: {
+          description: string
+          facture_id: string
+          id: string
+          order_index: number
+          quantity: number
+          total_ht: number
+          unit_price: number
+        }
+        Insert: {
+          description: string
+          facture_id: string
+          id?: string
+          order_index?: number
+          quantity?: number
+          total_ht?: number
+          unit_price?: number
+        }
+        Update: {
+          description?: string
+          facture_id?: string
+          id?: string
+          order_index?: number
+          quantity?: number
+          total_ht?: number
+          unit_price?: number
+        }
+        Relationships: []
+      }
+      factures: {
+        Row: {
+          chantier_id: string | null
+          client_address: string | null
+          client_name: string
+          client_vat: string | null
+          company_id: string
+          conditions: string | null
+          created_at: string
+          due_date: string | null
+          id: string
+          issue_date: string
+          notes: string | null
+          number: string
+          paid_date: string | null
+          payment_reference: string | null
+          status: string
+          subtotal_ht: number
+          total_ttc: number
+          type: string
+          vat_amount: number
+          vat_rate: number
+        }
+        Insert: {
+          chantier_id?: string | null
+          client_address?: string | null
+          client_name: string
+          client_vat?: string | null
+          company_id: string
+          conditions?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          issue_date?: string
+          notes?: string | null
+          number: string
+          paid_date?: string | null
+          payment_reference?: string | null
+          status?: string
+          subtotal_ht?: number
+          total_ttc?: number
+          type?: string
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Update: {
+          chantier_id?: string | null
+          client_address?: string | null
+          client_name?: string
+          client_vat?: string | null
+          company_id?: string
+          conditions?: string | null
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          issue_date?: string
+          notes?: string | null
+          number?: string
+          paid_date?: string | null
+          payment_reference?: string | null
+          status?: string
+          subtotal_ht?: number
+          total_ttc?: number
+          type?: string
+          vat_amount?: number
+          vat_rate?: number
+        }
+        Relationships: []
+      }
       onss_payments: {
         Row: {
           amount: number | null
