@@ -23,22 +23,49 @@ function Dashboard() {
     queryKey: ["dashboard", companyId],
     enabled: !!companyId,
     queryFn: async () => {
-      const [chantiersRes, personnelRes, affRes] = await Promise.all([
+      const now = new Date();
+      const ym = now.getFullYear();
+      const mm = now.getMonth() + 1;
+      const quarter = Math.floor((mm - 1) / 3) + 1;
+      const [chantiersRes, personnelRes, affRes, salRes, precRes, onssRes] = await Promise.all([
         supabase.from("chantiers").select("*").eq("company_id", companyId!),
         supabase.from("personnel").select("*").eq("company_id", companyId!),
         supabase.from("affectations").select("personnel_id, chantier_id"),
+        supabase.from("salary_payments").select("personnel_id, paid").eq("company_id", companyId!).eq("period_year", ym).eq("period_month", mm),
+        supabase.from("precompte_payments").select("personnel_id, amount, paid").eq("company_id", companyId!).eq("period_year", ym).eq("period_month", mm),
+        supabase.from("onss_payments").select("personnel_id, amount, paid").eq("company_id", companyId!).eq("year", ym).eq("quarter", quarter),
       ]);
       return {
         chantiers: chantiersRes.data ?? [],
         personnel: personnelRes.data ?? [],
         affectations: affRes.data ?? [],
+        salaries: salRes.data ?? [],
+        precomptes: precRes.data ?? [],
+        onss: onssRes.data ?? [],
+        quarter,
       };
     },
   });
 
   if (isLoading || !data) return <DashboardSkeleton />;
 
-  const { chantiers, personnel, affectations } = data;
+  const { chantiers, personnel, affectations, salaries, precomptes, onss, quarter } = data;
+
+  // Compliance metrics for active workers under contract
+  const eligibleWorkers = personnel.filter((p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""));
+  const totalElig = eligibleWorkers.length;
+  const unpaidSalaries = totalElig - salaries.filter((s: any) => s.paid).length;
+  const unpaidPrecompte = totalElig - precomptes.filter((s: any) => s.paid).length;
+  const precompteAmount = precomptes.filter((s: any) => !s.paid).reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
+  const onssPaidCount = onss.filter((s: any) => s.paid).length;
+  const onssAmount = onss.filter((s: any) => !s.paid).reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
+  const onssDue = totalElig > 0 && onssPaidCount < totalElig;
+  const now = new Date();
+  const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 15);
+  const onssDueDate = quarter === 1 ? new Date(now.getFullYear(), 3, 30)
+    : quarter === 2 ? new Date(now.getFullYear(), 6, 31)
+    : quarter === 3 ? new Date(now.getFullYear(), 9, 31)
+    : new Date(now.getFullYear() + 1, 0, 31);
 
   // Auto-detect late chantiers
   const late = chantiers.filter((c) => {
@@ -57,7 +84,6 @@ function Dashboard() {
 
   // Chart: aggregate by month (last 6 months, approximation from start_date)
   const months: { name: string; CA: number; Coûts: number }[] = [];
-  const now = new Date();
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
     const label = d.toLocaleDateString("fr-BE", { month: "short" }).replace(".", "");
@@ -206,16 +232,28 @@ function Dashboard() {
           <AlertTriangle className="h-5 w-5 text-warning" />
           <h3 className="text-base font-semibold">Alertes & Actions requises</h3>
         </div>
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           <AlertCard tone="danger" title={`${late.length} chantier${late.length > 1 ? "s" : ""} en retard`}>
             {late.length === 0 ? "Aucun retard 🎉" : late.slice(0, 2).map((c) => c.name).join(", ")}
           </AlertCard>
           <AlertCard tone="warning" title={`${unassigned.length} ouvrier${unassigned.length > 1 ? "s" : ""} sans affectation`}>
             {unassigned.length === 0 ? "Tous affectés" : unassigned.slice(0, 2).map((p) => p.full_name).join(", ")}
           </AlertCard>
-          <AlertCard tone="info" title="Module Véhicules">
-            Disponible prochainement
-          </AlertCard>
+          {unpaidSalaries > 0 && (
+            <AlertCard tone="warning" title={`${unpaidSalaries} salaire${unpaidSalaries > 1 ? "s" : ""} non payé${unpaidSalaries > 1 ? "s" : ""} ce mois`}>
+              Voir le module Précompte & ONSS pour régulariser
+            </AlertCard>
+          )}
+          {unpaidPrecompte > 0 && (
+            <AlertCard tone="danger" title={`Précompte dû avant le ${nextMonth.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}>
+              {formatEUR(precompteAmount)} à verser au SPF Finances
+            </AlertCard>
+          )}
+          {onssDue && (
+            <AlertCard tone="danger" title={`ONSS Q${quarter} dû avant le ${onssDueDate.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}>
+              {formatEUR(onssAmount)} à verser à l'ONSS
+            </AlertCard>
+          )}
         </div>
       </Card>
     </div>

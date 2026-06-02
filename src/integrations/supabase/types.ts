@@ -183,6 +183,48 @@ export type Database = {
           },
         ]
       }
+      onss_payments: {
+        Row: {
+          amount: number | null
+          company_id: string
+          created_at: string
+          due_date: string | null
+          id: string
+          paid: boolean | null
+          paid_date: string | null
+          personnel_id: string
+          quarter: number
+          reference: string | null
+          year: number
+        }
+        Insert: {
+          amount?: number | null
+          company_id: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          paid?: boolean | null
+          paid_date?: string | null
+          personnel_id: string
+          quarter: number
+          reference?: string | null
+          year: number
+        }
+        Update: {
+          amount?: number | null
+          company_id?: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          paid?: boolean | null
+          paid_date?: string | null
+          personnel_id?: string
+          quarter?: number
+          reference?: string | null
+          year?: number
+        }
+        Relationships: []
+      }
       personnel: {
         Row: {
           company_id: string
@@ -232,6 +274,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      precompte_payments: {
+        Row: {
+          amount: number | null
+          company_id: string
+          created_at: string
+          due_date: string | null
+          id: string
+          paid: boolean | null
+          paid_date: string | null
+          period_month: number
+          period_year: number
+          personnel_id: string
+          reference: string | null
+        }
+        Insert: {
+          amount?: number | null
+          company_id: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          paid?: boolean | null
+          paid_date?: string | null
+          period_month: number
+          period_year: number
+          personnel_id: string
+          reference?: string | null
+        }
+        Update: {
+          amount?: number | null
+          company_id?: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          paid?: boolean | null
+          paid_date?: string | null
+          period_month?: number
+          period_year?: number
+          personnel_id?: string
+          reference?: string | null
+        }
+        Relationships: []
       }
       presence: {
         Row: {
@@ -309,6 +393,87 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      salary_payments: {
+        Row: {
+          company_id: string
+          created_at: string
+          gross_amount: number | null
+          id: string
+          net_amount: number | null
+          paid: boolean | null
+          paid_date: string | null
+          payment_method: string | null
+          period_month: number
+          period_year: number
+          personnel_id: string
+          reference: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          gross_amount?: number | null
+          id?: string
+          net_amount?: number | null
+          paid?: boolean | null
+          paid_date?: string | null
+          payment_method?: string | null
+          period_month: number
+          period_year: number
+          personnel_id: string
+          reference?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          gross_amount?: number | null
+          id?: string
+          net_amount?: number | null
+          paid?: boolean | null
+          paid_date?: string | null
+          payment_method?: string | null
+          period_month?: number
+          period_year?: number
+          personnel_id?: string
+          reference?: string | null
+        }
+        Relationships: []
+      }
+      tva_checks: {
+        Row: {
+          check_date: string
+          checked_by: string | null
+          client_name: string
+          client_vat_number: string
+          company_id: string
+          id: string
+          is_eligible: boolean | null
+          notes: string | null
+          raw_response: Json | null
+        }
+        Insert: {
+          check_date?: string
+          checked_by?: string | null
+          client_name: string
+          client_vat_number: string
+          company_id: string
+          id?: string
+          is_eligible?: boolean | null
+          notes?: string | null
+          raw_response?: Json | null
+        }
+        Update: {
+          check_date?: string
+          checked_by?: string | null
+          client_name?: string
+          client_vat_number?: string
+          company_id?: string
+          id?: string
+          is_eligible?: boolean | null
+          notes?: string | null
+          raw_response?: Json | null
+        }
+        Relationships: []
       }
     }
     Views: {
