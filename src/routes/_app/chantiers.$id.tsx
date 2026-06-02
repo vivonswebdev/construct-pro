@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play } from "lucide-react";
+import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play, Truck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatEUR, formatDateBE, daysUntil, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
@@ -35,9 +35,16 @@ function ChantierDetail() {
         supabase.from("chantiers").select("*").eq("id", id).maybeSingle(),
         supabase.from("etapes").select("*").eq("chantier_id", id).order("order_index"),
         supabase.from("affectations").select("*, personnel(id, full_name)").eq("chantier_id", id),
-        supabase.from("vehicule_affectations").select("*, vehicules(id, plate, brand, model, cost_per_km, current_km)").eq("chantier_id", id),
+        supabase.from("vehicule_affectations").select("*").eq("chantier_id", id),
       ]);
-      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations: vaRes.data ?? [] };
+      const vIds = Array.from(new Set((vaRes.data ?? []).map((va) => va.vehicule_id)));
+      const vMap = new Map<string, any>();
+      if (vIds.length) {
+        const { data: vehs } = await supabase.from("vehicules").select("id, plate, brand, model, cost_per_km, current_km").in("id", vIds);
+        (vehs ?? []).forEach((v) => vMap.set(v.id, v));
+      }
+      const vehAffectations = (vaRes.data ?? []).map((va) => ({ ...va, vehicule: vMap.get(va.vehicule_id) }));
+      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations };
     },
   });
 
