@@ -18,9 +18,11 @@ import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
 import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
+import { Route as AppFacturationIndexRouteImport } from './routes/_app/facturation.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
 import { Route as AppVehiculesIdRouteImport } from './routes/_app/vehicules.$id'
 import { Route as AppPersonnelIdRouteImport } from './routes/_app/personnel.$id'
+import { Route as AppFacturationIdRouteImport } from './routes/_app/facturation.$id'
 import { Route as AppChantiersIdRouteImport } from './routes/_app/chantiers.$id'
 
 const LoginRoute = LoginRouteImport.update({
@@ -67,6 +69,11 @@ const AppPersonnelIndexRoute = AppPersonnelIndexRouteImport.update({
   path: '/personnel/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFacturationIndexRoute = AppFacturationIndexRouteImport.update({
+  id: '/facturation/',
+  path: '/facturation/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChantiersIndexRoute = AppChantiersIndexRouteImport.update({
   id: '/chantiers/',
   path: '/chantiers/',
@@ -80,6 +87,11 @@ const AppVehiculesIdRoute = AppVehiculesIdRouteImport.update({
 const AppPersonnelIdRoute = AppPersonnelIdRouteImport.update({
   id: '/personnel/$id',
   path: '/personnel/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppFacturationIdRoute = AppFacturationIdRouteImport.update({
+  id: '/facturation/$id',
+  path: '/facturation/$id',
   getParentRoute: () => AppRoute,
 } as any)
 const AppChantiersIdRoute = AppChantiersIdRouteImport.update({
@@ -96,9 +108,11 @@ export interface FileRoutesByFullPath {
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
+  '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers/': typeof AppChantiersIndexRoute
+  '/facturation/': typeof AppFacturationIndexRoute
   '/personnel/': typeof AppPersonnelIndexRoute
   '/vehicules/': typeof AppVehiculesIndexRoute
 }
@@ -110,9 +124,11 @@ export interface FileRoutesByTo {
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
+  '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers': typeof AppChantiersIndexRoute
+  '/facturation': typeof AppFacturationIndexRoute
   '/personnel': typeof AppPersonnelIndexRoute
   '/vehicules': typeof AppVehiculesIndexRoute
 }
@@ -126,9 +142,11 @@ export interface FileRoutesById {
   '/_app/precompte': typeof AppPrecompteRoute
   '/_app/profil': typeof AppProfilRoute
   '/_app/chantiers/$id': typeof AppChantiersIdRoute
+  '/_app/facturation/$id': typeof AppFacturationIdRoute
   '/_app/personnel/$id': typeof AppPersonnelIdRoute
   '/_app/vehicules/$id': typeof AppVehiculesIdRoute
   '/_app/chantiers/': typeof AppChantiersIndexRoute
+  '/_app/facturation/': typeof AppFacturationIndexRoute
   '/_app/personnel/': typeof AppPersonnelIndexRoute
   '/_app/vehicules/': typeof AppVehiculesIndexRoute
 }
@@ -142,9 +160,11 @@ export interface FileRouteTypes {
     | '/precompte'
     | '/profil'
     | '/chantiers/$id'
+    | '/facturation/$id'
     | '/personnel/$id'
     | '/vehicules/$id'
     | '/chantiers/'
+    | '/facturation/'
     | '/personnel/'
     | '/vehicules/'
   fileRoutesByTo: FileRoutesByTo
@@ -156,9 +176,11 @@ export interface FileRouteTypes {
     | '/precompte'
     | '/profil'
     | '/chantiers/$id'
+    | '/facturation/$id'
     | '/personnel/$id'
     | '/vehicules/$id'
     | '/chantiers'
+    | '/facturation'
     | '/personnel'
     | '/vehicules'
   id:
@@ -171,9 +193,11 @@ export interface FileRouteTypes {
     | '/_app/precompte'
     | '/_app/profil'
     | '/_app/chantiers/$id'
+    | '/_app/facturation/$id'
     | '/_app/personnel/$id'
     | '/_app/vehicules/$id'
     | '/_app/chantiers/'
+    | '/_app/facturation/'
     | '/_app/personnel/'
     | '/_app/vehicules/'
   fileRoutesById: FileRoutesById
@@ -249,6 +273,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPersonnelIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/facturation/': {
+      id: '/_app/facturation/'
+      path: '/facturation'
+      fullPath: '/facturation/'
+      preLoaderRoute: typeof AppFacturationIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/chantiers/': {
       id: '/_app/chantiers/'
       path: '/chantiers'
@@ -270,6 +301,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPersonnelIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/facturation/$id': {
+      id: '/_app/facturation/$id'
+      path: '/facturation/$id'
+      fullPath: '/facturation/$id'
+      preLoaderRoute: typeof AppFacturationIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/chantiers/$id': {
       id: '/_app/chantiers/$id'
       path: '/chantiers/$id'
@@ -286,9 +324,11 @@ interface AppRouteChildren {
   AppPrecompteRoute: typeof AppPrecompteRoute
   AppProfilRoute: typeof AppProfilRoute
   AppChantiersIdRoute: typeof AppChantiersIdRoute
+  AppFacturationIdRoute: typeof AppFacturationIdRoute
   AppPersonnelIdRoute: typeof AppPersonnelIdRoute
   AppVehiculesIdRoute: typeof AppVehiculesIdRoute
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
+  AppFacturationIndexRoute: typeof AppFacturationIndexRoute
   AppPersonnelIndexRoute: typeof AppPersonnelIndexRoute
   AppVehiculesIndexRoute: typeof AppVehiculesIndexRoute
 }
@@ -299,9 +339,11 @@ const AppRouteChildren: AppRouteChildren = {
   AppPrecompteRoute: AppPrecompteRoute,
   AppProfilRoute: AppProfilRoute,
   AppChantiersIdRoute: AppChantiersIdRoute,
+  AppFacturationIdRoute: AppFacturationIdRoute,
   AppPersonnelIdRoute: AppPersonnelIdRoute,
   AppVehiculesIdRoute: AppVehiculesIdRoute,
   AppChantiersIndexRoute: AppChantiersIndexRoute,
+  AppFacturationIndexRoute: AppFacturationIndexRoute,
   AppPersonnelIndexRoute: AppPersonnelIndexRoute,
   AppVehiculesIndexRoute: AppVehiculesIndexRoute,
 }
