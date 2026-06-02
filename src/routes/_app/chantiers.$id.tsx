@@ -165,6 +165,48 @@ function ChantierDetail() {
           </div>
         )}
       </div>
+
+      {/* Véhicules */}
+      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+          <Truck className="h-5 w-5 text-primary" /> Véhicules affectés
+        </h2>
+        {vehAffectations.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Aucun véhicule affecté.</p>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {vehAffectations.map((va: any) => {
+              const v = va.vehicule;
+              if (!v) return null;
+              const km = va.end_km && va.start_km ? va.end_km - va.start_km
+                : !va.end_date && va.start_km ? v.current_km - va.start_km
+                : null;
+              const cost = km ? km * Number(v.cost_per_km) : null;
+              return (
+                <Link
+                  key={va.id}
+                  to="/vehicules/$id"
+                  params={{ id: v.id }}
+                  className="block rounded-lg border border-border p-3 transition hover:bg-muted/30"
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="font-mono text-xs font-bold">{v.plate}</span>
+                    {!va.end_date && <span className="rounded-full bg-info/10 px-2 py-0.5 text-[10px] font-semibold text-info">En cours</span>}
+                  </div>
+                  <p className="mt-1 text-sm font-semibold">{v.brand} {v.model}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {formatDateBE(va.start_date)} → {va.end_date ? formatDateBE(va.end_date) : "—"}
+                  </p>
+                  <div className="mt-2 flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">{km !== null ? `${km.toLocaleString("fr-BE")} km` : "—"}</span>
+                    <span className="font-semibold text-primary">{cost !== null ? formatEUR(cost) : "—"}</span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
