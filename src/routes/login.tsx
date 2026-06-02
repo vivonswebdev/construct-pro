@@ -53,6 +53,46 @@ function LoginPage() {
     }
   };
 
+  const DEMO_EMAIL = "demo@constructflow.be";
+  const DEMO_PASSWORD = "demo1234";
+
+  const loginDemo = async () => {
+    setError(null);
+    setLoading(true);
+    try {
+      let { error } = await supabase.auth.signInWithPassword({
+        email: DEMO_EMAIL,
+        password: DEMO_PASSWORD,
+      });
+      if (error) {
+        // Create the demo account if it doesn't exist yet
+        const { error: signUpError } = await supabase.auth.signUp({
+          email: DEMO_EMAIL,
+          password: DEMO_PASSWORD,
+          options: {
+            emailRedirectTo: window.location.origin,
+            data: {
+              full_name: "Jean Démo",
+              company_name: "Démo Construction SPRL",
+            },
+          },
+        });
+        if (signUpError) throw signUpError;
+        // Auto-confirm is enabled, so we can sign in right away
+        const retry = await supabase.auth.signInWithPassword({
+          email: DEMO_EMAIL,
+          password: DEMO_PASSWORD,
+        });
+        if (retry.error) throw retry.error;
+      }
+      toast.success("Bienvenue sur le compte démo");
+    } catch (err: any) {
+      setError(err?.message ?? "Impossible d'accéder au compte démo");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-sidebar-bg px-4">
       <div className="w-full max-w-md">
@@ -145,6 +185,24 @@ function LoginPage() {
               {loading ? "..." : mode === "login" ? "Se connecter" : "Créer mon compte"}
             </button>
           </form>
+
+          <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground">
+            <div className="h-px flex-1 bg-border" />
+            ou essayez en 1 clic
+            <div className="h-px flex-1 bg-border" />
+          </div>
+
+          <button
+            type="button"
+            onClick={loginDemo}
+            disabled={loading}
+            className="w-full rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/10 disabled:opacity-60"
+          >
+            🚀 Accéder au compte démo (pré-rempli)
+          </button>
+          <p className="mt-2 text-center text-[11px] text-muted-foreground">
+            3 chantiers, 5 ouvriers et des présences déjà générés.
+          </p>
         </div>
         <p className="mt-6 text-center text-xs text-sidebar-text">© ConstructFlow 2026</p>
       </div>
