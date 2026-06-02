@@ -13,7 +13,10 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
+import { Route as AppPersonnelIdRouteImport } from './routes/_app/personnel.$id'
+import { Route as AppChantiersIdRouteImport } from './routes/_app/chantiers.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -34,9 +37,24 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPersonnelIndexRoute = AppPersonnelIndexRouteImport.update({
+  id: '/personnel/',
+  path: '/personnel/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChantiersIndexRoute = AppChantiersIndexRouteImport.update({
   id: '/chantiers/',
   path: '/chantiers/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPersonnelIdRoute = AppPersonnelIdRouteImport.update({
+  id: '/personnel/$id',
+  path: '/personnel/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChantiersIdRoute = AppChantiersIdRouteImport.update({
+  id: '/chantiers/$id',
+  path: '/chantiers/$id',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -44,13 +62,19 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AppDashboardRoute
+  '/chantiers/$id': typeof AppChantiersIdRoute
+  '/personnel/$id': typeof AppPersonnelIdRoute
   '/chantiers/': typeof AppChantiersIndexRoute
+  '/personnel/': typeof AppPersonnelIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/dashboard': typeof AppDashboardRoute
+  '/chantiers/$id': typeof AppChantiersIdRoute
+  '/personnel/$id': typeof AppPersonnelIdRoute
   '/chantiers': typeof AppChantiersIndexRoute
+  '/personnel': typeof AppPersonnelIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -58,20 +82,40 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/chantiers/$id': typeof AppChantiersIdRoute
+  '/_app/personnel/$id': typeof AppPersonnelIdRoute
   '/_app/chantiers/': typeof AppChantiersIndexRoute
+  '/_app/personnel/': typeof AppPersonnelIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard' | '/chantiers/'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/chantiers/$id'
+    | '/personnel/$id'
+    | '/chantiers/'
+    | '/personnel/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/chantiers'
+  to:
+    | '/'
+    | '/login'
+    | '/dashboard'
+    | '/chantiers/$id'
+    | '/personnel/$id'
+    | '/chantiers'
+    | '/personnel'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/login'
     | '/_app/dashboard'
+    | '/_app/chantiers/$id'
+    | '/_app/personnel/$id'
     | '/_app/chantiers/'
+    | '/_app/personnel/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -110,6 +154,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppDashboardRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/personnel/': {
+      id: '/_app/personnel/'
+      path: '/personnel'
+      fullPath: '/personnel/'
+      preLoaderRoute: typeof AppPersonnelIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/chantiers/': {
       id: '/_app/chantiers/'
       path: '/chantiers'
@@ -117,17 +168,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChantiersIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/personnel/$id': {
+      id: '/_app/personnel/$id'
+      path: '/personnel/$id'
+      fullPath: '/personnel/$id'
+      preLoaderRoute: typeof AppPersonnelIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/chantiers/$id': {
+      id: '/_app/chantiers/$id'
+      path: '/chantiers/$id'
+      fullPath: '/chantiers/$id'
+      preLoaderRoute: typeof AppChantiersIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
+  AppChantiersIdRoute: typeof AppChantiersIdRoute
+  AppPersonnelIdRoute: typeof AppPersonnelIdRoute
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
+  AppPersonnelIndexRoute: typeof AppPersonnelIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
+  AppChantiersIdRoute: AppChantiersIdRoute,
+  AppPersonnelIdRoute: AppPersonnelIdRoute,
   AppChantiersIndexRoute: AppChantiersIndexRoute,
+  AppPersonnelIndexRoute: AppPersonnelIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
