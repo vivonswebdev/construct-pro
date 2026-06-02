@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play, Truck } from "lucide-react";
+import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play, Truck, Package } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatEUR, formatDateBE, daysUntil, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
