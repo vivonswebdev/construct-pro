@@ -282,6 +282,48 @@ export type Database = {
         }
         Relationships: []
       }
+      materiaux: {
+        Row: {
+          category: string | null
+          company_id: string
+          created_at: string
+          id: string
+          min_stock: number
+          name: string
+          sku: string | null
+          stock_quantity: number
+          supplier: string | null
+          unit: string
+          unit_price: number
+        }
+        Insert: {
+          category?: string | null
+          company_id: string
+          created_at?: string
+          id?: string
+          min_stock?: number
+          name: string
+          sku?: string | null
+          stock_quantity?: number
+          supplier?: string | null
+          unit?: string
+          unit_price?: number
+        }
+        Update: {
+          category?: string | null
+          company_id?: string
+          created_at?: string
+          id?: string
+          min_stock?: number
+          name?: string
+          sku?: string | null
+          stock_quantity?: number
+          supplier?: string | null
+          unit?: string
+          unit_price?: number
+        }
+        Relationships: []
+      }
       onss_payments: {
         Row: {
           amount: number | null
@@ -535,6 +577,54 @@ export type Database = {
           period_year?: number
           personnel_id?: string
           reference?: string | null
+        }
+        Relationships: []
+      }
+      stock_mouvements: {
+        Row: {
+          chantier_id: string | null
+          company_id: string
+          created_at: string
+          date: string
+          id: string
+          materiau_id: string
+          notes: string | null
+          quantity: number
+          reference: string | null
+          supplier: string | null
+          total: number
+          type: string
+          unit_price: number
+        }
+        Insert: {
+          chantier_id?: string | null
+          company_id: string
+          created_at?: string
+          date?: string
+          id?: string
+          materiau_id: string
+          notes?: string | null
+          quantity?: number
+          reference?: string | null
+          supplier?: string | null
+          total?: number
+          type?: string
+          unit_price?: number
+        }
+        Update: {
+          chantier_id?: string | null
+          company_id?: string
+          created_at?: string
+          date?: string
+          id?: string
+          materiau_id?: string
+          notes?: string | null
+          quantity?: number
+          reference?: string | null
+          supplier?: string | null
+          total?: number
+          type?: string
+          unit_price?: number
         }
         Relationships: []
       }

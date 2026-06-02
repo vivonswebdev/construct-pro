@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play, Truck } from "lucide-react";
+import { ArrowLeft, MapPin, ChevronDown, ChevronUp, CheckCircle2, Play, Truck, Package } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { formatEUR, formatDateBE, daysUntil, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
@@ -31,11 +31,12 @@ function ChantierDetail() {
   const { data, isLoading } = useQuery({
     queryKey: ["chantier", id],
     queryFn: async () => {
-      const [cRes, eRes, aRes, vaRes] = await Promise.all([
+      const [cRes, eRes, aRes, vaRes, smRes] = await Promise.all([
         supabase.from("chantiers").select("*").eq("id", id).maybeSingle(),
         supabase.from("etapes").select("*").eq("chantier_id", id).order("order_index"),
         supabase.from("affectations").select("*, personnel(id, full_name)").eq("chantier_id", id),
         supabase.from("vehicule_affectations").select("*").eq("chantier_id", id),
+        supabase.from("stock_mouvements" as any).select("*").eq("chantier_id", id).order("date", { ascending: false }),
       ]);
       const vIds = Array.from(new Set((vaRes.data ?? []).map((va) => va.vehicule_id)));
       const vMap = new Map<string, any>();
@@ -44,15 +45,40 @@ function ChantierDetail() {
         (vehs ?? []).forEach((v) => vMap.set(v.id, v));
       }
       const vehAffectations = (vaRes.data ?? []).map((va) => ({ ...va, vehicule: vMap.get(va.vehicule_id) }));
-      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations };
+
+      const mouvements = (smRes.data ?? []) as any[];
+      const matIds = Array.from(new Set(mouvements.map((m) => m.materiau_id)));
+      const matMap = new Map<string, any>();
+      if (matIds.length) {
+        const { data: mats } = await supabase.from("materiaux" as any).select("id, name, unit").in("id", matIds);
+        (mats ?? []).forEach((m: any) => matMap.set(m.id, m));
+      }
+      const mouvementsWithMat = mouvements.map((m) => ({ ...m, materiau: matMap.get(m.materiau_id) }));
+
+      return { chantier: cRes.data, etapes: eRes.data ?? [], affectations: aRes.data ?? [], vehAffectations, mouvements: mouvementsWithMat };
     },
   });
 
   if (isLoading || !data) return <div className="p-6"><div className="h-40 animate-pulse rounded-xl bg-muted" /></div>;
-  const { chantier, etapes, affectations, vehAffectations } = data;
+  const { chantier, etapes, affectations, vehAffectations, mouvements } = data;
   if (!chantier) return <div>Chantier introuvable.</div>;
 
-  const benefice = Number(chantier.budget ?? 0) - Number(chantier.actual_costs ?? 0);
+  // Live material costs from stock movements (achat + sortie counted as expense, retour subtracted)
+  const materialCosts = mouvements.reduce((s: number, m: any) => {
+    if (m.type === "retour") return s - Number(m.total);
+    return s + Number(m.total);
+  }, 0);
+  const vehicleCosts = vehAffectations.reduce((s: number, va: any) => {
+    const v = va.vehicule;
+    if (!v) return s;
+    const km = va.end_km && va.start_km ? va.end_km - va.start_km
+      : !va.end_date && va.start_km ? v.current_km - va.start_km
+      : 0;
+    return s + (km > 0 ? km * Number(v.cost_per_km) : 0);
+  }, 0);
+  const totalCosts = Number(chantier.actual_costs ?? 0) + materialCosts + vehicleCosts;
+  const benefice = Number(chantier.budget ?? 0) - totalCosts;
+
   const days = daysUntil(chantier.end_date);
   const completed = etapes.filter((e) => e.progress >= 100).length;
 
@@ -103,16 +129,17 @@ function ChantierDetail() {
           </div>
         </div>
 
-        <div className="mt-5 grid grid-cols-1 gap-4 md:grid-cols-3">
+        <div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-4">
           <Metric label="Budget" value={formatEUR(chantier.budget)} />
-          <Metric label="Dépenses" value={formatEUR(chantier.actual_costs)} />
+          <Metric label="Dépenses totales" value={formatEUR(totalCosts)} badge="temps réel" />
+          <Metric label="dont matériaux" value={formatEUR(materialCosts)} />
           <Metric
             label="Bénéfice"
             value={formatEUR(benefice)}
             tone={benefice >= 0 ? "success" : "danger"}
-            badge="temps réel"
           />
         </div>
+
 
         <div className="mt-5">
           <div className="mb-1 flex items-center justify-between text-xs">
@@ -207,9 +234,68 @@ function ChantierDetail() {
           </div>
         )}
       </div>
+
+      {/* Matériaux */}
+      <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="flex items-center gap-2 text-lg font-semibold">
+            <Package className="h-5 w-5 text-primary" /> Matériaux consommés
+          </h2>
+          <Link to="/stock" className="text-xs font-semibold text-primary hover:underline">
+            Gérer le stock →
+          </Link>
+        </div>
+        {mouvements.length === 0 ? (
+          <p className="text-sm text-muted-foreground">Aucun mouvement de stock lié à ce chantier.</p>
+        ) : (
+          <div className="overflow-hidden rounded-lg border border-border">
+            <table className="w-full text-sm">
+              <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
+                <tr>
+                  <th className="px-3 py-2 text-left">Date</th>
+                  <th className="px-3 py-2 text-left">Type</th>
+                  <th className="px-3 py-2 text-left">Matériau</th>
+                  <th className="px-3 py-2 text-right">Qté</th>
+                  <th className="px-3 py-2 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {mouvements.map((m: any) => {
+                  const tStyles: Record<string, string> = {
+                    achat: "bg-emerald-100 text-emerald-700",
+                    sortie: "bg-cyan-100 text-cyan-700",
+                    retour: "bg-amber-100 text-amber-700",
+                  };
+                  const tLabels: Record<string, string> = { achat: "Achat", sortie: "Sortie", retour: "Retour" };
+                  return (
+                    <tr key={m.id} className="border-t border-border">
+                      <td className="px-3 py-2">{formatDateBE(m.date)}</td>
+                      <td className="px-3 py-2">
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tStyles[m.type] ?? "bg-muted"}`}>
+                          {tLabels[m.type] ?? m.type}
+                        </span>
+                      </td>
+                      <td className="px-3 py-2 font-medium">{m.materiau?.name ?? "—"}</td>
+                      <td className="px-3 py-2 text-right">{Number(m.quantity).toLocaleString("fr-BE")} {m.materiau?.unit ?? ""}</td>
+                      <td className={`px-3 py-2 text-right font-semibold ${m.type === "retour" ? "text-amber-600" : ""}`}>
+                        {m.type === "retour" ? "−" : ""}{formatEUR(m.total)}
+                      </td>
+                    </tr>
+                  );
+                })}
+                <tr className="border-t-2 border-border bg-muted/20">
+                  <td colSpan={4} className="px-3 py-2 text-right text-xs font-semibold uppercase text-muted-foreground">Total matériaux</td>
+                  <td className="px-3 py-2 text-right font-bold text-primary">{formatEUR(materialCosts)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
+
 
 function Metric({ label, value, tone, badge }: { label: string; value: string; tone?: "success" | "danger"; badge?: string }) {
   const color = tone === "success" ? "text-success" : tone === "danger" ? "text-danger" : "text-foreground";

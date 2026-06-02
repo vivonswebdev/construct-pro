@@ -108,12 +108,12 @@ export async function seedDataIfEmpty(companyId: string) {
   // Presence for current month
   const presenceRows: any[] = [];
   const now = new Date();
-  const year = now.getFullYear();
+  const yr = now.getFullYear();
   const month = now.getMonth();
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInMonth = new Date(yr, month + 1, 0).getDate();
   for (const p of personnel) {
     for (let d = 1; d <= Math.min(daysInMonth, now.getDate()); d++) {
-      const date = new Date(year, month, d);
+      const date = new Date(yr, month, d);
       const dow = date.getDay();
       if (dow === 0 || dow === 6) continue;
       const r = Math.random();
@@ -334,4 +334,33 @@ export async function seedDataIfEmpty(companyId: string) {
       );
     }
   }
+
+  // Matériaux & mouvements de stock
+  const matSeed = [
+    { name: "Ciment Portland CEM I 42.5N", sku: "CIM-425", unit: "sac 25kg", unit_price: 6.5, stock_quantity: 120, min_stock: 30, supplier: "Holcim", category: "Gros œuvre" },
+    { name: "Brique terre cuite 19cm", sku: "BRQ-19", unit: "pièce", unit_price: 0.85, stock_quantity: 4500, min_stock: 1000, supplier: "Wienerberger", category: "Maçonnerie" },
+    { name: "Sable de rivière 0/4", sku: "SAB-04", unit: "m³", unit_price: 38, stock_quantity: 12, min_stock: 5, supplier: "Carrières du Hainaut", category: "Granulats" },
+    { name: "Isolant laine de roche 100mm", sku: "ISO-LR100", unit: "m²", unit_price: 11.2, stock_quantity: 25, min_stock: 50, supplier: "Rockwool", category: "Isolation" },
+    { name: "Vis à bois 4x40mm", sku: "VIS-440", unit: "boîte 200", unit_price: 8.9, stock_quantity: 8, min_stock: 15, supplier: "Spit", category: "Visserie" },
+    { name: "Plaque OSB3 18mm", sku: "OSB-18", unit: "panneau", unit_price: 32, stock_quantity: 40, min_stock: 10, supplier: "Egger", category: "Bois" },
+  ].map((m) => ({ ...m, company_id: companyId }));
+  const { data: materiaux } = await (supabase.from("materiaux" as any) as any).insert(matSeed).select();
+
+  if (materiaux && materiaux.length) {
+    const findMat = (sku: string) => (materiaux as any[]).find((m) => m.sku === sku);
+    const mvts: any[] = [];
+    const ciment = findMat("CIM-425");
+    const brq = findMat("BRQ-19");
+    const sable = findMat("SAB-04");
+    const osb = findMat("OSB-18");
+    if (ciment) {
+      mvts.push({ company_id: companyId, materiau_id: ciment.id, chantier_id: chantiers[0].id, type: "achat", quantity: 50, unit_price: 6.5, total: 325, date: inDays(-40), supplier: "Holcim", reference: "BC-2024-0871" });
+      mvts.push({ company_id: companyId, materiau_id: ciment.id, chantier_id: chantiers[0].id, type: "sortie", quantity: 20, unit_price: 6.5, total: 130, date: inDays(-15), notes: "Fondations" });
+    }
+    if (brq) mvts.push({ company_id: companyId, materiau_id: brq.id, chantier_id: chantiers[0].id, type: "sortie", quantity: 800, unit_price: 0.85, total: 680, date: inDays(-10), notes: "Murs RDC" });
+    if (sable) mvts.push({ company_id: companyId, materiau_id: sable.id, chantier_id: chantiers[1].id, type: "achat", quantity: 8, unit_price: 38, total: 304, date: inDays(-22), supplier: "Carrières du Hainaut", reference: "BL-22458" });
+    if (osb) mvts.push({ company_id: companyId, materiau_id: osb.id, chantier_id: chantiers[1].id, type: "sortie", quantity: 12, unit_price: 32, total: 384, date: inDays(-5), notes: "Coffrage" });
+    if (mvts.length) await (supabase.from("stock_mouvements" as any) as any).insert(mvts);
+  }
 }
+

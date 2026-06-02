@@ -17,6 +17,7 @@ import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
 import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
+import { Route as AppStockIndexRouteImport } from './routes/_app/stock.index'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
 import { Route as AppFacturationIndexRouteImport } from './routes/_app/facturation.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
@@ -62,6 +63,11 @@ const AppConformiteTvaRoute = AppConformiteTvaRouteImport.update({
 const AppVehiculesIndexRoute = AppVehiculesIndexRouteImport.update({
   id: '/vehicules/',
   path: '/vehicules/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppStockIndexRoute = AppStockIndexRouteImport.update({
+  id: '/stock/',
+  path: '/stock/',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPersonnelIndexRoute = AppPersonnelIndexRouteImport.update({
@@ -114,6 +120,7 @@ export interface FileRoutesByFullPath {
   '/chantiers/': typeof AppChantiersIndexRoute
   '/facturation/': typeof AppFacturationIndexRoute
   '/personnel/': typeof AppPersonnelIndexRoute
+  '/stock/': typeof AppStockIndexRoute
   '/vehicules/': typeof AppVehiculesIndexRoute
 }
 export interface FileRoutesByTo {
@@ -130,6 +137,7 @@ export interface FileRoutesByTo {
   '/chantiers': typeof AppChantiersIndexRoute
   '/facturation': typeof AppFacturationIndexRoute
   '/personnel': typeof AppPersonnelIndexRoute
+  '/stock': typeof AppStockIndexRoute
   '/vehicules': typeof AppVehiculesIndexRoute
 }
 export interface FileRoutesById {
@@ -148,6 +156,7 @@ export interface FileRoutesById {
   '/_app/chantiers/': typeof AppChantiersIndexRoute
   '/_app/facturation/': typeof AppFacturationIndexRoute
   '/_app/personnel/': typeof AppPersonnelIndexRoute
+  '/_app/stock/': typeof AppStockIndexRoute
   '/_app/vehicules/': typeof AppVehiculesIndexRoute
 }
 export interface FileRouteTypes {
@@ -166,6 +175,7 @@ export interface FileRouteTypes {
     | '/chantiers/'
     | '/facturation/'
     | '/personnel/'
+    | '/stock/'
     | '/vehicules/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -182,6 +192,7 @@ export interface FileRouteTypes {
     | '/chantiers'
     | '/facturation'
     | '/personnel'
+    | '/stock'
     | '/vehicules'
   id:
     | '__root__'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/_app/chantiers/'
     | '/_app/facturation/'
     | '/_app/personnel/'
+    | '/_app/stock/'
     | '/_app/vehicules/'
   fileRoutesById: FileRoutesById
 }
@@ -266,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppVehiculesIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/stock/': {
+      id: '/_app/stock/'
+      path: '/stock'
+      fullPath: '/stock/'
+      preLoaderRoute: typeof AppStockIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/personnel/': {
       id: '/_app/personnel/'
       path: '/personnel'
@@ -330,6 +349,7 @@ interface AppRouteChildren {
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
   AppFacturationIndexRoute: typeof AppFacturationIndexRoute
   AppPersonnelIndexRoute: typeof AppPersonnelIndexRoute
+  AppStockIndexRoute: typeof AppStockIndexRoute
   AppVehiculesIndexRoute: typeof AppVehiculesIndexRoute
 }
 
@@ -345,6 +365,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppChantiersIndexRoute: AppChantiersIndexRoute,
   AppFacturationIndexRoute: AppFacturationIndexRoute,
   AppPersonnelIndexRoute: AppPersonnelIndexRoute,
+  AppStockIndexRoute: AppStockIndexRoute,
   AppVehiculesIndexRoute: AppVehiculesIndexRoute,
 }
 
