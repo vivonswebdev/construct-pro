@@ -13,7 +13,9 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppProfilRouteImport } from './routes/_app/profil'
+import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
+import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
 import { Route as AppPersonnelIdRouteImport } from './routes/_app/personnel.$id'
@@ -38,9 +40,19 @@ const AppProfilRoute = AppProfilRouteImport.update({
   path: '/profil',
   getParentRoute: () => AppRoute,
 } as any)
+const AppPrecompteRoute = AppPrecompteRouteImport.update({
+  id: '/precompte',
+  path: '/precompte',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppConformiteTvaRoute = AppConformiteTvaRouteImport.update({
+  id: '/conformite-tva',
+  path: '/conformite-tva',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPersonnelIndexRoute = AppPersonnelIndexRouteImport.update({
@@ -67,7 +79,9 @@ const AppChantiersIdRoute = AppChantiersIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
+  '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
@@ -77,7 +91,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
+  '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
@@ -89,7 +105,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/conformite-tva': typeof AppConformiteTvaRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/precompte': typeof AppPrecompteRoute
   '/_app/profil': typeof AppProfilRoute
   '/_app/chantiers/$id': typeof AppChantiersIdRoute
   '/_app/personnel/$id': typeof AppPersonnelIdRoute
@@ -101,7 +119,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/conformite-tva'
     | '/dashboard'
+    | '/precompte'
     | '/profil'
     | '/chantiers/$id'
     | '/personnel/$id'
@@ -111,7 +131,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/conformite-tva'
     | '/dashboard'
+    | '/precompte'
     | '/profil'
     | '/chantiers/$id'
     | '/personnel/$id'
@@ -122,7 +144,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/login'
+    | '/_app/conformite-tva'
     | '/_app/dashboard'
+    | '/_app/precompte'
     | '/_app/profil'
     | '/_app/chantiers/$id'
     | '/_app/personnel/$id'
@@ -166,11 +190,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfilRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/precompte': {
+      id: '/_app/precompte'
+      path: '/precompte'
+      fullPath: '/precompte'
+      preLoaderRoute: typeof AppPrecompteRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/conformite-tva': {
+      id: '/_app/conformite-tva'
+      path: '/conformite-tva'
+      fullPath: '/conformite-tva'
+      preLoaderRoute: typeof AppConformiteTvaRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/personnel/': {
@@ -205,7 +243,9 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppConformiteTvaRoute: typeof AppConformiteTvaRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppPrecompteRoute: typeof AppPrecompteRoute
   AppProfilRoute: typeof AppProfilRoute
   AppChantiersIdRoute: typeof AppChantiersIdRoute
   AppPersonnelIdRoute: typeof AppPersonnelIdRoute
@@ -214,7 +254,9 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppConformiteTvaRoute: AppConformiteTvaRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppPrecompteRoute: AppPrecompteRoute,
   AppProfilRoute: AppProfilRoute,
   AppChantiersIdRoute: AppChantiersIdRoute,
   AppPersonnelIdRoute: AppPersonnelIdRoute,
