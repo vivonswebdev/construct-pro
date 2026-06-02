@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeft, ChevronLeft, ChevronRight, Mail, Phone, Euro, IdCard } from "lucide-react";
+import { ArrowLeft, ChevronLeft, ChevronRight, Mail, Phone, Euro, IdCard, FileDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/lib/auth";
 import { initials, avatarColor, formatDateBE } from "@/lib/format";
+import { exportPresencePDF } from "@/lib/pdf";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/personnel/$id")({
@@ -14,6 +16,7 @@ const STATUS_OPTIONS = ["Présent", "Absent", "Congé"] as const;
 
 function PersonnelDetail() {
   const { id } = Route.useParams();
+  const { company } = useAuth();
   const qc = useQueryClient();
   const [viewMonth, setViewMonth] = useState(() => {
     const d = new Date();
@@ -102,9 +105,23 @@ function PersonnelDetail() {
 
       {/* Presence calendar */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-        <div className="mb-4 flex items-center justify-between">
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-semibold capitalize">Présences — {monthName}</h2>
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => exportPresencePDF({
+                personName: person.full_name,
+                year: viewMonth.year,
+                month: viewMonth.month,
+                presence,
+                hourlyRate: person.hourly_rate,
+                companyName: company?.name,
+              })}
+              className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
+              title="Exporter le rapport mensuel en PDF"
+            >
+              <FileDown className="h-3.5 w-3.5" /> Rapport PDF
+            </button>
             <button
               onClick={() => setViewMonth((v) => ({ year: v.month === 0 ? v.year - 1 : v.year, month: v.month === 0 ? 11 : v.month - 1 }))}
               className="rounded-md p-1.5 hover:bg-muted"

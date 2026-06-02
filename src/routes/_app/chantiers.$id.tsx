@@ -48,7 +48,7 @@ function ChantierDetail() {
   const days = daysUntil(chantier.end_date);
   const completed = etapes.filter((e) => e.progress >= 100).length;
 
-  const updateEtape = async (etapeId: string, patch: { progress?: number; status?: string; notes?: string }) => {
+  const updateEtape = async (etapeId: string, patch: { progress?: number; status?: string; notes?: string; start_date?: string | null; end_date?: string | null }) => {
     const { error } = await supabase.from("etapes").update(patch).eq("id", etapeId);
     if (error) { toast.error(error.message); return; }
 
@@ -178,8 +178,18 @@ function PhaseRow({ etape, index, isLast, onUpdate }: any) {
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(etape.progress);
   const [notes, setNotes] = useState(etape.notes ?? "");
+  const [startDate, setStartDate] = useState(etape.start_date ?? "");
+  const [endDate, setEndDate] = useState(etape.end_date ?? "");
 
   const dotStyle = PHASE_STATUS_DOT[etape.status] ?? "bg-gray-300";
+
+  const save = () => onUpdate({
+    progress,
+    notes,
+    start_date: startDate || null,
+    end_date: endDate || null,
+    status: progress >= 100 ? "Terminé" : progress > 0 ? "En cours" : "En attente",
+  });
 
   return (
     <div className="relative pb-4">
@@ -200,6 +210,11 @@ function PhaseRow({ etape, index, isLast, onUpdate }: any) {
                 <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${STATUS_STYLES[etape.status] ?? "bg-muted"}`}>
                   {etape.status}
                 </span>
+                {(etape.start_date || etape.end_date) && (
+                  <span className="text-[10px] text-muted-foreground">
+                    {formatDateBE(etape.start_date)} → {formatDateBE(etape.end_date)}
+                  </span>
+                )}
               </div>
               <div className="mt-2 flex items-center gap-3">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
@@ -224,6 +239,18 @@ function PhaseRow({ etape, index, isLast, onUpdate }: any) {
                   className="w-full accent-primary"
                 />
               </div>
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="mb-1 block text-xs font-medium">Date de début</label>
+                  <input type="date" value={startDate ?? ""} onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-md border border-border bg-card p-2 text-sm outline-none focus:border-primary" />
+                </div>
+                <div>
+                  <label className="mb-1 block text-xs font-medium">Date de fin</label>
+                  <input type="date" value={endDate ?? ""} onChange={(e) => setEndDate(e.target.value)}
+                    className="w-full rounded-md border border-border bg-card p-2 text-sm outline-none focus:border-primary" />
+                </div>
+              </div>
               <div>
                 <label className="mb-1 block text-xs font-medium">Notes</label>
                 <textarea
@@ -235,14 +262,14 @@ function PhaseRow({ etape, index, isLast, onUpdate }: any) {
               </div>
               <div className="flex flex-wrap gap-2">
                 <button
-                  onClick={() => onUpdate({ progress, notes, status: progress >= 100 ? "Terminé" : progress > 0 ? "En cours" : "En attente" })}
+                  onClick={save}
                   className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
                 >
                   Enregistrer
                 </button>
                 {etape.status !== "Terminé" && (
                   <button
-                    onClick={() => { setProgress(100); onUpdate({ progress: 100, status: "Terminé", notes }); }}
+                    onClick={() => { setProgress(100); onUpdate({ progress: 100, status: "Terminé", notes, start_date: startDate || null, end_date: endDate || null }); }}
                     className="inline-flex items-center gap-1 rounded-md bg-success px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90"
                   >
                     <CheckCircle2 className="h-3 w-3" /> Marquer terminé
@@ -250,7 +277,7 @@ function PhaseRow({ etape, index, isLast, onUpdate }: any) {
                 )}
                 {etape.status === "En attente" && (
                   <button
-                    onClick={() => onUpdate({ progress: 10, status: "En cours", notes })}
+                    onClick={() => onUpdate({ progress: 10, status: "En cours", notes, start_date: startDate || null, end_date: endDate || null })}
                     className="inline-flex items-center gap-1 rounded-md bg-info px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90"
                   >
                     <Play className="h-3 w-3" /> Démarrer

@@ -8,6 +8,7 @@ import {
   Package,
   Calculator,
   LogOut,
+  UserCircle,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -17,6 +18,7 @@ const ACTIVE_NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chantiers", label: "Chantiers", icon: HardHat },
   { to: "/personnel", label: "Personnel", icon: Users },
+  { to: "/profil", label: "Mon profil", icon: UserCircle },
 ] as const;
 
 const COMING_SOON = [

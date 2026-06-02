@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { Plus, Search, Eye, Edit2, X } from "lucide-react";
+import { Plus, Search, Eye, Edit2, X, FileDown, FileSpreadsheet } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
+import { exportChantiersPDF, exportChantiersCSV } from "@/lib/pdf";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/chantiers/")({
@@ -29,7 +30,7 @@ const DEFAULT_PHASES = [
 ];
 
 function ChantiersList() {
-  const { profile } = useAuth();
+  const { profile, company } = useAuth();
   const qc = useQueryClient();
   const companyId = profile?.company_id;
   const [search, setSearch] = useState("");
@@ -64,13 +65,31 @@ function ChantiersList() {
             {chantiers.length}
           </span>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
-        >
-          <Plus className="h-4 w-4" />
-          Nouveau chantier
-        </button>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => exportChantiersCSV(filtered)}
+            disabled={filtered.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted disabled:opacity-50"
+            title="Exporter en CSV"
+          >
+            <FileSpreadsheet className="h-4 w-4" /> CSV
+          </button>
+          <button
+            onClick={() => exportChantiersPDF(filtered, company?.name)}
+            disabled={filtered.length === 0}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted disabled:opacity-50"
+            title="Exporter en PDF"
+          >
+            <FileDown className="h-4 w-4" /> PDF
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
+          >
+            <Plus className="h-4 w-4" />
+            Nouveau chantier
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-3">
