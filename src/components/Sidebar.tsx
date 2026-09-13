@@ -11,6 +11,7 @@ import {
   UserCircle,
   ShieldCheck,
   Landmark,
+  Sparkles,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -25,6 +26,7 @@ const ACTIVE_NAV = [
   { to: "/facturation", label: "Devis & Factures", icon: FileText },
   { to: "/conformite-tva", label: "Conformité TVA", icon: ShieldCheck },
   { to: "/precompte", label: "Précompte & ONSS", icon: Landmark },
+  { to: "/assistant", label: "Assistant IA", icon: Sparkles },
   { to: "/profil", label: "Mon profil", icon: UserCircle },
 ] as const;
 

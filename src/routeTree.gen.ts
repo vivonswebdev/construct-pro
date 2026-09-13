@@ -16,6 +16,7 @@ import { Route as AppProfilRouteImport } from './routes/_app/profil'
 import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
+import { Route as AppAssistantRouteImport } from './routes/_app/assistant'
 import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
 import { Route as AppStockIndexRouteImport } from './routes/_app/stock.index'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
@@ -58,6 +59,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 const AppConformiteTvaRoute = AppConformiteTvaRouteImport.update({
   id: '/conformite-tva',
   path: '/conformite-tva',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAssistantRoute = AppAssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
   getParentRoute: () => AppRoute,
 } as any)
 const AppVehiculesIndexRoute = AppVehiculesIndexRouteImport.update({
@@ -109,6 +115,7 @@ const AppChantiersIdRoute = AppChantiersIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/assistant': typeof AppAssistantRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
@@ -126,6 +133,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/assistant': typeof AppAssistantRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
@@ -145,6 +153,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/assistant': typeof AppAssistantRoute
   '/_app/conformite-tva': typeof AppConformiteTvaRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/precompte': typeof AppPrecompteRoute
@@ -164,6 +173,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/assistant'
     | '/conformite-tva'
     | '/dashboard'
     | '/precompte'
@@ -181,6 +191,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/assistant'
     | '/conformite-tva'
     | '/dashboard'
     | '/precompte'
@@ -199,6 +210,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/login'
+    | '/_app/assistant'
     | '/_app/conformite-tva'
     | '/_app/dashboard'
     | '/_app/precompte'
@@ -271,6 +283,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConformiteTvaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/assistant': {
+      id: '/_app/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AppAssistantRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/vehicules/': {
       id: '/_app/vehicules/'
       path: '/vehicules'
@@ -338,6 +357,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAssistantRoute: typeof AppAssistantRoute
   AppConformiteTvaRoute: typeof AppConformiteTvaRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppPrecompteRoute: typeof AppPrecompteRoute
@@ -354,6 +374,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAssistantRoute: AppAssistantRoute,
   AppConformiteTvaRoute: AppConformiteTvaRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppPrecompteRoute: AppPrecompteRoute,
