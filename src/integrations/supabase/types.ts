@@ -61,6 +61,7 @@ export type Database = {
           actual_costs: number | null
           address: string | null
           budget: number | null
+          client_id: string | null
           client_name: string | null
           company_id: string
           created_at: string
@@ -76,6 +77,7 @@ export type Database = {
           actual_costs?: number | null
           address?: string | null
           budget?: number | null
+          client_id?: string | null
           client_name?: string | null
           company_id: string
           created_at?: string
@@ -91,6 +93,7 @@ export type Database = {
           actual_costs?: number | null
           address?: string | null
           budget?: number | null
+          client_id?: string | null
           client_name?: string | null
           company_id?: string
           created_at?: string
@@ -104,7 +107,82 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "chantiers_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "chantiers_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clients: {
+        Row: {
+          adresse: string | null
+          assujetti_tva: boolean
+          code_postal: string | null
+          company_id: string
+          created_at: string
+          email: string | null
+          id: string
+          langue: string
+          nom: string | null
+          notes: string | null
+          numero_bce: string | null
+          numero_tva: string | null
+          prenom: string | null
+          raison_sociale: string | null
+          telephone: string | null
+          type: string
+          ville: string | null
+        }
+        Insert: {
+          adresse?: string | null
+          assujetti_tva?: boolean
+          code_postal?: string | null
+          company_id: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          langue?: string
+          nom?: string | null
+          notes?: string | null
+          numero_bce?: string | null
+          numero_tva?: string | null
+          prenom?: string | null
+          raison_sociale?: string | null
+          telephone?: string | null
+          type?: string
+          ville?: string | null
+        }
+        Update: {
+          adresse?: string | null
+          assujetti_tva?: boolean
+          code_postal?: string | null
+          company_id?: string
+          created_at?: string
+          email?: string | null
+          id?: string
+          langue?: string
+          nom?: string | null
+          notes?: string | null
+          numero_bce?: string | null
+          numero_tva?: string | null
+          prenom?: string | null
+          raison_sociale?: string | null
+          telephone?: string | null
+          type?: string
+          ville?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clients_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
@@ -117,6 +195,7 @@ export type Database = {
           address: string | null
           bce_number: string | null
           created_at: string
+          demo_seeded: boolean
           id: string
           logo_url: string | null
           name: string
@@ -125,6 +204,7 @@ export type Database = {
           address?: string | null
           bce_number?: string | null
           created_at?: string
+          demo_seeded?: boolean
           id?: string
           logo_url?: string | null
           name: string
@@ -133,6 +213,7 @@ export type Database = {
           address?: string | null
           bce_number?: string | null
           created_at?: string
+          demo_seeded?: boolean
           id?: string
           logo_url?: string | null
           name?: string
@@ -192,6 +273,7 @@ export type Database = {
           quantity: number
           total_ht: number
           unit_price: number
+          vat_rate: number
         }
         Insert: {
           description: string
@@ -201,6 +283,7 @@ export type Database = {
           quantity?: number
           total_ht?: number
           unit_price?: number
+          vat_rate?: number
         }
         Update: {
           description?: string
@@ -210,13 +293,17 @@ export type Database = {
           quantity?: number
           total_ht?: number
           unit_price?: number
+          vat_rate?: number
         }
         Relationships: []
       }
       factures: {
         Row: {
+          attestation_6: boolean
+          autoliquidation: boolean
           chantier_id: string | null
           client_address: string | null
+          client_id: string | null
           client_name: string
           client_vat: string | null
           company_id: string
@@ -233,12 +320,16 @@ export type Database = {
           subtotal_ht: number
           total_ttc: number
           type: string
+          valid_until: string | null
           vat_amount: number
           vat_rate: number
         }
         Insert: {
+          attestation_6?: boolean
+          autoliquidation?: boolean
           chantier_id?: string | null
           client_address?: string | null
+          client_id?: string | null
           client_name: string
           client_vat?: string | null
           company_id: string
@@ -255,12 +346,16 @@ export type Database = {
           subtotal_ht?: number
           total_ttc?: number
           type?: string
+          valid_until?: string | null
           vat_amount?: number
           vat_rate?: number
         }
         Update: {
+          attestation_6?: boolean
+          autoliquidation?: boolean
           chantier_id?: string | null
           client_address?: string | null
+          client_id?: string | null
           client_name?: string
           client_vat?: string | null
           company_id?: string
@@ -277,10 +372,19 @@ export type Database = {
           subtotal_ht?: number
           total_ttc?: number
           type?: string
+          valid_until?: string | null
           vat_amount?: number
           vat_rate?: number
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "factures_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       materiaux: {
         Row: {
@@ -757,6 +861,7 @@ export type Database = {
     }
     Functions: {
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
+      seed_lock: { Args: { _company_id: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
