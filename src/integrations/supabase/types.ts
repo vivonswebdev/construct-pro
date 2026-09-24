@@ -214,6 +214,71 @@ export type Database = {
         };
         Relationships: [];
       };
+      company_settings: {
+        Row: {
+          base_onss_ouvrier_pct: number;
+          bic: string | null;
+          coefficient_cout_charge: number;
+          company_id: string;
+          couleur: string;
+          heures_par_jour: number;
+          iban: string | null;
+          id: string;
+          marge_cible_pct: number;
+          marge_intemperies_pct: number;
+          seuil_checkinatwork: number;
+          taux_onss_patronal: number;
+          taux_onss_personnel: number;
+          taux_precompte: number;
+          taux_verifies_le: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          base_onss_ouvrier_pct?: number;
+          bic?: string | null;
+          coefficient_cout_charge?: number;
+          company_id: string;
+          couleur?: string;
+          heures_par_jour?: number;
+          iban?: string | null;
+          id?: string;
+          marge_cible_pct?: number;
+          marge_intemperies_pct?: number;
+          seuil_checkinatwork?: number;
+          taux_onss_patronal?: number;
+          taux_onss_personnel?: number;
+          taux_precompte?: number;
+          taux_verifies_le?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          base_onss_ouvrier_pct?: number;
+          bic?: string | null;
+          coefficient_cout_charge?: number;
+          company_id?: string;
+          couleur?: string;
+          heures_par_jour?: number;
+          iban?: string | null;
+          id?: string;
+          marge_cible_pct?: number;
+          marge_intemperies_pct?: number;
+          seuil_checkinatwork?: number;
+          taux_onss_patronal?: number;
+          taux_onss_personnel?: number;
+          taux_precompte?: number;
+          taux_verifies_le?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "company_settings_company_id_fkey";
+            columns: ["company_id"];
+            isOneToOne: true;
+            referencedRelation: "companies";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       etapes: {
         Row: {
           chantier_id: string;
@@ -854,6 +919,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined };
       get_user_company_id: { Args: { _user_id: string }; Returns: string };
       seed_lock: { Args: { _company_id: string }; Returns: string };
     };
