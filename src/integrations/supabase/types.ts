@@ -869,6 +869,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       seed_lock: { Args: { _company_id: string }; Returns: string }
     }
