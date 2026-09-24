@@ -4,6 +4,23 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-09-24 (soir) — Réconciliation avec les commits Lovable sur `main`
+
+- Lovable ne lit que `main` : la PR #2 n'étant pas fusionnée, il n'a **pas** appliqué les
+  migrations de phase 0. À la place, il a créé `20260924173652_…` (3 colonnes de taux sur
+  `companies`) et branché `precompte.tsx` dessus (chargement + enregistrement automatique).
+- `main` fusionnée dans `phase-00-mise-en-place`. Conflits (dus au formatage Prettier) résolus.
+- **Décision** : une seule source pour les paramètres → `company_settings`. La fonctionnalité de
+  Lovable est conservée (taux chargés depuis la base, enregistrés automatiquement après 600 ms),
+  mais sur `company_settings`. Nouvelle migration `20260924180000_phase0_taux_vers_company_settings.sql` :
+  recopie les taux saisis dans `companies` vers `company_settings`, puis supprime les 3 colonnes.
+- Ordre d'application en base : `…130000` (dédoublonnage) → `…130100` (company_settings) →
+  `…173652` (déjà appliquée par Lovable) → `…180000` (réconciliation).
+- Avant application, la page Précompte fonctionne avec les taux par défaut (404 sur
+  `company_settings`, sans effet visible).
+
+---
+
 ## 2026-09-24 — Phase 0 : mise en place et corrections
 
 Branche : `phase-00-mise-en-place`.

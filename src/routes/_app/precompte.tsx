@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Landmark,
   ChevronLeft,
@@ -38,6 +38,54 @@ function PrecomptePage() {
   const [period, setPeriod] = useState({ year: now.getFullYear(), month: now.getMonth() });
   const [showSettings, setShowSettings] = useState(false);
   const [rates, setRates] = useState(DEFAULTS);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Taux indicatifs persistés dans company_settings (une ligne par société)
+  const { data: settings } = useQuery({
+    queryKey: ["company_settings", companyId],
+    enabled: !!companyId,
+    queryFn: async () => {
+      const { data } = await supabase
+        .from("company_settings")
+        .select("taux_precompte, taux_onss_personnel, taux_onss_patronal")
+        .eq("company_id", companyId!)
+        .maybeSingle();
+      return data;
+    },
+  });
+
+  useEffect(() => {
+    if (settings) {
+      setRates({
+        precompteRate: Number(settings.taux_precompte),
+        onssEmployeeRate: Number(settings.taux_onss_personnel),
+        onssEmployerRate: Number(settings.taux_onss_patronal),
+      });
+    }
+  }, [settings]);
+
+  const updateRates = (next: typeof DEFAULTS) => {
+    setRates(next);
+    if (!companyId) return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      const { error } = await supabase.from("company_settings").upsert(
+        {
+          company_id: companyId,
+          taux_precompte: next.precompteRate,
+          taux_onss_personnel: next.onssEmployeeRate,
+          taux_onss_patronal: next.onssEmployerRate,
+        },
+        { onConflict: "company_id" },
+      );
+      if (error) {
+        toast.error("Impossible d'enregistrer les taux");
+        return;
+      }
+      toast.success("Taux enregistrés");
+      qc.invalidateQueries({ queryKey: ["company_settings", companyId] });
+    }, 600);
+  };
   const [payModal, setPayModal] = useState<{
     kind: PayKind;
     personName: string;
@@ -274,17 +322,17 @@ function PrecomptePage() {
             <RateInput
               label="Précompte professionnel"
               value={rates.precompteRate}
-              onChange={(v) => setRates((r) => ({ ...r, precompteRate: v }))}
+              onChange={(v) => updateRates({ ...rates, precompteRate: v })}
             />
             <RateInput
               label="ONSS travailleur"
               value={rates.onssEmployeeRate}
-              onChange={(v) => setRates((r) => ({ ...r, onssEmployeeRate: v }))}
+              onChange={(v) => updateRates({ ...rates, onssEmployeeRate: v })}
             />
             <RateInput
               label="ONSS employeur"
               value={rates.onssEmployerRate}
-              onChange={(v) => setRates((r) => ({ ...r, onssEmployerRate: v }))}
+              onChange={(v) => updateRates({ ...rates, onssEmployerRate: v })}
             />
           </div>
         </div>
