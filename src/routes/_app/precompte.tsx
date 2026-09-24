@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import {
   Landmark, ChevronLeft, ChevronRight, CheckCircle2, AlertTriangle, FileDown, Settings,
 } from "lucide-react";
@@ -17,13 +17,43 @@ export const Route = createFileRoute("/_app/precompte")({
 type PayKind = "salary" | "precompte" | "onss";
 
 function PrecomptePage() {
-  const { profile } = useAuth();
+  const { profile, company } = useAuth();
   const qc = useQueryClient();
   const companyId = profile?.company_id;
   const now = new Date();
   const [period, setPeriod] = useState({ year: now.getFullYear(), month: now.getMonth() });
   const [showSettings, setShowSettings] = useState(false);
   const [rates, setRates] = useState(DEFAULTS);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Charge les taux enregistrés sur la fiche entreprise
+  useEffect(() => {
+    if (company) {
+      setRates({
+        precompteRate: Number(company.precompte_rate ?? DEFAULTS.precompteRate),
+        onssEmployeeRate: Number(company.onss_employee_rate ?? DEFAULTS.onssEmployeeRate),
+        onssEmployerRate: Number(company.onss_employer_rate ?? DEFAULTS.onssEmployerRate),
+      });
+    }
+  }, [company]);
+
+  const updateRates = (next: typeof DEFAULTS) => {
+    setRates(next);
+    if (!companyId) return;
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      const { error } = await supabase
+        .from("companies")
+        .update({
+          precompte_rate: next.precompteRate,
+          onss_employee_rate: next.onssEmployeeRate,
+          onss_employer_rate: next.onssEmployerRate,
+        } as any)
+        .eq("id", companyId);
+      if (error) toast.error("Impossible d'enregistrer les taux");
+      else toast.success("Taux enregistrés");
+    }, 600);
+  };
   const [payModal, setPayModal] = useState<{
     kind: PayKind; personName: string; defaultAmount: number; personnelId: string; existingId?: string;
   } | null>(null);
@@ -173,9 +203,9 @@ function PrecomptePage() {
         <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
           <h3 className="mb-3 text-sm font-semibold">Paramètres des taux (CP 124 construction par défaut)</h3>
           <div className="grid gap-3 md:grid-cols-3">
-            <RateInput label="Précompte professionnel" value={rates.precompteRate} onChange={(v) => setRates((r) => ({ ...r, precompteRate: v }))} />
-            <RateInput label="ONSS travailleur" value={rates.onssEmployeeRate} onChange={(v) => setRates((r) => ({ ...r, onssEmployeeRate: v }))} />
-            <RateInput label="ONSS employeur" value={rates.onssEmployerRate} onChange={(v) => setRates((r) => ({ ...r, onssEmployerRate: v }))} />
+            <RateInput label="Précompte professionnel" value={rates.precompteRate} onChange={(v) => updateRates({ ...rates, precompteRate: v })} />
+            <RateInput label="ONSS travailleur" value={rates.onssEmployeeRate} onChange={(v) => updateRates({ ...rates, onssEmployeeRate: v })} />
+            <RateInput label="ONSS employeur" value={rates.onssEmployerRate} onChange={(v) => updateRates({ ...rates, onssEmployerRate: v })} />
           </div>
         </div>
       )}

@@ -199,6 +199,9 @@ export type Database = {
           id: string
           logo_url: string | null
           name: string
+          onss_employee_rate: number
+          onss_employer_rate: number
+          precompte_rate: number
         }
         Insert: {
           address?: string | null
@@ -208,6 +211,9 @@ export type Database = {
           id?: string
           logo_url?: string | null
           name: string
+          onss_employee_rate?: number
+          onss_employer_rate?: number
+          precompte_rate?: number
         }
         Update: {
           address?: string | null
@@ -217,6 +223,9 @@ export type Database = {
           id?: string
           logo_url?: string | null
           name?: string
+          onss_employee_rate?: number
+          onss_employer_rate?: number
+          precompte_rate?: number
         }
         Relationships: []
       }
