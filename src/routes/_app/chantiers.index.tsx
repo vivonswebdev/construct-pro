@@ -7,6 +7,8 @@ import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { exportChantiersPDF, exportChantiersCSV } from "@/lib/pdf";
 import { toast } from "sonner";
+import { ClientSelect } from "@/components/ClientSelect";
+import { clientLabel, clientAddress } from "@/lib/clients";
 
 export const Route = createFileRoute("/_app/chantiers/")({
   component: ChantiersList,
@@ -233,7 +235,7 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
 function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
   const { profile } = useAuth();
   const [form, setForm] = useState({
-    name: "", client_name: "", address: "", budget: "",
+    name: "", client_id: "", client_name: "", address: "", budget: "",
     start_date: new Date().toISOString().slice(0, 10),
     end_date: "", description: "",
   });
@@ -250,6 +252,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
           company_id: profile.company_id,
           name: form.name,
           client_name: form.client_name,
+          client_id: form.client_id || null,
           address: form.address,
           budget: Number(form.budget) || 0,
           actual_costs: 0,
@@ -297,7 +300,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
         </div>
         <div className="grid gap-3">
           <ModalField label="Nom du chantier"><input required className="modal-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></ModalField>
-          <ModalField label="Nom du client"><input className="modal-input" value={form.client_name} onChange={(e) => setForm({ ...form, client_name: e.target.value })} /></ModalField>
+          <ModalField label="Client"><ClientSelect value={form.client_id} onChange={(id, c) => setForm({ ...form, client_id: id, client_name: clientLabel(c), address: form.address || clientAddress(c) })} /></ModalField>
           <ModalField label="Adresse"><input className="modal-input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></ModalField>
           <div className="grid grid-cols-3 gap-3">
             <ModalField label="Budget (€)"><input type="number" min="0" className="modal-input" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} /></ModalField>

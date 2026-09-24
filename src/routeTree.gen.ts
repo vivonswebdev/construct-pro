@@ -21,10 +21,12 @@ import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.i
 import { Route as AppStockIndexRouteImport } from './routes/_app/stock.index'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
 import { Route as AppFacturationIndexRouteImport } from './routes/_app/facturation.index'
+import { Route as AppClientsIndexRouteImport } from './routes/_app/clients.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
 import { Route as AppVehiculesIdRouteImport } from './routes/_app/vehicules.$id'
 import { Route as AppPersonnelIdRouteImport } from './routes/_app/personnel.$id'
 import { Route as AppFacturationIdRouteImport } from './routes/_app/facturation.$id'
+import { Route as AppClientsIdRouteImport } from './routes/_app/clients.$id'
 import { Route as AppChantiersIdRouteImport } from './routes/_app/chantiers.$id'
 
 const LoginRoute = LoginRouteImport.update({
@@ -86,6 +88,11 @@ const AppFacturationIndexRoute = AppFacturationIndexRouteImport.update({
   path: '/facturation/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppClientsIndexRoute = AppClientsIndexRouteImport.update({
+  id: '/clients/',
+  path: '/clients/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChantiersIndexRoute = AppChantiersIndexRouteImport.update({
   id: '/chantiers/',
   path: '/chantiers/',
@@ -106,6 +113,11 @@ const AppFacturationIdRoute = AppFacturationIdRouteImport.update({
   path: '/facturation/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppClientsIdRoute = AppClientsIdRouteImport.update({
+  id: '/clients/$id',
+  path: '/clients/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChantiersIdRoute = AppChantiersIdRouteImport.update({
   id: '/chantiers/$id',
   path: '/chantiers/$id',
@@ -121,10 +133,12 @@ export interface FileRoutesByFullPath {
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
+  '/clients/$id': typeof AppClientsIdRoute
   '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers/': typeof AppChantiersIndexRoute
+  '/clients/': typeof AppClientsIndexRoute
   '/facturation/': typeof AppFacturationIndexRoute
   '/personnel/': typeof AppPersonnelIndexRoute
   '/stock/': typeof AppStockIndexRoute
@@ -139,10 +153,12 @@ export interface FileRoutesByTo {
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
+  '/clients/$id': typeof AppClientsIdRoute
   '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers': typeof AppChantiersIndexRoute
+  '/clients': typeof AppClientsIndexRoute
   '/facturation': typeof AppFacturationIndexRoute
   '/personnel': typeof AppPersonnelIndexRoute
   '/stock': typeof AppStockIndexRoute
@@ -159,10 +175,12 @@ export interface FileRoutesById {
   '/_app/precompte': typeof AppPrecompteRoute
   '/_app/profil': typeof AppProfilRoute
   '/_app/chantiers/$id': typeof AppChantiersIdRoute
+  '/_app/clients/$id': typeof AppClientsIdRoute
   '/_app/facturation/$id': typeof AppFacturationIdRoute
   '/_app/personnel/$id': typeof AppPersonnelIdRoute
   '/_app/vehicules/$id': typeof AppVehiculesIdRoute
   '/_app/chantiers/': typeof AppChantiersIndexRoute
+  '/_app/clients/': typeof AppClientsIndexRoute
   '/_app/facturation/': typeof AppFacturationIndexRoute
   '/_app/personnel/': typeof AppPersonnelIndexRoute
   '/_app/stock/': typeof AppStockIndexRoute
@@ -179,10 +197,12 @@ export interface FileRouteTypes {
     | '/precompte'
     | '/profil'
     | '/chantiers/$id'
+    | '/clients/$id'
     | '/facturation/$id'
     | '/personnel/$id'
     | '/vehicules/$id'
     | '/chantiers/'
+    | '/clients/'
     | '/facturation/'
     | '/personnel/'
     | '/stock/'
@@ -197,10 +217,12 @@ export interface FileRouteTypes {
     | '/precompte'
     | '/profil'
     | '/chantiers/$id'
+    | '/clients/$id'
     | '/facturation/$id'
     | '/personnel/$id'
     | '/vehicules/$id'
     | '/chantiers'
+    | '/clients'
     | '/facturation'
     | '/personnel'
     | '/stock'
@@ -216,10 +238,12 @@ export interface FileRouteTypes {
     | '/_app/precompte'
     | '/_app/profil'
     | '/_app/chantiers/$id'
+    | '/_app/clients/$id'
     | '/_app/facturation/$id'
     | '/_app/personnel/$id'
     | '/_app/vehicules/$id'
     | '/_app/chantiers/'
+    | '/_app/clients/'
     | '/_app/facturation/'
     | '/_app/personnel/'
     | '/_app/stock/'
@@ -318,6 +342,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFacturationIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/clients/': {
+      id: '/_app/clients/'
+      path: '/clients'
+      fullPath: '/clients/'
+      preLoaderRoute: typeof AppClientsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/chantiers/': {
       id: '/_app/chantiers/'
       path: '/chantiers'
@@ -346,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppFacturationIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/clients/$id': {
+      id: '/_app/clients/$id'
+      path: '/clients/$id'
+      fullPath: '/clients/$id'
+      preLoaderRoute: typeof AppClientsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/chantiers/$id': {
       id: '/_app/chantiers/$id'
       path: '/chantiers/$id'
@@ -363,10 +401,12 @@ interface AppRouteChildren {
   AppPrecompteRoute: typeof AppPrecompteRoute
   AppProfilRoute: typeof AppProfilRoute
   AppChantiersIdRoute: typeof AppChantiersIdRoute
+  AppClientsIdRoute: typeof AppClientsIdRoute
   AppFacturationIdRoute: typeof AppFacturationIdRoute
   AppPersonnelIdRoute: typeof AppPersonnelIdRoute
   AppVehiculesIdRoute: typeof AppVehiculesIdRoute
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
+  AppClientsIndexRoute: typeof AppClientsIndexRoute
   AppFacturationIndexRoute: typeof AppFacturationIndexRoute
   AppPersonnelIndexRoute: typeof AppPersonnelIndexRoute
   AppStockIndexRoute: typeof AppStockIndexRoute
@@ -380,10 +420,12 @@ const AppRouteChildren: AppRouteChildren = {
   AppPrecompteRoute: AppPrecompteRoute,
   AppProfilRoute: AppProfilRoute,
   AppChantiersIdRoute: AppChantiersIdRoute,
+  AppClientsIdRoute: AppClientsIdRoute,
   AppFacturationIdRoute: AppFacturationIdRoute,
   AppPersonnelIdRoute: AppPersonnelIdRoute,
   AppVehiculesIdRoute: AppVehiculesIdRoute,
   AppChantiersIndexRoute: AppChantiersIndexRoute,
+  AppClientsIndexRoute: AppClientsIndexRoute,
   AppFacturationIndexRoute: AppFacturationIndexRoute,
   AppPersonnelIndexRoute: AppPersonnelIndexRoute,
   AppStockIndexRoute: AppStockIndexRoute,
