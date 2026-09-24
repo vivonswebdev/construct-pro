@@ -18,13 +18,19 @@ export type FactureForPDF = {
   notes: string | null;
   conditions: string | null;
   payment_reference: string | null;
+  autoliquidation?: boolean;
+  attestation_6?: boolean;
 };
+
+export const AUTOLIQ_MENTION = "Autoliquidation – Art. 20 AR n°1 TVA";
+export const ATTEST6_MENTION = "TVA 6 % : logement de plus de 10 ans – attestation client requise";
 
 export type LigneForPDF = {
   description: string;
   quantity: number;
   unit_price: number;
   total_ht: number;
+  vat_rate?: number;
 };
 
 export type CompanyForPDF = {
@@ -41,7 +47,7 @@ function structuredCommunication(num: string): string {
   return `+++${digits.slice(0, 3)}/${digits.slice(3, 7)}/${digits.slice(7, 10)}${String(mod).padStart(2, "0")}+++`;
 }
 
-export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], company: CompanyForPDF) {
+export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], company: CompanyForPDF, byRate?: Record<number, { base: number; vat: number }>) {
   const doc = new jsPDF();
   const W = doc.internal.pageSize.getWidth();
   const isDevis = facture.type === "devis";
@@ -97,11 +103,12 @@ export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], 
   // Lines table
   autoTable(doc, {
     startY: 78,
-    head: [["Description", "Qté", "Prix unit.", "Total HT"]],
+    head: [["Description", "Qté", "Prix unit.", "TVA", "Total HT"]],
     body: lignes.map((l) => [
       l.description,
       String(l.quantity),
       formatEUR(l.unit_price),
+      `${l.vat_rate ?? facture.vat_rate} %`,
       formatEUR(l.total_ht),
     ]),
     theme: "striped",
@@ -111,7 +118,8 @@ export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], 
       0: { cellWidth: "auto" },
       1: { halign: "right", cellWidth: 20 },
       2: { halign: "right", cellWidth: 30 },
-      3: { halign: "right", cellWidth: 30 },
+      3: { halign: "right", cellWidth: 18 },
+      4: { halign: "right", cellWidth: 30 },
     },
   });
 
@@ -122,18 +130,35 @@ export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], 
   doc.setFont("helvetica", "normal");
   doc.text("Sous-total HT", totalsX, afterTable);
   doc.text(formatEUR(facture.subtotal_ht), W - 14, afterTable, { align: "right" });
-  doc.text(`TVA ${facture.vat_rate}%`, totalsX, afterTable + 6);
-  doc.text(formatEUR(facture.vat_amount), W - 14, afterTable + 6, { align: "right" });
+  const rates = byRate && Object.keys(byRate).length ? Object.entries(byRate).sort((a, b) => Number(b[0]) - Number(a[0])) : [[String(facture.vat_rate), { base: facture.subtotal_ht, vat: facture.vat_amount }] as const];
+  let ty = afterTable;
+  for (const [rate, r] of rates) {
+    ty += 6;
+    doc.text(`TVA ${rate}%`, totalsX, ty);
+    doc.text(formatEUR((r as any).vat), W - 14, ty, { align: "right" });
+  }
   doc.setFillColor(8, 145, 178);
-  doc.rect(totalsX - 4, afterTable + 9, W - totalsX - 6, 9, "F");
+  doc.rect(totalsX - 4, ty + 3, W - totalsX - 6, 9, "F");
   doc.setTextColor(255, 255, 255);
   doc.setFont("helvetica", "bold");
-  doc.text("Total TTC", totalsX, afterTable + 15);
-  doc.text(formatEUR(facture.total_ttc), W - 14, afterTable + 15, { align: "right" });
+  doc.text("Total TTC", totalsX, ty + 9);
+  doc.text(formatEUR(facture.total_ttc), W - 14, ty + 9, { align: "right" });
   doc.setTextColor(15, 23, 42);
 
+  let y = ty + 22;
+  const mentions: string[] = [];
+  if (facture.autoliquidation) mentions.push(AUTOLIQ_MENTION);
+  if (facture.attestation_6) mentions.push(ATTEST6_MENTION);
+  if (mentions.length) {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.text("Mentions légales", 14, y);
+    doc.setFont("helvetica", "normal");
+    mentions.forEach((m, i) => doc.text(m, 14, y + 5 + i * 5));
+    y += 8 + mentions.length * 5;
+  }
+
   // Notes / conditions / payment
-  let y = afterTable + 30;
   if (facture.notes) {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
