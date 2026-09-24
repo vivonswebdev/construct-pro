@@ -12,6 +12,8 @@ import {
   ShieldCheck,
   Landmark,
   Sparkles,
+  Contact,
+  Receipt,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/lib/auth";
@@ -20,10 +22,11 @@ import { initials } from "@/lib/format";
 const ACTIVE_NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/chantiers", label: "Chantiers", icon: HardHat },
+  { to: "/clients", label: "Clients", icon: Contact },
   { to: "/personnel", label: "Personnel", icon: Users },
   { to: "/vehicules", label: "Véhicules", icon: Truck },
   { to: "/stock", label: "Stock", icon: Package },
-  { to: "/facturation", label: "Devis & Factures", icon: FileText },
+  { to: "/facturation", label: "Devis", icon: FileText },
   { to: "/conformite-tva", label: "Conformité TVA", icon: ShieldCheck },
   { to: "/precompte", label: "Précompte & ONSS", icon: Landmark },
   { to: "/assistant", label: "Assistant IA", icon: Sparkles },
@@ -32,6 +35,7 @@ const ACTIVE_NAV = [
 
 const COMING_SOON = [
   { key: "belcotax", label: "Belcotax", icon: Calculator },
+  { key: "peppol", label: "Facturation (Peppol)", icon: Receipt },
 ] as const;
 
 export function Sidebar() {
