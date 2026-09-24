@@ -17,7 +17,7 @@ export const Route = createFileRoute("/_app/assistant")({
       { property: "og:title", content: "Assistant IA — ConstructFlow" },
       {
         property: "og:description",
-        content: "Analyse instantanée de vos chantiers, factures et obligations belges.",
+        content: "Analyse instantanée de vos chantiers, devis et obligations belges.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -91,7 +91,7 @@ function AssistantPage() {
             </div>
             <p className="mb-5 max-w-md text-sm text-muted-foreground">
               Posez une question sur vos données. L'assistant connaît vos chantiers, votre
-              personnel, votre flotte, vos factures et votre stock.
+              personnel, votre flotte, vos devis et votre stock.
             </p>
             <div className="grid w-full max-w-2xl gap-2 sm:grid-cols-2">
               {SUGGESTIONS.map((s) => (

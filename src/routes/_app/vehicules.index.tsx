@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_app/vehicules/")({
   component: VehiculesPage,
 });
 
-const TYPES = ["Camionnette", "Camion", "Voiture", "Engin"] as const;
+const TYPES = ["Camionnette", "Camion", "Voiture", "Engin", "Remorque"] as const;
 
 function VehiculesPage() {
   const { profile } = useAuth();

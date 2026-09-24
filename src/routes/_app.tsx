@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { Sidebar } from "@/components/Sidebar";
 import { seedDataIfEmpty } from "@/lib/seed";
@@ -11,16 +12,21 @@ export const Route = createFileRoute("/_app")({
 function AppLayout() {
   const { session, loading, profile } = useAuth();
   const navigate = useNavigate();
+  const qc = useQueryClient();
+  const seededFor = useRef<string | null>(null);
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/login", replace: true });
   }, [session, loading, navigate]);
 
   useEffect(() => {
-    if (profile?.company_id) {
-      seedDataIfEmpty(profile.company_id).catch(console.error);
-    }
-  }, [profile?.company_id]);
+    const cid = profile?.company_id;
+    if (!cid || seededFor.current === cid) return;
+    seededFor.current = cid;
+    seedDataIfEmpty(cid)
+      .then((did) => { if (did) qc.invalidateQueries(); })
+      .catch(console.error);
+  }, [profile?.company_id, qc]);
 
   if (loading || !session) {
     return (

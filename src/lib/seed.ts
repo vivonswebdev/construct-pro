@@ -10,13 +10,15 @@ const DEFAULT_PHASES = [
   "Nettoyage & Réception",
 ];
 
-export async function seedDataIfEmpty(companyId: string) {
-  const { count } = await supabase
-    .from("chantiers")
-    .select("*", { count: "exact", head: true })
-    .eq("company_id", companyId);
-
-  if ((count ?? 0) > 0) return;
+/**
+ * Seeds demo data exactly once per company.
+ * The DB function seed_lock atomically flips companies.demo_seeded
+ * (false -> true) and only returns a row for the first caller, so parallel
+ * calls can never duplicate data.
+ */
+export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
+  const { data: locked, error: lockErr } = await supabase.rpc("seed_lock", { _company_id: companyId });
+  if (lockErr || !locked) return false;
 
   const today = new Date();
   const inDays = (n: number) => {
@@ -25,70 +27,40 @@ export async function seedDataIfEmpty(companyId: string) {
     return d.toISOString().slice(0, 10);
   };
 
-  const chantiersData = [
-    {
-      company_id: companyId,
-      name: "Résidence Les Acacias",
-      client_name: "Immobilière Dumont SA",
-      address: "Rue des Acacias 14, 4000 Liège",
-      budget: 245000,
-      actual_costs: 162400,
-      start_date: inDays(-90),
-      end_date: inDays(74),
-      status: "En cours",
-      progress: 68,
-      description: "Construction d'un immeuble résidentiel de 12 appartements.",
-    },
-    {
-      company_id: companyId,
-      name: "Entrepôt Logistique Seraing",
-      client_name: "TechLog BVBA",
-      address: "Quai des Carmes 8, 4100 Seraing",
-      budget: 180000,
-      actual_costs: 98200,
-      start_date: inDays(-120),
-      end_date: inDays(-30),
-      status: "En retard",
-      progress: 41,
-      description: "Extension d'entrepôt logistique 1500m².",
-    },
-    {
-      company_id: companyId,
-      name: "Villa Rénovation Namur",
-      client_name: "M. & Mme Pirard",
-      address: "Avenue de la Citadelle 22, 5000 Namur",
-      budget: 68000,
-      actual_costs: 56600,
-      start_date: inDays(-180),
-      end_date: inDays(-15),
-      status: "Terminé",
-      progress: 100,
-      description: "Rénovation complète d'une villa de 220m².",
-    },
-  ];
+  // Clients: 3 particuliers, 3 entreprises (2 assujettis)
+  const clientsSeed = [
+    { type: "entreprise", raison_sociale: "Immobilière Dumont SA", nom: "Dumont", numero_bce: "0123.456.789", numero_tva: "BE0123456789", assujetti_tva: true, adresse: "Rue des Acacias 14", code_postal: "4000", ville: "Liège", email: "contact@dumont-immo.be", telephone: "+32 4 222 33 44", langue: "FR" },
+    { type: "entreprise", raison_sociale: "TechLog BV", nom: "Janssens", numero_bce: "0456.789.012", numero_tva: "BE0456789012", assujetti_tva: true, adresse: "Industrieweg 8", code_postal: "3500", ville: "Hasselt", email: "info@techlog.be", telephone: "+32 11 45 67 89", langue: "NL" },
+    { type: "entreprise", raison_sociale: "ASBL Les Jardins du Cœur", nom: "Lambert", numero_bce: "0678.901.234", numero_tva: null, assujetti_tva: false, adresse: "Place du Marché 3", code_postal: "5000", ville: "Namur", email: "direction@jardinsducoeur.be", telephone: "+32 81 12 34 56", langue: "FR" },
+    { type: "particulier", prenom: "Luc", nom: "Pirard", adresse: "Avenue de la Citadelle 22", code_postal: "5000", ville: "Namur", email: "luc.pirard@gmail.com", telephone: "+32 475 12 34 56", langue: "FR" },
+    { type: "particulier", prenom: "Anne", nom: "Collignon", adresse: "Rue Haute 51", code_postal: "1300", ville: "Wavre", email: "anne.collignon@skynet.be", telephone: "+32 476 98 76 54", langue: "FR" },
+    { type: "particulier", prenom: "Pieter", nom: "Vermeulen", adresse: "Kerkstraat 17", code_postal: "9000", ville: "Gent", email: "p.vermeulen@telenet.be", telephone: "+32 477 55 44 33", langue: "NL" },
+  ].map((c) => ({ raison_sociale: null, numero_bce: null, numero_tva: null, assujetti_tva: false, prenom: null, ...c, company_id: companyId }));
+  const { data: clientsRows } = await supabase.from("clients").insert(clientsSeed as any).select();
+  const cl = (clientsRows ?? []) as any[];
+  const cName = (c: any) => c ? (c.type === "entreprise" ? c.raison_sociale : `${c.prenom} ${c.nom}`) : null;
+  const cAddr = (c: any) => c ? `${c.adresse}, ${c.code_postal} ${c.ville}` : null;
 
-  const { data: chantiers, error: cErr } = await supabase
-    .from("chantiers")
-    .insert(chantiersData)
-    .select();
-  if (cErr || !chantiers) return;
+  // Chantiers: 2 en cours dans les temps, 1 en retard, 1 terminé, 1 en préparation
+  const chantiersData = [
+    { client: cl[0], name: "Résidence Les Acacias", budget: 245000, actual_costs: 142400, start_date: inDays(-90), end_date: inDays(120), status: "En cours", progress: 55, description: "Construction d'un immeuble résidentiel de 12 appartements." },
+    { client: cl[4], name: "Extension maison Collignon", budget: 86000, actual_costs: 31200, start_date: inDays(-40), end_date: inDays(80), status: "En cours", progress: 35, description: "Extension de 45 m² avec toiture plate et baie vitrée." },
+    { client: cl[1], name: "Entrepôt Logistique Hasselt", budget: 180000, actual_costs: 128200, start_date: inDays(-150), end_date: inDays(-20), status: "En retard", progress: 72, description: "Extension d'entrepôt logistique 1 500 m²." },
+    { client: cl[3], name: "Villa Rénovation Namur", budget: 68000, actual_costs: 56600, start_date: inDays(-200), end_date: inDays(-25), status: "Terminé", progress: 100, description: "Rénovation complète d'une villa de 220 m² (TVA 6 %)." },
+    { client: cl[2], name: "Salle polyvalente ASBL", budget: 132000, actual_costs: 0, start_date: inDays(30), end_date: inDays(240), status: "En attente", progress: 0, description: "En préparation — construction d'une salle polyvalente de 300 m²." },
+  ].map(({ client, ...c }) => ({ ...c, company_id: companyId, client_id: client?.id ?? null, client_name: cName(client), address: cAddr(client) }));
+
+  const { data: chantiers, error: cErr } = await supabase.from("chantiers").insert(chantiersData as any).select();
+  if (cErr || !chantiers) return true;
 
   // Etapes
   const etapesRows = chantiers.flatMap((c) =>
     DEFAULT_PHASES.map((name, i) => {
-      const prog = c.progress;
-      const stagePct = Math.max(0, Math.min(100, (prog - (i * 100) / 7) * 7 / 1));
-      const phaseProgress = Math.max(0, Math.min(100, Math.round(stagePct)));
+      const phaseProgress = Math.max(0, Math.min(100, Math.round((c.progress - (i * 100) / 7) * 7)));
       let status = "En attente";
       if (phaseProgress >= 100) status = "Terminé";
       else if (phaseProgress > 0) status = "En cours";
-      return {
-        chantier_id: c.id,
-        name,
-        order_index: i,
-        progress: phaseProgress,
-        status,
-      };
+      return { chantier_id: c.id, name, order_index: i, progress: phaseProgress, status };
     })
   );
   await supabase.from("etapes").insert(etapesRows);
@@ -103,7 +75,7 @@ export async function seedDataIfEmpty(companyId: string) {
   ].map((p) => ({ ...p, company_id: companyId, status: "Actif" }));
 
   const { data: personnel } = await supabase.from("personnel").insert(personnelData).select();
-  if (!personnel) return;
+  if (!personnel) return true;
 
   // Presence for current month
   const presenceRows: any[] = [];
@@ -139,23 +111,26 @@ export async function seedDataIfEmpty(companyId: string) {
     { personnel_id: personnel[3].id, chantier_id: chantiers[0].id, start_date: inDays(-30), role: "Manœuvre" },
   ]);
 
-  // Vehicules
+  // Véhicules : 7 (3 camionnettes, 1 camion benne, 1 mini-pelle, 1 remorque, 1 voiture dirigeant)
   const vehiculesData = [
-    { company_id: companyId, type: "Camionnette", brand: "Renault", model: "Master", year: 2021, plate: "1-ABC-123", current_km: 84300, cost_per_km: 0.42, ct_date: inDays(120), insurance_date: inDays(45), maintenance_date: inDays(-180), status: "Affecté" },
-    { company_id: companyId, type: "Camion", brand: "Mercedes", model: "Actros", year: 2019, plate: "1-XYZ-789", current_km: 152800, cost_per_km: 0.95, ct_date: inDays(-12), insurance_date: inDays(220), maintenance_date: inDays(-95), status: "Disponible" },
-    { company_id: companyId, type: "Voiture", brand: "Volkswagen", model: "Caddy", year: 2022, plate: "2-DEF-456", current_km: 41200, cost_per_km: 0.30, ct_date: inDays(18), insurance_date: inDays(310), maintenance_date: inDays(-60), status: "Disponible" },
-    { company_id: companyId, type: "Engin", brand: "Bobcat", model: "S550", year: 2020, plate: "ENG-001", current_km: 2150, cost_per_km: 1.80, ct_date: inDays(200), insurance_date: inDays(95), maintenance_date: inDays(-400), status: "Affecté" },
-  ];
+    { type: "Camionnette", brand: "Ford", model: "Transit", year: 2021, plate: "1-ABC-123", current_km: 84300, cost_per_km: 0.42, ct_date: inDays(15), insurance_date: inDays(145), maintenance_date: inDays(40), status: "Affecté" },
+    { type: "Camionnette", brand: "Renault", model: "Master", year: 2020, plate: "1-DEF-456", current_km: 112500, cost_per_km: 0.45, ct_date: inDays(190), insurance_date: inDays(60), maintenance_date: inDays(-10), status: "Affecté" },
+    { type: "Camionnette", brand: "Volkswagen", model: "Crafter", year: 2023, plate: "2-GHI-789", current_km: 28400, cost_per_km: 0.40, ct_date: inDays(420), insurance_date: inDays(260), maintenance_date: inDays(120), status: "Disponible" },
+    { type: "Camion", brand: "MAN", model: "TGS 26.400 benne", year: 2019, plate: "1-JKL-012", current_km: 152800, cost_per_km: 0.95, ct_date: inDays(75), insurance_date: inDays(30), maintenance_date: inDays(-35), status: "Affecté" },
+    { type: "Engin", brand: "Kubota", model: "U27-4 mini-pelle", year: 2021, plate: "ENG-001", current_km: 2150, cost_per_km: 1.80, ct_date: inDays(300), insurance_date: inDays(95), maintenance_date: inDays(20), status: "Affecté" },
+    { type: "Remorque", brand: "Humbaur", model: "HT 3.5t", year: 2018, plate: "Q-REM-345", current_km: 0, cost_per_km: 0.08, ct_date: inDays(230), insurance_date: inDays(180), maintenance_date: inDays(160), status: "Disponible" },
+    { type: "Voiture", brand: "BMW", model: "520e hybride", year: 2024, plate: "2-MNO-678", current_km: 18600, cost_per_km: 0.35, ct_date: inDays(900), insurance_date: inDays(210), maintenance_date: inDays(95), status: "Disponible" },
+  ].map((v) => ({ ...v, company_id: companyId }));
   const { data: vehicules } = await supabase.from("vehicules").insert(vehiculesData).select();
-  if (vehicules && vehicules.length >= 4) {
+  if (vehicules && vehicules.length >= 7) {
     await supabase.from("vehicule_affectations").insert([
-      { vehicule_id: vehicules[0].id, chantier_id: chantiers[0].id, start_date: inDays(-60), start_km: 76800 },
-      { vehicule_id: vehicules[3].id, chantier_id: chantiers[1].id, start_date: inDays(-30), start_km: 1900 },
-      // Historique clôturé
-      { vehicule_id: vehicules[1].id, chantier_id: chantiers[2].id, start_date: inDays(-180), end_date: inDays(-20), start_km: 140200, end_km: 152800 },
+      { vehicule_id: vehicules[0].id, chantier_id: chantiers[0].id, start_date: inDays(-60), start_km: 79800 },
+      { vehicule_id: vehicules[1].id, chantier_id: chantiers[1].id, start_date: inDays(-35), start_km: 110900 },
+      { vehicule_id: vehicules[3].id, chantier_id: chantiers[2].id, start_date: inDays(-45), start_km: 150100 },
+      { vehicule_id: vehicules[4].id, chantier_id: chantiers[0].id, start_date: inDays(-30), start_km: 1900 },
+      { vehicule_id: vehicules[2].id, chantier_id: chantiers[3].id, start_date: inDays(-190), end_date: inDays(-25), start_km: 21000, end_km: 27900 },
     ]);
   }
-
 
   // TVA checks seed: 2 green, 1 red
   await supabase.from("tva_checks").insert([
@@ -175,7 +150,7 @@ export async function seedDataIfEmpty(companyId: string) {
     },
     {
       company_id: companyId,
-      client_name: "Sous-traitant Dubois SPRL",
+      client_name: "Sous-traitant Dubois SRL",
       client_vat_number: "BE0789012345",
       is_eligible: false,
       raw_response: { message: "Retenue obligatoire — dettes fiscales détectées" },
@@ -257,110 +232,99 @@ export async function seedDataIfEmpty(companyId: string) {
   }
   if (onssRows.length) await supabase.from("onss_payments").insert(onssRows);
 
-  // Factures & Devis seed
-  const factSeed = [
-    {
-      type: "facture", number: `FAC-${currentY}-0001`, status: "Payée",
-      client_name: chantiers[0].client_name, client_address: chantiers[0].address, client_vat: "BE0123456789",
-      chantier_id: chantiers[0].id,
-      issue_date: inDays(-75), due_date: inDays(-45), paid_date: inDays(-40), payment_reference: "VIR-2025-0001",
-      vat_rate: 21, subtotal_ht: 35000, vat_amount: 7350, total_ttc: 42350,
-      lignes: [
-        { description: "Acompte travaux Résidence Les Acacias (30%)", quantity: 1, unit_price: 35000 },
-      ],
-    },
-    {
-      type: "facture", number: `FAC-${currentY}-0002`, status: "Envoyée",
-      client_name: chantiers[1].client_name, client_address: chantiers[1].address, client_vat: "BE0456789012",
-      chantier_id: chantiers[1].id,
-      issue_date: inDays(-20), due_date: inDays(10),
-      vat_rate: 21, subtotal_ht: 18500, vat_amount: 3885, total_ttc: 22385,
-      lignes: [
-        { description: "Travaux gros œuvre - entrepôt", quantity: 1, unit_price: 12500 },
-        { description: "Fourniture matériaux divers", quantity: 1, unit_price: 6000 },
-      ],
-    },
-    {
-      type: "facture", number: `FAC-${currentY}-0003`, status: "En retard",
-      client_name: "Construction Mahieu SA", client_address: "Rue de l'Industrie 5, 4040 Herstal",
-      client_vat: "BE0234567890",
-      chantier_id: null,
-      issue_date: inDays(-60), due_date: inDays(-25),
-      vat_rate: 6, subtotal_ht: 8200, vat_amount: 492, total_ttc: 8692,
-      lignes: [
-        { description: "Rénovation toiture (TVA 6% bâtiment > 10 ans)", quantity: 1, unit_price: 8200 },
-      ],
-    },
-    {
-      type: "devis", number: `DEV-${currentY}-0007`, status: "Envoyé",
-      client_name: "Bureau d'architecture Mertens", client_address: "Place Saint-Lambert 12, 4000 Liège",
-      client_vat: "BE0345678901",
-      chantier_id: null,
-      issue_date: inDays(-5), due_date: inDays(25),
-      vat_rate: 21, subtotal_ht: 56000, vat_amount: 11760, total_ttc: 67760,
-      lignes: [
-        { description: "Gros œuvre extension villa - 180m²", quantity: 1, unit_price: 42000 },
-        { description: "Couverture toiture inclinée", quantity: 1, unit_price: 14000 },
-      ],
-    },
-    {
-      type: "devis", number: `DEV-${currentY}-0008`, status: "Accepté",
-      client_name: chantiers[0].client_name, client_address: chantiers[0].address, client_vat: "BE0123456789",
-      chantier_id: chantiers[0].id,
-      issue_date: inDays(-100), due_date: inDays(-70),
-      vat_rate: 21, subtotal_ht: 245000, vat_amount: 51450, total_ttc: 296450,
-      lignes: [
-        { description: "Construction immeuble résidentiel 12 appartements - prestations globales", quantity: 1, unit_price: 245000 },
-      ],
-    },
+  // Devis : 8 statuts variés avec lignes détaillées
+  type L = [string, number, number, number?]; // description, qty, unit_price, vat
+  const devisSeed: { client: any; chantier?: any; status: string; issue: number; valid: number; autoliq?: boolean; att6?: boolean; lignes: L[] }[] = [
+    { client: cl[0], chantier: chantiers[0], status: "Accepté", issue: -110, valid: -80, autoliq: true, lignes: [
+      ["Terrassement et évacuation des terres", 850, 18, 0], ["Fondations en béton armé", 1, 38500, 0], ["Gros œuvre maçonnerie (blocs béton)", 1, 112000, 0], ["Charpente et toiture tuiles", 1, 54500, 0], ["Menuiseries extérieures PVC", 1, 40000, 0] ] },
+    { client: cl[4], chantier: chantiers[1], status: "Accepté", issue: -55, valid: -25, lignes: [
+      ["Terrassement et fondations", 1, 9800, 21], ["Gros œuvre extension 45 m²", 45, 950, 21], ["Toiture plate EPDM + isolant PUR", 45, 185, 21], ["Baie vitrée alu 4 m", 1, 6450, 21], ["Raccordements et finitions", 1, 18500, 21] ] },
+    { client: cl[1], chantier: chantiers[2], status: "Accepté", issue: -170, valid: -140, autoliq: true, lignes: [
+      ["Dalle industrielle béton 1 500 m²", 1500, 62, 0], ["Structure acier et bardage", 1, 58000, 0], ["Toiture bac acier isolée", 1, 29000, 0] ] },
+    { client: cl[3], chantier: chantiers[3], status: "Accepté", issue: -220, valid: -190, att6: true, lignes: [
+      ["Démolition et évacuation", 1, 6200, 6], ["Remplacement toiture complète", 180, 145, 6], ["Isolation murs par l'intérieur", 220, 48, 6], ["Électricité mise en conformité RGIE", 1, 9800, 6], ["Peinture et finitions", 1, 12040, 6] ] },
+    { client: cl[5], status: "Envoyé", issue: -8, valid: 22, att6: true, lignes: [
+      ["Rénovation salle de bain complète", 1, 14500, 6], ["Remplacement châssis double vitrage", 6, 1150, 6], ["Carrelage sol 35 m²", 35, 72, 6] ] },
+    { client: cl[2], status: "Brouillon", issue: -2, valid: 28, lignes: [
+      ["Terrassement salle polyvalente", 1, 12500, 21], ["Fondations et dalle", 1, 34000, 21], ["Gros œuvre et toiture", 1, 71000, 21], ["Techniques spéciales (HVAC)", 1, 14500, 21] ] },
+    { client: cl[4], status: "Refusé", issue: -70, valid: -40, lignes: [
+      ["Aménagement abri de jardin", 1, 7800, 21], ["Terrasse bois exotique 30 m²", 30, 165, 21] ] },
+    { client: cl[1], status: "Expiré", issue: -95, valid: -65, autoliq: true, lignes: [
+      ["Extension bureaux mezzanine", 120, 480, 0], ["Cloisons plaques de plâtre", 180, 42, 0] ] },
   ];
-
-  for (const f of factSeed) {
-    const { lignes, ...factRow } = f as any;
-    const { data: inserted } = await (supabase.from("factures" as any) as any)
-      .insert({ ...factRow, company_id: companyId })
-      .select()
-      .single();
-    if (inserted && lignes) {
-      await (supabase.from("facture_lignes" as any) as any).insert(
-        (lignes as any[]).map((l, i) => ({
-          facture_id: inserted.id,
-          description: l.description,
-          quantity: l.quantity,
-          unit_price: l.unit_price,
-          total_ht: l.quantity * l.unit_price,
-          order_index: i,
-        }))
-      );
+  const yr4 = today.getFullYear();
+  for (const [i, d] of devisSeed.entries()) {
+    const lignes = d.lignes.map(([description, quantity, unit_price, vat]) => ({ description, quantity, unit_price, vat_rate: d.autoliq ? 0 : (vat ?? 21) }));
+    const subtotal = lignes.reduce((s, l) => s + l.quantity * l.unit_price, 0);
+    const vatAmount = lignes.reduce((s, l) => s + (l.quantity * l.unit_price * l.vat_rate) / 100, 0);
+    const mainRate = lignes[0]?.vat_rate ?? 21;
+    const { data: inserted } = await supabase.from("factures").insert({
+      company_id: companyId, type: "devis", number: `DEV-${yr4}-${String(i + 1).padStart(4, "0")}`,
+      status: d.status, client_id: d.client?.id ?? null, client_name: cName(d.client) ?? "Client",
+      client_address: cAddr(d.client), client_vat: d.client?.numero_tva ?? null,
+      chantier_id: d.chantier?.id ?? null, issue_date: inDays(d.issue), valid_until: inDays(d.valid), due_date: inDays(d.valid),
+      vat_rate: mainRate, subtotal_ht: subtotal, vat_amount: vatAmount, total_ttc: subtotal + vatAmount,
+      autoliquidation: !!d.autoliq, attestation_6: !!d.att6,
+      conditions: "Devis valable 30 jours. Acompte de 30 % à la commande.",
+    } as any).select().single();
+    if (inserted) {
+      await supabase.from("facture_lignes").insert(lignes.map((l, idx) => ({
+        facture_id: inserted.id, ...l, total_ht: l.quantity * l.unit_price, order_index: idx,
+      })) as any);
     }
   }
 
-  // Matériaux & mouvements de stock
+  // Stock : 20 matériaux (3 sous le minimum)
   const matSeed = [
     { name: "Ciment Portland CEM I 42.5N", sku: "CIM-425", unit: "sac 25kg", unit_price: 6.5, stock_quantity: 120, min_stock: 30, supplier: "Holcim", category: "Gros œuvre" },
-    { name: "Brique terre cuite 19cm", sku: "BRQ-19", unit: "pièce", unit_price: 0.85, stock_quantity: 4500, min_stock: 1000, supplier: "Wienerberger", category: "Maçonnerie" },
     { name: "Sable de rivière 0/4", sku: "SAB-04", unit: "m³", unit_price: 38, stock_quantity: 12, min_stock: 5, supplier: "Carrières du Hainaut", category: "Granulats" },
-    { name: "Isolant laine de roche 100mm", sku: "ISO-LR100", unit: "m²", unit_price: 11.2, stock_quantity: 25, min_stock: 50, supplier: "Rockwool", category: "Isolation" },
-    { name: "Vis à bois 4x40mm", sku: "VIS-440", unit: "boîte 200", unit_price: 8.9, stock_quantity: 8, min_stock: 15, supplier: "Spit", category: "Visserie" },
+    { name: "Gravier concassé 4/14", sku: "GRV-414", unit: "m³", unit_price: 42, stock_quantity: 9, min_stock: 4, supplier: "Carrières du Hainaut", category: "Granulats" },
+    { name: "Bloc béton 39x19x14", sku: "BLC-14", unit: "pièce", unit_price: 1.45, stock_quantity: 1800, min_stock: 500, supplier: "Ebema", category: "Maçonnerie" },
+    { name: "Bloc béton 39x19x19", sku: "BLC-19", unit: "pièce", unit_price: 1.85, stock_quantity: 320, min_stock: 400, supplier: "Ebema", category: "Maçonnerie" },
+    { name: "Brique de parement rouge", sku: "BRQ-PAR", unit: "pièce", unit_price: 0.85, stock_quantity: 4500, min_stock: 1000, supplier: "Wienerberger", category: "Maçonnerie" },
+    { name: "Fer à béton HA 12mm (6m)", sku: "FER-12", unit: "barre", unit_price: 9.8, stock_quantity: 140, min_stock: 50, supplier: "ArcelorMittal", category: "Armatures" },
+    { name: "Treillis soudé 150x150x8", sku: "TRS-8", unit: "panneau", unit_price: 34, stock_quantity: 45, min_stock: 10, supplier: "ArcelorMittal", category: "Armatures" },
+    { name: "Mortier de maçonnerie", sku: "MRT-25", unit: "sac 25kg", unit_price: 5.2, stock_quantity: 85, min_stock: 25, supplier: "Weber", category: "Gros œuvre" },
+    { name: "Plaque de plâtre BA13", sku: "PLQ-13", unit: "plaque", unit_price: 7.9, stock_quantity: 60, min_stock: 40, supplier: "Gyproc", category: "Finitions" },
+    { name: "Rail métallique R48", sku: "RAIL-48", unit: "barre 3m", unit_price: 3.4, stock_quantity: 110, min_stock: 40, supplier: "Gyproc", category: "Finitions" },
+    { name: "Isolant PUR 120mm", sku: "PUR-120", unit: "m²", unit_price: 21.5, stock_quantity: 63, min_stock: 60, supplier: "Recticel", category: "Isolation" },
+    { name: "Laine de roche 100mm", sku: "ISO-LR100", unit: "m²", unit_price: 11.2, stock_quantity: 140, min_stock: 50, supplier: "Rockwool", category: "Isolation" },
+    { name: "Membrane EPDM 1.2mm", sku: "EPDM-12", unit: "m²", unit_price: 14.5, stock_quantity: 95, min_stock: 30, supplier: "Firestone", category: "Toiture" },
+    { name: "Tuile béton anthracite", sku: "TUI-ANT", unit: "pièce", unit_price: 1.25, stock_quantity: 900, min_stock: 300, supplier: "Monier", category: "Toiture" },
+    { name: "Chevron sapin 63x175 (5m)", sku: "CHV-63", unit: "pièce", unit_price: 18.9, stock_quantity: 36, min_stock: 15, supplier: "Van Hoorebeke", category: "Bois" },
     { name: "Plaque OSB3 18mm", sku: "OSB-18", unit: "panneau", unit_price: 32, stock_quantity: 40, min_stock: 10, supplier: "Egger", category: "Bois" },
+    { name: "Tube PVC évacuation Ø110", sku: "PVC-110", unit: "barre 3m", unit_price: 12.6, stock_quantity: 28, min_stock: 10, supplier: "Wavin", category: "Égouttage" },
+    { name: "Vis à bois 5x60mm", sku: "VIS-560", unit: "boîte 200", unit_price: 11.9, stock_quantity: 6, min_stock: 15, supplier: "Spit", category: "Visserie" },
+    { name: "Enduit de façade blanc", sku: "END-FAC", unit: "sac 25kg", unit_price: 17.5, stock_quantity: 44, min_stock: 20, supplier: "Weber", category: "Finitions" },
   ].map((m) => ({ ...m, company_id: companyId }));
-  const { data: materiaux } = await (supabase.from("materiaux" as any) as any).insert(matSeed).select();
+  const { data: materiaux } = await supabase.from("materiaux").insert(matSeed).select();
 
   if (materiaux && materiaux.length) {
-    const findMat = (sku: string) => (materiaux as any[]).find((m) => m.sku === sku);
-    const mvts: any[] = [];
-    const ciment = findMat("CIM-425");
-    const brq = findMat("BRQ-19");
-    const sable = findMat("SAB-04");
-    const osb = findMat("OSB-18");
-    if (ciment) {
-      mvts.push({ company_id: companyId, materiau_id: ciment.id, chantier_id: chantiers[0].id, type: "achat", quantity: 50, unit_price: 6.5, total: 325, date: inDays(-40), supplier: "Holcim", reference: "BC-2024-0871" });
-      mvts.push({ company_id: companyId, materiau_id: ciment.id, chantier_id: chantiers[0].id, type: "sortie", quantity: 20, unit_price: 6.5, total: 130, date: inDays(-15), notes: "Fondations" });
-    }
-    if (brq) mvts.push({ company_id: companyId, materiau_id: brq.id, chantier_id: chantiers[0].id, type: "sortie", quantity: 800, unit_price: 0.85, total: 680, date: inDays(-10), notes: "Murs RDC" });
-    if (sable) mvts.push({ company_id: companyId, materiau_id: sable.id, chantier_id: chantiers[1].id, type: "achat", quantity: 8, unit_price: 38, total: 304, date: inDays(-22), supplier: "Carrières du Hainaut", reference: "BL-22458" });
-    if (osb) mvts.push({ company_id: companyId, materiau_id: osb.id, chantier_id: chantiers[1].id, type: "sortie", quantity: 12, unit_price: 32, total: 384, date: inDays(-5), notes: "Coffrage" });
-    if (mvts.length) await (supabase.from("stock_mouvements" as any) as any).insert(mvts);
+    const m = (sku: string) => (materiaux as any[]).find((x) => x.sku === sku);
+    // Entries insert with trigger → adjust stock; keep net effect small but realistic.
+    const mv = (sku: string, chIdx: number | null, type: string, quantity: number, day: number, extra: any = {}) => {
+      const mat = m(sku);
+      if (!mat) return null;
+      return { company_id: companyId, materiau_id: mat.id, chantier_id: chIdx === null ? null : chantiers[chIdx].id, type, quantity, unit_price: mat.unit_price, total: quantity * Number(mat.unit_price), date: inDays(day), ...extra };
+    };
+    const mvts = [
+      mv("CIM-425", 0, "achat", 60, -45, { supplier: "Holcim", reference: "BC-0871" }),
+      mv("CIM-425", 0, "sortie", 40, -30, { notes: "Fondations" }),
+      mv("FER-12", 0, "sortie", 80, -28, { notes: "Armatures semelles" }),
+      mv("BLC-14", 0, "sortie", 1200, -15, { notes: "Murs RDC" }),
+      mv("SAB-04", 1, "achat", 6, -25, { supplier: "Carrières du Hainaut", reference: "BL-22458" }),
+      mv("BLC-19", 1, "sortie", 280, -12, { notes: "Murs extension" }),
+      mv("PUR-120", 1, "sortie", 45, -5, { notes: "Toiture plate" }),
+      mv("EPDM-12", 1, "sortie", 48, -4, { notes: "Étanchéité toiture" }),
+      mv("TRS-8", 2, "sortie", 30, -60, { notes: "Dalle industrielle" }),
+      mv("OSB-18", 2, "sortie", 12, -20, { notes: "Coffrage" }),
+      mv("OSB-18", 2, "retour", 2, -18, { notes: "Surplus coffrage" }),
+      mv("PLQ-13", 3, "sortie", 70, -60, { notes: "Cloisons intérieures" }),
+      mv("END-FAC", 3, "sortie", 16, -40, { notes: "Façade" }),
+      mv("PLQ-13", null, "achat", 80, -10, { supplier: "Gyproc", reference: "BC-0903" }),
+    ].filter(Boolean);
+    if (mvts.length) await supabase.from("stock_mouvements").insert(mvts as any);
   }
-}
 
+  return true;
+}
