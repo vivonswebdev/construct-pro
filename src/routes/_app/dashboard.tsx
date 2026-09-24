@@ -5,7 +5,7 @@ import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
 } from "recharts";
 import {
-  TrendingUp, Euro, HardHat, Users, AlertTriangle, ArrowRight,
+  TrendingUp, Euro, HardHat, Users, AlertTriangle, ArrowRight, FileText, Percent,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -36,6 +36,7 @@ function Dashboard() {
         supabase.from("onss_payments").select("personnel_id, amount, paid").eq("company_id", companyId!).eq("year", ym).eq("quarter", quarter),
         supabase.from("vehicules").select("id, plate, ct_date, insurance_date").eq("company_id", companyId!),
       ]);
+      const devRes = await supabase.from("factures").select("status, total_ttc").eq("company_id", companyId!).eq("type", "devis");
       return {
         chantiers: chantiersRes.data ?? [],
         personnel: personnelRes.data ?? [],
@@ -44,6 +45,7 @@ function Dashboard() {
         precomptes: precRes.data ?? [],
         onss: onssRes.data ?? [],
         vehicules: vehRes.data ?? [],
+        devis: devRes.data ?? [],
         quarter,
       };
     },
@@ -51,7 +53,11 @@ function Dashboard() {
 
   if (isLoading || !data) return <DashboardSkeleton />;
 
-  const { chantiers, personnel, affectations, salaries, precomptes, onss, vehicules, quarter } = data;
+  const { chantiers, personnel, affectations, salaries, precomptes, onss, vehicules, quarter, devis } = data;
+  const devisPending = devis.filter((d: any) => d.status === "Envoyé" || d.status === "Brouillon");
+  const devisAccepted = devis.filter((d: any) => d.status === "Accepté").length;
+  const devisDecided = devis.filter((d: any) => ["Accepté", "Refusé", "Expiré"].includes(d.status)).length;
+  const acceptRate = devisDecided ? Math.round((devisAccepted / devisDecided) * 100) : 0;
 
   // Compliance metrics for active workers under contract
   const eligibleWorkers = personnel.filter((p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""));
@@ -128,7 +134,7 @@ function Dashboard() {
       </div>
 
       {/* KPIs */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6">
         <KpiCard
           icon={TrendingUp}
           label="CA Total"
@@ -158,6 +164,20 @@ function Dashboard() {
           sub={`${unassigned.length} sans affectation`}
           subTone={unassigned.length > 0 ? "warning" : "muted"}
           tone="primary"
+        />
+        <KpiCard
+          icon={FileText}
+          label="Devis en attente"
+          value={String(devisPending.length)}
+          sub={formatEUR(devisPending.reduce((s: number, d: any) => s + Number(d.total_ttc ?? 0), 0))}
+          tone="primary"
+        />
+        <KpiCard
+          icon={Percent}
+          label="Taux d'acceptation"
+          value={`${acceptRate}%`}
+          sub={`${devisAccepted} accepté(s) / ${devisDecided} décidé(s)`}
+          tone={acceptRate >= 50 ? "success" : "danger"}
         />
       </div>
 

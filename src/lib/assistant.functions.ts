@@ -46,19 +46,17 @@ export const askAssistant = createServerFn({ method: "POST" })
     const factures = (faRes.data ?? []) as any[];
     const materiaux = (maRes.data ?? []) as any[];
 
-    const impaye = factures
-      .filter((f) => f.type === "facture" && f.status !== "payee")
-      .reduce((s, f) => s + Number(f.total_ttc ?? 0), 0);
-    const encaisse = factures
-      .filter((f) => f.type === "facture" && f.status === "payee")
-      .reduce((s, f) => s + Number(f.total_ttc ?? 0), 0);
+    const devis = factures.filter((f) => f.type === "devis");
+    const devisAttente = devis.filter((f) => f.status === "Envoyé" || f.status === "Brouillon");
+    const devisAcc = devis.filter((f) => f.status === "Accepté").length;
+    const devisDec = devis.filter((f) => ["Accepté", "Refusé", "Expiré"].includes(f.status)).length;
     const lowStock = materiaux.filter(
       (m) => Number(m.stock_quantity) <= Number(m.min_stock) && Number(m.min_stock) > 0,
     );
 
     const ctx = [
       `SOCIÉTÉ — ${chantiers.length} chantiers, ${personnel.length} employés, ${vehicules.length} véhicules.`,
-      `FACTURATION — encaissé ${eur(encaisse)}, impayé ${eur(impaye)}.`,
+      `DEVIS — ${devisAttente.length} en attente (${eur(devisAttente.reduce((s, f) => s + Number(f.total_ttc ?? 0), 0))}), taux d'acceptation ${devisDec ? Math.round((devisAcc / devisDec) * 100) : 0} %. La facturation n'est pas encore gérée dans l'application (module Peppol à venir).`,
       "",
       "CHANTIERS:",
       ...chantiers.map(
