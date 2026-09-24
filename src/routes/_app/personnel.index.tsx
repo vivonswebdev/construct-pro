@@ -28,7 +28,11 @@ function PersonnelList() {
         supabase.from("presence").select("*"),
         supabase.from("affectations").select("*, chantiers(name)"),
       ]);
-      return { personnel: pRes.data ?? [], presence: presRes.data ?? [], affectations: affRes.data ?? [] };
+      return {
+        personnel: pRes.data ?? [],
+        presence: presRes.data ?? [],
+        affectations: affRes.data ?? [],
+      };
     },
   });
 
@@ -53,7 +57,9 @@ function PersonnelList() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl font-bold tracking-tight">Personnel</h1>
-          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">{personnel.length}</span>
+          <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+            {personnel.length}
+          </span>
         </div>
         <button
           onClick={() => setShowModal(true)}
@@ -78,14 +84,19 @@ function PersonnelList() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="rounded-lg border border-border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
         >
-          {["Tous", "Actif", "Inactif"].map((s) => <option key={s}>{s}</option>)}
+          {["Tous", "Actif", "Inactif"].map((s) => (
+            <option key={s}>{s}</option>
+          ))}
         </select>
       </div>
 
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-border bg-card py-16 text-center">
           <p className="text-sm font-semibold">Aucun ouvrier pour le moment</p>
-          <button onClick={() => setShowModal(true)} className="mt-3 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90">
+          <button
+            onClick={() => setShowModal(true)}
+            className="mt-3 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
+          >
             Ajouter votre premier ouvrier
           </button>
         </div>
@@ -101,12 +112,20 @@ function PersonnelList() {
                 className="block rounded-xl border border-border bg-card p-4 shadow-sm transition hover:shadow-md"
               >
                 <div className="flex items-start justify-between">
-                  <div className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white ${avatarColor(p.full_name)}`}>
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white ${avatarColor(p.full_name)}`}
+                  >
                     {initials(p.full_name)}
                   </div>
-                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                    p.status === "Actif" ? "bg-emerald-100 text-emerald-700" : "bg-gray-200 text-gray-600"
-                  }`}>{p.status}</span>
+                  <span
+                    className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                      p.status === "Actif"
+                        ? "bg-emerald-100 text-emerald-700"
+                        : "bg-gray-200 text-gray-600"
+                    }`}
+                  >
+                    {p.status}
+                  </span>
                 </div>
                 <h3 className="mt-3 font-semibold">{p.full_name}</h3>
                 <p className="text-xs text-muted-foreground">{p.contract_type ?? "—"}</p>
@@ -114,7 +133,9 @@ function PersonnelList() {
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   <div className="rounded-md bg-muted/50 p-2">
                     <p className="text-[10px] uppercase text-muted-foreground">Chantier</p>
-                    <p className="truncate text-xs font-semibold">{aff?.chantiers?.name ?? "Non affecté"}</p>
+                    <p className="truncate text-xs font-semibold">
+                      {aff?.chantiers?.name ?? "Non affecté"}
+                    </p>
                   </div>
                   <div className="rounded-md bg-muted/50 p-2">
                     <p className="text-[10px] uppercase text-muted-foreground">Contrat</p>
@@ -123,7 +144,9 @@ function PersonnelList() {
                 </div>
 
                 <div className="mt-3">
-                  <p className="mb-1 text-[10px] uppercase text-muted-foreground">7 derniers jours</p>
+                  <p className="mb-1 text-[10px] uppercase text-muted-foreground">
+                    7 derniers jours
+                  </p>
                   <div className="flex gap-1">
                     {lastDays.map((d) => {
                       const pr = presence.find((x) => x.personnel_id === p.id && x.date === d);
@@ -147,7 +170,10 @@ function PersonnelList() {
       {showModal && (
         <NewPersonnelModal
           onClose={() => setShowModal(false)}
-          onCreated={() => { qc.invalidateQueries({ queryKey: ["personnel-full"] }); setShowModal(false); }}
+          onCreated={() => {
+            qc.invalidateQueries({ queryKey: ["personnel-full"] });
+            setShowModal(false);
+          }}
         />
       )}
     </div>
@@ -157,8 +183,12 @@ function PersonnelList() {
 function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
   const { profile } = useAuth();
   const [form, setForm] = useState({
-    full_name: "", nrn: "", email: "", phone: "",
-    contract_type: "CDI", hourly_rate: "",
+    full_name: "",
+    nrn: "",
+    email: "",
+    phone: "",
+    contract_type: "CDI",
+    hourly_rate: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -188,31 +218,91 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={onClose}>
-      <form onSubmit={submit} onClick={(e) => e.stopPropagation()} className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+      onClick={onClose}
+    >
+      <form
+        onSubmit={submit}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl"
+      >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold">Nouvel ouvrier</h3>
-          <button type="button" onClick={onClose} className="rounded-md p-1 hover:bg-muted"><X className="h-4 w-4" /></button>
+          <button type="button" onClick={onClose} className="rounded-md p-1 hover:bg-muted">
+            <X className="h-4 w-4" />
+          </button>
         </div>
         <div className="grid gap-3">
-          <F label="Nom complet"><input required className="mi" value={form.full_name} onChange={(e) => setForm({ ...form, full_name: e.target.value })} /></F>
+          <F label="Nom complet">
+            <input
+              required
+              className="mi"
+              value={form.full_name}
+              onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+            />
+          </F>
           <div className="grid grid-cols-2 gap-3">
-            <F label="NRN"><input placeholder="85.04.12-345.67" className="mi" value={form.nrn} onChange={(e) => setForm({ ...form, nrn: e.target.value })} /></F>
-            <F label="Téléphone"><input className="mi" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></F>
+            <F label="NRN">
+              <input
+                placeholder="85.04.12-345.67"
+                className="mi"
+                value={form.nrn}
+                onChange={(e) => setForm({ ...form, nrn: e.target.value })}
+              />
+            </F>
+            <F label="Téléphone">
+              <input
+                className="mi"
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              />
+            </F>
           </div>
-          <F label="Email"><input type="email" className="mi" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></F>
+          <F label="Email">
+            <input
+              type="email"
+              className="mi"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+            />
+          </F>
           <div className="grid grid-cols-2 gap-3">
             <F label="Type de contrat">
-              <select className="mi" value={form.contract_type} onChange={(e) => setForm({ ...form, contract_type: e.target.value })}>
-                {["CDI", "CDD", "Intérim", "Indépendant"].map((c) => <option key={c}>{c}</option>)}
+              <select
+                className="mi"
+                value={form.contract_type}
+                onChange={(e) => setForm({ ...form, contract_type: e.target.value })}
+              >
+                {["CDI", "CDD", "Intérim", "Indépendant"].map((c) => (
+                  <option key={c}>{c}</option>
+                ))}
               </select>
             </F>
-            <F label="Taux horaire (€/h)"><input type="number" step="0.01" className="mi" value={form.hourly_rate} onChange={(e) => setForm({ ...form, hourly_rate: e.target.value })} /></F>
+            <F label="Taux horaire (€/h)">
+              <input
+                type="number"
+                step="0.01"
+                className="mi"
+                value={form.hourly_rate}
+                onChange={(e) => setForm({ ...form, hourly_rate: e.target.value })}
+              />
+            </F>
           </div>
         </div>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted">Annuler</button>
-          <button type="submit" disabled={saving} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
+          >
             {saving ? "..." : "Ajouter"}
           </button>
         </div>
@@ -223,5 +313,10 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
 }
 
 function F({ label, children }: { label: string; children: React.ReactNode }) {
-  return <label className="block"><span className="mb-1 block text-xs font-medium">{label}</span>{children}</label>;
+  return (
+    <label className="block">
+      <span className="mb-1 block text-xs font-medium">{label}</span>
+      {children}
+    </label>
+  );
 }

@@ -35,9 +35,19 @@ export const askAssistant = createServerFn({ method: "POST" })
     const [chRes, prRes, veRes, faRes, maRes] = await Promise.all([
       sb.from("chantiers").select("*").limit(100),
       sb.from("personnel").select("*").limit(100),
-      sb.from("vehicules" as any).select("*").limit(100),
-      sb.from("factures" as any).select("*").eq("type", "devis").limit(200),
-      sb.from("materiaux" as any).select("*").limit(200),
+      sb
+        .from("vehicules" as any)
+        .select("*")
+        .limit(100),
+      sb
+        .from("factures" as any)
+        .select("*")
+        .eq("type", "devis")
+        .limit(200),
+      sb
+        .from("materiaux" as any)
+        .select("*")
+        .limit(200),
     ]);
 
     const chantiers = (chRes.data ?? []) as any[];
@@ -107,7 +117,10 @@ ${ctx}`;
         return { ok: false as const, error: "Trop de requêtes, réessayez dans un instant." };
       }
       if (res.status === 402) {
-        return { ok: false as const, error: "Crédits IA épuisés. Rechargez votre espace Lovable AI." };
+        return {
+          ok: false as const,
+          error: "Crédits IA épuisés. Rechargez votre espace Lovable AI.",
+        };
       }
       if (!res.ok) {
         return { ok: false as const, error: `Erreur IA (${res.status}).` };

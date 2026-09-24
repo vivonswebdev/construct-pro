@@ -47,7 +47,12 @@ function structuredCommunication(num: string): string {
   return `+++${digits.slice(0, 3)}/${digits.slice(3, 7)}/${digits.slice(7, 10)}${String(mod).padStart(2, "0")}+++`;
 }
 
-export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], company: CompanyForPDF, byRate?: Record<number, { base: number; vat: number }>) {
+export function exportFacturePDF(
+  facture: FactureForPDF,
+  lignes: LigneForPDF[],
+  company: CompanyForPDF,
+  byRate?: Record<number, { base: number; vat: number }>,
+) {
   const doc = new jsPDF();
   const W = doc.internal.pageSize.getWidth();
   const isDevis = facture.type === "devis";
@@ -130,7 +135,15 @@ export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], 
   doc.setFont("helvetica", "normal");
   doc.text("Sous-total HT", totalsX, afterTable);
   doc.text(formatEUR(facture.subtotal_ht), W - 14, afterTable, { align: "right" });
-  const rates = byRate && Object.keys(byRate).length ? Object.entries(byRate).sort((a, b) => Number(b[0]) - Number(a[0])) : [[String(facture.vat_rate), { base: facture.subtotal_ht, vat: facture.vat_amount }] as const];
+  const rates =
+    byRate && Object.keys(byRate).length
+      ? Object.entries(byRate).sort((a, b) => Number(b[0]) - Number(a[0]))
+      : [
+          [
+            String(facture.vat_rate),
+            { base: facture.subtotal_ht, vat: facture.vat_amount },
+          ] as const,
+        ];
   let ty = afterTable;
   for (const [rate, r] of rates) {
     ty += 6;
@@ -193,7 +206,7 @@ export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], 
     `Document généré le ${formatDateBE(new Date())} via ConstructFlow`,
     W / 2,
     doc.internal.pageSize.getHeight() - 8,
-    { align: "center" }
+    { align: "center" },
   );
 
   doc.save(`${isDevis ? "Devis" : "Facture"}_${facture.number}.pdf`);

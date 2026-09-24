@@ -9,7 +9,13 @@ type Profile = {
   role: string;
 };
 
-type Company = { id: string; name: string; bce_number?: string | null; address?: string | null; logo_url?: string | null };
+type Company = {
+  id: string;
+  name: string;
+  bce_number?: string | null;
+  address?: string | null;
+  logo_url?: string | null;
+};
 
 type AuthCtx = {
   user: User | null;

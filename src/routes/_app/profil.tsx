@@ -28,7 +28,11 @@ function ProfilPage() {
 
   useEffect(() => {
     if (!company?.id) return;
-    supabase.from("companies").select("name, address, bce_number, logo_url").eq("id", company.id).maybeSingle()
+    supabase
+      .from("companies")
+      .select("name, address, bce_number, logo_url")
+      .eq("id", company.id)
+      .maybeSingle()
       .then(({ data }) => {
         if (!data) return;
         setCompanyName(data.name ?? "");
@@ -37,7 +41,11 @@ function ProfilPage() {
         setLogoUrl(data.logo_url ?? "");
       });
     // also fetch avatar for current profile
-    supabase.from("profiles").select("avatar_url").eq("id", user!.id).maybeSingle()
+    supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", user!.id)
+      .maybeSingle()
       .then(({ data }) => setAvatarUrl((data as any)?.avatar_url ?? ""));
   }, [company?.id, user]);
 
@@ -50,7 +58,10 @@ function ProfilPage() {
       .eq("id", user.id);
     setSavingProfile(false);
     if (error) toast.error(error.message);
-    else { toast.success("Profil mis à jour"); refreshProfile(); }
+    else {
+      toast.success("Profil mis à jour");
+      refreshProfile();
+    }
   };
 
   const saveCompany = async () => {
@@ -58,18 +69,28 @@ function ProfilPage() {
     setSavingCompany(true);
     const { error } = await supabase
       .from("companies")
-      .update({ name: companyName, address: address || null, bce_number: bce || null, logo_url: logoUrl || null })
+      .update({
+        name: companyName,
+        address: address || null,
+        bce_number: bce || null,
+        logo_url: logoUrl || null,
+      })
       .eq("id", company.id);
     setSavingCompany(false);
     if (error) toast.error(error.message);
-    else { toast.success("Entreprise mise à jour"); refreshProfile(); }
+    else {
+      toast.success("Entreprise mise à jour");
+      refreshProfile();
+    }
   };
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
         <h1 className="text-2xl font-bold tracking-tight">Mon profil</h1>
-        <p className="text-sm text-muted-foreground">Gérez vos informations personnelles et celles de votre entreprise.</p>
+        <p className="text-sm text-muted-foreground">
+          Gérez vos informations personnelles et celles de votre entreprise.
+        </p>
       </div>
 
       <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -81,7 +102,9 @@ function ProfilPage() {
           {avatarUrl ? (
             <img src={avatarUrl} alt="avatar" className="h-16 w-16 rounded-full object-cover" />
           ) : (
-            <div className={`flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-white ${avatarColor(fullName || "?")}`}>
+            <div
+              className={`flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-white ${avatarColor(fullName || "?")}`}
+            >
               {initials(fullName)}
             </div>
           )}
@@ -92,15 +115,27 @@ function ProfilPage() {
         </div>
         <div className="mt-5 grid gap-3">
           <Field label="Nom complet">
-            <input className="pf-input" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+            <input
+              className="pf-input"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+            />
           </Field>
           <Field label="URL de l'avatar (optionnel)">
-            <input className="pf-input" placeholder="https://..." value={avatarUrl} onChange={(e) => setAvatarUrl(e.target.value)} />
+            <input
+              className="pf-input"
+              placeholder="https://..."
+              value={avatarUrl}
+              onChange={(e) => setAvatarUrl(e.target.value)}
+            />
           </Field>
         </div>
         <div className="mt-5 flex justify-end">
-          <button onClick={saveProfile} disabled={savingProfile}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60">
+          <button
+            onClick={saveProfile}
+            disabled={savingProfile}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
+          >
             <Save className="h-4 w-4" /> {savingProfile ? "..." : "Enregistrer"}
           </button>
         </div>
@@ -113,23 +148,44 @@ function ProfilPage() {
         </div>
         <div className="grid gap-3">
           <Field label="Nom de l'entreprise">
-            <input className="pf-input" value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+            <input
+              className="pf-input"
+              value={companyName}
+              onChange={(e) => setCompanyName(e.target.value)}
+            />
           </Field>
           <Field label="Adresse">
-            <input className="pf-input" value={address} onChange={(e) => setAddress(e.target.value)} />
+            <input
+              className="pf-input"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
           </Field>
           <div className="grid gap-3 sm:grid-cols-2">
             <Field label="Numéro BCE">
-              <input className="pf-input" placeholder="BE 0123.456.789" value={bce} onChange={(e) => setBce(e.target.value)} />
+              <input
+                className="pf-input"
+                placeholder="BE 0123.456.789"
+                value={bce}
+                onChange={(e) => setBce(e.target.value)}
+              />
             </Field>
             <Field label="URL du logo (optionnel)">
-              <input className="pf-input" placeholder="https://..." value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} />
+              <input
+                className="pf-input"
+                placeholder="https://..."
+                value={logoUrl}
+                onChange={(e) => setLogoUrl(e.target.value)}
+              />
             </Field>
           </div>
         </div>
         <div className="mt-5 flex justify-end">
-          <button onClick={saveCompany} disabled={savingCompany}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60">
+          <button
+            onClick={saveCompany}
+            disabled={savingCompany}
+            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
+          >
             <Save className="h-4 w-4" /> {savingCompany ? "..." : "Enregistrer"}
           </button>
         </div>

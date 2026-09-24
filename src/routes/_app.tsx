@@ -24,7 +24,9 @@ function AppLayout() {
     if (!cid || seededFor.current === cid) return;
     seededFor.current = cid;
     seedDataIfEmpty(cid)
-      .then((did) => { if (did) qc.invalidateQueries(); })
+      .then((did) => {
+        if (did) qc.invalidateQueries();
+      })
       .catch(console.error);
   }, [profile?.company_id, qc]);
 
