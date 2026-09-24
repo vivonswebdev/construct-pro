@@ -203,9 +203,9 @@ function PrecomptePage() {
         <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
           <h3 className="mb-3 text-sm font-semibold">Paramètres des taux (CP 124 construction par défaut)</h3>
           <div className="grid gap-3 md:grid-cols-3">
-            <RateInput label="Précompte professionnel" value={rates.precompteRate} onChange={(v) => setRates((r) => ({ ...r, precompteRate: v }))} />
-            <RateInput label="ONSS travailleur" value={rates.onssEmployeeRate} onChange={(v) => setRates((r) => ({ ...r, onssEmployeeRate: v }))} />
-            <RateInput label="ONSS employeur" value={rates.onssEmployerRate} onChange={(v) => setRates((r) => ({ ...r, onssEmployerRate: v }))} />
+            <RateInput label="Précompte professionnel" value={rates.precompteRate} onChange={(v) => updateRates({ ...rates, precompteRate: v })} />
+            <RateInput label="ONSS travailleur" value={rates.onssEmployeeRate} onChange={(v) => updateRates({ ...rates, onssEmployeeRate: v })} />
+            <RateInput label="ONSS employeur" value={rates.onssEmployerRate} onChange={(v) => updateRates({ ...rates, onssEmployerRate: v })} />
           </div>
         </div>
       )}
