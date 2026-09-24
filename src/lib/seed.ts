@@ -35,7 +35,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     { type: "particulier", prenom: "Luc", nom: "Pirard", adresse: "Avenue de la Citadelle 22", code_postal: "5000", ville: "Namur", email: "luc.pirard@gmail.com", telephone: "+32 475 12 34 56", langue: "FR" },
     { type: "particulier", prenom: "Anne", nom: "Collignon", adresse: "Rue Haute 51", code_postal: "1300", ville: "Wavre", email: "anne.collignon@skynet.be", telephone: "+32 476 98 76 54", langue: "FR" },
     { type: "particulier", prenom: "Pieter", nom: "Vermeulen", adresse: "Kerkstraat 17", code_postal: "9000", ville: "Gent", email: "p.vermeulen@telenet.be", telephone: "+32 477 55 44 33", langue: "NL" },
-  ].map((c) => ({ ...c, company_id: companyId }));
+  ].map((c) => ({ raison_sociale: null, numero_bce: null, numero_tva: null, assujetti_tva: false, prenom: null, ...c, company_id: companyId }));
   const { data: clientsRows } = await supabase.from("clients").insert(clientsSeed as any).select();
   const cl = (clientsRows ?? []) as any[];
   const cName = (c: any) => c ? (c.type === "entreprise" ? c.raison_sociale : `${c.prenom} ${c.nom}`) : null;
