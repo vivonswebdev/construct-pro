@@ -73,7 +73,7 @@ function LoginPage() {
             emailRedirectTo: window.location.origin,
             data: {
               full_name: "Jean Démo",
-              company_name: "Démo Construction SPRL",
+              company_name: "Démo Construction SRL",
             },
           },
         });
@@ -134,7 +134,7 @@ function LoginPage() {
                     required
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Ex: Dupont Construction SPRL"
+                    placeholder="Ex: Dupont Construction SRL"
                     className="input"
                   />
                 </Field>

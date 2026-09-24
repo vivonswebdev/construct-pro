@@ -36,7 +36,7 @@ export const askAssistant = createServerFn({ method: "POST" })
       sb.from("chantiers").select("*").limit(100),
       sb.from("personnel").select("*").limit(100),
       sb.from("vehicules" as any).select("*").limit(100),
-      sb.from("factures" as any).select("*").limit(200),
+      sb.from("factures" as any).select("*").eq("type", "devis").limit(200),
       sb.from("materiaux" as any).select("*").limit(200),
     ]);
 
