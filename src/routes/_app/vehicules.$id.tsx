@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Truck, Car, RefreshCw, Plus, X, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { toast } from "sonner";
@@ -23,8 +24,16 @@ function VehiculeDetail() {
     queryFn: async () => {
       const [vRes, aRes, cRes] = await Promise.all([
         supabase.from("vehicules").select("*").eq("id", id).maybeSingle(),
-        supabase.from("vehicule_affectations").select("*").eq("vehicule_id", id).order("start_date", { ascending: false }),
-        supabase.from("chantiers").select("id, name").eq("company_id", companyId ?? "").order("name"),
+        supabase
+          .from("vehicule_affectations")
+          .select("*")
+          .eq("vehicule_id", id)
+          .order("start_date", { ascending: false }),
+        supabase
+          .from("chantiers")
+          .select("id, name")
+          .eq("company_id", companyId ?? "")
+          .order("name"),
       ]);
       const chMap = new Map((cRes.data ?? []).map((c) => [c.id, c]));
       const affs = (aRes.data ?? []).map((a) => ({ ...a, chantier: chMap.get(a.chantier_id) }));
@@ -37,31 +46,43 @@ function VehiculeDetail() {
   if (!data.v) return <div>Véhicule introuvable.</div>;
 
   const v = data.v;
-  const current = data.affectations.find((a: any) => !a.end_date);
+  const current = data.affectations.find((a) => !a.end_date);
 
   const renew = async (field: "ct_date" | "insurance_date" | "maintenance_date") => {
     const now = new Date();
-    const newDate = field === "maintenance_date"
-      ? now
-      : new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
-    const { error } = await supabase.from("vehicules").update({ [field]: newDate.toISOString().slice(0, 10) } as any).eq("id", id);
+    const newDate =
+      field === "maintenance_date"
+        ? now
+        : new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
+    const patch: TablesUpdate<"vehicules"> = {};
+    patch[field] = newDate.toISOString().slice(0, 10);
+    const { error } = await supabase.from("vehicules").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Mis à jour");
     qc.invalidateQueries({ queryKey: ["vehicule", id] });
     qc.invalidateQueries({ queryKey: ["vehicules"] });
   };
 
-  const closeAffectation = async (aff: any) => {
-    const endKmStr = prompt(`Kilométrage de fin (km actuel: ${v.current_km}) :`, String(v.current_km));
+  const closeAffectation = async (aff: Tables<"vehicule_affectations">) => {
+    const endKmStr = prompt(
+      `Kilométrage de fin (km actuel: ${v.current_km}) :`,
+      String(v.current_km),
+    );
     if (!endKmStr) return;
     const endKm = Number(endKmStr);
     if (isNaN(endKm)) return toast.error("Kilométrage invalide");
-    const { error } = await supabase.from("vehicule_affectations").update({
-      end_date: new Date().toISOString().slice(0, 10),
-      end_km: endKm,
-    }).eq("id", aff.id);
+    const { error } = await supabase
+      .from("vehicule_affectations")
+      .update({
+        end_date: new Date().toISOString().slice(0, 10),
+        end_km: endKm,
+      })
+      .eq("id", aff.id);
     if (error) return toast.error(error.message);
-    await supabase.from("vehicules").update({ current_km: endKm, status: "Disponible" }).eq("id", id);
+    await supabase
+      .from("vehicules")
+      .update({ current_km: endKm, status: "Disponible" })
+      .eq("id", id);
     qc.invalidateQueries({ queryKey: ["vehicule", id] });
     qc.invalidateQueries({ queryKey: ["vehicules"] });
     toast.success("Affectation clôturée");
@@ -80,7 +101,10 @@ function VehiculeDetail() {
 
   return (
     <div className="space-y-6">
-      <Link to="/vehicules" className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground">
+      <Link
+        to="/vehicules"
+        className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
+      >
         <ArrowLeft className="h-4 w-4" /> Retour à la flotte
       </Link>
 
@@ -92,19 +116,33 @@ function VehiculeDetail() {
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-bold tracking-tight">{v.brand} {v.model}</h1>
-                <span className="rounded-md bg-muted px-2.5 py-1 font-mono text-sm font-bold tracking-wider">{v.plate}</span>
+                <h1 className="text-2xl font-bold tracking-tight">
+                  {v.brand} {v.model}
+                </h1>
+                <span className="rounded-md bg-muted px-2.5 py-1 font-mono text-sm font-bold tracking-wider">
+                  {v.plate}
+                </span>
               </div>
-              <p className="mt-1 text-sm text-muted-foreground">{v.type} · {v.year ?? "—"} · {v.current_km.toLocaleString("fr-BE")} km · {formatEUR(v.cost_per_km)} / km</p>
+              <p className="mt-1 text-sm text-muted-foreground">
+                {v.type} · {v.year ?? "—"} · {v.current_km.toLocaleString("fr-BE")} km ·{" "}
+                {formatEUR(v.cost_per_km)} / km
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2">
             {current ? (
-              <span className="rounded-full bg-info/10 px-3 py-1 text-xs font-semibold text-info">🏗 {current.chantier?.name}</span>
+              <span className="rounded-full bg-info/10 px-3 py-1 text-xs font-semibold text-info">
+                🏗 {current.chantier?.name}
+              </span>
             ) : (
-              <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">● Disponible</span>
+              <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                ● Disponible
+              </span>
             )}
-            <button onClick={deleteVeh} className="rounded-lg p-2 text-muted-foreground hover:bg-red-50 hover:text-danger">
+            <button
+              onClick={deleteVeh}
+              className="rounded-lg p-2 text-muted-foreground hover:bg-red-50 hover:text-danger"
+            >
               <Trash2 className="h-4 w-4" />
             </button>
           </div>
@@ -116,8 +154,17 @@ function VehiculeDetail() {
         <h2 className="mb-4 text-lg font-semibold">Alertes & Entretiens</h2>
         <div className="space-y-2">
           <AlertRow label="Contrôle technique" date={v.ct_date} onRenew={() => renew("ct_date")} />
-          <AlertRow label="Assurance" date={v.insurance_date} onRenew={() => renew("insurance_date")} />
-          <AlertRow label="Dernier entretien" date={v.maintenance_date} reverse onRenew={() => renew("maintenance_date")} />
+          <AlertRow
+            label="Assurance"
+            date={v.insurance_date}
+            onRenew={() => renew("insurance_date")}
+          />
+          <AlertRow
+            label="Dernier entretien"
+            date={v.maintenance_date}
+            reverse
+            onRenew={() => renew("maintenance_date")}
+          />
         </div>
       </div>
 
@@ -149,24 +196,40 @@ function VehiculeDetail() {
                 </tr>
               </thead>
               <tbody>
-                {data.affectations.map((a: any) => {
+                {data.affectations.map((a) => {
                   const km = a.end_km && a.start_km ? a.end_km - a.start_km : null;
                   const cost = km ? km * Number(v.cost_per_km) : null;
                   return (
                     <tr key={a.id} className="border-t border-border">
                       <td className="py-2 font-medium">
-                        <Link to="/chantiers/$id" params={{ id: a.chantier_id }} className="hover:text-primary">
+                        <Link
+                          to="/chantiers/$id"
+                          params={{ id: a.chantier_id }}
+                          className="hover:text-primary"
+                        >
                           {a.chantier?.name ?? "—"}
                         </Link>
                       </td>
                       <td className="py-2 text-muted-foreground">
-                        {formatDateBE(a.start_date)} → {a.end_date ? formatDateBE(a.end_date) : <span className="text-info">En cours</span>}
+                        {formatDateBE(a.start_date)} →{" "}
+                        {a.end_date ? (
+                          formatDateBE(a.end_date)
+                        ) : (
+                          <span className="text-info">En cours</span>
+                        )}
                       </td>
-                      <td className="py-2">{km !== null ? `${km.toLocaleString("fr-BE")} km` : "—"}</td>
-                      <td className="py-2 font-semibold">{cost !== null ? formatEUR(cost) : "—"}</td>
+                      <td className="py-2">
+                        {km !== null ? `${km.toLocaleString("fr-BE")} km` : "—"}
+                      </td>
+                      <td className="py-2 font-semibold">
+                        {cost !== null ? formatEUR(cost) : "—"}
+                      </td>
                       <td className="py-2 text-right">
                         {!a.end_date && (
-                          <button onClick={() => closeAffectation(a)} className="text-xs font-semibold text-primary hover:underline">
+                          <button
+                            onClick={() => closeAffectation(a)}
+                            className="text-xs font-semibold text-primary hover:underline"
+                          >
                             Clôturer
                           </button>
                         )}
@@ -197,7 +260,17 @@ function VehiculeDetail() {
   );
 }
 
-function AlertRow({ label, date, reverse, onRenew }: { label: string; date: string | null; reverse?: boolean; onRenew: () => void }) {
+function AlertRow({
+  label,
+  date,
+  reverse,
+  onRenew,
+}: {
+  label: string;
+  date: string | null;
+  reverse?: boolean;
+  onRenew: () => void;
+}) {
   const d = daysUntil(date);
   let tone = "bg-muted text-muted-foreground";
   let info = "Non renseigné";
@@ -209,8 +282,10 @@ function AlertRow({ label, date, reverse, onRenew }: { label: string; date: stri
       else if (ago > 335) tone = "bg-amber-100 text-amber-700";
       else tone = "bg-emerald-100 text-emerald-700";
     } else {
-      info = d! < 0 ? `Expiré depuis ${Math.abs(d!)} j (${formatDateBE(date)})`
-        : `Expire le ${formatDateBE(date)} (${d} j)`;
+      info =
+        d! < 0
+          ? `Expiré depuis ${Math.abs(d!)} j (${formatDateBE(date)})`
+          : `Expire le ${formatDateBE(date)} (${d} j)`;
       if (d! < 0) tone = "bg-red-100 text-red-700";
       else if (d! < 30) tone = "bg-amber-100 text-amber-700";
       else tone = "bg-emerald-100 text-emerald-700";
@@ -235,7 +310,19 @@ function AlertRow({ label, date, reverse, onRenew }: { label: string; date: stri
   );
 }
 
-function AffectationModal({ vehiculeId, currentKm, chantiers, onClose, onSaved }: any) {
+function AffectationModal({
+  vehiculeId,
+  currentKm,
+  chantiers,
+  onClose,
+  onSaved,
+}: {
+  vehiculeId: string;
+  currentKm: number;
+  chantiers: Pick<Tables<"chantiers">, "id" | "name">[];
+  onClose: () => void;
+  onSaved: () => void;
+}) {
   const [chantierId, setChantierId] = useState(chantiers[0]?.id ?? "");
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
   const [startKm, setStartKm] = useState(currentKm);
@@ -259,31 +346,67 @@ function AffectationModal({ vehiculeId, currentKm, chantiers, onClose, onSaved }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
-      <form onSubmit={submit} onClick={(e) => e.stopPropagation()} className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
+      <form
+        onSubmit={submit}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl"
+      >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold">Affecter à un chantier</h3>
-          <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted"><X className="h-4 w-4" /></button>
+          <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted">
+            <X className="h-4 w-4" />
+          </button>
         </div>
         <div className="space-y-3">
           <label className="block">
             <span className="mb-1 block text-xs font-medium">Chantier</span>
-            <select className={inputCls} value={chantierId} onChange={(e) => setChantierId(e.target.value)}>
-              {chantiers.map((c: any) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            <select
+              className={inputCls}
+              value={chantierId}
+              onChange={(e) => setChantierId(e.target.value)}
+            >
+              {chantiers.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
             </select>
           </label>
           <label className="block">
             <span className="mb-1 block text-xs font-medium">Date de début</span>
-            <input type="date" className={inputCls} value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+            <input
+              type="date"
+              className={inputCls}
+              value={startDate}
+              onChange={(e) => setStartDate(e.target.value)}
+            />
           </label>
           <label className="block">
             <span className="mb-1 block text-xs font-medium">Kilométrage de départ</span>
-            <input type="number" className={inputCls} value={startKm} onChange={(e) => setStartKm(e.target.value)} />
+            <input
+              type="number"
+              className={inputCls}
+              value={startKm}
+              onChange={(e) => setStartKm(Number(e.target.value))}
+            />
           </label>
         </div>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted">Annuler</button>
-          <button disabled={saving} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
+            Annuler
+          </button>
+          <button
+            disabled={saving}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
+          >
             {saving ? "…" : "Affecter"}
           </button>
         </div>
@@ -292,4 +415,5 @@ function AffectationModal({ vehiculeId, currentKm, chantiers, onClose, onSaved }
   );
 }
 
-const inputCls = "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
+const inputCls =
+  "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";

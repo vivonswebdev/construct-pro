@@ -13,7 +13,11 @@ export function useClients() {
     queryKey: ["clients", companyId],
     enabled: !!companyId,
     queryFn: async () => {
-      const { data } = await supabase.from("clients").select("*").eq("company_id", companyId!).order("created_at", { ascending: false });
+      const { data } = await supabase
+        .from("clients")
+        .select("*")
+        .eq("company_id", companyId!)
+        .order("created_at", { ascending: false });
       return (data ?? []) as Client[];
     },
   });
@@ -34,14 +38,20 @@ export function ClientSelect({
   return (
     <div className="flex gap-2">
       <select
-        className={className ?? "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"}
+        className={
+          className ??
+          "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+        }
         value={value}
-        onChange={(e) => onChange(e.target.value, clients?.find((c) => c.id === e.target.value) ?? null)}
+        onChange={(e) =>
+          onChange(e.target.value, clients?.find((c) => c.id === e.target.value) ?? null)
+        }
       >
         <option value="">— Sélectionner un client —</option>
         {(clients ?? []).map((c) => (
           <option key={c.id} value={c.id}>
-            {clientLabel(c)}{c.type === "entreprise" ? " (entreprise)" : ""}
+            {clientLabel(c)}
+            {c.type === "entreprise" ? " (entreprise)" : ""}
           </option>
         ))}
       </select>

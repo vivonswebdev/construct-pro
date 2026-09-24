@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatEUR, formatDateBE } from "./format";
+import { lastTableY } from "./pdf";
 
 export type FactureForPDF = {
   type: string;
@@ -47,7 +48,12 @@ function structuredCommunication(num: string): string {
   return `+++${digits.slice(0, 3)}/${digits.slice(3, 7)}/${digits.slice(7, 10)}${String(mod).padStart(2, "0")}+++`;
 }
 
-export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], company: CompanyForPDF, byRate?: Record<number, { base: number; vat: number }>) {
+export function exportFacturePDF(
+  facture: FactureForPDF,
+  lignes: LigneForPDF[],
+  company: CompanyForPDF,
+  byRate?: Record<number, { base: number; vat: number }>,
+) {
   const doc = new jsPDF();
   const W = doc.internal.pageSize.getWidth();
   const isDevis = facture.type === "devis";
@@ -124,18 +130,26 @@ export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], 
   });
 
   // Totals
-  const afterTable = (doc as any).lastAutoTable.finalY + 6;
+  const afterTable = lastTableY(doc) + 6;
   const totalsX = W - 80;
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.text("Sous-total HT", totalsX, afterTable);
   doc.text(formatEUR(facture.subtotal_ht), W - 14, afterTable, { align: "right" });
-  const rates = byRate && Object.keys(byRate).length ? Object.entries(byRate).sort((a, b) => Number(b[0]) - Number(a[0])) : [[String(facture.vat_rate), { base: facture.subtotal_ht, vat: facture.vat_amount }] as const];
+  const rates =
+    byRate && Object.keys(byRate).length
+      ? Object.entries(byRate).sort((a, b) => Number(b[0]) - Number(a[0]))
+      : [
+          [
+            String(facture.vat_rate),
+            { base: facture.subtotal_ht, vat: facture.vat_amount },
+          ] as const,
+        ];
   let ty = afterTable;
   for (const [rate, r] of rates) {
     ty += 6;
     doc.text(`TVA ${rate}%`, totalsX, ty);
-    doc.text(formatEUR((r as any).vat), W - 14, ty, { align: "right" });
+    doc.text(formatEUR(r.vat), W - 14, ty, { align: "right" });
   }
   doc.setFillColor(8, 145, 178);
   doc.rect(totalsX - 4, ty + 3, W - totalsX - 6, 9, "F");
@@ -193,7 +207,7 @@ export function exportFacturePDF(facture: FactureForPDF, lignes: LigneForPDF[], 
     `Document généré le ${formatDateBE(new Date())} via ConstructFlow`,
     W / 2,
     doc.internal.pageSize.getHeight() - 8,
-    { align: "center" }
+    { align: "center" },
   );
 
   doc.save(`${isDevis ? "Devis" : "Facture"}_${facture.number}.pdf`);

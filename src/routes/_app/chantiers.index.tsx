@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { exportChantiersPDF, exportChantiersCSV } from "@/lib/pdf";
 import { toast } from "sonner";
+import { errorMessage } from "@/lib/utils";
 import { ClientSelect } from "@/components/ClientSelect";
 import { clientLabel, clientAddress } from "@/lib/clients";
 
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/_app/chantiers/")({
 const STATUS_STYLES: Record<string, string> = {
   "En cours": "bg-cyan-100 text-cyan-700",
   "En retard": "bg-red-100 text-red-700",
-  "Terminé": "bg-emerald-100 text-emerald-700",
+  Terminé: "bg-emerald-100 text-emerald-700",
   "En attente": "bg-amber-100 text-amber-700",
 };
 
@@ -54,7 +55,8 @@ function ChantiersList() {
 
   const filtered = chantiers.filter((c) => {
     if (status !== "Tous" && c.status !== status) return false;
-    if (search && !`${c.name} ${c.client_name ?? ""}`.toLowerCase().includes(search.toLowerCase())) return false;
+    if (search && !`${c.name} ${c.client_name ?? ""}`.toLowerCase().includes(search.toLowerCase()))
+      return false;
     return true;
   });
 
@@ -158,14 +160,18 @@ function ChantiersList() {
                       </div>
                     </Td>
                     <Td>
-                      <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[c.status] ?? "bg-muted"}`}>
+                      <span
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[c.status] ?? "bg-muted"}`}
+                      >
                         {c.status}
                       </span>
                     </Td>
                     <Td>
                       <div>{formatDateBE(c.end_date)}</div>
                       {days !== null && c.progress < 100 && (
-                        <div className={`text-xs ${urgent ? "text-danger font-semibold" : "text-muted-foreground"}`}>
+                        <div
+                          className={`text-xs ${urgent ? "text-danger font-semibold" : "text-muted-foreground"}`}
+                        >
                           {days < 0 ? `${Math.abs(days)} j de retard` : `${days} j restants`}
                         </div>
                       )}
@@ -221,7 +227,9 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
         <Plus className="h-7 w-7 text-muted-foreground" />
       </div>
       <h3 className="text-base font-semibold">Aucun chantier pour le moment</h3>
-      <p className="mt-1 text-sm text-muted-foreground">Démarrez en créant votre premier chantier.</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Démarrez en créant votre premier chantier.
+      </p>
       <button
         onClick={onCreate}
         className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
@@ -235,9 +243,14 @@ function EmptyState({ onCreate }: { onCreate: () => void }) {
 function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
   const { profile } = useAuth();
   const [form, setForm] = useState({
-    name: "", client_id: "", client_name: "", address: "", budget: "",
+    name: "",
+    client_id: "",
+    client_name: "",
+    address: "",
+    budget: "",
     start_date: new Date().toISOString().slice(0, 10),
-    end_date: "", description: "",
+    end_date: "",
+    description: "",
   });
   const [saving, setSaving] = useState(false);
 
@@ -273,20 +286,23 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
           order_index: i,
           status: "En attente",
           progress: 0,
-        }))
+        })),
       );
 
       toast.success("Chantier créé");
       onCreated();
-    } catch (err: any) {
-      toast.error(err.message ?? "Erreur");
+    } catch (err) {
+      toast.error(errorMessage(err));
     } finally {
       setSaving(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+      onClick={onClose}
+    >
       <form
         onSubmit={submit}
         onClick={(e) => e.stopPropagation()}
@@ -299,19 +315,83 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
           </button>
         </div>
         <div className="grid gap-3">
-          <ModalField label="Nom du chantier"><input required className="modal-input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></ModalField>
-          <ModalField label="Client"><ClientSelect value={form.client_id} onChange={(id, c) => setForm({ ...form, client_id: id, client_name: clientLabel(c), address: form.address || clientAddress(c) })} /></ModalField>
-          <ModalField label="Adresse"><input className="modal-input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></ModalField>
+          <ModalField label="Nom du chantier">
+            <input
+              required
+              className="modal-input"
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+            />
+          </ModalField>
+          <ModalField label="Client">
+            <ClientSelect
+              value={form.client_id}
+              onChange={(id, c) =>
+                setForm({
+                  ...form,
+                  client_id: id,
+                  client_name: clientLabel(c),
+                  address: form.address || clientAddress(c),
+                })
+              }
+            />
+          </ModalField>
+          <ModalField label="Adresse">
+            <input
+              className="modal-input"
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+            />
+          </ModalField>
           <div className="grid grid-cols-3 gap-3">
-            <ModalField label="Budget (€)"><input type="number" min="0" className="modal-input" value={form.budget} onChange={(e) => setForm({ ...form, budget: e.target.value })} /></ModalField>
-            <ModalField label="Début"><input type="date" className="modal-input" value={form.start_date} onChange={(e) => setForm({ ...form, start_date: e.target.value })} /></ModalField>
-            <ModalField label="Remise"><input type="date" className="modal-input" value={form.end_date} onChange={(e) => setForm({ ...form, end_date: e.target.value })} /></ModalField>
+            <ModalField label="Budget (€)">
+              <input
+                type="number"
+                min="0"
+                className="modal-input"
+                value={form.budget}
+                onChange={(e) => setForm({ ...form, budget: e.target.value })}
+              />
+            </ModalField>
+            <ModalField label="Début">
+              <input
+                type="date"
+                className="modal-input"
+                value={form.start_date}
+                onChange={(e) => setForm({ ...form, start_date: e.target.value })}
+              />
+            </ModalField>
+            <ModalField label="Remise">
+              <input
+                type="date"
+                className="modal-input"
+                value={form.end_date}
+                onChange={(e) => setForm({ ...form, end_date: e.target.value })}
+              />
+            </ModalField>
           </div>
-          <ModalField label="Description"><textarea rows={3} className="modal-input" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></ModalField>
+          <ModalField label="Description">
+            <textarea
+              rows={3}
+              className="modal-input"
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+            />
+          </ModalField>
         </div>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted">Annuler</button>
-          <button type="submit" disabled={saving} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
+            Annuler
+          </button>
+          <button
+            type="submit"
+            disabled={saving}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
+          >
             {saving ? "..." : "Créer"}
           </button>
         </div>

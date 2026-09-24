@@ -9,6 +9,7 @@ Build a professional SaaS web application called "ConstructFlow" — a construct
 ---
 
 ## TECH STACK
+
 - React + TypeScript + Vite
 - Tailwind CSS (custom config below)
 - Supabase (Auth + PostgreSQL database)
@@ -23,6 +24,7 @@ Build a professional SaaS web application called "ConstructFlow" — a construct
 ## DESIGN SYSTEM
 
 Colors (add to tailwind.config.js):
+
 - sidebar-bg: #1a2332 (dark navy)
 - sidebar-text: #8892a4
 - sidebar-active: #0891b2
@@ -41,6 +43,7 @@ Colors (add to tailwind.config.js):
 Typography: font-family Inter (import from Google Fonts)
 
 Global styles:
+
 - Sidebar: fixed left, 240px wide, bg #1a2332, full height
 - Main content: margin-left 240px, min-height 100vh, bg #f8f9fa, padding 24px
 - Cards: bg white, rounded-xl, border border-gray-100, shadow-sm
@@ -54,7 +57,7 @@ Global styles:
 
 Create these tables:
 
-```sql
+````sql
 -- Companies (multi-tenant)
 create table companies (
   id uuid primary key default gen_random_uuid(),
@@ -596,4 +599,4 @@ git clone <this-repository-url>
 cd <repository-name>
 npm i
 npm run dev
-```
+````

@@ -56,9 +56,7 @@ export function Sidebar() {
           </div>
           <div className="leading-tight">
             <div className="text-sm font-bold text-white">ConstructFlow</div>
-            <div className="truncate text-xs text-sidebar-text">
-              {company?.name ?? "—"}
-            </div>
+            <div className="truncate text-xs text-sidebar-text">{company?.name ?? "—"}</div>
           </div>
         </div>
 
@@ -118,9 +116,7 @@ export function Sidebar() {
               <div className="truncate text-xs font-semibold text-white">
                 {profile?.full_name ?? "Utilisateur"}
               </div>
-              <div className="text-[11px] text-sidebar-text capitalize">
-                {profile?.role ?? ""}
-              </div>
+              <div className="text-[11px] text-sidebar-text capitalize">{profile?.role ?? ""}</div>
             </div>
             <button
               onClick={signOut}

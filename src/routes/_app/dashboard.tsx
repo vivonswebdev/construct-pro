@@ -2,10 +2,25 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Legend,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+  Legend,
 } from "recharts";
 import {
-  TrendingUp, Euro, HardHat, Users, AlertTriangle, ArrowRight, FileText, Percent,
+  TrendingUp,
+  Euro,
+  HardHat,
+  Users,
+  AlertTriangle,
+  ArrowRight,
+  FileText,
+  Percent,
+  type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -27,16 +42,39 @@ function Dashboard() {
       const ym = now.getFullYear();
       const mm = now.getMonth() + 1;
       const quarter = Math.floor((mm - 1) / 3) + 1;
-      const [chantiersRes, personnelRes, affRes, salRes, precRes, onssRes, vehRes] = await Promise.all([
-        supabase.from("chantiers").select("*").eq("company_id", companyId!),
-        supabase.from("personnel").select("*").eq("company_id", companyId!),
-        supabase.from("affectations").select("personnel_id, chantier_id"),
-        supabase.from("salary_payments").select("personnel_id, paid").eq("company_id", companyId!).eq("period_year", ym).eq("period_month", mm),
-        supabase.from("precompte_payments").select("personnel_id, amount, paid").eq("company_id", companyId!).eq("period_year", ym).eq("period_month", mm),
-        supabase.from("onss_payments").select("personnel_id, amount, paid").eq("company_id", companyId!).eq("year", ym).eq("quarter", quarter),
-        supabase.from("vehicules").select("id, plate, ct_date, insurance_date").eq("company_id", companyId!),
-      ]);
-      const devRes = await supabase.from("factures").select("status, total_ttc").eq("company_id", companyId!).eq("type", "devis");
+      const [chantiersRes, personnelRes, affRes, salRes, precRes, onssRes, vehRes] =
+        await Promise.all([
+          supabase.from("chantiers").select("*").eq("company_id", companyId!),
+          supabase.from("personnel").select("*").eq("company_id", companyId!),
+          supabase.from("affectations").select("personnel_id, chantier_id"),
+          supabase
+            .from("salary_payments")
+            .select("personnel_id, paid")
+            .eq("company_id", companyId!)
+            .eq("period_year", ym)
+            .eq("period_month", mm),
+          supabase
+            .from("precompte_payments")
+            .select("personnel_id, amount, paid")
+            .eq("company_id", companyId!)
+            .eq("period_year", ym)
+            .eq("period_month", mm),
+          supabase
+            .from("onss_payments")
+            .select("personnel_id, amount, paid")
+            .eq("company_id", companyId!)
+            .eq("year", ym)
+            .eq("quarter", quarter),
+          supabase
+            .from("vehicules")
+            .select("id, plate, ct_date, insurance_date")
+            .eq("company_id", companyId!),
+        ]);
+      const devRes = await supabase
+        .from("factures")
+        .select("status, total_ttc")
+        .eq("company_id", companyId!)
+        .eq("type", "devis");
       return {
         chantiers: chantiersRes.data ?? [],
         personnel: personnelRes.data ?? [],
@@ -53,27 +91,47 @@ function Dashboard() {
 
   if (isLoading || !data) return <DashboardSkeleton />;
 
-  const { chantiers, personnel, affectations, salaries, precomptes, onss, vehicules, quarter, devis } = data;
-  const devisPending = devis.filter((d: any) => d.status === "Envoyé" || d.status === "Brouillon");
-  const devisAccepted = devis.filter((d: any) => d.status === "Accepté").length;
-  const devisDecided = devis.filter((d: any) => ["Accepté", "Refusé", "Expiré"].includes(d.status)).length;
+  const {
+    chantiers,
+    personnel,
+    affectations,
+    salaries,
+    precomptes,
+    onss,
+    vehicules,
+    quarter,
+    devis,
+  } = data;
+  const devisPending = devis.filter((d) => d.status === "Envoyé" || d.status === "Brouillon");
+  const devisAccepted = devis.filter((d) => d.status === "Accepté").length;
+  const devisDecided = devis.filter((d) =>
+    ["Accepté", "Refusé", "Expiré"].includes(d.status),
+  ).length;
   const acceptRate = devisDecided ? Math.round((devisAccepted / devisDecided) * 100) : 0;
 
   // Compliance metrics for active workers under contract
-  const eligibleWorkers = personnel.filter((p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""));
+  const eligibleWorkers = personnel.filter(
+    (p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""),
+  );
   const totalElig = eligibleWorkers.length;
-  const unpaidSalaries = totalElig - salaries.filter((s: any) => s.paid).length;
-  const unpaidPrecompte = totalElig - precomptes.filter((s: any) => s.paid).length;
-  const precompteAmount = precomptes.filter((s: any) => !s.paid).reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
-  const onssPaidCount = onss.filter((s: any) => s.paid).length;
-  const onssAmount = onss.filter((s: any) => !s.paid).reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
+  const unpaidSalaries = totalElig - salaries.filter((s) => s.paid).length;
+  const unpaidPrecompte = totalElig - precomptes.filter((s) => s.paid).length;
+  const precompteAmount = precomptes
+    .filter((s) => !s.paid)
+    .reduce((acc, s) => acc + Number(s.amount ?? 0), 0);
+  const onssPaidCount = onss.filter((s) => s.paid).length;
+  const onssAmount = onss.filter((s) => !s.paid).reduce((acc, s) => acc + Number(s.amount ?? 0), 0);
   const onssDue = totalElig > 0 && onssPaidCount < totalElig;
   const now = new Date();
   const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 15);
-  const onssDueDate = quarter === 1 ? new Date(now.getFullYear(), 3, 30)
-    : quarter === 2 ? new Date(now.getFullYear(), 6, 31)
-    : quarter === 3 ? new Date(now.getFullYear(), 9, 31)
-    : new Date(now.getFullYear() + 1, 0, 31);
+  const onssDueDate =
+    quarter === 1
+      ? new Date(now.getFullYear(), 3, 30)
+      : quarter === 2
+        ? new Date(now.getFullYear(), 6, 31)
+        : quarter === 3
+          ? new Date(now.getFullYear(), 9, 31)
+          : new Date(now.getFullYear() + 1, 0, 31);
 
   // Auto-detect late chantiers
   const late = chantiers.filter((c) => {
@@ -112,7 +170,7 @@ function Dashboard() {
   // If all zero, spread totals across last 6 months for visual feedback
   if (months.every((m) => m.CA === 0)) {
     months.forEach((m, i) => {
-      const factor = 0.6 + (i * 0.12);
+      const factor = 0.6 + i * 0.12;
       m.CA = Math.round((caTotal / 6) * factor);
       m.Coûts = Math.round((coutsTotal / 6) * factor);
     });
@@ -121,7 +179,9 @@ function Dashboard() {
   const topRentables = [...chantiers]
     .map((c) => ({
       ...c,
-      rentabilite: c.budget ? ((Number(c.budget) - Number(c.actual_costs)) / Number(c.budget)) * 100 : 0,
+      rentabilite: c.budget
+        ? ((Number(c.budget) - Number(c.actual_costs)) / Number(c.budget)) * 100
+        : 0,
     }))
     .sort((a, b) => b.rentabilite - a.rentabilite)
     .slice(0, 5);
@@ -169,7 +229,7 @@ function Dashboard() {
           icon={FileText}
           label="Devis en attente"
           value={String(devisPending.length)}
-          sub={formatEUR(devisPending.reduce((s: number, d: any) => s + Number(d.total_ttc ?? 0), 0))}
+          sub={formatEUR(devisPending.reduce((s, d) => s + Number(d.total_ttc ?? 0), 0))}
           tone="primary"
         />
         <KpiCard
@@ -191,8 +251,17 @@ function Dashboard() {
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={months} margin={{ left: -10 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="oklch(0.93 0.005 250)" vertical={false} />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#6b7280" }} axisLine={false} tickLine={false} />
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  stroke="oklch(0.93 0.005 250)"
+                  vertical={false}
+                />
+                <XAxis
+                  dataKey="name"
+                  tick={{ fontSize: 12, fill: "#6b7280" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
                 <YAxis
                   tick={{ fontSize: 11, fill: "#6b7280" }}
                   axisLine={false}
@@ -222,9 +291,12 @@ function Dashboard() {
             )}
             {topRentables.map((c) => {
               const r = Math.round(c.rentabilite);
-              const tone = r > 15 ? "bg-emerald-100 text-emerald-700"
-                : r >= 5 ? "bg-amber-100 text-amber-700"
-                : "bg-red-100 text-red-700";
+              const tone =
+                r > 15
+                  ? "bg-emerald-100 text-emerald-700"
+                  : r >= 5
+                    ? "bg-amber-100 text-amber-700"
+                    : "bg-red-100 text-red-700";
               return (
                 <Link
                   key={c.id}
@@ -234,7 +306,9 @@ function Dashboard() {
                 >
                   <div className="mb-1 flex items-center justify-between gap-2">
                     <span className="truncate text-sm font-medium">{c.name}</span>
-                    <span className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${tone}`}>
+                    <span
+                      className={`shrink-0 rounded-full px-2 py-0.5 text-xs font-semibold ${tone}`}
+                    >
                       {r}%
                     </span>
                   </div>
@@ -255,40 +329,79 @@ function Dashboard() {
           <h3 className="text-base font-semibold">Alertes & Actions requises</h3>
         </div>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          <AlertCard tone="danger" title={`${late.length} chantier${late.length > 1 ? "s" : ""} en retard`}>
-            {late.length === 0 ? "Aucun retard 🎉" : late.slice(0, 2).map((c) => c.name).join(", ")}
+          <AlertCard
+            tone="danger"
+            title={`${late.length} chantier${late.length > 1 ? "s" : ""} en retard`}
+          >
+            {late.length === 0
+              ? "Aucun retard 🎉"
+              : late
+                  .slice(0, 2)
+                  .map((c) => c.name)
+                  .join(", ")}
           </AlertCard>
-          <AlertCard tone="warning" title={`${unassigned.length} ouvrier${unassigned.length > 1 ? "s" : ""} sans affectation`}>
-            {unassigned.length === 0 ? "Tous affectés" : unassigned.slice(0, 2).map((p) => p.full_name).join(", ")}
+          <AlertCard
+            tone="warning"
+            title={`${unassigned.length} ouvrier${unassigned.length > 1 ? "s" : ""} sans affectation`}
+          >
+            {unassigned.length === 0
+              ? "Tous affectés"
+              : unassigned
+                  .slice(0, 2)
+                  .map((p) => p.full_name)
+                  .join(", ")}
           </AlertCard>
           {unpaidSalaries > 0 && (
-            <AlertCard tone="warning" title={`${unpaidSalaries} salaire${unpaidSalaries > 1 ? "s" : ""} non payé${unpaidSalaries > 1 ? "s" : ""} ce mois`}>
+            <AlertCard
+              tone="warning"
+              title={`${unpaidSalaries} salaire${unpaidSalaries > 1 ? "s" : ""} non payé${unpaidSalaries > 1 ? "s" : ""} ce mois`}
+            >
               Voir le module Précompte & ONSS pour régulariser
             </AlertCard>
           )}
           {unpaidPrecompte > 0 && (
-            <AlertCard tone="danger" title={`Précompte dû avant le ${nextMonth.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}>
+            <AlertCard
+              tone="danger"
+              title={`Précompte dû avant le ${nextMonth.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}
+            >
               {formatEUR(precompteAmount)} à verser au SPF Finances
             </AlertCard>
           )}
           {onssDue && (
-            <AlertCard tone="danger" title={`ONSS Q${quarter} dû avant le ${onssDueDate.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}>
+            <AlertCard
+              tone="danger"
+              title={`ONSS Q${quarter} dû avant le ${onssDueDate.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}
+            >
               {formatEUR(onssAmount)} à verser à l'ONSS
             </AlertCard>
           )}
           {(() => {
-            const ctExpired = vehicules.filter((v: any) => v.ct_date && daysUntil(v.ct_date)! < 0);
-            const insSoon = vehicules.filter((v: any) => v.insurance_date && daysUntil(v.insurance_date)! >= 0 && daysUntil(v.insurance_date)! < 30);
+            const ctExpired = vehicules.filter((v) => v.ct_date && daysUntil(v.ct_date)! < 0);
+            const insSoon = vehicules.filter(
+              (v) =>
+                v.insurance_date &&
+                daysUntil(v.insurance_date)! >= 0 &&
+                daysUntil(v.insurance_date)! < 30,
+            );
             return (
               <>
                 {ctExpired.length > 0 && (
-                  <AlertCard tone="danger" title={`🚛 ${ctExpired.length} véhicule${ctExpired.length > 1 ? "s" : ""} avec CT expiré`}>
-                    {ctExpired.slice(0, 2).map((v: any) => v.plate).join(", ")}
+                  <AlertCard
+                    tone="danger"
+                    title={`🚛 ${ctExpired.length} véhicule${ctExpired.length > 1 ? "s" : ""} avec CT expiré`}
+                  >
+                    {ctExpired
+                      .slice(0, 2)
+                      .map((v) => v.plate)
+                      .join(", ")}
                   </AlertCard>
                 )}
                 {insSoon.length > 0 && (
                   <AlertCard tone="warning" title={`⚠️ Assurance véhicule à renouveler`}>
-                    {insSoon.slice(0, 2).map((v: any) => `${v.plate} (${daysUntil(v.insurance_date)} j)`).join(", ")}
+                    {insSoon
+                      .slice(0, 2)
+                      .map((v) => `${v.plate} (${daysUntil(v.insurance_date)} j)`)
+                      .join(", ")}
                   </AlertCard>
                 )}
               </>
@@ -309,21 +422,34 @@ function Card({ children, className = "" }: { children: React.ReactNode; classNa
 }
 
 function KpiCard({
-  icon: Icon, label, value, sub, tone = "primary", subTone = "muted",
+  icon: Icon,
+  label,
+  value,
+  sub,
+  tone = "primary",
+  subTone = "muted",
 }: {
-  icon: any; label: string; value: string; sub?: string;
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  sub?: string;
   tone?: "primary" | "success" | "danger";
   subTone?: "muted" | "danger" | "warning" | "success";
 }) {
   const iconBg =
-    tone === "success" ? "bg-emerald-100 text-emerald-600" :
-    tone === "danger" ? "bg-red-100 text-red-600" :
-    "bg-accent text-primary";
+    tone === "success"
+      ? "bg-emerald-100 text-emerald-600"
+      : tone === "danger"
+        ? "bg-red-100 text-red-600"
+        : "bg-accent text-primary";
   const subClass =
-    subTone === "danger" ? "text-danger" :
-    subTone === "warning" ? "text-warning" :
-    subTone === "success" ? "text-success" :
-    "text-muted-foreground";
+    subTone === "danger"
+      ? "text-danger"
+      : subTone === "warning"
+        ? "text-warning"
+        : subTone === "success"
+          ? "text-success"
+          : "text-muted-foreground";
   return (
     <Card>
       <div className="flex items-start justify-between">
@@ -341,8 +467,14 @@ function KpiCard({
 }
 
 function AlertCard({
-  tone, title, children,
-}: { tone: "danger" | "warning" | "info"; title: string; children: React.ReactNode }) {
+  tone,
+  title,
+  children,
+}: {
+  tone: "danger" | "warning" | "info";
+  title: string;
+  children: React.ReactNode;
+}) {
   const map = {
     danger: { border: "border-l-danger", bg: "bg-red-50/50", text: "text-danger" },
     warning: { border: "border-l-warning", bg: "bg-amber-50/50", text: "text-warning" },

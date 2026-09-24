@@ -30,8 +30,14 @@ export function initials(name: string | null | undefined): string {
 }
 
 const AVATAR_COLORS = [
-  "bg-cyan-500", "bg-emerald-500", "bg-violet-500", "bg-amber-500",
-  "bg-rose-500", "bg-blue-500", "bg-fuchsia-500", "bg-teal-500",
+  "bg-cyan-500",
+  "bg-emerald-500",
+  "bg-violet-500",
+  "bg-amber-500",
+  "bg-rose-500",
+  "bg-blue-500",
+  "bg-fuchsia-500",
+  "bg-teal-500",
 ];
 export function avatarColor(seed: string): string {
   let h = 0;

@@ -14,7 +14,7 @@ const inputSchema = z.object({
 export const checkTva = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }) => {
-    const vat = data.vat_number.replace(/[\s.\-]/g, "").toUpperCase();
+    const vat = data.vat_number.replace(/[\s.-]/g, "").toUpperCase();
     if (!/^BE\d{10}$/.test(vat)) {
       return { ok: false as const, error: "Format de TVA invalide (attendu BE + 10 chiffres)" };
     }
@@ -25,14 +25,17 @@ export const checkTva = createServerFn({ method: "POST" })
         method: "GET",
         headers: {
           "User-Agent": "Mozilla/5.0 (compatible; ConstructFlow/1.0)",
-          "Accept": "text/html,application/xhtml+xml",
+          Accept: "text/html,application/xhtml+xml",
           "Accept-Language": "fr-BE,fr;q=0.9",
         },
         signal: AbortSignal.timeout(15000),
       });
 
       if (!res.ok) {
-        return { ok: false as const, error: `Site officiel indisponible (HTTP ${res.status}). Utilisez la saisie manuelle.` };
+        return {
+          ok: false as const,
+          error: `Site officiel indisponible (HTTP ${res.status}). Utilisez la saisie manuelle.`,
+        };
       }
 
       const html = await res.text();
@@ -56,11 +59,12 @@ export const checkTva = createServerFn({ method: "POST" })
       return {
         ok: true as const,
         eligible,
-        message: eligible === true
-          ? "Aucune retenue obligatoire — sous-traitant en règle."
-          : eligible === false
-          ? "Retenue obligatoire de 15% — dettes fiscales/sociales détectées."
-          : "Résultat ambigu. Vérifiez manuellement sur le site officiel.",
+        message:
+          eligible === true
+            ? "Aucune retenue obligatoire — sous-traitant en règle."
+            : eligible === false
+              ? "Retenue obligatoire de 15% — dettes fiscales/sociales détectées."
+              : "Résultat ambigu. Vérifiez manuellement sur le site officiel.",
         raw_html: html.slice(0, 5000),
         source_url: url,
       };

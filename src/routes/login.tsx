@@ -4,6 +4,7 @@ import { HardHat } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
+import { errorMessage } from "@/lib/utils";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -45,8 +46,8 @@ function LoginPage() {
         if (error) throw error;
         toast.success("Compte créé. Bienvenue !");
       }
-    } catch (err: any) {
-      const msg = err?.message ?? "Une erreur est survenue";
+    } catch (err) {
+      const msg = errorMessage(err, "Une erreur est survenue");
       setError(msg === "Invalid login credentials" ? "Identifiants invalides" : msg);
     } finally {
       setLoading(false);
@@ -60,7 +61,7 @@ function LoginPage() {
     setError(null);
     setLoading(true);
     try {
-      let { error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: DEMO_EMAIL,
         password: DEMO_PASSWORD,
       });
@@ -86,8 +87,8 @@ function LoginPage() {
         if (retry.error) throw retry.error;
       }
       toast.success("Bienvenue sur le compte démo");
-    } catch (err: any) {
-      setError(err?.message ?? "Impossible d'accéder au compte démo");
+    } catch (err) {
+      setError(errorMessage(err, "Impossible d'accéder au compte démo"));
     } finally {
       setLoading(false);
     }

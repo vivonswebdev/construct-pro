@@ -2,11 +2,16 @@
 
 export function formatEURBE(n: number | null | undefined): string {
   const v = Number(n ?? 0);
-  return v.toLocaleString("fr-BE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).replace(/\u202f/g, " ").replace(/\u00a0/g, " ") + " €";
+  return (
+    v
+      .toLocaleString("fr-BE", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+      .replace(/\u202f/g, " ")
+      .replace(/\u00a0/g, " ") + " €"
+  );
 }
 
 export function cleanVAT(input: string): string {
-  return input.replace(/[\s.\-]/g, "").toUpperCase();
+  return input.replace(/[\s.-]/g, "").toUpperCase();
 }
 
 export function formatVATDisplay(vat: string): string {
@@ -45,6 +50,16 @@ export const DEFAULTS = {
 };
 
 export const MONTHS_FR = [
-  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+  "Janvier",
+  "Février",
+  "Mars",
+  "Avril",
+  "Mai",
+  "Juin",
+  "Juillet",
+  "Août",
+  "Septembre",
+  "Octobre",
+  "Novembre",
+  "Décembre",
 ];

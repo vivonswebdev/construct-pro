@@ -2,6 +2,11 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatEUR, formatDateBE } from "./format";
 
+/** Position Y de fin du dernier tableau jspdf-autotable (propriété ajoutée au document). */
+export function lastTableY(doc: jsPDF): number {
+  return (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 0;
+}
+
 type Chantier = {
   name: string;
   client_name: string | null;
@@ -67,8 +72,10 @@ export function exportChantiersPDF(chantiers: Chantier[], companyName?: string) 
   });
 
   autoTable(doc, {
-    startY: (doc as any).lastAutoTable.finalY + 8,
-    head: [["Chantier", "Client", "Début", "Remise", "Budget", "Dépenses", "Progression", "Statut"]],
+    startY: lastTableY(doc) + 8,
+    head: [
+      ["Chantier", "Client", "Début", "Remise", "Budget", "Dépenses", "Progression", "Statut"],
+    ],
     body: chantiers.map((c) => [
       c.name,
       c.client_name ?? "—",
@@ -88,7 +95,18 @@ export function exportChantiersPDF(chantiers: Chantier[], companyName?: string) 
 }
 
 export function exportChantiersCSV(chantiers: Chantier[]) {
-  const headers = ["Nom", "Client", "Adresse", "Début", "Remise", "Budget (€)", "Dépenses (€)", "Marge (€)", "Progression (%)", "Statut"];
+  const headers = [
+    "Nom",
+    "Client",
+    "Adresse",
+    "Début",
+    "Remise",
+    "Budget (€)",
+    "Dépenses (€)",
+    "Marge (€)",
+    "Progression (%)",
+    "Statut",
+  ];
   const rows = chantiers.map((c) => [
     c.name,
     c.client_name ?? "",
@@ -102,7 +120,8 @@ export function exportChantiersCSV(chantiers: Chantier[]) {
     c.status,
   ]);
   const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
-  const csv = "\uFEFF" + [headers, ...rows].map((r) => r.map((v) => esc(String(v))).join(";")).join("\r\n");
+  const csv =
+    "\uFEFF" + [headers, ...rows].map((r) => r.map((v) => esc(String(v))).join(";")).join("\r\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -123,13 +142,23 @@ export function exportPresencePDF(opts: {
   companyName?: string;
 }) {
   const { personName, year, month, presence, hourlyRate, companyName } = opts;
-  const monthLabel = new Date(year, month, 1).toLocaleDateString("fr-BE", { month: "long", year: "numeric" });
+  const monthLabel = new Date(year, month, 1).toLocaleDateString("fr-BE", {
+    month: "long",
+    year: "numeric",
+  });
   const doc = new jsPDF();
-  header(doc, `Rapport de présences — ${personName}`, `${monthLabel}${companyName ? " · " + companyName : ""}`);
+  header(
+    doc,
+    `Rapport de présences — ${personName}`,
+    `${monthLabel}${companyName ? " · " + companyName : ""}`,
+  );
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const rows: any[] = [];
-  let totalP = 0, totalA = 0, totalC = 0, totalH = 0;
+  const rows: string[][] = [];
+  let totalP = 0,
+    totalA = 0,
+    totalC = 0,
+    totalH = 0;
   for (let d = 1; d <= daysInMonth; d++) {
     const dateObj = new Date(year, month, d);
     const iso = dateObj.toISOString().slice(0, 10);
@@ -137,13 +166,18 @@ export function exportPresencePDF(opts: {
     const dowName = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"][dowIdx];
     const weekend = dowIdx >= 5;
     const pr = presence.find((p) => p.date === iso);
-    const status = weekend ? "Week-end" : pr?.status ?? "—";
+    const status = weekend ? "Week-end" : (pr?.status ?? "—");
     const hours = pr?.hours ?? 0;
     if (status === "Présent") totalP++;
     else if (status === "Absent") totalA++;
     else if (status === "Congé") totalC++;
     totalH += Number(hours);
-    rows.push([formatDateBE(iso), dowName, status, status === "Présent" ? `${Number(hours)} h` : "—"]);
+    rows.push([
+      formatDateBE(iso),
+      dowName,
+      status,
+      status === "Présent" ? `${Number(hours)} h` : "—",
+    ]);
   }
 
   autoTable(doc, {
@@ -156,7 +190,7 @@ export function exportPresencePDF(opts: {
     columnStyles: { 3: { halign: "right" } },
   });
 
-  const summaryY = (doc as any).lastAutoTable.finalY + 8;
+  const summaryY = lastTableY(doc) + 8;
   const summary: (string | number)[][] = [
     ["Jours présents", totalP],
     ["Jours absents", totalA],
@@ -177,5 +211,7 @@ export function exportPresencePDF(opts: {
     tableWidth: 110,
   });
 
-  doc.save(`presences_${personName.replace(/\s+/g, "_")}_${year}-${String(month + 1).padStart(2, "0")}.pdf`);
+  doc.save(
+    `presences_${personName.replace(/\s+/g, "_")}_${year}-${String(month + 1).padStart(2, "0")}.pdf`,
+  );
 }

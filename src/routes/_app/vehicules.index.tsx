@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Truck, Car, Plus, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { daysUntil, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
@@ -24,7 +25,11 @@ function VehiculesPage() {
     enabled: !!companyId,
     queryFn: async () => {
       const [vRes, aRes, cRes] = await Promise.all([
-        supabase.from("vehicules").select("*").eq("company_id", companyId!).order("created_at", { ascending: false }),
+        supabase
+          .from("vehicules")
+          .select("*")
+          .eq("company_id", companyId!)
+          .order("created_at", { ascending: false }),
         supabase.from("vehicule_affectations").select("*").is("end_date", null),
         supabase.from("chantiers").select("id, name").eq("company_id", companyId!),
       ]);
@@ -35,8 +40,8 @@ function VehiculesPage() {
   });
 
   const byVehicule = useMemo(() => {
-    const m = new Map<string, any>();
-    data?.affectations.forEach((a: any) => m.set(a.vehicule_id, a));
+    const m = new Map<string, Affectation>();
+    data?.affectations.forEach((a) => m.set(a.vehicule_id, a));
     return m;
   }, [data]);
 
@@ -46,7 +51,8 @@ function VehiculesPage() {
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Flotte véhicules</h1>
           <p className="text-sm text-muted-foreground">
-            {data?.vehicules.length ?? 0} véhicule{(data?.vehicules.length ?? 0) > 1 ? "s" : ""} enregistré{(data?.vehicules.length ?? 0) > 1 ? "s" : ""}
+            {data?.vehicules.length ?? 0} véhicule{(data?.vehicules.length ?? 0) > 1 ? "s" : ""}{" "}
+            enregistré{(data?.vehicules.length ?? 0) > 1 ? "s" : ""}
           </p>
         </div>
         <button
@@ -66,7 +72,9 @@ function VehiculesPage() {
       ) : (data?.vehicules.length ?? 0) === 0 ? (
         <div className="rounded-xl border border-dashed border-border bg-card p-12 text-center">
           <Truck className="mx-auto h-10 w-10 text-muted-foreground" />
-          <p className="mt-3 text-sm text-muted-foreground">Aucun véhicule. Ajoutez votre premier véhicule pour commencer.</p>
+          <p className="mt-3 text-sm text-muted-foreground">
+            Aucun véhicule. Ajoutez votre premier véhicule pour commencer.
+          </p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -90,7 +98,11 @@ function VehiculesPage() {
   );
 }
 
-function VehiculeCard({ v, affectation }: { v: any; affectation: any }) {
+type Affectation = Tables<"vehicule_affectations"> & {
+  chantier?: Pick<Tables<"chantiers">, "id" | "name">;
+};
+
+function VehiculeCard({ v, affectation }: { v: Tables<"vehicules">; affectation?: Affectation }) {
   const Icon = v.type === "Voiture" ? Car : Truck;
   return (
     <Link
@@ -107,8 +119,12 @@ function VehiculeCard({ v, affectation }: { v: any; affectation: any }) {
         </span>
       </div>
       <div className="mt-3">
-        <p className="font-semibold">{v.brand} {v.model}</p>
-        <p className="text-xs text-muted-foreground">{v.type} · {v.year ?? "—"} · {v.current_km.toLocaleString("fr-BE")} km</p>
+        <p className="font-semibold">
+          {v.brand} {v.model}
+        </p>
+        <p className="text-xs text-muted-foreground">
+          {v.type} · {v.year ?? "—"} · {v.current_km.toLocaleString("fr-BE")} km
+        </p>
       </div>
       <div className="mt-3">
         {affectation ? (
@@ -130,7 +146,15 @@ function VehiculeCard({ v, affectation }: { v: any; affectation: any }) {
   );
 }
 
-function DateBadge({ label, date, reverse = false }: { label: string; date: string | null; reverse?: boolean }) {
+function DateBadge({
+  label,
+  date,
+  reverse = false,
+}: {
+  label: string;
+  date: string | null;
+  reverse?: boolean;
+}) {
   const d = daysUntil(date);
   // reverse=true means entretien (date is last maintenance, alert if > 1 year ago)
   let tone = "bg-muted text-muted-foreground";
@@ -153,7 +177,15 @@ function DateBadge({ label, date, reverse = false }: { label: string; date: stri
   );
 }
 
-function AddVehiculeModal({ companyId, onClose, onSaved }: { companyId: string; onClose: () => void; onSaved: () => void }) {
+function AddVehiculeModal({
+  companyId,
+  onClose,
+  onSaved,
+}: {
+  companyId: string;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
   const [form, setForm] = useState({
     type: "Camionnette",
     brand: "",
@@ -192,7 +224,10 @@ function AddVehiculeModal({ companyId, onClose, onSaved }: { companyId: string; 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      onClick={onClose}
+    >
       <form
         onSubmit={submit}
         onClick={(e) => e.stopPropagation()}
@@ -200,45 +235,106 @@ function AddVehiculeModal({ companyId, onClose, onSaved }: { companyId: string; 
       >
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold">Nouveau véhicule</h3>
-          <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted"><X className="h-4 w-4" /></button>
+          <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted">
+            <X className="h-4 w-4" />
+          </button>
         </div>
         <div className="grid grid-cols-2 gap-3">
           <Field label="Type">
-            <select className={inputCls} value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
-              {TYPES.map((t) => <option key={t}>{t}</option>)}
+            <select
+              className={inputCls}
+              value={form.type}
+              onChange={(e) => setForm({ ...form, type: e.target.value })}
+            >
+              {TYPES.map((t) => (
+                <option key={t}>{t}</option>
+              ))}
             </select>
           </Field>
           <Field label="Plaque *">
-            <input className={inputCls} value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value })} placeholder="1-ABC-123" />
+            <input
+              className={inputCls}
+              value={form.plate}
+              onChange={(e) => setForm({ ...form, plate: e.target.value })}
+              placeholder="1-ABC-123"
+            />
           </Field>
           <Field label="Marque">
-            <input className={inputCls} value={form.brand} onChange={(e) => setForm({ ...form, brand: e.target.value })} />
+            <input
+              className={inputCls}
+              value={form.brand}
+              onChange={(e) => setForm({ ...form, brand: e.target.value })}
+            />
           </Field>
           <Field label="Modèle">
-            <input className={inputCls} value={form.model} onChange={(e) => setForm({ ...form, model: e.target.value })} />
+            <input
+              className={inputCls}
+              value={form.model}
+              onChange={(e) => setForm({ ...form, model: e.target.value })}
+            />
           </Field>
           <Field label="Année">
-            <input type="number" className={inputCls} value={form.year} onChange={(e) => setForm({ ...form, year: Number(e.target.value) })} />
+            <input
+              type="number"
+              className={inputCls}
+              value={form.year}
+              onChange={(e) => setForm({ ...form, year: Number(e.target.value) })}
+            />
           </Field>
           <Field label="Kilométrage">
-            <input type="number" className={inputCls} value={form.current_km} onChange={(e) => setForm({ ...form, current_km: Number(e.target.value) })} />
+            <input
+              type="number"
+              className={inputCls}
+              value={form.current_km}
+              onChange={(e) => setForm({ ...form, current_km: Number(e.target.value) })}
+            />
           </Field>
           <Field label="Coût/km (€)">
-            <input type="number" step="0.01" className={inputCls} value={form.cost_per_km} onChange={(e) => setForm({ ...form, cost_per_km: Number(e.target.value) })} />
+            <input
+              type="number"
+              step="0.01"
+              className={inputCls}
+              value={form.cost_per_km}
+              onChange={(e) => setForm({ ...form, cost_per_km: Number(e.target.value) })}
+            />
           </Field>
           <Field label="Date CT">
-            <input type="date" className={inputCls} value={form.ct_date} onChange={(e) => setForm({ ...form, ct_date: e.target.value })} />
+            <input
+              type="date"
+              className={inputCls}
+              value={form.ct_date}
+              onChange={(e) => setForm({ ...form, ct_date: e.target.value })}
+            />
           </Field>
           <Field label="Date assurance">
-            <input type="date" className={inputCls} value={form.insurance_date} onChange={(e) => setForm({ ...form, insurance_date: e.target.value })} />
+            <input
+              type="date"
+              className={inputCls}
+              value={form.insurance_date}
+              onChange={(e) => setForm({ ...form, insurance_date: e.target.value })}
+            />
           </Field>
           <Field label="Dernier entretien">
-            <input type="date" className={inputCls} value={form.maintenance_date} onChange={(e) => setForm({ ...form, maintenance_date: e.target.value })} />
+            <input
+              type="date"
+              className={inputCls}
+              value={form.maintenance_date}
+              onChange={(e) => setForm({ ...form, maintenance_date: e.target.value })}
+            />
           </Field>
         </div>
         <div className="mt-5 flex justify-end gap-2">
-          <button type="button" onClick={onClose} className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted">Annuler</button>
-          <button disabled={saving} className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
+          >
+            Annuler
+          </button>
+          <button
+            disabled={saving}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
+          >
             {saving ? "Enregistrement…" : "Ajouter"}
           </button>
         </div>
@@ -247,7 +343,8 @@ function AddVehiculeModal({ companyId, onClose, onSaved }: { companyId: string; 
   );
 }
 
-const inputCls = "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
+const inputCls =
+  "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (

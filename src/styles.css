@@ -40,48 +40,53 @@
   --color-danger: var(--danger);
   --color-info: var(--info);
 
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: "Inter", system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.625rem;
 
   /* Brand */
-  --sidebar-bg: oklch(0.225 0.035 252);          /* #1a2332 */
-  --sidebar-text: oklch(0.66 0.025 250);         /* #8892a4 */
-  --sidebar-active: oklch(0.62 0.12 210);        /* #0891b2 teal */
-  --page-bg: oklch(0.985 0.002 250);             /* #f8f9fa */
+  --sidebar-bg: oklch(0.225 0.035 252); /* #1a2332 */
+  --sidebar-text: oklch(0.66 0.025 250); /* #8892a4 */
+  --sidebar-active: oklch(0.62 0.12 210); /* #0891b2 teal */
+  --page-bg: oklch(0.985 0.002 250); /* #f8f9fa */
 
   --background: oklch(0.985 0.002 250);
-  --foreground: oklch(0.18 0.01 260);            /* #111827 */
+  --foreground: oklch(0.18 0.01 260); /* #111827 */
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.18 0.01 260);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.18 0.01 260);
 
-  --primary: oklch(0.62 0.12 210);               /* teal */
+  --primary: oklch(0.62 0.12 210); /* teal */
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.96 0.005 250);
   --secondary-foreground: oklch(0.225 0.035 252);
   --muted: oklch(0.96 0.005 250);
-  --muted-foreground: oklch(0.55 0.015 257);     /* #6b7280 */
+  --muted-foreground: oklch(0.55 0.015 257); /* #6b7280 */
   --accent: oklch(0.94 0.02 210);
   --accent-foreground: oklch(0.225 0.035 252);
   --destructive: oklch(0.62 0.22 27);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.93 0.005 250);               /* #e5e7eb */
+  --border: oklch(0.93 0.005 250); /* #e5e7eb */
   --input: oklch(0.93 0.005 250);
   --ring: oklch(0.62 0.12 210);
 
-  --success: oklch(0.68 0.15 155);               /* #10b981 */
-  --warning: oklch(0.78 0.15 75);                /* #f59e0b */
-  --danger: oklch(0.62 0.22 27);                 /* #ef4444 */
-  --info: oklch(0.62 0.18 255);                  /* #3b82f6 */
+  --success: oklch(0.68 0.15 155); /* #10b981 */
+  --warning: oklch(0.78 0.15 75); /* #f59e0b */
+  --danger: oklch(0.62 0.22 27); /* #ef4444 */
+  --info: oklch(0.62 0.18 255); /* #3b82f6 */
 }
 
 @layer base {
-  * { border-color: var(--color-border); }
-  html, body { font-family: 'Inter', system-ui, sans-serif; }
+  * {
+    border-color: var(--color-border);
+  }
+  html,
+  body {
+    font-family: "Inter", system-ui, sans-serif;
+  }
   body {
     background-color: var(--color-page-bg);
     color: var(--color-foreground);
