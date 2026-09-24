@@ -75,7 +75,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   ].map((p) => ({ ...p, company_id: companyId, status: "Actif" }));
 
   const { data: personnel } = await supabase.from("personnel").insert(personnelData).select();
-  if (!personnel) return;
+  if (!personnel) return true;
 
   // Presence for current month
   const presenceRows: any[] = [];
