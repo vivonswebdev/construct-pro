@@ -13,6 +13,7 @@ import {
   FileDown,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { cleanVAT, formatVATDisplay, isValidVAT, formatEURBE } from "@/lib/belgian";
 import { formatDateBE } from "@/lib/format";
@@ -59,7 +60,7 @@ function ConformiteTvaPage() {
 
   // Latest check per VAT
   const latestByVat = useMemo(() => {
-    const map = new Map<string, any>();
+    const map = new Map<string, Tables<"tva_checks">>();
     for (const row of history) {
       if (!map.has(row.client_vat_number)) map.set(row.client_vat_number, row);
     }

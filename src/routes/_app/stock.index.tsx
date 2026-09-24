@@ -62,12 +62,9 @@ function StockPage() {
     enabled: !!profile?.company_id,
     queryFn: async () => {
       const [mRes, mvRes, chRes] = await Promise.all([
+        supabase.from("materiaux").select("*").order("name"),
         supabase
-          .from("materiaux" as any)
-          .select("*")
-          .order("name"),
-        supabase
-          .from("stock_mouvements" as any)
+          .from("stock_mouvements")
           .select("*")
           .order("date", { ascending: false })
           .limit(200),
@@ -331,7 +328,7 @@ function StockPage() {
                           onClick={async () => {
                             if (!confirm("Supprimer ce mouvement ? Le stock sera ajusté.")) return;
                             const { error } = await supabase
-                              .from("stock_mouvements" as any)
+                              .from("stock_mouvements")
                               .delete()
                               .eq("id", m.id);
                             if (error) toast.error(error.message);
@@ -419,7 +416,7 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
       return;
     }
     setSaving(true);
-    const { error } = await supabase.from("materiaux" as any).insert({
+    const { error } = await supabase.from("materiaux").insert({
       ...form,
       sku: form.sku || null,
       supplier: form.supplier || null,
@@ -568,7 +565,7 @@ function MouvementModal({
         return;
     }
     setSaving(true);
-    const { error } = await supabase.from("stock_mouvements" as any).insert({
+    const { error } = await supabase.from("stock_mouvements").insert({
       company_id: companyId,
       materiau_id: form.materiau_id,
       chantier_id: form.chantier_id || null,

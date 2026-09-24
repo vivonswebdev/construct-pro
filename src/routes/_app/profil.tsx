@@ -46,7 +46,7 @@ function ProfilPage() {
       .select("avatar_url")
       .eq("id", user!.id)
       .maybeSingle()
-      .then(({ data }) => setAvatarUrl((data as any)?.avatar_url ?? ""));
+      .then(({ data }) => setAvatarUrl(data?.avatar_url ?? ""));
   }, [company?.id, user]);
 
   const saveProfile = async () => {

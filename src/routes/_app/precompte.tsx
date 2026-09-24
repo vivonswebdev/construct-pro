@@ -10,6 +10,7 @@ import {
   FileDown,
   Settings,
 } from "lucide-react";
+import type { PostgrestError } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import {
@@ -100,7 +101,7 @@ function PrecomptePage() {
       const defaultOnss = defaultGross * 3 * (rates.onssEmployerRate + rates.onssEmployeeRate);
       return {
         person: p,
-        chantierName: (aff as any)?.chantiers?.name ?? "—",
+        chantierName: aff?.chantiers?.name ?? "—",
         salary: { row: sal, defaultGross, defaultNet },
         precompte: { row: prec, defaultAmount: defaultPrec },
         onss: { row: onss, defaultAmount: defaultOnss },
@@ -136,7 +137,7 @@ function PrecomptePage() {
   const confirmPayment = async (paidDate: string, reference: string, amount: number) => {
     if (!payModal || !companyId) return;
     const { kind, personnelId } = payModal;
-    let error: any = null;
+    let error: PostgrestError | null = null;
     if (kind === "salary") {
       const gross = rows.find((r) => r.person.id === personnelId)!.salary.defaultGross;
       const res = await supabase.from("salary_payments").upsert(

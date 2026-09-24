@@ -14,7 +14,7 @@ const inputSchema = z.object({
 export const checkTva = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }) => {
-    const vat = data.vat_number.replace(/[\s.\-]/g, "").toUpperCase();
+    const vat = data.vat_number.replace(/[\s.-]/g, "").toUpperCase();
     if (!/^BE\d{10}$/.test(vat)) {
       return { ok: false as const, error: "Format de TVA invalide (attendu BE + 10 chiffres)" };
     }

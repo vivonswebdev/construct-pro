@@ -7,7 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { toast } from "sonner";
 import { ClientSelect } from "@/components/ClientSelect";
-import { clientLabel, clientAddress } from "@/lib/clients";
+import { clientLabel, clientAddress, type Client } from "@/lib/clients";
 
 export const Route = createFileRoute("/_app/facturation/")({
   head: () => ({
@@ -72,7 +72,7 @@ function DevisPage() {
         .eq("company_id", companyId!)
         .eq("type", "devis")
         .order("issue_date", { ascending: false });
-      return ((data ?? []) as any[]).map((d) => ({ ...d, status: effectiveStatus(d) })) as Devis[];
+      return (data ?? []).map((d): Devis => ({ ...d, status: effectiveStatus(d) }));
     },
   });
 
@@ -333,7 +333,7 @@ function NewDevisModal({
   const [form, setForm] = useState({
     number: nextDevisNumber(),
     client_id: "",
-    client: null as any,
+    client: null as Client | null,
     issue_date: plusDays(0),
     valid_until: plusDays(30),
   });

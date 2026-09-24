@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { exportChantiersPDF, exportChantiersCSV } from "@/lib/pdf";
 import { toast } from "sonner";
+import { errorMessage } from "@/lib/utils";
 import { ClientSelect } from "@/components/ClientSelect";
 import { clientLabel, clientAddress } from "@/lib/clients";
 
@@ -290,8 +291,8 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
 
       toast.success("Chantier créé");
       onCreated();
-    } catch (err: any) {
-      toast.error(err.message ?? "Erreur");
+    } catch (err) {
+      toast.error(errorMessage(err));
     } finally {
       setSaving(false);
     }

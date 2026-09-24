@@ -11,7 +11,7 @@ export function formatEURBE(n: number | null | undefined): string {
 }
 
 export function cleanVAT(input: string): string {
-  return input.replace(/[\s.\-]/g, "").toUpperCase();
+  return input.replace(/[\s.-]/g, "").toUpperCase();
 }
 
 export function formatVATDisplay(vat: string): string {

@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
+import { errorMessage } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/personnel/")({
   component: PersonnelList,
@@ -103,7 +104,7 @@ function PersonnelList() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((p) => {
-            const aff = affectations.find((a: any) => a.personnel_id === p.id);
+            const aff = affectations.find((a) => a.personnel_id === p.id);
             return (
               <Link
                 to="/personnel/$id"
@@ -210,8 +211,8 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
       if (error) throw error;
       toast.success("Ouvrier ajouté");
       onCreated();
-    } catch (err: any) {
-      toast.error(err.message ?? "Erreur");
+    } catch (err) {
+      toast.error(errorMessage(err));
     } finally {
       setSaving(false);
     }

@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 
 const DEFAULT_PHASES = [
   "Préparation du site",
@@ -115,14 +116,11 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     ...c,
     company_id: companyId,
   }));
-  const { data: clientsRows } = await supabase
-    .from("clients")
-    .insert(clientsSeed as any)
-    .select();
-  const cl = (clientsRows ?? []) as any[];
-  const cName = (c: any) =>
+  const { data: clientsRows } = await supabase.from("clients").insert(clientsSeed).select();
+  const cl = clientsRows ?? [];
+  const cName = (c?: Tables<"clients">) =>
     c ? (c.type === "entreprise" ? c.raison_sociale : `${c.prenom} ${c.nom}`) : null;
-  const cAddr = (c: any) => (c ? `${c.adresse}, ${c.code_postal} ${c.ville}` : null);
+  const cAddr = (c?: Tables<"clients">) => (c ? `${c.adresse}, ${c.code_postal} ${c.ville}` : null);
 
   // Chantiers: 2 en cours dans les temps, 1 en retard, 1 terminé, 1 en préparation
   const chantiersData = [
@@ -191,7 +189,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
 
   const { data: chantiers, error: cErr } = await supabase
     .from("chantiers")
-    .insert(chantiersData as any)
+    .insert(chantiersData)
     .select();
   if (cErr || !chantiers) return true;
 
@@ -258,7 +256,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   if (!personnel) return true;
 
   // Presence for current month
-  const presenceRows: any[] = [];
+  const presenceRows: TablesInsert<"presence">[] = [];
   const now = new Date();
   const yr = now.getFullYear();
   const month = now.getMonth();
@@ -454,7 +452,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       company_id: companyId,
-      client_name: "TechLog BVBA",
+      client_name: "TechLog BV",
       client_vat_number: "BE0456789012",
       is_eligible: true,
       raw_response: { message: "Aucune retenue obligatoire" },
@@ -476,8 +474,8 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   const currentM = now.getMonth() + 1; // 1-12
   const currentQuarter = Math.floor((currentM - 1) / 3) + 1;
 
-  const salaryRows: any[] = [];
-  const precompteRows: any[] = [];
+  const salaryRows: TablesInsert<"salary_payments">[] = [];
+  const precompteRows: TablesInsert<"precompte_payments">[] = [];
   for (const w of contractWorkers) {
     const gross = Number(w.hourly_rate ?? 20) * 8 * 22;
     const net = Math.round(gross * 0.69 * 100) / 100;
@@ -530,7 +528,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   if (precompteRows.length) await supabase.from("precompte_payments").insert(precompteRows);
 
   // ONSS: Q1 paid, current quarter unpaid for everyone
-  const onssRows: any[] = [];
+  const onssRows: TablesInsert<"onss_payments">[] = [];
   for (const w of contractWorkers) {
     const gross = Number(w.hourly_rate ?? 20) * 8 * 22;
     const amt = Math.round(gross * 3 * 0.4 * 100) / 100;
@@ -571,8 +569,8 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   // Devis : 8 statuts variés avec lignes détaillées
   type L = [string, number, number, number?]; // description, qty, unit_price, vat
   const devisSeed: {
-    client: any;
-    chantier?: any;
+    client?: Tables<"clients">;
+    chantier?: Tables<"chantiers">;
     status: string;
     issue: number;
     valid: number;
@@ -719,7 +717,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
         autoliquidation: !!d.autoliq,
         attestation_6: !!d.att6,
         conditions: "Devis valable 30 jours. Acompte de 30 % à la commande.",
-      } as any)
+      })
       .select()
       .single();
     if (inserted) {
@@ -729,7 +727,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
           ...l,
           total_ht: l.quantity * l.unit_price,
           order_index: idx,
-        })) as any,
+        })),
       );
     }
   }
@@ -940,7 +938,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   const { data: materiaux } = await supabase.from("materiaux").insert(matSeed).select();
 
   if (materiaux && materiaux.length) {
-    const m = (sku: string) => (materiaux as any[]).find((x) => x.sku === sku);
+    const m = (sku: string) => materiaux.find((x) => x.sku === sku);
     // Entries insert with trigger → adjust stock; keep net effect small but realistic.
     const mv = (
       sku: string,
@@ -948,7 +946,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       type: string,
       quantity: number,
       day: number,
-      extra: any = {},
+      extra: Partial<TablesInsert<"stock_mouvements">> = {},
     ) => {
       const mat = m(sku);
       if (!mat) return null;
@@ -979,8 +977,8 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       mv("PLQ-13", 3, "sortie", 70, -60, { notes: "Cloisons intérieures" }),
       mv("END-FAC", 3, "sortie", 16, -40, { notes: "Façade" }),
       mv("PLQ-13", null, "achat", 80, -10, { supplier: "Gyproc", reference: "BC-0903" }),
-    ].filter(Boolean);
-    if (mvts.length) await supabase.from("stock_mouvements").insert(mvts as any);
+    ].filter((x): x is NonNullable<typeof x> => x !== null);
+    if (mvts.length) await supabase.from("stock_mouvements").insert(mvts);
   }
 
   return true;

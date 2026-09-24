@@ -10,6 +10,7 @@ import {
   Euro,
   IdCard,
   FileDown,
+  type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -244,7 +245,7 @@ function PersonnelDetail() {
           <p className="text-sm text-muted-foreground">Aucune affectation en cours.</p>
         ) : (
           <div className="space-y-2">
-            {affectations.map((a: any) => (
+            {affectations.map((a) => (
               <div
                 key={a.id}
                 className="flex items-center justify-between rounded-lg border border-border p-3"
@@ -264,7 +265,15 @@ function PersonnelDetail() {
   );
 }
 
-function InfoItem({ icon: Icon, label, value }: any) {
+function InfoItem({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: LucideIcon;
+  label: string;
+  value: React.ReactNode;
+}) {
   return (
     <div className="rounded-lg border border-border bg-muted/30 p-3">
       <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-muted-foreground">

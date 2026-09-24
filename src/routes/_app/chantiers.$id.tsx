@@ -12,6 +12,7 @@ import {
   Package,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { formatEUR, formatDateBE, daysUntil, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
 
@@ -46,13 +47,16 @@ function ChantierDetail() {
         supabase.from("affectations").select("*, personnel(id, full_name)").eq("chantier_id", id),
         supabase.from("vehicule_affectations").select("*").eq("chantier_id", id),
         supabase
-          .from("stock_mouvements" as any)
+          .from("stock_mouvements")
           .select("*")
           .eq("chantier_id", id)
           .order("date", { ascending: false }),
       ]);
       const vIds = Array.from(new Set((vaRes.data ?? []).map((va) => va.vehicule_id)));
-      const vMap = new Map<string, any>();
+      const vMap = new Map<
+        string,
+        Pick<Tables<"vehicules">, "id" | "plate" | "brand" | "model" | "cost_per_km" | "current_km">
+      >();
       if (vIds.length) {
         const { data: vehs } = await supabase
           .from("vehicules")
@@ -65,15 +69,15 @@ function ChantierDetail() {
         vehicule: vMap.get(va.vehicule_id),
       }));
 
-      const mouvements = (smRes.data ?? []) as any[];
+      const mouvements = smRes.data ?? [];
       const matIds = Array.from(new Set(mouvements.map((m) => m.materiau_id)));
-      const matMap = new Map<string, any>();
+      const matMap = new Map<string, Pick<Tables<"materiaux">, "id" | "name" | "unit">>();
       if (matIds.length) {
         const { data: mats } = await supabase
-          .from("materiaux" as any)
+          .from("materiaux")
           .select("id, name, unit")
           .in("id", matIds);
-        (mats ?? []).forEach((m: any) => matMap.set(m.id, m));
+        (mats ?? []).forEach((m) => matMap.set(m.id, m));
       }
       const mouvementsWithMat = mouvements.map((m) => ({
         ...m,
@@ -100,11 +104,11 @@ function ChantierDetail() {
   if (!chantier) return <div>Chantier introuvable.</div>;
 
   // Live material costs from stock movements (achat + sortie counted as expense, retour subtracted)
-  const materialCosts = mouvements.reduce((s: number, m: any) => {
+  const materialCosts = mouvements.reduce((s, m) => {
     if (m.type === "retour") return s - Number(m.total);
     return s + Number(m.total);
   }, 0);
-  const vehicleCosts = vehAffectations.reduce((s: number, va: any) => {
+  const vehicleCosts = vehAffectations.reduce((s, va) => {
     const v = va.vehicule;
     if (!v) return s;
     const km =
@@ -249,7 +253,7 @@ function ChantierDetail() {
           <p className="text-sm text-muted-foreground">Aucun ouvrier affecté.</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {affectations.map((a: any) => (
+            {affectations.map((a) => (
               <div
                 key={a.id}
                 className="flex items-center gap-3 rounded-lg border border-border p-3"
@@ -278,7 +282,7 @@ function ChantierDetail() {
           <p className="text-sm text-muted-foreground">Aucun véhicule affecté.</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {vehAffectations.map((va: any) => {
+            {vehAffectations.map((va) => {
               const v = va.vehicule;
               if (!v) return null;
               const km =
@@ -351,7 +355,7 @@ function ChantierDetail() {
                 </tr>
               </thead>
               <tbody>
-                {mouvements.map((m: any) => {
+                {mouvements.map((m) => {
                   const tStyles: Record<string, string> = {
                     achat: "bg-emerald-100 text-emerald-700",
                     sortie: "bg-cyan-100 text-cyan-700",
@@ -435,7 +439,25 @@ function Metric({
   );
 }
 
-function PhaseRow({ etape, index, isLast, onUpdate }: any) {
+type EtapePatch = {
+  progress?: number;
+  status?: string;
+  notes?: string;
+  start_date?: string | null;
+  end_date?: string | null;
+};
+
+function PhaseRow({
+  etape,
+  index,
+  isLast,
+  onUpdate,
+}: {
+  etape: Tables<"etapes">;
+  index: number;
+  isLast: boolean;
+  onUpdate: (patch: EtapePatch) => void;
+}) {
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(etape.progress);
   const [notes, setNotes] = useState(etape.notes ?? "");

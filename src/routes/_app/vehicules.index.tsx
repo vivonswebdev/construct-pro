@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import { Truck, Car, Plus, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { daysUntil, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
@@ -39,8 +40,8 @@ function VehiculesPage() {
   });
 
   const byVehicule = useMemo(() => {
-    const m = new Map<string, any>();
-    data?.affectations.forEach((a: any) => m.set(a.vehicule_id, a));
+    const m = new Map<string, Affectation>();
+    data?.affectations.forEach((a) => m.set(a.vehicule_id, a));
     return m;
   }, [data]);
 
@@ -97,7 +98,11 @@ function VehiculesPage() {
   );
 }
 
-function VehiculeCard({ v, affectation }: { v: any; affectation: any }) {
+type Affectation = Tables<"vehicule_affectations"> & {
+  chantier?: Pick<Tables<"chantiers">, "id" | "name">;
+};
+
+function VehiculeCard({ v, affectation }: { v: Tables<"vehicules">; affectation?: Affectation }) {
   const Icon = v.type === "Voiture" ? Car : Truck;
   return (
     <Link

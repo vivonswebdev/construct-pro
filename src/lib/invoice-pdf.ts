@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatEUR, formatDateBE } from "./format";
+import { lastTableY } from "./pdf";
 
 export type FactureForPDF = {
   type: string;
@@ -129,7 +130,7 @@ export function exportFacturePDF(
   });
 
   // Totals
-  const afterTable = (doc as any).lastAutoTable.finalY + 6;
+  const afterTable = lastTableY(doc) + 6;
   const totalsX = W - 80;
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
@@ -148,7 +149,7 @@ export function exportFacturePDF(
   for (const [rate, r] of rates) {
     ty += 6;
     doc.text(`TVA ${rate}%`, totalsX, ty);
-    doc.text(formatEUR((r as any).vat), W - 14, ty, { align: "right" });
+    doc.text(formatEUR(r.vat), W - 14, ty, { align: "right" });
   }
   doc.setFillColor(8, 145, 178);
   doc.rect(totalsX - 4, ty + 3, W - totalsX - 6, 9, "F");

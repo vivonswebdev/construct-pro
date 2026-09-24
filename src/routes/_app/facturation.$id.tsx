@@ -14,13 +14,14 @@ import {
   HardHat,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
 import { exportFacturePDF, AUTOLIQ_MENTION, ATTEST6_MENTION } from "@/lib/invoice-pdf";
 import { StatusBadge, effectiveStatus, nextDevisNumber, plusDays } from "./facturation.index";
 import { ClientSelect } from "@/components/ClientSelect";
-import { clientLabel, clientAddress } from "@/lib/clients";
+import { clientLabel, clientAddress, type Client } from "@/lib/clients";
 
 export const Route = createFileRoute("/_app/facturation/$id")({
   head: () => ({
@@ -71,17 +72,18 @@ function DevisDetail() {
         supabase.from("factures").select("*").eq("id", id).single(),
         supabase.from("facture_lignes").select("*").eq("facture_id", id).order("order_index"),
       ]);
-      const f: any = fRes.data;
-      let client: any = null;
+      const f = fRes.data;
+      let client: Client | null = null;
       if (f?.client_id)
         client = (await supabase.from("clients").select("*").eq("id", f.client_id).maybeSingle())
-          .data;
-      return { facture: f, lignes: (lRes.data ?? []) as any as Ligne[], client };
+          .data as Client | null;
+      const lignes: Ligne[] = lRes.data ?? [];
+      return { facture: f, lignes, client };
     },
   });
 
-  const [f, setF] = useState<any>(null);
-  const [client, setClient] = useState<any>(null);
+  const [f, setF] = useState<Tables<"factures"> | null>(null);
+  const [client, setClient] = useState<Client | null>(null);
   const [lignes, setLignes] = useState<Ligne[]>([]);
 
   useEffect(() => {
@@ -240,17 +242,15 @@ function DevisDetail() {
       .select()
       .single();
     if (error || !ch) return toast.error(error?.message ?? "Erreur");
-    await supabase
-      .from("etapes")
-      .insert(
-        DEFAULT_PHASES.map((n, i) => ({
-          chantier_id: ch.id,
-          name: n,
-          order_index: i,
-          status: "En attente",
-          progress: 0,
-        })),
-      );
+    await supabase.from("etapes").insert(
+      DEFAULT_PHASES.map((n, i) => ({
+        chantier_id: ch.id,
+        name: n,
+        order_index: i,
+        status: "En attente",
+        progress: 0,
+      })),
+    );
     await supabase.from("factures").update({ chantier_id: ch.id }).eq("id", id);
     qc.invalidateQueries();
     toast.success("Chantier créé");

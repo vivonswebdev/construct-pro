@@ -2,6 +2,11 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatEUR, formatDateBE } from "./format";
 
+/** Position Y de fin du dernier tableau jspdf-autotable (propriété ajoutée au document). */
+export function lastTableY(doc: jsPDF): number {
+  return (doc as jsPDF & { lastAutoTable?: { finalY: number } }).lastAutoTable?.finalY ?? 0;
+}
+
 type Chantier = {
   name: string;
   client_name: string | null;
@@ -67,7 +72,7 @@ export function exportChantiersPDF(chantiers: Chantier[], companyName?: string) 
   });
 
   autoTable(doc, {
-    startY: (doc as any).lastAutoTable.finalY + 8,
+    startY: lastTableY(doc) + 8,
     head: [
       ["Chantier", "Client", "Début", "Remise", "Budget", "Dépenses", "Progression", "Statut"],
     ],
@@ -149,7 +154,7 @@ export function exportPresencePDF(opts: {
   );
 
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const rows: any[] = [];
+  const rows: string[][] = [];
   let totalP = 0,
     totalA = 0,
     totalC = 0,
@@ -185,7 +190,7 @@ export function exportPresencePDF(opts: {
     columnStyles: { 3: { halign: "right" } },
   });
 
-  const summaryY = (doc as any).lastAutoTable.finalY + 8;
+  const summaryY = lastTableY(doc) + 8;
   const summary: (string | number)[][] = [
     ["Jours présents", totalP],
     ["Jours absents", totalA],

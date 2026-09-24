@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowLeft, Truck, Car, RefreshCw, Plus, X, Trash2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { toast } from "sonner";
@@ -45,7 +46,7 @@ function VehiculeDetail() {
   if (!data.v) return <div>Véhicule introuvable.</div>;
 
   const v = data.v;
-  const current = data.affectations.find((a: any) => !a.end_date);
+  const current = data.affectations.find((a) => !a.end_date);
 
   const renew = async (field: "ct_date" | "insurance_date" | "maintenance_date") => {
     const now = new Date();
@@ -53,17 +54,16 @@ function VehiculeDetail() {
       field === "maintenance_date"
         ? now
         : new Date(now.getFullYear() + 1, now.getMonth(), now.getDate());
-    const { error } = await supabase
-      .from("vehicules")
-      .update({ [field]: newDate.toISOString().slice(0, 10) } as any)
-      .eq("id", id);
+    const patch: TablesUpdate<"vehicules"> = {};
+    patch[field] = newDate.toISOString().slice(0, 10);
+    const { error } = await supabase.from("vehicules").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Mis à jour");
     qc.invalidateQueries({ queryKey: ["vehicule", id] });
     qc.invalidateQueries({ queryKey: ["vehicules"] });
   };
 
-  const closeAffectation = async (aff: any) => {
+  const closeAffectation = async (aff: Tables<"vehicule_affectations">) => {
     const endKmStr = prompt(
       `Kilométrage de fin (km actuel: ${v.current_km}) :`,
       String(v.current_km),
@@ -196,7 +196,7 @@ function VehiculeDetail() {
                 </tr>
               </thead>
               <tbody>
-                {data.affectations.map((a: any) => {
+                {data.affectations.map((a) => {
                   const km = a.end_km && a.start_km ? a.end_km - a.start_km : null;
                   const cost = km ? km * Number(v.cost_per_km) : null;
                   return (
@@ -310,7 +310,19 @@ function AlertRow({
   );
 }
 
-function AffectationModal({ vehiculeId, currentKm, chantiers, onClose, onSaved }: any) {
+function AffectationModal({
+  vehiculeId,
+  currentKm,
+  chantiers,
+  onClose,
+  onSaved,
+}: {
+  vehiculeId: string;
+  currentKm: number;
+  chantiers: Pick<Tables<"chantiers">, "id" | "name">[];
+  onClose: () => void;
+  onSaved: () => void;
+}) {
   const [chantierId, setChantierId] = useState(chantiers[0]?.id ?? "");
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
   const [startKm, setStartKm] = useState(currentKm);
@@ -357,7 +369,7 @@ function AffectationModal({ vehiculeId, currentKm, chantiers, onClose, onSaved }
               value={chantierId}
               onChange={(e) => setChantierId(e.target.value)}
             >
-              {chantiers.map((c: any) => (
+              {chantiers.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.name}
                 </option>
@@ -379,7 +391,7 @@ function AffectationModal({ vehiculeId, currentKm, chantiers, onClose, onSaved }
               type="number"
               className={inputCls}
               value={startKm}
-              onChange={(e) => setStartKm(e.target.value)}
+              onChange={(e) => setStartKm(Number(e.target.value))}
             />
           </label>
         </div>

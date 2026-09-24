@@ -20,6 +20,7 @@ import {
   ArrowRight,
   FileText,
   Percent,
+  type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
@@ -101,9 +102,9 @@ function Dashboard() {
     quarter,
     devis,
   } = data;
-  const devisPending = devis.filter((d: any) => d.status === "Envoyé" || d.status === "Brouillon");
-  const devisAccepted = devis.filter((d: any) => d.status === "Accepté").length;
-  const devisDecided = devis.filter((d: any) =>
+  const devisPending = devis.filter((d) => d.status === "Envoyé" || d.status === "Brouillon");
+  const devisAccepted = devis.filter((d) => d.status === "Accepté").length;
+  const devisDecided = devis.filter((d) =>
     ["Accepté", "Refusé", "Expiré"].includes(d.status),
   ).length;
   const acceptRate = devisDecided ? Math.round((devisAccepted / devisDecided) * 100) : 0;
@@ -113,15 +114,13 @@ function Dashboard() {
     (p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""),
   );
   const totalElig = eligibleWorkers.length;
-  const unpaidSalaries = totalElig - salaries.filter((s: any) => s.paid).length;
-  const unpaidPrecompte = totalElig - precomptes.filter((s: any) => s.paid).length;
+  const unpaidSalaries = totalElig - salaries.filter((s) => s.paid).length;
+  const unpaidPrecompte = totalElig - precomptes.filter((s) => s.paid).length;
   const precompteAmount = precomptes
-    .filter((s: any) => !s.paid)
-    .reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
-  const onssPaidCount = onss.filter((s: any) => s.paid).length;
-  const onssAmount = onss
-    .filter((s: any) => !s.paid)
-    .reduce((acc: number, s: any) => acc + Number(s.amount ?? 0), 0);
+    .filter((s) => !s.paid)
+    .reduce((acc, s) => acc + Number(s.amount ?? 0), 0);
+  const onssPaidCount = onss.filter((s) => s.paid).length;
+  const onssAmount = onss.filter((s) => !s.paid).reduce((acc, s) => acc + Number(s.amount ?? 0), 0);
   const onssDue = totalElig > 0 && onssPaidCount < totalElig;
   const now = new Date();
   const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 15);
@@ -230,9 +229,7 @@ function Dashboard() {
           icon={FileText}
           label="Devis en attente"
           value={String(devisPending.length)}
-          sub={formatEUR(
-            devisPending.reduce((s: number, d: any) => s + Number(d.total_ttc ?? 0), 0),
-          )}
+          sub={formatEUR(devisPending.reduce((s, d) => s + Number(d.total_ttc ?? 0), 0))}
           tone="primary"
         />
         <KpiCard
@@ -379,9 +376,9 @@ function Dashboard() {
             </AlertCard>
           )}
           {(() => {
-            const ctExpired = vehicules.filter((v: any) => v.ct_date && daysUntil(v.ct_date)! < 0);
+            const ctExpired = vehicules.filter((v) => v.ct_date && daysUntil(v.ct_date)! < 0);
             const insSoon = vehicules.filter(
-              (v: any) =>
+              (v) =>
                 v.insurance_date &&
                 daysUntil(v.insurance_date)! >= 0 &&
                 daysUntil(v.insurance_date)! < 30,
@@ -395,7 +392,7 @@ function Dashboard() {
                   >
                     {ctExpired
                       .slice(0, 2)
-                      .map((v: any) => v.plate)
+                      .map((v) => v.plate)
                       .join(", ")}
                   </AlertCard>
                 )}
@@ -403,7 +400,7 @@ function Dashboard() {
                   <AlertCard tone="warning" title={`⚠️ Assurance véhicule à renouveler`}>
                     {insSoon
                       .slice(0, 2)
-                      .map((v: any) => `${v.plate} (${daysUntil(v.insurance_date)} j)`)
+                      .map((v) => `${v.plate} (${daysUntil(v.insurance_date)} j)`)
                       .join(", ")}
                   </AlertCard>
                 )}
@@ -432,7 +429,7 @@ function KpiCard({
   tone = "primary",
   subTone = "muted",
 }: {
-  icon: any;
+  icon: LucideIcon;
   label: string;
   value: string;
   sub?: string;

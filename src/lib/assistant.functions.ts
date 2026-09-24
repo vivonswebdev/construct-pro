@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { chat } from "./ai.server";
 
 const inputSchema = z.object({
   messages: z
@@ -26,37 +27,21 @@ export const askAssistant = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data, context }) => {
-    const apiKey = process.env["LOVABLE_API_KEY"];
-    if (!apiKey) {
-      return { ok: false as const, error: "Assistant indisponible (clé IA manquante)." };
-    }
-
     const sb = context.supabase;
-    const [chRes, prRes, veRes, faRes, maRes] = await Promise.all([
+    const [chRes, prRes, veRes, deRes, maRes] = await Promise.all([
       sb.from("chantiers").select("*").limit(100),
       sb.from("personnel").select("*").limit(100),
-      sb
-        .from("vehicules" as any)
-        .select("*")
-        .limit(100),
-      sb
-        .from("factures" as any)
-        .select("*")
-        .eq("type", "devis")
-        .limit(200),
-      sb
-        .from("materiaux" as any)
-        .select("*")
-        .limit(200),
+      sb.from("vehicules").select("*").limit(100),
+      sb.from("factures").select("*").eq("type", "devis").limit(200),
+      sb.from("materiaux").select("*").limit(200),
     ]);
 
-    const chantiers = (chRes.data ?? []) as any[];
-    const personnel = (prRes.data ?? []) as any[];
-    const vehicules = (veRes.data ?? []) as any[];
-    const factures = (faRes.data ?? []) as any[];
-    const materiaux = (maRes.data ?? []) as any[];
+    const chantiers = chRes.data ?? [];
+    const personnel = prRes.data ?? [];
+    const vehicules = veRes.data ?? [];
+    const devis = deRes.data ?? [];
+    const materiaux = maRes.data ?? [];
 
-    const devis = factures.filter((f) => f.type === "devis");
     const devisAttente = devis.filter((f) => f.status === "Envoyé" || f.status === "Brouillon");
     const devisAcc = devis.filter((f) => f.status === "Accepté").length;
     const devisDec = devis.filter((f) => ["Accepté", "Refusé", "Expiré"].includes(f.status)).length;
@@ -71,19 +56,19 @@ export const askAssistant = createServerFn({ method: "POST" })
       "CHANTIERS:",
       ...chantiers.map(
         (c) =>
-          `- ${c.name} | client: ${c.client_name ?? "?"} | statut: ${c.status} | avancement: ${c.progress ?? 0}% | budget: ${eur(c.budget ?? 0)} | dépenses: ${eur(c.spent ?? 0)} | fin prévue: ${c.end_date ?? "?"}`,
+          `- ${c.name} | client: ${c.client_name ?? "?"} | statut: ${c.status} | avancement: ${c.progress ?? 0}% | budget: ${eur(c.budget ?? 0)} | dépenses: ${eur(c.actual_costs ?? 0)} | fin prévue: ${c.end_date ?? "?"}`,
       ),
       "",
       "PERSONNEL:",
       ...personnel.map(
         (p) =>
-          `- ${p.full_name} | ${p.role ?? "?"} | taux horaire: ${eur(p.hourly_rate ?? 0)} | contrat: ${p.contract_type ?? "?"} | statut: ${p.status ?? "?"}`,
+          `- ${p.full_name} | taux horaire: ${eur(p.hourly_rate ?? 0)} | contrat: ${p.contract_type ?? "?"} | statut: ${p.status}`,
       ),
       "",
       "VÉHICULES:",
       ...vehicules.map(
         (v) =>
-          `- ${v.name ?? v.brand} ${v.model ?? ""} (${v.plate ?? "?"}) | CT: ${v.ct_expiry ?? "?"} | assurance: ${v.insurance_expiry ?? "?"} | statut: ${v.status ?? "?"}`,
+          `- ${v.brand ?? v.type} ${v.model ?? ""} (${v.plate}) | CT: ${v.ct_date ?? "?"} | assurance: ${v.insurance_date ?? "?"} | statut: ${v.status}`,
       ),
       "",
       `STOCK BAS (${lowStock.length}): ${lowStock.map((m) => `${m.name} (${m.stock_quantity} ${m.unit})`).join(", ") || "aucun"}`,
@@ -99,38 +84,5 @@ Rappelle que les calculs fiscaux sont indicatifs et à valider avec le comptable
 === DONNÉES DE LA SOCIÉTÉ ===
 ${ctx}`;
 
-    try {
-      const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${apiKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash",
-          messages: [{ role: "system", content: system }, ...data.messages],
-        }),
-        signal: AbortSignal.timeout(60000),
-      });
-
-      if (res.status === 429) {
-        return { ok: false as const, error: "Trop de requêtes, réessayez dans un instant." };
-      }
-      if (res.status === 402) {
-        return {
-          ok: false as const,
-          error: "Crédits IA épuisés. Rechargez votre espace Lovable AI.",
-        };
-      }
-      if (!res.ok) {
-        return { ok: false as const, error: `Erreur IA (${res.status}).` };
-      }
-
-      const json = (await res.json()) as any;
-      const content = json?.choices?.[0]?.message?.content ?? "";
-      return { ok: true as const, content };
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Erreur inconnue";
-      return { ok: false as const, error: `Assistant injoignable : ${msg}` };
-    }
+    return chat({ system, messages: data.messages });
   });
