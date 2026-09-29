@@ -208,6 +208,8 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - Paiement d'un sous-traitant : bouton « Vérifier les dettes » (lien vers le service officiel, BCE prérempli, enregistrement manuel du résultat daté + capture) ; si dette : calcul de la retenue et blocage du paiement complet.
 - Checklists paramétrables par statut (indépendant, associé actif, dirigeant, salarié, sous-traitant, société) : BCE, caisse d'assurances sociales, accès à la profession selon la région, RC, décennale, VCA, Limosa, Dimona, permis, examen médical, formations, ConstruBadge…
 - Tableau de bord feu tricolore ; alertes à 30 jours ; blocage optionnel d'affectation ; rappel Checkinatwork ; avertissement faux indépendant.
+- *(Ajout du 29/09/2026, voir §10)* `contrats_sous_traitance` (chantier, descriptif des prestations, dates, mode de prix forfait/horaire, taux horaire, prix forfaitaire, fréquence de paiement, délai de paiement) et `prestations_sous_traitance` (journal : date, description, heures, nombre d'ouvriers, bon de travail, photos, validation par un profil). Les **factures** des sous-traitants sont des achats : elles passent par la phase 12 (pas de table dédiée) et se rattachent au contrat.
+- `sous_traitants.forme_juridique` : SRL, SA, SC, SComm, indépendant (personne physique), autre — jamais « SPRL » (supprimée par le CSA en 2019).
 - Démo : 5 sous-traitants (1 document expiré, 1 dette constatée).
 - **CA** : impossible d'enregistrer un paiement complet à un sous-traitant avec dette sans calcul de retenue.
 
@@ -230,12 +232,14 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - Entrées : email dédié (`achats+{slug}@…`, webhook Resend inbound) ; upload ; **UBL Peppol BIS Billing 3.0 parsé de façon déterministe** (sans IA, contrôle des totaux) ; PDF/photo extraits par IA (statut « à valider », champs incertains surlignés) ; endpoint `/api/hooks/achats` signé HMAC préparé pour un futur connecteur Peppol (inactif).
 - Écran de validation document | données ; affectation des lignes aux chantiers et matériaux (suggestion) ; à la validation : entrée de stock + coût chantier + fournisseur créé.
 - Doublons, alerte hausse de prix > 10 %, échéances fournisseurs dans l'agenda, export CSV/UBL pour le comptable.
-- **CA** : un fichier UBL d'exemple est importé sans IA avec des totaux exacts ; un doublon est bloqué.
+- *(Ajout du 29/09/2026, voir §10)* **Catégorie « Frais de restaurant »** : photo du ticket, participants (nom, société, fonction — au moins un), motif professionnel obligatoire, chantier/client lié, validation (brouillon → validé / rejeté avec motif). Déductibilité fiscale et TVA déductible lues dans une table de paramètres datée (valeurs indicatives de départ : 69 % à l'impôt, TVA 0 % déductible), jamais en dur ; bandeau « indicatif ».
+- **CA** : un fichier UBL d'exemple est importé sans IA avec des totaux exacts ; un doublon est bloqué ; un frais de restaurant sans participant ni motif ne peut pas être validé.
 
 ### Phase 13 — Matériel/location et déchets
 - `equipements` (propre/loué, loueur, tarifs jour/semaine, caution, dates, chantier, contrôles périodiques) ; coût calculé et imputé ; alertes retour et contrôle ; visible agenda et mobile.
 - `dechets` (type, volume/poids, conteneur, collecteur, enlèvement, bordereau, coût, destination) ; checklist par région (Flandre : sloopopvolgingsplan/Tracimat, asbestattest) ; amiante → avertissement « entreprise agréée requise » ; rapport PDF par chantier ; obligations dans une table paramétrable.
-- **CA** : le coût de location suit le tarif le plus avantageux ; le coût des déchets apparaît dans la rentabilité.
+- *(Ajout du 29/09/2026, voir §10)* **Export « Inventaire à date »** (PDF/CSV pour le comptable) regroupant véhicules, équipements propres et stock à une date donnée : catégorie, description, n° de série, date d'achat, montant HT, localisation, statut. Champs manquants ajoutés aux tables existantes (`equipements.numero_serie`, `date_achat`, `montant_achat_ht`…). **Pas de calcul d'amortissement** (tenu dans le logiciel comptable).
+- **CA** : le coût de location suit le tarif le plus avantageux ; le coût des déchets apparaît dans la rentabilité ; l'inventaire au 31/12 n'inclut ni les biens achetés après cette date ni ceux sortis avant.
 
 ### Phase 14 — Primes rénovation (3 régions)
 - `primes_regles` globale (région, programme, type de travaux, conditions, montants par catégorie de revenus jsonb, documents requis, lien officiel, date de vérification), éditable par un rôle **admin plateforme**.
@@ -272,6 +276,7 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 6. Relecture des fichiers de langue NL/RO/PL par un locuteur natif du secteur.
 7. Relecture juridique des modèles de CG et contrats.
 8. Modèle économique (plans, modules payants, option domaine personnalisé) : impacte la gestion des droits par module.
+9. Source officielle de la « loi 2027 » sur les feuilles de temps des associés actifs (voir §10).
 
 ---
 
@@ -285,6 +290,52 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - [ ] `bun run build` et `bun run lint` OK
 - [ ] `docs/JOURNAL.md` mis à jour (fait, décidé, reste à faire)
 - [ ] Captures ou description des écrans ajoutées au résumé de la PR
+
+---
+
+## 10. Mise à jour du périmètre — 29/09/2026
+
+Décisions prises après examen d'une proposition externe (modules sous-traitants, associés actifs,
+frais de restaurant, inventaire). Les ajouts sont intégrés dans les phases 9, 12 et 13 ci-dessus.
+
+### 10.1 Règles confirmées
+- **Nommage** : tables et colonnes en français ; réutilisation de l'existant (`chantiers`, `profiles`,
+  `clients`, `companies`). Pas de tables `projects`, `users` ni `user_companies`.
+- **RLS** : policies sur `company_id = public.get_user_company_id(auth.uid())`, comme toutes les
+  tables existantes.
+- **Formes juridiques** (CSA 2019) : SRL, SA, SC, SComm, indépendant, autre — plus de « SPRL ».
+  La forme juridique de la société utilisatrice est une donnée d'identité (`companies`), pas un
+  paramètre de `company_settings` ; la liste des valeurs est une constante traduite (i18n).
+- **Restaurant** : TVA 0 % déductible (sauf exceptions légales), déduction fiscale 69 % — valeurs
+  indicatives dans une table de paramètres datée, jamais en dur.
+
+### 10.2 Ajouts au périmètre
+| Phase | Ajout |
+|---|---|
+| 9 | Contrats de sous-traitance + journal des prestations (factures via la phase 12) |
+| 12 | Catégorie « Frais de restaurant » (participants, motif, ticket, validation) |
+| 13 | Export « Inventaire à date » (véhicules, équipements, stock), sans amortissements |
+
+### 10.3 En attente
+- **Feuilles de temps des associés actifs (« loi 2027 »)** : non développé tant qu'aucune source
+  officielle (Moniteur belge, SPF, ONSS) n'est fournie. Si elle est confirmée : extension de la
+  feuille de temps de la phase 3 aux dirigeants/associés, sans tables supplémentaires.
+  **NISS** : non stocké, sauf obligation légale explicite (donnée sensible RGPD).
+
+### 10.4 Ordre des phases
+Ordre de la passation maintenu (1 → 2 → 3 → …). Les phases 9 et 12 peuvent être avancées juste
+après la phase 3 en cas de priorité commerciale.
+
+### 10.5 Pratiques de travail
+- Jamais de modification directe sur `main` ; une branche par phase (`phase-09-sous-traitants`…).
+- Avant fusion : `bun run build`, `bun run lint`, `bunx tsc --noEmit`, `bun run i18n:check`
+  (dès la phase 1) et tests Vitest (dès la phase 3).
+- **Retour arrière des migrations** : Supabase et Lovable exécutent le fichier SQL **en entier**. Une
+  section `-- migrate:down` suivie d'instructions non commentées serait donc exécutée
+  immédiatement (suppression de ce qui vient d'être créé). Le SQL de retour arrière est écrit à la
+  fin de chaque migration dans un bloc **entièrement commenté** (`-- ROLLBACK : …`, chaque ligne
+  préfixée par `--`), à exécuter manuellement si besoin.
+- `PASSATION.md` et `docs/JOURNAL.md` mis à jour avant chaque phase.
 
 ---
 

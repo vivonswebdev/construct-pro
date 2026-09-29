@@ -4,6 +4,26 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-09-29 — Mise à jour du périmètre (PASSATION §10)
+
+- Proposition externe examinée (sous-traitants, associés actifs « loi 2027 », frais de restaurant,
+  inventaire). Schéma proposé non retenu tel quel (tables en anglais, `projects`/`users`/
+  `user_companies` inexistants, « SPRL », TVA restaurant « 50 % déductible »).
+- **Retenu** : phase 9 + contrats et journal de prestations des sous-traitants (factures via la
+  phase 12) ; phase 12 + catégorie « Frais de restaurant » ; phase 13 + export « Inventaire à date »
+  sans amortissements. Taux restaurant indicatifs (69 % impôt, TVA 0 %) en table de paramètres.
+- **En attente** : feuilles de temps des associés actifs, tant qu'aucune source officielle n'est
+  fournie. NISS non stocké sauf obligation légale.
+- Corrections apportées à la note reçue :
+  - RLS via `get_user_company_id()` (pas de table `user_companies`) ;
+  - forme juridique de la société dans `companies`, pas dans `company_settings` ;
+  - **pas de section `-- migrate:down` exécutable** : Supabase/Lovable exécutent le fichier entier,
+    le retour arrière serait appliqué aussitôt. Convention : bloc `-- ROLLBACK` entièrement
+    commenté en fin de migration (appliquée à la migration de phase 1).
+- Ordre des phases maintenu ; phases 9 et 12 avançables après la phase 3.
+
+---
+
 ## 2026-09-24 (nuit) — Migrations phase 0 appliquées, nettoyage
 
 Branche : `phase-00-suivi`.
