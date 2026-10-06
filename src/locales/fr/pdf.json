@@ -1,1 +1,41 @@
-{}
+{
+  "quote": "DEVIS",
+  "invoice": "FACTURE",
+  "number": "N° {{number}}",
+  "bce": "BCE : {{value}}",
+  "billedTo": "Facturé à",
+  "vat": "TVA : {{value}}",
+  "issueDate": "Date d'émission",
+  "validity": "Validité",
+  "dueDate": "Échéance",
+  "status": "Statut",
+  "columns": {
+    "description": "Description",
+    "qty": "Qté",
+    "unitPrice": "Prix unit.",
+    "vat": "TVA",
+    "totalExcl": "Total HT"
+  },
+  "subtotalExcl": "Sous-total HT",
+  "vatRate": "TVA {{rate}} %",
+  "totalIncl": "Total TTC",
+  "legalMentions": "Mentions légales",
+  "mentionReverseCharge": "Autoliquidation – Art. 20 AR n° 1 TVA",
+  "mention6": "TVA 6 % : logement de plus de 10 ans – attestation client requise",
+  "notes": "Notes",
+  "paymentTerms": "Modalités de paiement",
+  "structuredCommunication": "Communication structurée : {{value}}",
+  "reference": "Référence : {{value}}",
+  "generalConditions": "Conditions",
+  "footer": "Document généré le {{date}} via ConstructFlow",
+  "fileQuote": "Devis",
+  "fileInvoice": "Facture",
+  "defaultConditions": "Devis valable 30 jours. Acompte de 30 % à la commande.",
+  "statusLabels": {
+    "brouillon": "Brouillon",
+    "envoye": "Envoyé",
+    "accepte": "Accepté",
+    "refuse": "Refusé",
+    "expire": "Expiré"
+  }
+}
