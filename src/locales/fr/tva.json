@@ -1,1 +1,70 @@
-{}
+{
+  "title": "Conformité TVA & retenue",
+  "subtitle": "Vérifiez l'obligation de retenue pour vos clients et sous-traitants (art. 402 CIR)",
+  "form": {
+    "title": "Vérifier un numéro de TVA",
+    "clientName": "Nom du client",
+    "clientNamePlaceholder": "Ex : Immobilière Dumont SA",
+    "vat": "N° TVA",
+    "vatHint": "Format : BE + 10 chiffres",
+    "checking": "Vérification en cours…",
+    "checkNow": "Vérifier maintenant",
+    "source": "ⓘ Données issues de checkobligationderetenue.be — résultat SPF Finances (art. 402 CIR 92)"
+  },
+  "validation": {
+    "clientNameRequired": "Indiquez le nom du client",
+    "vatInvalid": "Numéro de TVA invalide (BE + 10 chiffres)"
+  },
+  "errors": {
+    "format_invalide": "Format de TVA invalide (attendu : BE + 10 chiffres)",
+    "site_indisponible": "Site officiel indisponible (HTTP {{status}}). Utilisez la saisie manuelle.",
+    "site_injoignable": "Impossible de contacter le site officiel. Utilisez la saisie manuelle.",
+    "manualHint": "Vous pouvez consulter le site officiel et enregistrer le résultat manuellement."
+  },
+  "result": {
+    "noWithholding": "✓ Aucune retenue obligatoire",
+    "withholding": "⚠ Retenue obligatoire !",
+    "toConfirm": "Résultat à confirmer manuellement",
+    "msgNoWithholding": "Aucune retenue obligatoire — en règle.",
+    "msgWithholding": "Retenue obligatoire — dettes fiscales ou sociales constatées.",
+    "msgAmbiguous": "Résultat ambigu. Vérifiez manuellement sur le site officiel.",
+    "msgManualOk": "Saisie manuelle — conforme",
+    "msgManualWithholding": "Saisie manuelle — retenue obligatoire",
+    "checkedAt": "Vérifié le {{date}} à {{time}}",
+    "officialSite": "Voir sur le site officiel",
+    "manualEntry": "Saisie manuelle :",
+    "compliant": "✓ Conforme",
+    "withholdingShort": "⚠ Retenue"
+  },
+  "calc": {
+    "title": "Calcul de la retenue",
+    "invoiceAmount": "Montant de la facture",
+    "withholding": "Retenue {{rate}} %",
+    "toSpf": "À verser au SPF",
+    "netToClient": "Net au client",
+    "balance": "Solde à verser",
+    "gross": "Montant brut",
+    "invoiced": "Total facturé"
+  },
+  "history": {
+    "title": "Historique des vérifications",
+    "searchPlaceholder": "Rechercher client ou n° TVA",
+    "exportCsv": "Export CSV",
+    "noResult": "Aucun résultat —",
+    "launchCheck": "Lancer une vérification ?",
+    "empty": "Aucune vérification enregistrée. Utilisez le formulaire ci-dessus.",
+    "unknown": "Inconnu",
+    "recheck": "Re-vérifier",
+    "csvFileName": "verifications-tva",
+    "columns": {
+      "status": "Statut",
+      "client": "Client",
+      "vat": "N° TVA",
+      "checkedOn": "Vérifié le",
+      "actions": "Actions"
+    }
+  },
+  "toasts": {
+    "saved": "Vérification enregistrée"
+  }
+}
