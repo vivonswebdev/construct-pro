@@ -1,0 +1,66 @@
+{
+  "title": "Withholding tax & NSSO",
+  "subtitle": "Tracking of social and tax obligations per worker",
+  "ratesSettings": "Rate settings",
+  "ratesTitle": "Rate settings (JC 124 construction by default)",
+  "rates": {
+    "precompte": "Payroll withholding tax",
+    "onssEmployee": "NSSO employee",
+    "onssEmployer": "NSSO employer"
+  },
+  "kpi": {
+    "salariesPaid": "Salaries paid",
+    "precomptePaid": "Withholding tax paid",
+    "onss": "NSSO Q{{quarter}}/{{year}}",
+    "paid": "Paid",
+    "totalObligations": "Total obligations"
+  },
+  "alerts": {
+    "precompteUnpaid_one": "Withholding tax {{period}} unpaid for {{count}} worker — due: {{date}}",
+    "precompteUnpaid_other": "Withholding tax {{period}} unpaid for {{count}} workers — due: {{date}}",
+    "onssUnpaid": "NSSO Q{{quarter}} {{year}} unpaid — due: {{date}}"
+  },
+  "table": {
+    "title": "Active workers — {{period}}",
+    "worker": "Worker",
+    "site": "Site",
+    "netSalary": "Net salary",
+    "salaryStatus": "Salary status",
+    "precompte": "Withholding tax",
+    "precompteStatus": "Withholding status",
+    "onss": "NSSO Q{{quarter}}",
+    "onssStatus": "NSSO status",
+    "empty": "No active workers (permanent / fixed-term / agency)."
+  },
+  "exports": {
+    "pdf": "Export PDF — summary",
+    "csv": "Export CSV",
+    "belcotax": "Belcotax form (soon)",
+    "pdfSoon": "PDF export coming soon",
+    "csvSoon": "CSV export coming soon"
+  },
+  "status": {
+    "paidOn": "✓ Paid on {{date}}",
+    "pay": "Pay",
+    "cancel": "Cancel"
+  },
+  "modal": {
+    "salary": "Salary payment",
+    "precompte": "Withholding tax payment",
+    "onss": "NSSO payment",
+    "worker": "Worker:",
+    "notePrecompte": "To be paid to the FPS Finance before the 15th of the following month.",
+    "noteOnss": "To be paid to the NSSO before the last day of the month following the quarter.",
+    "amount": "Amount (€)",
+    "date": "Payment date",
+    "reference": "Transfer reference",
+    "referencePlaceholder": "E.g. TRF-2026-06-001",
+    "confirm": "Confirm payment"
+  },
+  "toasts": {
+    "ratesSaved": "Rates saved",
+    "ratesError": "Unable to save the rates",
+    "paymentSaved": "Payment recorded",
+    "paymentCancelled": "Payment cancelled"
+  }
+}

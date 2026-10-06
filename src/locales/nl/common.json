@@ -1,0 +1,99 @@
+{
+  "appName": "ConstructFlow",
+  "meta": {
+    "title": "ConstructFlow — Werfbeheer",
+    "description": "Platform voor werfbeheer voor Belgische bouwbedrijven."
+  },
+  "actions": {
+    "add": "Toevoegen",
+    "cancel": "Annuleren",
+    "close": "Sluiten",
+    "confirm": "Bevestigen",
+    "create": "Aanmaken",
+    "delete": "Verwijderen",
+    "edit": "Wijzigen",
+    "save": "Opslaan",
+    "saving": "Opslaan…",
+    "search": "Zoeken",
+    "back": "Terug",
+    "see": "Bekijken",
+    "export": "Exporteren",
+    "understood": "Begrepen",
+    "translate": "Vertalen",
+    "showOriginal": "Origineel bekijken",
+    "translating": "Vertalen…"
+  },
+  "labels": {
+    "all": "Alle",
+    "none": "Geen",
+    "unknown": "—",
+    "notes": "Notities",
+    "status": "Status",
+    "date": "Datum",
+    "total": "Totaal",
+    "language": "Taal",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "address": "Adres",
+    "postalCode": "Postcode",
+    "city": "Gemeente",
+    "vat": "Btw",
+    "bce": "Ondernemingsnummer",
+    "name": "Naam",
+    "firstName": "Voornaam",
+    "description": "Omschrijving",
+    "quantity": "Aant.",
+    "type": "Type",
+    "user": "Gebruiker"
+  },
+  "units": {
+    "days_one": "{{count}} dag",
+    "days_other": "{{count}} dagen",
+    "daysShort": "{{count}} d",
+    "hoursShort": "{{count}} u",
+    "km": "{{value}} km"
+  },
+  "time": {
+    "daysLeft": "nog {{count}} d",
+    "daysLate": "{{count}} d vertraging"
+  },
+  "errors": {
+    "generic": "Er is een fout opgetreden",
+    "notFound": "Pagina niet gevonden",
+    "backHome": "Terug naar de startpagina",
+    "loading": "Laden…"
+  },
+  "toasts": {
+    "saved": "Opgeslagen",
+    "updated": "Bijgewerkt",
+    "deleted": "Verwijderd",
+    "created": "Aangemaakt"
+  },
+  "translation": {
+    "translatedFrom": "Automatisch vertaald",
+    "failed": "Vertalen mislukt"
+  },
+  "pages": {
+    "clients": {
+      "title": "Klanten",
+      "description": "Beheer uw particuliere en zakelijke klanten, hun btw-nummers en hun werven."
+    },
+    "client": {
+      "title": "Klantenfiche",
+      "description": "Klantgegevens, gekoppelde werven en offertes."
+    },
+    "devis": {
+      "title": "Offertes",
+      "description": "Offertes met Belgische btw, verlegging van heffing en 6 % btw."
+    },
+    "devisDetail": {
+      "title": "Offerte",
+      "description": "Offerte bewerken met regels, Belgische btw en pdf-export."
+    },
+    "assistant": {
+      "title": "AI-assistent",
+      "description": "Stel uw vragen over uw werven, offertes en Belgische verplichtingen: de assistent antwoordt op basis van uw gegevens."
+    }
+  },
+  "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat."
+}

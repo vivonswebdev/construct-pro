@@ -1,0 +1,24 @@
+{
+  "title": "AI assistant",
+  "subtitle": "Analyses your sites, quotes and Belgian obligations in real time.",
+  "intro": "Ask a question about your data. The assistant knows your sites, staff, fleet, quotes and stock.",
+  "suggestions": {
+    "budget": "Which sites are at risk of going over budget?",
+    "quotes": "Which quotes are pending and which should I follow up?",
+    "fleet": "Summarise the state of my fleet and upcoming inspections.",
+    "deadlines": "What are my withholding tax and NSSO deadlines this month?"
+  },
+  "thinking": "Analysing your data…",
+  "placeholder": "Ask your question…",
+  "send": "Send",
+  "disclaimer": "Indicative answers — have any tax obligation confirmed by your accountant.",
+  "emptyAnswer": "(empty answer)",
+  "errors": {
+    "trop_de_requetes": "Too many requests, please try again shortly.",
+    "credits_epuises": "AI credits exhausted.",
+    "erreur_ia": "AI service error (code {{status}}).",
+    "cle_manquante": "Assistant unavailable (AI key missing).",
+    "injoignable": "Assistant unreachable. Please try again later.",
+    "generic": "Something went wrong. Please try again."
+  }
+}

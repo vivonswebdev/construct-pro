@@ -1,0 +1,43 @@
+{
+  "title": "Personal",
+  "add": "Adaugă un muncitor",
+  "addFirst": "Adăugați primul muncitor",
+  "new": "Muncitor nou",
+  "searchPlaceholder": "Căutați un muncitor…",
+  "empty": "Niciun muncitor deocamdată",
+  "backToList": "Înapoi la personal",
+  "card": {
+    "site": "Șantier",
+    "contract": "Contract",
+    "notAssigned": "Nealocat",
+    "last7Days": "Ultimele 7 zile"
+  },
+  "form": {
+    "fullName": "Nume complet",
+    "nrn": "Număr de registru național",
+    "phone": "Telefon",
+    "email": "E-mail",
+    "contract": "Tip de contract",
+    "hourlyRate": "Tarif orar (€/h)",
+    "language": "Limba muncitorului"
+  },
+  "toasts": {
+    "added": "Muncitor adăugat",
+    "languageSaved": "Limbă salvată"
+  },
+  "detail": {
+    "hourlyRate": "Tarif orar",
+    "hourlyRateValue": "{{value}} €/h",
+    "presenceTitle": "Prezențe — {{month}}",
+    "reportPdf": "Raport PDF",
+    "reportPdfTitle": "Exportați raportul lunar în PDF",
+    "clickToChange": "Faceți clic pentru a schimba",
+    "statPresent": "zile prezent",
+    "statAbsent": "absențe",
+    "statLeave": "concediu",
+    "statHours": "ore lucrate",
+    "sites": "Șantiere alocate",
+    "noAssignment": "Nicio alocare în curs.",
+    "since": "din {{date}}"
+  }
+}

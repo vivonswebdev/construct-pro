@@ -1,0 +1,79 @@
+{
+  "title": "Budowy",
+  "new": "Nowa budowa",
+  "create": "Utwórz budowę",
+  "searchPlaceholder": "Szukaj budowy…",
+  "notFound": "Nie znaleziono budowy.",
+  "backToList": "Powrót do budów",
+  "exportCsv": "Eksport do CSV",
+  "exportPdf": "Eksport do PDF",
+  "columns": {
+    "site": "Budowa",
+    "client": "Klient",
+    "budget": "Budżet",
+    "progress": "Postęp",
+    "status": "Status",
+    "handover": "Odbiór",
+    "actions": "Działania"
+  },
+  "empty": {
+    "title": "Brak budów",
+    "text": "Zacznij od utworzenia pierwszej budowy."
+  },
+  "form": {
+    "name": "Nazwa budowy",
+    "client": "Klient",
+    "address": "Adres",
+    "budget": "Budżet (€)",
+    "start": "Rozpoczęcie",
+    "handover": "Odbiór",
+    "description": "Opis"
+  },
+  "toasts": {
+    "created": "Budowa utworzona",
+    "stepUpdated": "Etap zaktualizowany"
+  },
+  "phases": {
+    "preparation": "Przygotowanie terenu budowy",
+    "fondations": "Fundamenty",
+    "grosOeuvre": "Stan surowy",
+    "charpente": "Więźba i pokrycie dachu",
+    "secondOeuvre": "Instalacje (elektryczne, hydrauliczne)",
+    "finitions": "Wykończenie i malowanie",
+    "reception": "Sprzątanie i odbiór"
+  },
+  "detail": {
+    "budget": "Budżet",
+    "totalCosts": "Łączne wydatki",
+    "realtime": "na bieżąco",
+    "ofWhichMaterials": "w tym materiały",
+    "profit": "Zysk",
+    "overallProgress": "Postęp ogólny",
+    "phasesTitle": "Etapy budowy",
+    "stepsCompleted": "Zakończone etapy: {{done}}/{{total}}",
+    "team": "Ekipa na tej budowie",
+    "noTeam": "Brak przydzielonych pracowników.",
+    "vehicles": "Przydzielone pojazdy",
+    "noVehicles": "Brak przydzielonych pojazdów.",
+    "inProgress": "W toku",
+    "materials": "Zużyte materiały",
+    "manageStock": "Zarządzaj magazynem →",
+    "noMaterials": "Brak ruchów magazynowych dla tej budowy.",
+    "materialsTotal": "Suma materiałów",
+    "materialColumns": {
+      "date": "Data",
+      "type": "Typ",
+      "material": "Materiał",
+      "qty": "Ilość",
+      "total": "Suma"
+    }
+  },
+  "phase": {
+    "progress": "Postęp: {{value}} %",
+    "startDate": "Data rozpoczęcia",
+    "endDate": "Data zakończenia",
+    "notes": "Notatki",
+    "markDone": "Oznacz jako zakończony",
+    "start": "Rozpocznij"
+  }
+}

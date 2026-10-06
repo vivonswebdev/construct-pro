@@ -1,0 +1,67 @@
+{
+  "title": "Reținere la sursă & ONSS",
+  "subtitle": "Urmărirea obligațiilor sociale și fiscale pe muncitor",
+  "ratesSettings": "Setări procente",
+  "ratesTitle": "Setări procente (implicit CP 124 construcții)",
+  "rates": {
+    "precompte": "Impozit reținut la sursă",
+    "onssEmployee": "ONSS angajat",
+    "onssEmployer": "ONSS angajator"
+  },
+  "kpi": {
+    "salariesPaid": "Salarii plătite",
+    "precomptePaid": "Reținere plătită",
+    "onss": "ONSS T{{quarter}}/{{year}}",
+    "paid": "Plătit",
+    "totalObligations": "Total obligații"
+  },
+  "alerts": {
+    "precompteUnpaid_one": "Reținere la sursă {{period}} neplătită pentru {{count}} muncitor — scadență: {{date}}",
+    "precompteUnpaid_few": "Reținere la sursă {{period}} neplătită pentru {{count}} muncitori — scadență: {{date}}",
+    "precompteUnpaid_other": "Reținere la sursă {{period}} neplătită pentru {{count}} de muncitori — scadență: {{date}}",
+    "onssUnpaid": "ONSS T{{quarter}} {{year}} neplătit — scadență: {{date}}"
+  },
+  "table": {
+    "title": "Muncitori activi — {{period}}",
+    "worker": "Muncitor",
+    "site": "Șantier",
+    "netSalary": "Salariu net",
+    "salaryStatus": "Stare salariu",
+    "precompte": "Reținere",
+    "precompteStatus": "Stare reținere",
+    "onss": "ONSS T{{quarter}}",
+    "onssStatus": "Stare ONSS",
+    "empty": "Niciun muncitor activ (durată nedeterminată / determinată / temporar)."
+  },
+  "exports": {
+    "pdf": "Export PDF — rezumat",
+    "csv": "Export CSV",
+    "belcotax": "Fișă Belcotax (în curând)",
+    "pdfSoon": "Exportul PDF va fi disponibil în curând",
+    "csvSoon": "Exportul CSV va fi disponibil în curând"
+  },
+  "status": {
+    "paidOn": "✓ Plătit la {{date}}",
+    "pay": "Plătește",
+    "cancel": "Anulează"
+  },
+  "modal": {
+    "salary": "Plata salariului",
+    "precompte": "Plata reținerii la sursă",
+    "onss": "Plată ONSS",
+    "worker": "Muncitor:",
+    "notePrecompte": "De plătit către SPF Finanțe înainte de 15 ale lunii următoare.",
+    "noteOnss": "De plătit către ONSS înainte de ultima zi a lunii care urmează trimestrului.",
+    "amount": "Sumă (€)",
+    "date": "Data plății",
+    "reference": "Referința transferului",
+    "referencePlaceholder": "Ex.: VIR-2026-06-001",
+    "confirm": "Confirmă plata"
+  },
+  "toasts": {
+    "ratesSaved": "Procente salvate",
+    "ratesError": "Procentele nu au putut fi salvate",
+    "paymentSaved": "Plată înregistrată",
+    "paymentCancelled": "Plată anulată"
+  }
+}

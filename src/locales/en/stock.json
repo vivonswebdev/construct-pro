@@ -1,0 +1,79 @@
+{
+  "title": "Stock & materials",
+  "subtitle": "Catalogue, purchases, issues and impact on site profit",
+  "exportCsv": "Export CSV",
+  "purchase": "Purchase",
+  "issueSlip": "Issue slip",
+  "return": "Return",
+  "newMaterial": "New material",
+  "csvFileName": "stock_movements",
+  "kpi": {
+    "references": "Items",
+    "stockValue": "Stock value",
+    "recentPurchases": "Purchases (recent)",
+    "siteIssues": "Issued to sites"
+  },
+  "lowStock_one": "{{count}} product below minimum stock",
+  "lowStock_other": "{{count}} products below minimum stock",
+  "tabs": {
+    "catalog": "Catalogue",
+    "movements": "Movements"
+  },
+  "searchPlaceholder": "Search for a material or SKU…",
+  "noMaterial": "No materials.",
+  "noMovement": "No movements.",
+  "columns": {
+    "name": "Name",
+    "sku": "SKU",
+    "stock": "Stock",
+    "unitPrice": "Unit price",
+    "value": "Value",
+    "supplier": "Supplier",
+    "date": "Date",
+    "type": "Type",
+    "material": "Material",
+    "qty": "Qty",
+    "unit": "Unit",
+    "total": "Total",
+    "site": "Site",
+    "supplierRef": "Supplier / ref.",
+    "reference": "Reference"
+  },
+  "confirmDeleteMovement": "Delete this movement? Stock will be adjusted.",
+  "materialForm": {
+    "name": "Name *",
+    "sku": "SKU",
+    "unit": "Unit",
+    "defaultUnit": "piece",
+    "unitPrice": "Unit price (€)",
+    "initialStock": "Opening stock",
+    "minStock": "Minimum stock",
+    "supplier": "Supplier",
+    "category": "Category"
+  },
+  "movementForm": {
+    "material": "Material *",
+    "choose": "— Choose —",
+    "materialOption": "{{name}} ({{qty}} {{unit}} available)",
+    "siteRequired": "Site *",
+    "siteOptional": "Site (optional)",
+    "none": "— None —",
+    "quantity": "Quantity ({{unit}})",
+    "unitPrice": "Unit price (€)",
+    "date": "Date",
+    "supplier": "Supplier",
+    "invoiceRef": "Invoice reference",
+    "notes": "Notes",
+    "total": "Total"
+  },
+  "validation": {
+    "nameRequired": "Name required",
+    "materialRequired": "Material required",
+    "siteRequiredForIssue": "A site is required for an issue",
+    "insufficientStock": "Insufficient stock ({{qty}} {{unit}} available). Continue anyway?"
+  },
+  "toasts": {
+    "materialCreated": "Material created",
+    "movementSaved": "{{label}} recorded"
+  }
+}

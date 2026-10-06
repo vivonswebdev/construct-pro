@@ -1,0 +1,64 @@
+{
+  "title": "Clients",
+  "count_one": "{{count}} client — private and business",
+  "count_other": "{{count}} clients — private and business",
+  "new": "New client",
+  "edit": "Edit client",
+  "searchPlaceholder": "Search for a client, town or VAT number…",
+  "allTypes": "All types",
+  "particuliers": "Private",
+  "entreprises": "Businesses",
+  "empty": "No clients found.",
+  "notFound": "Client not found.",
+  "select": "— Select a client —",
+  "companySuffix": "(business)",
+  "columns": {
+    "client": "Client",
+    "type": "Type",
+    "vat": "VAT no.",
+    "city": "Town",
+    "contact": "Contact",
+    "language": "Language"
+  },
+  "vatLiable": "VAT-registered",
+  "vatLiableLong": "VAT-registered",
+  "form": {
+    "companyName": "Company name *",
+    "companyNamePlaceholder": "E.g. Dumont Immo SRL",
+    "bce": "Company no.",
+    "contactName": "Contact (name)",
+    "firstName": "First name",
+    "lastName": "Last name *",
+    "vat": "VAT no.",
+    "vatInvalid": "Invalid format",
+    "vatLiable": "VAT-registered",
+    "address": "Address",
+    "postalCode": "Postcode",
+    "city": "Town",
+    "email": "Email",
+    "phone": "Phone",
+    "language": "Document language",
+    "notes": "Notes"
+  },
+  "validation": {
+    "companyNameRequired": "The company name is required",
+    "lastNameRequired": "The last name is required",
+    "vatInvalid": "Invalid Belgian VAT number (format BE0123456789)",
+    "vatRequiredIfLiable": "A VAT-registered client must have a VAT number"
+  },
+  "toasts": {
+    "created": "Client created",
+    "updated": "Client updated"
+  },
+  "detail": {
+    "totalQuoted": "Total quoted (excl. VAT)",
+    "totalAccepted": "Total accepted (excl. VAT)",
+    "sites": "Sites",
+    "info": "Details",
+    "linkedSites": "Linked sites",
+    "noSites": "No sites.",
+    "linkedQuotes": "Linked quotes",
+    "noQuotes": "No quotes.",
+    "confirmDelete": "Delete this client? Linked sites and quotes will be kept."
+  }
+}

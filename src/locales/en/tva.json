@@ -1,0 +1,70 @@
+{
+  "title": "VAT compliance & withholding",
+  "subtitle": "Check the withholding obligation for your clients and subcontractors (art. 402 ITC)",
+  "form": {
+    "title": "Check a VAT number",
+    "clientName": "Client name",
+    "clientNamePlaceholder": "E.g. Dumont Real Estate SA",
+    "vat": "VAT no.",
+    "vatHint": "Format: BE + 10 digits",
+    "checking": "Checking…",
+    "checkNow": "Check now",
+    "source": "ⓘ Data from checkobligationderetenue.be — FPS Finance result (art. 402 ITC 92)"
+  },
+  "validation": {
+    "clientNameRequired": "Enter the client name",
+    "vatInvalid": "Invalid VAT number (BE + 10 digits)"
+  },
+  "errors": {
+    "format_invalide": "Invalid VAT format (expected: BE + 10 digits)",
+    "site_indisponible": "Official site unavailable (HTTP {{status}}). Use manual entry.",
+    "site_injoignable": "Unable to reach the official site. Use manual entry.",
+    "manualHint": "You can check the official site and record the result manually."
+  },
+  "result": {
+    "noWithholding": "✓ No withholding required",
+    "withholding": "⚠ Withholding required!",
+    "toConfirm": "Result to be confirmed manually",
+    "msgNoWithholding": "No withholding required — compliant.",
+    "msgWithholding": "Withholding required — tax or social debts found.",
+    "msgAmbiguous": "Unclear result. Check manually on the official site.",
+    "msgManualOk": "Manual entry — compliant",
+    "msgManualWithholding": "Manual entry — withholding required",
+    "checkedAt": "Checked on {{date}} at {{time}}",
+    "officialSite": "View on the official site",
+    "manualEntry": "Manual entry:",
+    "compliant": "✓ Compliant",
+    "withholdingShort": "⚠ Withholding"
+  },
+  "calc": {
+    "title": "Withholding calculation",
+    "invoiceAmount": "Invoice amount",
+    "withholding": "Withholding {{rate}}%",
+    "toSpf": "To pay to the FPS",
+    "netToClient": "Net to the client",
+    "balance": "Balance to pay",
+    "gross": "Gross amount",
+    "invoiced": "Total invoiced"
+  },
+  "history": {
+    "title": "Check history",
+    "searchPlaceholder": "Search client or VAT no.",
+    "exportCsv": "Export CSV",
+    "noResult": "No results —",
+    "launchCheck": "Run a check?",
+    "empty": "No checks recorded yet. Use the form above.",
+    "unknown": "Unknown",
+    "recheck": "Check again",
+    "csvFileName": "vat-checks",
+    "columns": {
+      "status": "Status",
+      "client": "Client",
+      "vat": "VAT no.",
+      "checkedOn": "Checked on",
+      "actions": "Actions"
+    }
+  },
+  "toasts": {
+    "saved": "Check recorded"
+  }
+}

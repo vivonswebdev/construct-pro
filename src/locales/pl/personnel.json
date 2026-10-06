@@ -1,0 +1,43 @@
+{
+  "title": "Pracownicy",
+  "add": "Dodaj pracownika",
+  "addFirst": "Dodaj pierwszego pracownika",
+  "new": "Nowy pracownik",
+  "searchPlaceholder": "Szukaj pracownika…",
+  "empty": "Brak pracowników",
+  "backToList": "Powrót do pracowników",
+  "card": {
+    "site": "Budowa",
+    "contract": "Umowa",
+    "notAssigned": "Nieprzydzielony",
+    "last7Days": "Ostatnie 7 dni"
+  },
+  "form": {
+    "fullName": "Imię i nazwisko",
+    "nrn": "Numer rejestru krajowego",
+    "phone": "Telefon",
+    "email": "E-mail",
+    "contract": "Rodzaj umowy",
+    "hourlyRate": "Stawka godzinowa (€/h)",
+    "language": "Język pracownika"
+  },
+  "toasts": {
+    "added": "Pracownik dodany",
+    "languageSaved": "Język zapisany"
+  },
+  "detail": {
+    "hourlyRate": "Stawka godzinowa",
+    "hourlyRateValue": "{{value}} €/h",
+    "presenceTitle": "Obecności — {{month}}",
+    "reportPdf": "Raport PDF",
+    "reportPdfTitle": "Eksportuj raport miesięczny do PDF",
+    "clickToChange": "Kliknij, aby zmienić",
+    "statPresent": "dni obecności",
+    "statAbsent": "nieobecności",
+    "statLeave": "urlop",
+    "statHours": "przepracowane godziny",
+    "sites": "Przydzielone budowy",
+    "noAssignment": "Brak bieżącego przydziału.",
+    "since": "od {{date}}"
+  }
+}

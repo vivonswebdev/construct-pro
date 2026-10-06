@@ -1,0 +1,90 @@
+{
+  "title": "Quotes",
+  "subtitle": "Belgian VAT per line (21% / 6% / 0%) and reverse charge",
+  "exportCsv": "Export CSV",
+  "csvFileName": "quotes",
+  "new": "New quote",
+  "count_one": "{{count}} quote",
+  "count_other": "{{count}} quotes",
+  "kpi": {
+    "totalQuoted": "Total quoted (excl. VAT)",
+    "accepted": "Accepted (excl. VAT)",
+    "pending": "Pending quotes",
+    "acceptRate": "Acceptance rate"
+  },
+  "searchPlaceholder": "Search for a number or client…",
+  "allStatuses": "All statuses",
+  "empty": "No quotes yet.",
+  "columns": {
+    "number": "Number",
+    "client": "Client",
+    "date": "Date",
+    "validity": "Valid until",
+    "totalIncl": "Total incl. VAT",
+    "status": "Status",
+    "excl": "Excl. VAT (€)",
+    "vat": "VAT (€)",
+    "incl": "Incl. VAT (€)"
+  },
+  "form": {
+    "client": "Client *",
+    "number": "Number",
+    "issueDate": "Issue date",
+    "validUntil": "Valid until",
+    "createAndEdit": "Create and edit",
+    "creating": "Creating…"
+  },
+  "validation": {
+    "selectClient": "Select a client"
+  },
+  "toasts": {
+    "created": "Quote created",
+    "saved": "Saved",
+    "statusChanged": "Status: {{status}}",
+    "duplicated": "Quote duplicated",
+    "siteCreated": "Site created",
+    "deleted": "Deleted"
+  },
+  "detail": {
+    "title": "Quote {{number}}",
+    "issued": "Issued on {{issue}} · valid until {{until}}",
+    "pdf": "PDF",
+    "pdfLanguage": "PDF in {{language}} (client's language)",
+    "duplicate": "Duplicate",
+    "markSent": "Mark as sent",
+    "accepted": "Accepted",
+    "refused": "Declined",
+    "viewSite": "View site",
+    "createSite": "Create the site",
+    "save": "Save",
+    "client": "Client",
+    "clientVat": "VAT: {{value}}",
+    "vatLiable": "VAT-registered",
+    "reverseCharge": "Reverse charge",
+    "reverseChargeHelp": "0% VAT, notice “{{mention}}” on the PDF.",
+    "details": "Details",
+    "lines": "Items",
+    "addLine": "Add",
+    "noLines": "No items. Click “Add”.",
+    "linePlaceholder": "E.g. earthworks, structural work, roofing…",
+    "subtotalExcl": "Subtotal excl. VAT",
+    "vatOn": "VAT {{rate}}% (on {{base}})",
+    "totalIncl": "Total incl. VAT",
+    "notes": "Notes",
+    "notesPlaceholder": "Message to the client",
+    "conditions": "Terms",
+    "conditionsPlaceholder": "Validity, deposit, lead times…",
+    "siteNamePrompt": "Site name",
+    "siteNameDefault": "Site {{client}}",
+    "siteDescription": "Created from quote {{number}}",
+    "confirmDelete": "Permanently delete this quote?",
+    "defaultCompany": "My company"
+  },
+  "columnsLines": {
+    "description": "Description",
+    "qty": "Qty",
+    "unitPrice": "Unit price",
+    "vat": "VAT",
+    "totalExcl": "Total excl. VAT"
+  }
+}

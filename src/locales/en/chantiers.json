@@ -1,0 +1,79 @@
+{
+  "title": "Sites",
+  "new": "New site",
+  "create": "Create a site",
+  "searchPlaceholder": "Search for a site…",
+  "notFound": "Site not found.",
+  "backToList": "Back to sites",
+  "exportCsv": "Export to CSV",
+  "exportPdf": "Export to PDF",
+  "columns": {
+    "site": "Site",
+    "client": "Client",
+    "budget": "Budget",
+    "progress": "Progress",
+    "status": "Status",
+    "handover": "Handover",
+    "actions": "Actions"
+  },
+  "empty": {
+    "title": "No sites yet",
+    "text": "Get started by creating your first site."
+  },
+  "form": {
+    "name": "Site name",
+    "client": "Client",
+    "address": "Address",
+    "budget": "Budget (€)",
+    "start": "Start",
+    "handover": "Handover",
+    "description": "Description"
+  },
+  "toasts": {
+    "created": "Site created",
+    "stepUpdated": "Phase updated"
+  },
+  "phases": {
+    "preparation": "Site preparation",
+    "fondations": "Foundations",
+    "grosOeuvre": "Structural work",
+    "charpente": "Roof structure & roofing",
+    "secondOeuvre": "Building services (electrical, plumbing)",
+    "finitions": "Finishes & painting",
+    "reception": "Cleaning & handover"
+  },
+  "detail": {
+    "budget": "Budget",
+    "totalCosts": "Total spending",
+    "realtime": "real time",
+    "ofWhichMaterials": "of which materials",
+    "profit": "Profit",
+    "overallProgress": "Overall progress",
+    "phasesTitle": "Site phases",
+    "stepsCompleted": "{{done}}/{{total}} phases completed",
+    "team": "Team on this site",
+    "noTeam": "No workers assigned.",
+    "vehicles": "Assigned vehicles",
+    "noVehicles": "No vehicles assigned.",
+    "inProgress": "In progress",
+    "materials": "Materials used",
+    "manageStock": "Manage stock →",
+    "noMaterials": "No stock movements for this site.",
+    "materialsTotal": "Materials total",
+    "materialColumns": {
+      "date": "Date",
+      "type": "Type",
+      "material": "Material",
+      "qty": "Qty",
+      "total": "Total"
+    }
+  },
+  "phase": {
+    "progress": "Progress: {{value}}%",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "notes": "Notes",
+    "markDone": "Mark as completed",
+    "start": "Start"
+  }
+}

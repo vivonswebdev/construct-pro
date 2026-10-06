@@ -1,0 +1,70 @@
+{
+  "title": "Conformitate TVA & reținere",
+  "subtitle": "Verificați obligația de reținere pentru clienți și subcontractanți (art. 402 CIR)",
+  "form": {
+    "title": "Verificați un număr de TVA",
+    "clientName": "Numele clientului",
+    "clientNamePlaceholder": "Ex.: Immobilière Dumont SA",
+    "vat": "Nr. TVA",
+    "vatHint": "Format: BE + 10 cifre",
+    "checking": "Verificare în curs…",
+    "checkNow": "Verifică acum",
+    "source": "ⓘ Date de pe checkobligationderetenue.be — rezultat SPF Finanțe (art. 402 CIR 92)"
+  },
+  "validation": {
+    "clientNameRequired": "Introduceți numele clientului",
+    "vatInvalid": "Număr de TVA invalid (BE + 10 cifre)"
+  },
+  "errors": {
+    "format_invalide": "Format TVA invalid (așteptat: BE + 10 cifre)",
+    "site_indisponible": "Site oficial indisponibil (HTTP {{status}}). Folosiți introducerea manuală.",
+    "site_injoignable": "Site-ul oficial nu poate fi accesat. Folosiți introducerea manuală.",
+    "manualHint": "Puteți consulta site-ul oficial și înregistra rezultatul manual."
+  },
+  "result": {
+    "noWithholding": "✓ Nicio reținere obligatorie",
+    "withholding": "⚠ Reținere obligatorie!",
+    "toConfirm": "Rezultat de confirmat manual",
+    "msgNoWithholding": "Nicio reținere obligatorie — în regulă.",
+    "msgWithholding": "Reținere obligatorie — datorii fiscale sau sociale constatate.",
+    "msgAmbiguous": "Rezultat neclar. Verificați manual pe site-ul oficial.",
+    "msgManualOk": "Introducere manuală — conform",
+    "msgManualWithholding": "Introducere manuală — reținere obligatorie",
+    "checkedAt": "Verificat la {{date}}, ora {{time}}",
+    "officialSite": "Vezi pe site-ul oficial",
+    "manualEntry": "Introducere manuală:",
+    "compliant": "✓ Conform",
+    "withholdingShort": "⚠ Reținere"
+  },
+  "calc": {
+    "title": "Calculul reținerii",
+    "invoiceAmount": "Valoarea facturii",
+    "withholding": "Reținere {{rate}} %",
+    "toSpf": "De plătit către SPF",
+    "netToClient": "Net către client",
+    "balance": "Sold de plătit",
+    "gross": "Sumă brută",
+    "invoiced": "Total facturat"
+  },
+  "history": {
+    "title": "Istoricul verificărilor",
+    "searchPlaceholder": "Căutați client sau nr. TVA",
+    "exportCsv": "Export CSV",
+    "noResult": "Niciun rezultat —",
+    "launchCheck": "Lansați o verificare?",
+    "empty": "Nicio verificare înregistrată. Folosiți formularul de mai sus.",
+    "unknown": "Necunoscut",
+    "recheck": "Verifică din nou",
+    "csvFileName": "verificari-tva",
+    "columns": {
+      "status": "Stare",
+      "client": "Client",
+      "vat": "Nr. TVA",
+      "checkedOn": "Verificat la",
+      "actions": "Acțiuni"
+    }
+  },
+  "toasts": {
+    "saved": "Verificare înregistrată"
+  }
+}

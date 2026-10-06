@@ -1,0 +1,24 @@
+{
+  "title": "Asistent AI",
+  "subtitle": "Analizează șantierele, devizele și obligațiile din Belgia în timp real.",
+  "intro": "Puneți o întrebare despre datele dumneavoastră. Asistentul cunoaște șantierele, personalul, parcul auto, devizele și stocul.",
+  "suggestions": {
+    "budget": "Ce șantiere riscă să depășească bugetul?",
+    "quotes": "Ce devize sunt în așteptare și pe care trebuie să le urmăresc?",
+    "fleet": "Rezumă starea parcului auto și ITP-urile care urmează.",
+    "deadlines": "Care sunt scadențele pentru reținerea la sursă și ONSS luna aceasta?"
+  },
+  "thinking": "Se analizează datele…",
+  "placeholder": "Puneți întrebarea…",
+  "send": "Trimite",
+  "disclaimer": "Răspunsuri orientative — confirmați orice obligație fiscală cu contabilul.",
+  "emptyAnswer": "(răspuns gol)",
+  "errors": {
+    "trop_de_requetes": "Prea multe cereri, încercați din nou în scurt timp.",
+    "credits_epuises": "Creditele AI au fost epuizate.",
+    "erreur_ia": "Eroare a serviciului AI (cod {{status}}).",
+    "cle_manquante": "Asistent indisponibil (lipsește cheia AI).",
+    "injoignable": "Asistentul nu poate fi accesat. Încercați mai târziu.",
+    "generic": "A apărut o eroare. Încercați din nou."
+  }
+}

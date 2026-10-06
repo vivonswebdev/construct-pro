@@ -4,6 +4,61 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-06 — Phase 1 : multilingue (FR / NL / EN / RO / PL)
+
+Branche : `phase-01-i18n` (inclut le correctif `fix/fermeture-modales`).
+
+### Fait
+
+- **i18next** (`src/lib/i18n.ts`) : français par défaut et secours ; premier rendu en français
+  (identique au rendu serveur), puis langue du profil > langue mémorisée sur l'appareil > navigateur.
+  Sélecteur à drapeaux dans le menu, sur la connexion et dans Mon profil ; changement instantané.
+- **16 namespaces × 5 langues**, clés typées (`src/i18next.d.ts`). Toutes les pages, fenêtres,
+  toasts, confirmations, exports CSV et rapports PDF traduits ; pluriels par langue.
+- **Statuts en codes neutres** (`en_cours`, `accepte`, `present`, `cdi`, `camionnette`…) : code,
+  données de démo et migration. Comparaisons via `toCode()`, qui tolère les anciens libellés français
+  tant que la migration n'est pas appliquée (aucune rupture pendant la transition).
+- **Documents** : PDF du devis dans la langue du client (FR/NL/EN), mentions légales comprises ;
+  conditions par défaut d'un nouveau devis dans la langue du client. Rapports internes (liste des
+  chantiers, présences) dans la langue de l'interface.
+- **Langues en base** : `profiles.langue`, `personnel.langue` (5 langues), `clients.langue` passé en
+  minuscules + `en` (documents FR/NL/EN).
+- **Traduction du contenu saisi** : `translateText()` (serveur, IA via `ai.server.ts`, cache par
+  société dans `traductions`, clé SHA-256) + composant `TranslatableText` (notes client, description
+  de chantier ; servira au journal de chantier en phase 11).
+- **Assistant IA** : répond dans la langue de l'utilisateur ; erreurs IA en codes traduits.
+- **Contrôle** `bun run i18n:check` (`scripts/check-i18n.ts`) : clés et variables `{{…}}` identiques
+  dans les 5 langues, formes plurielles requises par langue, aucune chaîne visible en dur (analyse
+  TypeScript du JSX, attributs visibles, toasts/confirm/prompt). Résultat : ✓.
+- Migration `20260925090000_phase1_i18n.sql` **testée sur PGlite** : conversion des libellés existants,
+  contraintes (un libellé français est refusé), valeurs par défaut, langues ; migration phase 9 rejouée
+  après. Bloc ROLLBACK commenté.
+- Corrigé au passage : rapport de présences et page Précompte qui comparaient des libellés français
+  (auraient affiché 0 après migration) ; coût/km « 0 € » et « entretien il y a -41 j » (fiche véhicule) ;
+  sous-titre du dashboard « +12 % vs mois dernier » (valeur fictive) remplacé par le nombre de chantiers.
+- Vérifié dans l'app : FR → NL → PL (menu, dashboard, chantiers, devis, véhicules, précompte, fiche
+  devis avec bouton « PDF (FR) »), pluriels polonais corrects, aucune erreur après rechargement.
+
+### Décidé
+
+- Codes de langue en minuscules partout (`fr`, `nl`…), comme i18next.
+- NL : « offerte » pour devis (usage courant en Belgique) plutôt que « bestek » cité dans la passation ;
+  « werf », « oplevering », « bedrijfsvoorheffing », « RSZ », « KBO/ondernemingsnummer », « btw ».
+- RO/PL : institutions belges gardées telles quelles (ONSS, SPF Finances) pour les ouvriers en Belgique.
+
+### À faire / points ouverts
+
+- [ ] **Appliquer la migration** `20260925090000_phase1_i18n.sql` juste après la fusion (le code
+      tolère l'ancien état, mais la création d'un client ou d'un ouvrier avec une langue échoue tant
+      qu'elle n'est pas appliquée). Puis supprimer la copie éventuelle créée par Lovable.
+- [ ] **Relecture native** NL / RO / PL (§8.6), en priorité les **mentions légales** NL/EN du PDF
+      (autoliquidation, TVA 6 %) et la terminologie chantier.
+- [ ] Calculateur de la page Conformité TVA : taux 15 % encore en constante → `parametres_30bis`
+      quand la phase 9 sera fusionnée.
+- [ ] Le choix de langue n'est enregistré dans le profil qu'après la migration (colonne `langue`).
+
+---
+
 ## 2026-10-06 — Compléments de périmètre (PASSATION §10.6)
 
 - Schémas reçus intégrés aux phases 9, 12, 13 et à l'annexe A : `sous_traitant_contrats`,

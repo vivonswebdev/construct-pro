@@ -1,0 +1,43 @@
+{
+  "title": "Staff",
+  "add": "Add a worker",
+  "addFirst": "Add your first worker",
+  "new": "New worker",
+  "searchPlaceholder": "Search for a worker…",
+  "empty": "No workers yet",
+  "backToList": "Back to staff",
+  "card": {
+    "site": "Site",
+    "contract": "Contract",
+    "notAssigned": "Not assigned",
+    "last7Days": "Last 7 days"
+  },
+  "form": {
+    "fullName": "Full name",
+    "nrn": "National register number",
+    "phone": "Phone",
+    "email": "Email",
+    "contract": "Contract type",
+    "hourlyRate": "Hourly rate (€/h)",
+    "language": "Worker's language"
+  },
+  "toasts": {
+    "added": "Worker added",
+    "languageSaved": "Language saved"
+  },
+  "detail": {
+    "hourlyRate": "Hourly rate",
+    "hourlyRateValue": "{{value}} €/h",
+    "presenceTitle": "Attendance — {{month}}",
+    "reportPdf": "PDF report",
+    "reportPdfTitle": "Export the monthly report as PDF",
+    "clickToChange": "Click to change",
+    "statPresent": "days present",
+    "statAbsent": "absent",
+    "statLeave": "leave",
+    "statHours": "hours worked",
+    "sites": "Assigned sites",
+    "noAssignment": "No current assignment.",
+    "since": "since {{date}}"
+  }
+}
