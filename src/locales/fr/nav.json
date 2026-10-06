@@ -1,0 +1,28 @@
+{
+  "activeModules": "Modules actifs",
+  "comingSoon": "Bientôt disponible",
+  "soon": "Bientôt",
+  "comingSoonText": "Ce module sera disponible dans la prochaine mise à jour.",
+  "signOut": "Se déconnecter",
+  "language": "Langue de l'interface",
+  "items": {
+    "dashboard": "Dashboard",
+    "chantiers": "Chantiers",
+    "clients": "Clients",
+    "personnel": "Personnel",
+    "vehicules": "Véhicules",
+    "stock": "Stock",
+    "devis": "Devis",
+    "tva": "Conformité TVA",
+    "precompte": "Précompte & ONSS",
+    "assistant": "Assistant IA",
+    "profil": "Mon profil",
+    "belcotax": "Belcotax",
+    "peppol": "Facturation (Peppol)"
+  },
+  "roles": {
+    "admin": "Administrateur",
+    "gerant": "Gérant",
+    "ouvrier": "Ouvrier"
+  }
+}

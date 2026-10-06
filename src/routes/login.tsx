@@ -5,12 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 import { errorMessage } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
 });
 
 function LoginPage() {
+  const { t } = useTranslation(["auth", "common"]);
   const navigate = useNavigate();
   const { session } = useAuth();
   const [mode, setMode] = useState<"login" | "signup">("login");
@@ -33,7 +36,7 @@ function LoginPage() {
       if (mode === "login") {
         const { error } = await supabase.auth.signInWithPassword({ email, password });
         if (error) throw error;
-        toast.success("Connexion réussie");
+        toast.success(t("toasts.loggedIn"));
       } else {
         const { error } = await supabase.auth.signUp({
           email,
@@ -44,11 +47,11 @@ function LoginPage() {
           },
         });
         if (error) throw error;
-        toast.success("Compte créé. Bienvenue !");
+        toast.success(t("toasts.signedUp"));
       }
     } catch (err) {
-      const msg = errorMessage(err, "Une erreur est survenue");
-      setError(msg === "Invalid login credentials" ? "Identifiants invalides" : msg);
+      const msg = errorMessage(err, t("common:errors.generic"));
+      setError(msg === "Invalid login credentials" ? t("errors.invalidCredentials") : msg);
     } finally {
       setLoading(false);
     }
@@ -86,9 +89,9 @@ function LoginPage() {
         });
         if (retry.error) throw retry.error;
       }
-      toast.success("Bienvenue sur le compte démo");
+      toast.success(t("toasts.demoWelcome"));
     } catch (err) {
-      setError(errorMessage(err, "Impossible d'accéder au compte démo"));
+      setError(errorMessage(err, t("errors.demoUnavailable")));
     } finally {
       setLoading(false);
     }
@@ -102,7 +105,8 @@ function LoginPage() {
             <HardHat className="h-7 w-7" />
           </div>
           <h1 className="text-2xl font-bold text-white">ConstructFlow</h1>
-          <p className="mt-1 text-sm text-sidebar-text">Gérez vos chantiers avec précision</p>
+          <p className="mt-1 text-sm text-sidebar-text">{t("tagline")}</p>
+          <LanguageSelector className="mt-3 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-sidebar-text outline-none [&>option]:text-foreground" />
         </div>
 
         <div className="rounded-2xl bg-card p-6 shadow-xl">
@@ -114,7 +118,7 @@ function LoginPage() {
                 mode === "login" ? "bg-card shadow-sm" : "text-muted-foreground"
               }`}
             >
-              Se connecter
+              {t("login")}
             </button>
             <button
               type="button"
@@ -123,44 +127,44 @@ function LoginPage() {
                 mode === "signup" ? "bg-card shadow-sm" : "text-muted-foreground"
               }`}
             >
-              Créer un compte
+              {t("signup")}
             </button>
           </div>
 
           <form onSubmit={onSubmit} className="space-y-4">
             {mode === "signup" && (
               <>
-                <Field label="Nom de l'entreprise">
+                <Field label={t("companyName")}>
                   <input
                     required
                     value={companyName}
                     onChange={(e) => setCompanyName(e.target.value)}
-                    placeholder="Ex: Dupont Construction SRL"
+                    placeholder={t("companyNamePlaceholder")}
                     className="input"
                   />
                 </Field>
-                <Field label="Votre nom complet">
+                <Field label={t("fullName")}>
                   <input
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Jean Dupont"
+                    placeholder={t("fullNamePlaceholder")}
                     className="input"
                   />
                 </Field>
               </>
             )}
-            <Field label="Email">
+            <Field label={t("email")}>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="vous@entreprise.be"
+                placeholder={t("emailPlaceholder")}
                 className="input"
               />
             </Field>
-            <Field label="Mot de passe">
+            <Field label={t("password")}>
               <input
                 type="password"
                 required
@@ -183,13 +187,13 @@ function LoginPage() {
               disabled={loading}
               className="w-full rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition hover:bg-primary/90 disabled:opacity-60"
             >
-              {loading ? "..." : mode === "login" ? "Se connecter" : "Créer mon compte"}
+              {loading ? "…" : mode === "login" ? t("login") : t("signupSubmit")}
             </button>
           </form>
 
           <div className="my-5 flex items-center gap-3 text-[11px] uppercase tracking-wider text-muted-foreground">
             <div className="h-px flex-1 bg-border" />
-            ou essayez en 1 clic
+            {t("orTry")}
             <div className="h-px flex-1 bg-border" />
           </div>
 
@@ -199,13 +203,13 @@ function LoginPage() {
             disabled={loading}
             className="w-full rounded-lg border border-primary/30 bg-primary/5 px-4 py-2.5 text-sm font-semibold text-primary transition hover:bg-primary/10 disabled:opacity-60"
           >
-            🚀 Accéder au compte démo (pré-rempli)
+            {t("demoButton")}
           </button>
           <p className="mt-2 text-center text-[11px] text-muted-foreground">
-            3 chantiers, 5 ouvriers et des présences déjà générés.
+            {t("demoHint")}
           </p>
         </div>
-        <p className="mt-6 text-center text-xs text-sidebar-text">© ConstructFlow 2026</p>
+        <p className="mt-6 text-center text-xs text-sidebar-text">{t("copyright")}</p>
       </div>
 
       <style>{`

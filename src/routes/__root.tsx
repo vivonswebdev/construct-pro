@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { AuthProvider } from "@/lib/auth";
+import i18n from "@/lib/i18n";
+import { useTranslation } from "react-i18next";
 import { Toaster } from "@/components/ui/sonner";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
@@ -11,11 +13,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ConstructFlow — Gestion de chantiers" },
-      {
-        name: "description",
-        content: "Plateforme de gestion de chantiers pour entreprises de construction belges.",
-      },
+      { title: i18n.t("common:meta.title") },
+      { name: "description", content: i18n.t("common:meta.description") },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -29,18 +28,23 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   }),
   shellComponent: RootShell,
   component: RootComponent,
-  notFoundComponent: () => (
+  notFoundComponent: NotFound,
+});
+
+function NotFound() {
+  const { t } = useTranslation();
+  return (
     <div className="flex min-h-screen items-center justify-center bg-page-bg">
       <div className="text-center">
         <h1 className="text-6xl font-bold">404</h1>
-        <p className="mt-2 text-muted-foreground">Page introuvable</p>
+        <p className="mt-2 text-muted-foreground">{t("errors.notFound")}</p>
         <a href="/" className="mt-4 inline-block text-primary underline">
-          Retour à l'accueil
+          {t("errors.backHome")}
         </a>
       </div>
     </div>
-  ),
-});
+  );
+}
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
