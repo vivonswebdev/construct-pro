@@ -100,6 +100,14 @@ export function intlLocale(l: string = i18n.language): string {
   return LANGUES.find((x) => x.code === l)?.intl ?? "fr-BE";
 }
 
+/** Nom du mois (0 = janvier) avec majuscule, dans la langue courante. */
+export function nomMois(month0: number): string {
+  const s = new Intl.DateTimeFormat(intlLocale(), { month: "long" }).format(
+    new Date(2026, month0, 1),
+  );
+  return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
 /** Noms courts des jours, du lundi au dimanche, dans la langue courante. */
 export function joursSemaineCourts(): string[] {
   const fmt = new Intl.DateTimeFormat(intlLocale(), { weekday: "short" });
