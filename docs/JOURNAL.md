@@ -23,8 +23,11 @@ Branche : `phase-09-sous-traitants` (préparée pendant que la phase 1 est termi
   Script : `supabase/tests/phase9_sous_traitants.check.ts` (prérequis : `bun add -d @electric-sql/pglite`).
 - Pas encore fait (à la reprise de la phase 9) : `types.ts`, `documents_conformite` et checklists,
   écrans, i18n, données de démo.
-- Questions ouvertes : plafond éventuel de la retenue au montant de la dette ; durée de conservation
-  RGPD des noms d'ouvriers des sous-traitants.
+- Corrections du 06/10 (soir) : un sous-traitant ayant une vérification 30bis ne peut plus être
+  supprimé (la suppression en cascade aurait effacé la preuve) → statut « bloque » ;
+  `company_settings.duree_conservation_ouvriers_ans` (défaut 10, à confirmer). 15 tests OK.
+- Question ouverte : plafond éventuel de la retenue au montant de la dette. Rappel : la base de
+  calcul est le montant HTVA **du paiement** (35 % / 15 % de la facture), pas la dette.
 
 ---
 

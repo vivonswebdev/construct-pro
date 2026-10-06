@@ -170,6 +170,17 @@ await expectError(
   "foreign key",
   "contrat de B rattaché au chantier de A refusé (FK composite)",
 );
+// Retour à la société A : un sous-traitant vérifié ne peut pas être supprimé
+await as(U1);
+await expectError(
+  `DELETE FROM public.sous_traitants WHERE id = 'aaaaaaaa-0000-0000-0000-0000000000a2'`,
+  "verifications_30bis_st_fk",
+  "suppression d'un sous-traitant vérifié refusée (preuve conservée)",
+);
+const conserv = await db.query<{ d: number }>(
+  `SELECT duree_conservation_ouvriers_ans AS d FROM public.company_settings WHERE company_id = '${C1}'`,
+);
+ok(conserv.rows[0]?.d === 10, "durée de conservation RGPD par défaut = 10 ans");
 const params = await db.query(`SELECT * FROM public.parametres_30bis`);
 ok(params.rows.length === 1, "paramètres 30bis lisibles par un utilisateur connecté");
 

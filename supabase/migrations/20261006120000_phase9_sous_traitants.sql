@@ -83,8 +83,10 @@ CREATE TABLE public.verifications_30bis (
   verifie_par uuid REFERENCES public.profiles(id) ON DELETE SET NULL,
   created_at timestamptz NOT NULL DEFAULT now(),
   CONSTRAINT verifications_30bis_id_company_uniq UNIQUE (id, company_id),
+  -- RESTRICT : un sous-traitant vérifié ne peut pas être supprimé (la preuve disparaîtrait) ;
+  -- on le passe au statut « bloque ».
   CONSTRAINT verifications_30bis_st_fk FOREIGN KEY (sous_traitant_id, company_id)
-    REFERENCES public.sous_traitants (id, company_id) ON DELETE CASCADE
+    REFERENCES public.sous_traitants (id, company_id) ON DELETE RESTRICT
 );
 CREATE INDEX idx_verif30bis_company ON public.verifications_30bis (company_id);
 CREATE INDEX idx_verif30bis_st ON public.verifications_30bis (sous_traitant_id, verifie_le DESC);
@@ -231,6 +233,8 @@ BEGIN
     RAISE EXCEPTION 'parametres_30bis_absents' USING ERRCODE = 'P0001';
   END IF;
 
+  -- Base : montant HTVA du paiement (pas le montant de la dette). Plafond éventuel au montant
+  -- de la dette : non appliqué, en attente de confirmation (voir JOURNAL).
   v_onss := CASE WHEN v_verif.dette_sociale THEN round(NEW.montant_ht * v_taux.taux_retenue_onss, 2) ELSE 0 END;
   v_spf := CASE WHEN v_verif.dette_fiscale THEN round(NEW.montant_ht * v_taux.taux_retenue_spf, 2) ELSE 0 END;
   IF NEW.retenue_onss <> v_onss OR NEW.retenue_spf <> v_spf THEN
@@ -247,7 +251,15 @@ BEFORE INSERT OR UPDATE ON public.achat_paiements
 FOR EACH ROW EXECUTE FUNCTION public.check_paiement_30bis();
 
 -- ---------------------------------------------------------------------------
--- 7. Droits et RLS
+-- 7. Durée de conservation des noms d'ouvriers des sous-traitants (RGPD)
+--    Paramètre par société ; valeur par défaut à confirmer par Youssef (10 ans indiqués).
+-- ---------------------------------------------------------------------------
+ALTER TABLE public.company_settings
+  ADD COLUMN IF NOT EXISTS duree_conservation_ouvriers_ans integer NOT NULL DEFAULT 10
+  CONSTRAINT company_settings_conservation_chk CHECK (duree_conservation_ouvriers_ans BETWEEN 1 AND 30);
+
+-- ---------------------------------------------------------------------------
+-- 8. Droits et RLS
 -- ---------------------------------------------------------------------------
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.sous_traitants TO authenticated;
 GRANT SELECT, INSERT, UPDATE, DELETE ON public.sous_traitant_contrats TO authenticated;
@@ -325,4 +337,5 @@ CREATE POLICY "parametres_30bis_select" ON public.parametres_30bis FOR SELECT TO
 -- DROP TABLE IF EXISTS public.verifications_30bis;
 -- DROP TABLE IF EXISTS public.parametres_30bis;
 -- DROP TABLE IF EXISTS public.sous_traitants;
+-- ALTER TABLE public.company_settings DROP COLUMN IF EXISTS duree_conservation_ouvriers_ans;
 -- ALTER TABLE public.chantiers DROP CONSTRAINT IF EXISTS chantiers_id_company_uniq;
