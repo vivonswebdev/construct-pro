@@ -114,7 +114,12 @@ for (const lang of LANGS) {
 // Le français lui-même : formes plurielles complètes
 for (const [ns, keys] of ref) {
   const forms = requiredPluralForms(REF);
-  const bases = new Set([...keys.keys()].map(splitPlural).filter((p) => p.suffix).map((p) => p.base));
+  const bases = new Set(
+    [...keys.keys()]
+      .map(splitPlural)
+      .filter((p) => p.suffix)
+      .map((p) => p.base),
+  );
   for (const base of bases)
     for (const form of forms)
       if (!keys.has(`${base}_${form}`)) report(`[fr] ${ns}:${base}_${form} manquant`);
@@ -124,10 +129,29 @@ for (const [ns, keys] of ref) {
 // 2. Chaînes en dur
 // ---------------------------------------------------------------------------
 const SRC = join(ROOT, "src");
-const EXCLUDE = [/[\\/]components[\\/]ui[\\/]/, /[\\/]integrations[\\/]/, /routeTree\.gen\.ts$/, /\.d\.ts$/];
+const EXCLUDE = [
+  /[\\/]components[\\/]ui[\\/]/,
+  /[\\/]integrations[\\/]/,
+  /routeTree\.gen\.ts$/,
+  /\.d\.ts$/,
+];
 const VISIBLE_ATTRS = new Set(["label", "placeholder", "title", "alt", "aria-label", "sub"]);
-const MESSAGE_CALLS = new Set(["success", "error", "info", "warning", "message", "confirm", "prompt", "alert"]);
+const MESSAGE_CALLS = new Set([
+  "success",
+  "error",
+  "info",
+  "warning",
+  "message",
+  "confirm",
+  "prompt",
+  "alert",
+]);
 const HAS_WORD = /\p{L}{2,}/u;
+// Exemples de format (« BE0123456789 », « 1-ABC-123 », « 0123.456.789 ») : rien à traduire.
+const FORMAT_EXAMPLE = (s: string) => /\d/.test(s) && !/\p{Ll}{2,}/u.test(s);
+// Termes identiques dans toutes les langues (pas TVA/ONSS : BTW, RSZ, VAT…).
+const UNIVERSAL = new Set(["CSV", "PDF", "IBAN", "BIC", "UBL", "Peppol", "Excel", "€"]);
+const isText = (s: string) => HAS_WORD.test(s) && !FORMAT_EXAMPLE(s) && !UNIVERSAL.has(s.trim());
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {
@@ -149,17 +173,16 @@ for (const file of walk(SRC)) {
   const visit = (node: ts.Node) => {
     if (ts.isJsxText(node)) {
       const s = node.getText().trim();
-      if (HAS_WORD.test(s)) flag(node, `texte JSX : ${JSON.stringify(s.slice(0, 60))}`);
+      if (isText(s)) flag(node, `texte JSX : ${JSON.stringify(s.slice(0, 60))}`);
     } else if (ts.isJsxAttribute(node) && node.initializer) {
       const name = node.name.getText();
       const init = node.initializer;
-      const lit =
-        ts.isStringLiteral(init)
-          ? init
-          : ts.isJsxExpression(init) && init.expression && ts.isStringLiteral(init.expression)
-            ? init.expression
-            : null;
-      if (VISIBLE_ATTRS.has(name) && lit && HAS_WORD.test(lit.text))
+      const lit = ts.isStringLiteral(init)
+        ? init
+        : ts.isJsxExpression(init) && init.expression && ts.isStringLiteral(init.expression)
+          ? init.expression
+          : null;
+      if (VISIBLE_ATTRS.has(name) && lit && isText(lit.text))
         flag(node, `${name}=${JSON.stringify(lit.text.slice(0, 60))}`);
     } else if (ts.isCallExpression(node)) {
       const callee = node.expression;
@@ -172,7 +195,9 @@ for (const file of walk(SRC)) {
       if (
         MESSAGE_CALLS.has(fname) &&
         arg &&
-        (ts.isStringLiteral(arg) || ts.isNoSubstitutionTemplateLiteral(arg) || ts.isTemplateExpression(arg)) &&
+        (ts.isStringLiteral(arg) ||
+          ts.isNoSubstitutionTemplateLiteral(arg) ||
+          ts.isTemplateExpression(arg)) &&
         HAS_WORD.test(arg.getText())
       )
         flag(node, `${fname}(${arg.getText().slice(0, 60)})`);
@@ -182,5 +207,7 @@ for (const file of walk(SRC)) {
   visit(sf);
 }
 
-console.log(problems ? `\n✖ ${problems} problème(s) i18n` : "✓ i18n : clés cohérentes, aucune chaîne en dur");
+console.log(
+  problems ? `\n✖ ${problems} problème(s) i18n` : "✓ i18n : clés cohérentes, aucune chaîne en dur",
+);
 process.exit(problems ? 1 : 0);

@@ -56,10 +56,10 @@ export function Sidebar() {
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-bold text-white">
-            CF
+            CF {/* i18n-ignore : monogramme */}
           </div>
           <div className="leading-tight">
-            <div className="text-sm font-bold text-white">ConstructFlow</div>
+            <div className="text-sm font-bold text-white">{t("common:appName")}</div>
             <div className="truncate text-xs text-sidebar-text">{company?.name ?? "—"}</div>
           </div>
         </div>
@@ -150,9 +150,7 @@ export function Sidebar() {
               <Package className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-lg font-semibold">{csModal}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              {t("comingSoonText")}
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{t("comingSoonText")}</p>
             <button
               onClick={() => setCsModal(null)}
               className="mt-5 w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"

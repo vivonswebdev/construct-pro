@@ -99,3 +99,13 @@ export function applyLangue(l: Langue, remember = false) {
 export function intlLocale(l: string = i18n.language): string {
   return LANGUES.find((x) => x.code === l)?.intl ?? "fr-BE";
 }
+
+/** Noms courts des jours, du lundi au dimanche, dans la langue courante. */
+export function joursSemaineCourts(): string[] {
+  const fmt = new Intl.DateTimeFormat(intlLocale(), { weekday: "short" });
+  // 5 janvier 2026 = un lundi
+  return Array.from({ length: 7 }, (_, i) => {
+    const s = fmt.format(new Date(2026, 0, 5 + i)).replace(".", "");
+    return s.charAt(0).toUpperCase() + s.slice(1);
+  });
+}

@@ -15,26 +15,24 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
 import { formatEUR, formatDateBE, daysUntil, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { intlLocale } from "@/lib/i18n";
+import { toCode } from "@/lib/statuts";
+import { statutChantierStyle } from "@/lib/chantiers";
 
 export const Route = createFileRoute("/_app/chantiers/$id")({
   component: ChantierDetail,
 });
 
-const STATUS_STYLES: Record<string, string> = {
-  "En cours": "bg-cyan-100 text-cyan-700",
-  "En retard": "bg-red-100 text-red-700",
-  Terminé: "bg-emerald-100 text-emerald-700",
-  "En attente": "bg-amber-100 text-amber-700",
-};
-
 const PHASE_STATUS_DOT: Record<string, string> = {
-  "En attente": "bg-gray-300 text-gray-700",
-  "En cours": "bg-info text-white",
-  Terminé: "bg-success text-white",
-  "En retard": "bg-danger text-white",
+  en_attente: "bg-gray-300 text-gray-700",
+  en_cours: "bg-info text-white",
+  termine: "bg-success text-white",
+  en_retard: "bg-danger text-white",
 };
 
 function ChantierDetail() {
+  const { t } = useTranslation(["chantiers", "common", "statuts"]);
   const { id } = Route.useParams();
   const qc = useQueryClient();
 
@@ -101,7 +99,7 @@ function ChantierDetail() {
       </div>
     );
   const { chantier, etapes, affectations, vehAffectations, mouvements } = data;
-  if (!chantier) return <div>Chantier introuvable.</div>;
+  if (!chantier) return <div>{t("notFound")}</div>;
 
   // Live material costs from stock movements (achat + sortie counted as expense, retour subtracted)
   const materialCosts = mouvements.reduce((s, m) => {
@@ -150,17 +148,17 @@ function ChantierDetail() {
       const avg = Math.round(allEtapes.reduce((s, e) => s + e.progress, 0) / allEtapes.length);
       const newStatus =
         avg >= 100
-          ? "Terminé"
+          ? "termine"
           : chantier.end_date && new Date(chantier.end_date) < new Date()
-            ? "En retard"
+            ? "en_retard"
             : avg > 0
-              ? "En cours"
-              : "En attente";
+              ? "en_cours"
+              : "en_attente";
       await supabase.from("chantiers").update({ progress: avg, status: newStatus }).eq("id", id);
     }
     qc.invalidateQueries({ queryKey: ["chantier", id] });
     qc.invalidateQueries({ queryKey: ["chantiers"] });
-    toast.success("Étape mise à jour");
+    toast.success(t("toasts.stepUpdated"));
   };
 
   return (
@@ -169,7 +167,7 @@ function ChantierDetail() {
         to="/chantiers"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" /> Retour aux chantiers
+        <ArrowLeft className="h-4 w-4" /> {t("backToList")}
       </Link>
 
       {/* Header */}
@@ -184,26 +182,32 @@ function ChantierDetail() {
           </div>
           <div className="flex items-center gap-3">
             <span
-              className={`rounded-full px-3 py-1 text-xs font-semibold ${STATUS_STYLES[chantier.status] ?? "bg-muted"}`}
+              className={`rounded-full px-3 py-1 text-xs font-semibold ${statutChantierStyle(chantier.status)}`}
             >
-              {chantier.status}
+              {t(`statuts:chantier.${toCode(chantier.status)}`, { defaultValue: chantier.status })}
             </span>
             {days !== null && chantier.progress < 100 && (
               <span
                 className={`rounded-full px-3 py-1 text-xs font-semibold ${days < 14 ? "bg-red-100 text-red-700" : "bg-muted text-muted-foreground"}`}
               >
-                {days < 0 ? `${Math.abs(days)} j de retard` : `${days} j restants`}
+                {days < 0
+                  ? t("common:time.daysLate", { count: Math.abs(days) })
+                  : t("common:time.daysLeft", { count: days })}
               </span>
             )}
           </div>
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-4 md:grid-cols-4">
-          <Metric label="Budget" value={formatEUR(chantier.budget)} />
-          <Metric label="Dépenses totales" value={formatEUR(totalCosts)} badge="temps réel" />
-          <Metric label="dont matériaux" value={formatEUR(materialCosts)} />
+          <Metric label={t("detail.budget")} value={formatEUR(chantier.budget)} />
           <Metric
-            label="Bénéfice"
+            label={t("detail.totalCosts")}
+            value={formatEUR(totalCosts)}
+            badge={t("detail.realtime")}
+          />
+          <Metric label={t("detail.ofWhichMaterials")} value={formatEUR(materialCosts)} />
+          <Metric
+            label={t("detail.profit")}
             value={formatEUR(benefice)}
             tone={benefice >= 0 ? "success" : "danger"}
           />
@@ -211,7 +215,7 @@ function ChantierDetail() {
 
         <div className="mt-5">
           <div className="mb-1 flex items-center justify-between text-xs">
-            <span className="text-muted-foreground">Progression globale</span>
+            <span className="text-muted-foreground">{t("detail.overallProgress")}</span>
             <span className="font-semibold">{chantier.progress}%</span>
           </div>
           <div className="h-3 overflow-hidden rounded-full bg-muted">
@@ -226,9 +230,9 @@ function ChantierDetail() {
       {/* Phases */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Phases du chantier</h2>
+          <h2 className="text-lg font-semibold">{t("detail.phasesTitle")}</h2>
           <span className="text-sm text-muted-foreground">
-            {completed}/{etapes.length} étapes complétées
+            {t("detail.stepsCompleted", { done: completed, total: etapes.length })}
           </span>
         </div>
         <div className="space-y-0">
@@ -248,9 +252,9 @@ function ChantierDetail() {
 
       {/* Team */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">Équipe sur ce chantier</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t("detail.team")}</h2>
         {affectations.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucun ouvrier affecté.</p>
+          <p className="text-sm text-muted-foreground">{t("detail.noTeam")}</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {affectations.map((a) => (
@@ -276,10 +280,10 @@ function ChantierDetail() {
       {/* Véhicules */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
-          <Truck className="h-5 w-5 text-primary" /> Véhicules affectés
+          <Truck className="h-5 w-5 text-primary" /> {t("detail.vehicles")}
         </h2>
         {vehAffectations.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucun véhicule affecté.</p>
+          <p className="text-sm text-muted-foreground">{t("detail.noVehicles")}</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {vehAffectations.map((va) => {
@@ -303,7 +307,7 @@ function ChantierDetail() {
                     <span className="font-mono text-xs font-bold">{v.plate}</span>
                     {!va.end_date && (
                       <span className="rounded-full bg-info/10 px-2 py-0.5 text-[10px] font-semibold text-info">
-                        En cours
+                        {t("detail.inProgress")}
                       </span>
                     )}
                   </div>
@@ -315,7 +319,9 @@ function ChantierDetail() {
                   </p>
                   <div className="mt-2 flex items-center justify-between text-xs">
                     <span className="text-muted-foreground">
-                      {km !== null ? `${km.toLocaleString("fr-BE")} km` : "—"}
+                      {km !== null
+                        ? t("common:units.km", { value: km.toLocaleString(intlLocale()) })
+                        : "—"}
                     </span>
                     <span className="font-semibold text-primary">
                       {cost !== null ? formatEUR(cost) : "—"}
@@ -332,26 +338,24 @@ function ChantierDetail() {
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
           <h2 className="flex items-center gap-2 text-lg font-semibold">
-            <Package className="h-5 w-5 text-primary" /> Matériaux consommés
+            <Package className="h-5 w-5 text-primary" /> {t("detail.materials")}
           </h2>
           <Link to="/stock" className="text-xs font-semibold text-primary hover:underline">
-            Gérer le stock →
+            {t("detail.manageStock")}
           </Link>
         </div>
         {mouvements.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            Aucun mouvement de stock lié à ce chantier.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("detail.noMaterials")}</p>
         ) : (
           <div className="overflow-hidden rounded-lg border border-border">
             <table className="w-full text-sm">
               <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
                 <tr>
-                  <th className="px-3 py-2 text-left">Date</th>
-                  <th className="px-3 py-2 text-left">Type</th>
-                  <th className="px-3 py-2 text-left">Matériau</th>
-                  <th className="px-3 py-2 text-right">Qté</th>
-                  <th className="px-3 py-2 text-right">Total</th>
+                  <th className="px-3 py-2 text-left">{t("detail.materialColumns.date")}</th>
+                  <th className="px-3 py-2 text-left">{t("detail.materialColumns.type")}</th>
+                  <th className="px-3 py-2 text-left">{t("detail.materialColumns.material")}</th>
+                  <th className="px-3 py-2 text-right">{t("detail.materialColumns.qty")}</th>
+                  <th className="px-3 py-2 text-right">{t("detail.materialColumns.total")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -361,11 +365,6 @@ function ChantierDetail() {
                     sortie: "bg-cyan-100 text-cyan-700",
                     retour: "bg-amber-100 text-amber-700",
                   };
-                  const tLabels: Record<string, string> = {
-                    achat: "Achat",
-                    sortie: "Sortie",
-                    retour: "Retour",
-                  };
                   return (
                     <tr key={m.id} className="border-t border-border">
                       <td className="px-3 py-2">{formatDateBE(m.date)}</td>
@@ -373,12 +372,12 @@ function ChantierDetail() {
                         <span
                           className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tStyles[m.type] ?? "bg-muted"}`}
                         >
-                          {tLabels[m.type] ?? m.type}
+                          {t(`statuts:mouvement.${toCode(m.type)}`, { defaultValue: m.type })}
                         </span>
                       </td>
                       <td className="px-3 py-2 font-medium">{m.materiau?.name ?? "—"}</td>
                       <td className="px-3 py-2 text-right">
-                        {Number(m.quantity).toLocaleString("fr-BE")} {m.materiau?.unit ?? ""}
+                        {Number(m.quantity).toLocaleString(intlLocale())} {m.materiau?.unit ?? ""}
                       </td>
                       <td
                         className={`px-3 py-2 text-right font-semibold ${m.type === "retour" ? "text-amber-600" : ""}`}
@@ -394,7 +393,7 @@ function ChantierDetail() {
                     colSpan={4}
                     className="px-3 py-2 text-right text-xs font-semibold uppercase text-muted-foreground"
                   >
-                    Total matériaux
+                    {t("detail.materialsTotal")}
                   </td>
                   <td className="px-3 py-2 text-right font-bold text-primary">
                     {formatEUR(materialCosts)}
@@ -458,13 +457,15 @@ function PhaseRow({
   isLast: boolean;
   onUpdate: (patch: EtapePatch) => void;
 }) {
+  const { t } = useTranslation(["chantiers", "common", "statuts"]);
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(etape.progress);
   const [notes, setNotes] = useState(etape.notes ?? "");
   const [startDate, setStartDate] = useState(etape.start_date ?? "");
   const [endDate, setEndDate] = useState(etape.end_date ?? "");
 
-  const dotStyle = PHASE_STATUS_DOT[etape.status] ?? "bg-gray-300";
+  const etapeStatut = toCode(etape.status);
+  const dotStyle = PHASE_STATUS_DOT[etapeStatut] ?? "bg-gray-300";
 
   const save = () =>
     onUpdate({
@@ -472,7 +473,7 @@ function PhaseRow({
       notes,
       start_date: startDate || null,
       end_date: endDate || null,
-      status: progress >= 100 ? "Terminé" : progress > 0 ? "En cours" : "En attente",
+      status: progress >= 100 ? "termine" : progress > 0 ? "en_cours" : "en_attente",
     });
 
   return (
@@ -494,9 +495,9 @@ function PhaseRow({
               <div className="flex items-center gap-2">
                 <p className="font-semibold">{etape.name}</p>
                 <span
-                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${STATUS_STYLES[etape.status] ?? "bg-muted"}`}
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${statutChantierStyle(etape.status)}`}
                 >
-                  {etape.status}
+                  {t(`statuts:chantier.${etapeStatut}`, { defaultValue: etape.status })}
                 </span>
                 {(etape.start_date || etape.end_date) && (
                   <span className="text-[10px] text-muted-foreground">
@@ -521,7 +522,9 @@ function PhaseRow({
           {open && (
             <div className="mt-2 space-y-3 rounded-lg border border-border bg-muted/20 p-4">
               <div>
-                <label className="mb-1 block text-xs font-medium">Progression : {progress}%</label>
+                <label className="mb-1 block text-xs font-medium">
+                  {t("phase.progress", { value: progress })}
+                </label>
                 <input
                   type="range"
                   min={0}
@@ -533,7 +536,7 @@ function PhaseRow({
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="mb-1 block text-xs font-medium">Date de début</label>
+                  <label className="mb-1 block text-xs font-medium">{t("phase.startDate")}</label>
                   <input
                     type="date"
                     value={startDate ?? ""}
@@ -542,7 +545,7 @@ function PhaseRow({
                   />
                 </div>
                 <div>
-                  <label className="mb-1 block text-xs font-medium">Date de fin</label>
+                  <label className="mb-1 block text-xs font-medium">{t("phase.endDate")}</label>
                   <input
                     type="date"
                     value={endDate ?? ""}
@@ -552,7 +555,7 @@ function PhaseRow({
                 </div>
               </div>
               <div>
-                <label className="mb-1 block text-xs font-medium">Notes</label>
+                <label className="mb-1 block text-xs font-medium">{t("phase.notes")}</label>
                 <textarea
                   rows={2}
                   value={notes}
@@ -565,15 +568,15 @@ function PhaseRow({
                   onClick={save}
                   className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
                 >
-                  Enregistrer
+                  {t("common:actions.save")}
                 </button>
-                {etape.status !== "Terminé" && (
+                {etapeStatut !== "termine" && (
                   <button
                     onClick={() => {
                       setProgress(100);
                       onUpdate({
                         progress: 100,
-                        status: "Terminé",
+                        status: "termine",
                         notes,
                         start_date: startDate || null,
                         end_date: endDate || null,
@@ -581,15 +584,15 @@ function PhaseRow({
                     }}
                     className="inline-flex items-center gap-1 rounded-md bg-success px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90"
                   >
-                    <CheckCircle2 className="h-3 w-3" /> Marquer terminé
+                    <CheckCircle2 className="h-3 w-3" /> {t("phase.markDone")}
                   </button>
                 )}
-                {etape.status === "En attente" && (
+                {etapeStatut === "en_attente" && (
                   <button
                     onClick={() =>
                       onUpdate({
                         progress: 10,
-                        status: "En cours",
+                        status: "en_cours",
                         notes,
                         start_date: startDate || null,
                         end_date: endDate || null,
@@ -597,7 +600,7 @@ function PhaseRow({
                     }
                     className="inline-flex items-center gap-1 rounded-md bg-info px-3 py-1.5 text-xs font-semibold text-white hover:opacity-90"
                   >
-                    <Play className="h-3 w-3" /> Démarrer
+                    <Play className="h-3 w-3" /> {t("phase.start")}
                   </button>
                 )}
               </div>

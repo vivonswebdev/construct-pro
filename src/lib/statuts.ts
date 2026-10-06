@@ -39,6 +39,6 @@ export function toCode(v: string | null | undefined): string {
     .trim()
     .toLowerCase()
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "")
+    .replace(/[\u0300-\u036f]/g, "")
     .replace(/\s+/g, "_");
 }

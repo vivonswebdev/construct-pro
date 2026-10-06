@@ -6,6 +6,8 @@ import { useAuth } from "@/lib/auth";
 import { cleanVAT, isValidVAT } from "@/lib/belgian";
 import type { Client } from "@/lib/clients";
 import { backdropClose } from "@/lib/modal";
+import { useTranslation } from "react-i18next";
+import { LANGUES_DOCUMENTS, type LangueDocument } from "@/lib/i18n";
 
 const inputCls =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
@@ -19,6 +21,7 @@ export function ClientFormModal({
   onClose: () => void;
   onSaved: (c: Client) => void;
 }) {
+  const { t } = useTranslation(["clients", "common", "statuts"]);
   const { profile } = useAuth();
   const [f, setF] = useState({
     type: client?.type ?? "particulier",
@@ -33,7 +36,7 @@ export function ClientFormModal({
     ville: client?.ville ?? "",
     email: client?.email ?? "",
     telephone: client?.telephone ?? "",
-    langue: client?.langue ?? "FR",
+    langue: ((client?.langue ?? "fr").toLowerCase() as LangueDocument) || "fr",
     notes: client?.notes ?? "",
   });
   const [saving, setSaving] = useState(false);
@@ -44,11 +47,10 @@ export function ClientFormModal({
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!profile?.company_id) return;
-    if (isEnt && !f.raison_sociale.trim()) return toast.error("La raison sociale est requise");
-    if (!isEnt && !f.nom.trim()) return toast.error("Le nom est requis");
-    if (vatInvalid) return toast.error("Numéro de TVA belge invalide (format BE0123456789)");
-    if (f.assujetti_tva && !f.numero_tva)
-      return toast.error("Un client assujetti doit avoir un numéro de TVA");
+    if (isEnt && !f.raison_sociale.trim()) return toast.error(t("validation.companyNameRequired"));
+    if (!isEnt && !f.nom.trim()) return toast.error(t("validation.lastNameRequired"));
+    if (vatInvalid) return toast.error(t("validation.vatInvalid"));
+    if (f.assujetti_tva && !f.numero_tva) return toast.error(t("validation.vatRequiredIfLiable"));
     setSaving(true);
     const payload = {
       ...f,
@@ -61,7 +63,7 @@ export function ClientFormModal({
     const { data, error } = await q;
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success(client ? "Client mis à jour" : "Client créé");
+    toast.success(client ? t("toasts.updated") : t("toasts.created"));
     onSaved(data as Client);
   };
 
@@ -76,37 +78,35 @@ export function ClientFormModal({
         className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-card p-6 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">
-            {client ? "Modifier le client" : "Nouveau client"}
-          </h3>
+          <h3 className="text-lg font-semibold">{client ? t("edit") : t("new")}</h3>
           <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted">
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="mb-4 flex w-fit gap-1 rounded-lg bg-muted p-1">
-          {(["particulier", "entreprise"] as const).map((t) => (
+          {(["particulier", "entreprise"] as const).map((ty) => (
             <button
-              key={t}
+              key={ty}
               type="button"
-              onClick={() => set({ type: t })}
-              className={`rounded-md px-4 py-1.5 text-sm font-medium ${f.type === t ? "bg-card shadow-sm" : "text-muted-foreground"}`}
+              onClick={() => set({ type: ty })}
+              className={`rounded-md px-4 py-1.5 text-sm font-medium ${f.type === ty ? "bg-card shadow-sm" : "text-muted-foreground"}`}
             >
-              {t === "particulier" ? "Particulier" : "Entreprise"}
+              {t(`statuts:clientType.${ty}`)}
             </button>
           ))}
         </div>
         <div className="grid grid-cols-2 gap-3">
           {isEnt ? (
             <>
-              <L label="Raison sociale *" full>
+              <L label={t("form.companyName")} full>
                 <input
                   className={inputCls}
                   value={f.raison_sociale}
                   onChange={(e) => set({ raison_sociale: e.target.value })}
-                  placeholder="Ex: Dumont Immo SRL"
+                  placeholder={t("form.companyNamePlaceholder")}
                 />
               </L>
-              <L label="N° BCE">
+              <L label={t("form.bce")}>
                 <input
                   className={inputCls}
                   value={f.numero_bce}
@@ -114,7 +114,7 @@ export function ClientFormModal({
                   placeholder="0123.456.789"
                 />
               </L>
-              <L label="Contact (nom)">
+              <L label={t("form.contactName")}>
                 <input
                   className={inputCls}
                   value={f.nom}
@@ -124,14 +124,14 @@ export function ClientFormModal({
             </>
           ) : (
             <>
-              <L label="Prénom">
+              <L label={t("form.firstName")}>
                 <input
                   className={inputCls}
                   value={f.prenom}
                   onChange={(e) => set({ prenom: e.target.value })}
                 />
               </L>
-              <L label="Nom *">
+              <L label={t("form.lastName")}>
                 <input
                   className={inputCls}
                   value={f.nom}
@@ -140,14 +140,16 @@ export function ClientFormModal({
               </L>
             </>
           )}
-          <L label="N° TVA">
+          <L label={t("form.vat")}>
             <input
               className={`${inputCls} ${vatInvalid ? "border-red-500" : ""}`}
               value={f.numero_tva}
               onChange={(e) => set({ numero_tva: e.target.value })}
               placeholder="BE0123456789"
             />
-            {vatInvalid && <span className="mt-1 block text-xs text-red-600">Format invalide</span>}
+            {vatInvalid && (
+              <span className="mt-1 block text-xs text-red-600">{t("form.vatInvalid")}</span>
+            )}
           </L>
           <label className="flex items-end gap-2 pb-2 text-sm">
             <input
@@ -155,30 +157,30 @@ export function ClientFormModal({
               checked={f.assujetti_tva}
               onChange={(e) => set({ assujetti_tva: e.target.checked })}
             />
-            Assujetti à la TVA
+            {t("form.vatLiable")}
           </label>
-          <L label="Adresse" full>
+          <L label={t("form.address")} full>
             <input
               className={inputCls}
               value={f.adresse}
               onChange={(e) => set({ adresse: e.target.value })}
             />
           </L>
-          <L label="Code postal">
+          <L label={t("form.postalCode")}>
             <input
               className={inputCls}
               value={f.code_postal}
               onChange={(e) => set({ code_postal: e.target.value })}
             />
           </L>
-          <L label="Ville">
+          <L label={t("form.city")}>
             <input
               className={inputCls}
               value={f.ville}
               onChange={(e) => set({ ville: e.target.value })}
             />
           </L>
-          <L label="Email">
+          <L label={t("form.email")}>
             <input
               type="email"
               className={inputCls}
@@ -186,24 +188,27 @@ export function ClientFormModal({
               onChange={(e) => set({ email: e.target.value })}
             />
           </L>
-          <L label="Téléphone">
+          <L label={t("form.phone")}>
             <input
               className={inputCls}
               value={f.telephone}
               onChange={(e) => set({ telephone: e.target.value })}
             />
           </L>
-          <L label="Langue">
+          <L label={t("form.language")}>
             <select
               className={inputCls}
               value={f.langue}
-              onChange={(e) => set({ langue: e.target.value as "FR" | "NL" })}
+              onChange={(e) => set({ langue: e.target.value as LangueDocument })}
             >
-              <option value="FR">Français</option>
-              <option value="NL">Nederlands</option>
+              {LANGUES_DOCUMENTS.map((l) => (
+                <option key={l} value={l}>
+                  {t(`statuts:langue.${l}`)}
+                </option>
+              ))}
             </select>
           </L>
-          <L label="Notes" full>
+          <L label={t("form.notes")} full>
             <textarea
               rows={2}
               className={inputCls}
@@ -218,13 +223,13 @@ export function ClientFormModal({
             onClick={onClose}
             className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={saving}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
           >
-            {saving ? "…" : "Enregistrer"}
+            {saving ? "…" : t("common:actions.save")}
           </button>
         </div>
       </form>

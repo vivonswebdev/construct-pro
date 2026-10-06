@@ -104,7 +104,7 @@ function LoginPage() {
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white shadow-lg">
             <HardHat className="h-7 w-7" />
           </div>
-          <h1 className="text-2xl font-bold text-white">ConstructFlow</h1>
+          <h1 className="text-2xl font-bold text-white">{t("common:appName")}</h1>
           <p className="mt-1 text-sm text-sidebar-text">{t("tagline")}</p>
           <LanguageSelector className="mt-3 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-sidebar-text outline-none [&>option]:text-foreground" />
         </div>
@@ -205,9 +205,7 @@ function LoginPage() {
           >
             {t("demoButton")}
           </button>
-          <p className="mt-2 text-center text-[11px] text-muted-foreground">
-            {t("demoHint")}
-          </p>
+          <p className="mt-2 text-center text-[11px] text-muted-foreground">{t("demoHint")}</p>
         </div>
         <p className="mt-6 text-center text-xs text-sidebar-text">{t("copyright")}</p>
       </div>

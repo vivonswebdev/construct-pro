@@ -1,1 +1,43 @@
-{}
+{
+  "title": "Personnel",
+  "add": "Ajouter un ouvrier",
+  "addFirst": "Ajouter votre premier ouvrier",
+  "new": "Nouvel ouvrier",
+  "searchPlaceholder": "Rechercher un ouvrier…",
+  "empty": "Aucun ouvrier pour le moment",
+  "backToList": "Retour au personnel",
+  "card": {
+    "site": "Chantier",
+    "contract": "Contrat",
+    "notAssigned": "Non affecté",
+    "last7Days": "7 derniers jours"
+  },
+  "form": {
+    "fullName": "Nom complet",
+    "nrn": "N° de registre national",
+    "phone": "Téléphone",
+    "email": "Email",
+    "contract": "Type de contrat",
+    "hourlyRate": "Taux horaire (€/h)",
+    "language": "Langue de l'ouvrier"
+  },
+  "toasts": {
+    "added": "Ouvrier ajouté",
+    "languageSaved": "Langue enregistrée"
+  },
+  "detail": {
+    "hourlyRate": "Taux horaire",
+    "hourlyRateValue": "{{value}} €/h",
+    "presenceTitle": "Présences — {{month}}",
+    "reportPdf": "Rapport PDF",
+    "reportPdfTitle": "Exporter le rapport mensuel en PDF",
+    "clickToChange": "Cliquer pour changer",
+    "statPresent": "jours présents",
+    "statAbsent": "absents",
+    "statLeave": "congés",
+    "statHours": "heures travaillées",
+    "sites": "Chantiers affectés",
+    "noAssignment": "Aucune affectation en cours.",
+    "since": "depuis le {{date}}"
+  }
+}

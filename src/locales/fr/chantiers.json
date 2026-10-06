@@ -1,1 +1,79 @@
-{}
+{
+  "title": "Chantiers",
+  "new": "Nouveau chantier",
+  "create": "Créer un chantier",
+  "searchPlaceholder": "Rechercher un chantier…",
+  "notFound": "Chantier introuvable.",
+  "backToList": "Retour aux chantiers",
+  "exportCsv": "Exporter en CSV",
+  "exportPdf": "Exporter en PDF",
+  "columns": {
+    "site": "Chantier",
+    "client": "Client",
+    "budget": "Budget",
+    "progress": "Progression",
+    "status": "Statut",
+    "handover": "Remise",
+    "actions": "Actions"
+  },
+  "empty": {
+    "title": "Aucun chantier pour le moment",
+    "text": "Démarrez en créant votre premier chantier."
+  },
+  "form": {
+    "name": "Nom du chantier",
+    "client": "Client",
+    "address": "Adresse",
+    "budget": "Budget (€)",
+    "start": "Début",
+    "handover": "Remise",
+    "description": "Description"
+  },
+  "toasts": {
+    "created": "Chantier créé",
+    "stepUpdated": "Étape mise à jour"
+  },
+  "phases": {
+    "preparation": "Préparation du site",
+    "fondations": "Fondations",
+    "grosOeuvre": "Gros œuvre",
+    "charpente": "Charpente & toiture",
+    "secondOeuvre": "Second œuvre (électricité, plomberie)",
+    "finitions": "Finitions & peinture",
+    "reception": "Nettoyage & réception"
+  },
+  "detail": {
+    "budget": "Budget",
+    "totalCosts": "Dépenses totales",
+    "realtime": "temps réel",
+    "ofWhichMaterials": "dont matériaux",
+    "profit": "Bénéfice",
+    "overallProgress": "Progression globale",
+    "phasesTitle": "Phases du chantier",
+    "stepsCompleted": "{{done}}/{{total}} étapes complétées",
+    "team": "Équipe sur ce chantier",
+    "noTeam": "Aucun ouvrier affecté.",
+    "vehicles": "Véhicules affectés",
+    "noVehicles": "Aucun véhicule affecté.",
+    "inProgress": "En cours",
+    "materials": "Matériaux consommés",
+    "manageStock": "Gérer le stock →",
+    "noMaterials": "Aucun mouvement de stock lié à ce chantier.",
+    "materialsTotal": "Total matériaux",
+    "materialColumns": {
+      "date": "Date",
+      "type": "Type",
+      "material": "Matériau",
+      "qty": "Qté",
+      "total": "Total"
+    }
+  },
+  "phase": {
+    "progress": "Progression : {{value}} %",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "notes": "Notes",
+    "markDone": "Marquer terminé",
+    "start": "Démarrer"
+  }
+}

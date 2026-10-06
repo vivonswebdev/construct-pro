@@ -9,22 +9,17 @@ import { clientLabel, clientAddress, type Client } from "@/lib/clients";
 import { formatVATDisplay } from "@/lib/belgian";
 import { formatEUR, formatDateBE } from "@/lib/format";
 import { StatusBadge } from "./facturation.index";
+import { useTranslation } from "react-i18next";
+import { pageHead } from "@/lib/head";
+import { toCode } from "@/lib/statuts";
 
 export const Route = createFileRoute("/_app/clients/$id")({
-  head: () => ({
-    meta: [
-      { title: "Fiche client — ConstructFlow" },
-      { name: "description", content: "Informations client, chantiers et devis liés." },
-      { property: "og:title", content: "Fiche client — ConstructFlow" },
-      { property: "og:description", content: "Informations client, chantiers et devis liés." },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  head: () => pageHead("client"),
   component: ClientDetail,
 });
 
 function ClientDetail() {
+  const { t } = useTranslation(["clients", "common", "statuts"]);
   const { id } = Route.useParams();
   const qc = useQueryClient();
   const navigate = useNavigate();
@@ -49,15 +44,15 @@ function ClientDetail() {
 
   if (isLoading) return <div className="h-64 animate-pulse rounded-xl bg-muted" />;
   const c = data?.client;
-  if (!c) return <p className="text-sm text-muted-foreground">Client introuvable.</p>;
+  if (!c) return <p className="text-sm text-muted-foreground">{t("notFound")}</p>;
 
   const totalDevise = data.devis.reduce((s, d) => s + Number(d.subtotal_ht), 0);
   const totalAccepte = data.devis
-    .filter((d) => d.status === "Accepté")
+    .filter((d) => toCode(d.status) === "accepte")
     .reduce((s, d) => s + Number(d.subtotal_ht), 0);
 
   const remove = async () => {
-    if (!confirm("Supprimer ce client ? Les chantiers et devis liés seront conservés.")) return;
+    if (!confirm(t("detail.confirmDelete"))) return;
     const { error } = await supabase.from("clients").delete().eq("id", id);
     if (error) return toast.error(error.message);
     qc.invalidateQueries({ queryKey: ["clients"] });
@@ -74,8 +69,8 @@ function ClientDetail() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{clientLabel(c)}</h1>
             <p className="text-sm text-muted-foreground">
-              {c.type === "entreprise" ? "Entreprise" : "Particulier"} · {c.langue}
-              {c.assujetti_tva && " · Assujetti TVA"}
+              {t(`statuts:clientType.${c.type}`)} · {c.langue.toUpperCase()}
+              {c.assujetti_tva && ` · ${t("vatLiableLong")}`}
             </p>
           </div>
         </div>
@@ -84,7 +79,7 @@ function ClientDetail() {
             onClick={() => setEdit(true)}
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium hover:bg-muted"
           >
-            <Edit2 className="h-4 w-4" /> Modifier
+            <Edit2 className="h-4 w-4" /> {t("common:actions.edit")}
           </button>
           <button
             onClick={remove}
@@ -96,18 +91,22 @@ function ClientDetail() {
       </div>
 
       <div className="grid gap-4 sm:grid-cols-3">
-        <Kpi label="Total devisé (HT)" value={formatEUR(totalDevise)} />
-        <Kpi label="Total accepté (HT)" value={formatEUR(totalAccepte)} tone="text-emerald-600" />
-        <Kpi label="Chantiers" value={String(data.chantiers.length)} />
+        <Kpi label={t("detail.totalQuoted")} value={formatEUR(totalDevise)} />
+        <Kpi
+          label={t("detail.totalAccepted")}
+          value={formatEUR(totalAccepte)}
+          tone="text-emerald-600"
+        />
+        <Kpi label={t("detail.sites")} value={String(data.chantiers.length)} />
       </div>
 
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="space-y-3 rounded-xl border border-border bg-card p-5 text-sm">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Informations
+            {t("detail.info")}
           </h3>
-          {c.numero_tva && <Row label="N° TVA" value={formatVATDisplay(c.numero_tva)} />}
-          {c.numero_bce && <Row label="N° BCE" value={c.numero_bce} />}
+          {c.numero_tva && <Row label={t("form.vat")} value={formatVATDisplay(c.numero_tva)} />}
+          {c.numero_bce && <Row label={t("form.bce")} value={c.numero_bce} />}
           {clientAddress(c) && (
             <p className="flex gap-2">
               <MapPin className="h-4 w-4 text-muted-foreground" />
@@ -132,10 +131,10 @@ function ClientDetail() {
         <div className="space-y-4 lg:col-span-2">
           <div className="rounded-xl border border-border bg-card">
             <h3 className="border-b border-border px-5 py-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Chantiers liés
+              {t("detail.linkedSites")}
             </h3>
             {data.chantiers.length === 0 ? (
-              <p className="p-5 text-sm text-muted-foreground">Aucun chantier.</p>
+              <p className="p-5 text-sm text-muted-foreground">{t("detail.noSites")}</p>
             ) : (
               data.chantiers.map((ch) => (
                 <Link
@@ -146,7 +145,8 @@ function ClientDetail() {
                 >
                   <span className="font-medium">{ch.name}</span>
                   <span className="text-muted-foreground">
-                    {ch.status} · {ch.progress}% · {formatEUR(ch.budget)}
+                    {t(`statuts:chantier.${toCode(ch.status)}`, { defaultValue: ch.status })} ·{" "}
+                    {ch.progress}% · {formatEUR(ch.budget)}
                   </span>
                 </Link>
               ))
@@ -154,10 +154,10 @@ function ClientDetail() {
           </div>
           <div className="rounded-xl border border-border bg-card">
             <h3 className="border-b border-border px-5 py-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              Devis liés
+              {t("detail.linkedQuotes")}
             </h3>
             {data.devis.length === 0 ? (
-              <p className="p-5 text-sm text-muted-foreground">Aucun devis.</p>
+              <p className="p-5 text-sm text-muted-foreground">{t("detail.noQuotes")}</p>
             ) : (
               data.devis.map((d) => (
                 <Link
