@@ -20,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useAuth } from "@/lib/auth";
 import { initials } from "@/lib/format";
+import { backdropClose } from "@/lib/modal";
 
 const ACTIVE_NAV = [
   { to: "/dashboard", key: "dashboard", icon: LayoutDashboard },
@@ -139,7 +140,7 @@ export function Sidebar() {
       {csModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-          onClick={() => setCsModal(null)}
+          {...backdropClose(() => setCsModal(null))}
         >
           <div
             className="w-full max-w-sm rounded-2xl bg-card p-6 text-center shadow-xl"

@@ -7,6 +7,7 @@ import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { daysUntil, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/vehicules/")({
   component: VehiculesPage,
@@ -226,7 +227,7 @@ function AddVehiculeModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <form
         onSubmit={submit}
