@@ -226,7 +226,8 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - Paiement d'un sous-traitant : bouton « Vérifier les dettes » (lien vers le service officiel, BCE prérempli, enregistrement manuel du résultat daté + capture) ; si dette : calcul de la retenue et blocage du paiement complet.
 - Checklists paramétrables par statut (indépendant, associé actif, dirigeant, salarié, sous-traitant, société) : BCE, caisse d'assurances sociales, accès à la profession selon la région, RC, décennale, VCA, Limosa, Dimona, permis, examen médical, formations, ConstruBadge…
 - Tableau de bord feu tricolore ; alertes à 30 jours ; blocage optionnel d'affectation ; rappel Checkinatwork ; avertissement faux indépendant.
-- _(Ajout du 29/09/2026, voir §10)_ `contrats_sous_traitance` (chantier, descriptif des prestations, dates, mode de prix forfait/horaire, taux horaire, prix forfaitaire, fréquence de paiement, délai de paiement) et `prestations_sous_traitance` (journal : date, description, heures, nombre d'ouvriers, bon de travail, photos, validation par un profil). Les **factures** des sous-traitants sont des achats : elles passent par la phase 12 (pas de table dédiée) et se rattachent au contrat.
+- _(Ajouts des 29/09 et 06/10/2026, voir §10 et annexe A)_ `sous_traitant_contrats` (chantier, descriptif des prestations, type de prix forfait/horaire/unitaire, prix, fréquence et délai de paiement, bon de commande, devis, planning) et `sous_traitant_prestations` (journal daté : description, heures, ouvriers présents, feuille de chantier, photos, bon de travail, validation) — preuves de la réalité des prestations. Les **factures** des sous-traitants sont des achats : elles passent par la phase 12 (pas de table dédiée) et se rattachent au contrat et aux prestations facturées.
+- La vérification 30bis est **datée et liée à chaque paiement** (`verifications_30bis`), jamais un simple « fait / pas fait » sur la fiche du sous-traitant.
 - `sous_traitants.forme_juridique` : SRL, SA, SC, SComm, indépendant (personne physique), autre — jamais « SPRL » (supprimée par le CSA en 2019).
 - Démo : 5 sous-traitants (1 document expiré, 1 dette constatée).
 - **CA** : impossible d'enregistrer un paiement complet à un sous-traitant avec dette sans calcul de retenue.
@@ -254,13 +255,15 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - Écran de validation document | données ; affectation des lignes aux chantiers et matériaux (suggestion) ; à la validation : entrée de stock + coût chantier + fournisseur créé.
 - Doublons, alerte hausse de prix > 10 %, échéances fournisseurs dans l'agenda, export CSV/UBL pour le comptable.
 - _(Ajout du 29/09/2026, voir §10)_ **Catégorie « Frais de restaurant »** : photo du ticket, participants (nom, société, fonction — au moins un), motif professionnel obligatoire, chantier/client lié, validation (brouillon → validé / rejeté avec motif). Déductibilité fiscale et TVA déductible lues dans une table de paramètres datée (valeurs indicatives de départ : 69 % à l'impôt, TVA 0 % déductible), jamais en dur ; bandeau « indicatif ».
-- **CA** : un fichier UBL d'exemple est importé sans IA avec des totaux exacts ; un doublon est bloqué ; un frais de restaurant sans participant ni motif ne peut pas être validé.
+- _(Ajout du 06/10/2026, voir §10.6)_ **Lien achats ↔ sous-traitance** : `achats.sous_traitant_id`, `contrat_id`, table de liaison `achat_prestations` (une facture peut couvrir plusieurs prestations) ; **paiements** dans `achat_paiements` (date, montant, référence du virement, preuve, mode — pour la sous-traitance : vérification 30bis du jour et retenue éventuelle). Le chantier est porté par chaque ligne d'achat ; il est **obligatoire pour une facture de sous-traitance**, facultatif pour les frais généraux.
+- _(Ajout du 06/10/2026)_ **Livre de caisse** (`livre_caisse`) : entrées/sorties d'espèces avec pièce justificative ; **solde calculé** (jamais stocké) ; écritures non modifiables après validation (correction par écriture inverse) ; alerte si un paiement en espèces dépasse le plafond légal (paramètre, valeur indicative 3 000 €).
+- **CA** : un fichier UBL d'exemple est importé sans IA avec des totaux exacts ; un doublon est bloqué ; un frais de restaurant sans participant ni motif ne peut pas être validé ; le solde de caisse reste exact après une correction ; un paiement de sous-traitance sans vérification 30bis du jour est refusé.
 
 ### Phase 13 — Matériel/location et déchets
 
 - `equipements` (propre/loué, loueur, tarifs jour/semaine, caution, dates, chantier, contrôles périodiques) ; coût calculé et imputé ; alertes retour et contrôle ; visible agenda et mobile.
 - `dechets` (type, volume/poids, conteneur, collecteur, enlèvement, bordereau, coût, destination) ; checklist par région (Flandre : sloopopvolgingsplan/Tracimat, asbestattest) ; amiante → avertissement « entreprise agréée requise » ; rapport PDF par chantier ; obligations dans une table paramétrable.
-- _(Ajout du 29/09/2026, voir §10)_ **Export « Inventaire à date »** (PDF/CSV pour le comptable) regroupant véhicules, équipements propres et stock à une date donnée : catégorie, description, n° de série, date d'achat, montant HT, localisation, statut. Champs manquants ajoutés aux tables existantes (`equipements.numero_serie`, `date_achat`, `montant_achat_ht`…). **Pas de calcul d'amortissement** (tenu dans le logiciel comptable).
+- _(Ajout du 29/09/2026, voir §10)_ **Export « Inventaire à date »** (PDF/CSV pour le comptable) regroupant véhicules, équipements propres et stock à une date donnée : catégorie, description, n° de série, date d'achat, montant HT, localisation, statut. Champs manquants ajoutés aux tables existantes (`equipements.numero_serie`, `date_achat`, `montant_achat_ht`, `fournisseur`, `localisation`, `photos`, `date_sortie`, `motif_sortie`…). Les biens qui ne sont ni véhicules, ni matériel de chantier, ni stock (mobilier, informatique) sont des `equipements` de catégorie `mobilier` / `informatique` : **pas de tables `inventaire_*` séparées** (double saisie). **Pas de calcul d'amortissement** (tenu dans le logiciel comptable).
 - **CA** : le coût de location suit le tarif le plus avantageux ; le coût des déchets apparaît dans la rentabilité ; l'inventaire au 31/12 n'inclut ni les biens achetés après cette date ni ceux sortis avant.
 
 ### Phase 14 — Primes rénovation (3 régions)
@@ -366,6 +369,33 @@ après la phase 3 en cas de priorité commerciale.
   préfixée par `--`), à exécuter manuellement si besoin.
 - `PASSATION.md` et `docs/JOURNAL.md` mis à jour avant chaque phase.
 
+### 10.6 Compléments du 06/10/2026
+
+Schémas détaillés reçus pour la sous-traitance, les factures d'achat, le livre de caisse et
+l'inventaire. Intégrés aux phases 9, 12, 13 et à l'annexe A, avec ces corrections :
+
+- **30bis** : pas de champs `verification_30bis_fait/date` sur `sous_traitants`. L'obligation porte
+  sur **chaque paiement** : vérification datée dans `verifications_30bis`, rattachée au paiement
+  (`achat_paiements`).
+- **Chantier sur les achats** : obligatoire pour la sous-traitance, pas pour les frais généraux
+  (bureau, carburant, assurances). Porté par ligne pour répartir une facture sur plusieurs chantiers.
+- **Facture ↔ prestations** : table de liaison plutôt qu'un seul `prestation_id` (une facture
+  mensuelle couvre plusieurs prestations).
+- **Factures de vente** : hors périmètre (facturation Peppol « Bientôt »). Aucun champ ajouté à
+  `factures` ; pas de JSON de prestations côté vente (le lien passe par le chantier).
+- **Prix « % du CA »** : remplacé par `unitaire` (prix au m², m³, pièce…), usuel en construction.
+- **E-mails stockés en JSON dans le contrat** : non retenu ; les échanges passeront par
+  `emails_envoyes` (phase 7) et les pièces par Storage (bucket `documents`).
+- **Livre de caisse** : solde **calculé**, jamais stocké (sinon faux après toute correction) ;
+  écritures figées après validation ; plafond des paiements en espèces en paramètre.
+- **Inventaire** : pas de tables `inventaire_*` séparées ; enrichissement de `equipements`
+  (catégories `mobilier`, `informatique`) et de `vehicules`, export « inventaire à date ».
+- **Conventions** : `company_id` NOT NULL + FK + RLS (pas de `DEFAULT get_user_company_id()`, dont
+  la signature attend `auth.uid()`) ; horodatage `created_at` / `created_by` comme les tables
+  existantes ; fichiers en chemins Storage préfixés par `company_id`.
+- **Données personnelles** : noms des ouvriers des sous-traitants conservés uniquement comme preuve
+  de prestation (RGPD : durée de conservation à définir avec le comptable).
+
 ---
 
 ## Annexe A — Détail des colonnes (reprise des spécifications d'origine)
@@ -383,7 +413,11 @@ Slugs réservés : `www, app, api, admin, s, m, login, dashboard, mail, support,
 
 **postes_types** : id, company_id, categorie, libelle, unite (`m2|m3|m|piece|forfait`), prix_vente_ht, cout_materiaux_unitaire, heures_par_unite, nb_ouvriers_recommande, materiaux jsonb `[{materiau_id, quantite_par_unite}]`.
 
-**sous_traitants** : id, company_id, raison_sociale, forme_juridique, numero_bce, numero_tva, contact, email, telephone, adresse, metiers text[], conditions, note_interne, statut (`actif|bloque`), commentaire.
+**sous_traitants** : id, company_id, raison_sociale, forme_juridique, numero_bce, numero_tva, adresse, email, telephone, contact_nom, contact_email, contact_telephone, iban, metiers text[], conditions, note_interne, statut (`actif|bloque`), created_by, created_at. (La conformité 30bis est dans `verifications_30bis`, pas ici.)
+
+**sous_traitant_contrats** : id, company_id, sous_traitant_id, chantier_id, descriptif_prestations (requis), type_prix (`forfait|horaire|unitaire`), prix_unitaire_ht, unite (`heure|jour|m2|m3|m|piece|forfait`), montant_forfait_ht, frequence_paiement (`a_la_facture|hebdomadaire|mensuelle|avancement`), delai_paiement_jours (30), date_debut, date_fin, bon_commande_ref, bon_commande_fichier, devis_ref, devis_fichier, planning_fichier, created_by, created_at.
+
+**sous_traitant_prestations** : id, company_id, contrat_id, chantier_id, date_prestation (requis), description, heures, ouvriers jsonb `[{nom, fonction, heures}]`, feuille_chantier_fichier, photos text[], bon_travail_ref, presence_enregistree (Checkinatwork), presence_fichier, valide_par, valide_le, created_by, created_at.
 
 **documents_conformite** : id, company_id, entite_type, entite_id, type_document, fichier_url, date_emission, date_expiration, statut (calculé : `valide|expire_bientot|expire|manquant`).
 
@@ -391,9 +425,15 @@ Slugs réservés : `www, app, api, admin, s, m, login, dashboard, mail, support,
 
 **travaux_supplementaires** : id, company_id, chantier_id, origine, description, photos, lignes jsonb, montant_ht, tva, impact_delai_jours, statut (`signale|chiffre|envoye|accepte|refuse|execute`), signe_le, document_signe_id.
 
-**achats** : id, company_id, fournisseur_id, numero, date, echeance, montant_ht, tva, montant_ttc, source (`email|upload|ubl|peppol_connecteur|manuel`), fichier_url, xml_url, statut (`a_valider|valide|paye|conteste`), chantier_id.
+**achats** : id, company_id, fournisseur_id, sous_traitant_id, contrat_id, categorie (`materiaux|sous_traitance|location|restaurant|frais_generaux|autre`), numero, date, echeance, montant_ht, tva, montant_ttc, source (`email|upload|ubl|peppol_connecteur|manuel`), fichier_url, xml_url, statut (`a_valider|valide|paye|conteste`), chantier_id (chantier principal ; détail par ligne).
 
-**equipements** : id, company_id, nom, categorie, propriete (`propre|loue`), loueur_id, reference_contrat, tarif_jour, tarif_semaine, caution, date_debut, date_retour_prevue, date_retour_reelle, chantier_id, statut, date_controle, documents.
+**achat_prestations** : achat_id, prestation_id (clé primaire composée).
+
+**achat_paiements** : id, company_id, achat_id, date, montant, mode (`virement|especes|domiciliation|carte`), reference, preuve_fichier, verification_30bis_id, retenue_onss, retenue_spf, created_by, created_at.
+
+**livre_caisse** : id, company_id, date_operation, sens (`entree|sortie`), montant (> 0), description (requis), piece_fichier, achat_id, valide (bool), valide_le, annule_ecriture_id (écriture inverse), created_by, created_at. Solde : vue ou fonction calculée, jamais stocké.
+
+**equipements** : id, company_id, nom, categorie (`engin|outillage|echafaudage|conteneur|mobilier|informatique|autre`), propriete (`propre|loue`), loueur_id, reference_contrat, tarif_jour, tarif_semaine, caution, date_debut, date_retour_prevue, date_retour_reelle, chantier_id, statut (`en_service|hors_service|vendu|perdu`), date_controle, documents, numero_serie, date_achat, montant_achat_ht, fournisseur, localisation, photos text[], date_sortie, motif_sortie.
 
 **dechets** : id, company_id, chantier_id, type, volume, poids, equipement_id, collecteur_id, date_enlevement, bordereau_url, cout, destination.
 

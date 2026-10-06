@@ -4,6 +4,20 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-06 — Compléments de périmètre (PASSATION §10.6)
+
+- Schémas reçus intégrés aux phases 9, 12, 13 et à l'annexe A : `sous_traitant_contrats`,
+  `sous_traitant_prestations`, liens achats ↔ sous-traitance (`achat_prestations`,
+  `achat_paiements`), `livre_caisse`, enrichissement de `equipements` pour l'inventaire.
+- Corrections principales : 30bis vérifié et daté **à chaque paiement** (pas un booléen sur la
+  fiche) ; chantier obligatoire seulement pour la sous-traitance ; solde de caisse calculé, jamais
+  stocké ; pas de tables `inventaire_*` séparées (double saisie) ; rien côté factures de vente
+  (hors périmètre) ; prix « % du CA » remplacé par « unitaire ».
+- Nouveaux CA : solde de caisse exact après correction ; paiement de sous-traitance refusé sans
+  vérification 30bis du jour.
+
+---
+
 ## 2026-09-29 — Mise à jour du périmètre (PASSATION §10)
 
 - Proposition externe examinée (sous-traitants, associés actifs « loi 2027 », frais de restaurant,
