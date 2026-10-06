@@ -8,6 +8,7 @@ import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { toast } from "sonner";
 import { ClientSelect } from "@/components/ClientSelect";
 import { clientLabel, clientAddress, type Client } from "@/lib/clients";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/facturation/")({
   head: () => ({
@@ -371,7 +372,7 @@ function NewDevisModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <form
         onSubmit={submit}

@@ -7,6 +7,7 @@ import { useAuth } from "@/lib/auth";
 import { initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
 import { errorMessage } from "@/lib/utils";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/personnel/")({
   component: PersonnelList,
@@ -221,7 +222,7 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <form
         onSubmit={submit}
