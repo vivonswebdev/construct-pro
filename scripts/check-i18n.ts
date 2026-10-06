@@ -47,8 +47,12 @@ function splitPlural(key: string): { base: string; suffix: string | null } {
   return m ? { base: m[1], suffix: m[2] } : { base: key, suffix: null };
 }
 
+/** Formes plurielles réellement utilisées pour des quantités entières 0–1000 (+ « other »). */
 function requiredPluralForms(lang: string): string[] {
-  return new Intl.PluralRules(lang).resolvedOptions().pluralCategories as string[];
+  const rules = new Intl.PluralRules(lang);
+  const forms = new Set<string>(["other"]);
+  for (let n = 0; n <= 1000; n++) forms.add(rules.select(n));
+  return [...forms];
 }
 
 function loadLang(lang: string): Map<string, Map<string, string>> {
