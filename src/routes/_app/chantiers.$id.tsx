@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { intlLocale } from "@/lib/i18n";
 import { toCode } from "@/lib/statuts";
 import { statutChantierStyle } from "@/lib/chantiers";
+import { TranslatableText } from "@/components/TranslatableText";
 
 export const Route = createFileRoute("/_app/chantiers/$id")({
   component: ChantierDetail,
@@ -179,6 +180,10 @@ function ChantierDetail() {
             <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4" /> {chantier.address}
             </p>
+            <TranslatableText
+              text={chantier.description}
+              className="mt-2 max-w-2xl text-sm text-muted-foreground"
+            />
           </div>
           <div className="flex items-center gap-3">
             <span

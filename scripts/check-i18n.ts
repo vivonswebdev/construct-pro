@@ -155,7 +155,9 @@ const HAS_WORD = /\p{L}{2,}/u;
 const FORMAT_EXAMPLE = (s: string) => /\d/.test(s) && !/\p{Ll}{2,}/u.test(s);
 // Termes identiques dans toutes les langues (pas TVA/ONSS : BTW, RSZ, VAT…).
 const UNIVERSAL = new Set(["CSV", "PDF", "IBAN", "BIC", "UBL", "Peppol", "Excel", "€"]);
-const isText = (s: string) => HAS_WORD.test(s) && !FORMAT_EXAMPLE(s) && !UNIVERSAL.has(s.trim());
+const URL_EXAMPLE = (s: string) => /^https?:\/\//.test(s.trim());
+const isText = (s: string) =>
+  HAS_WORD.test(s) && !FORMAT_EXAMPLE(s) && !URL_EXAMPLE(s) && !UNIVERSAL.has(s.trim());
 
 function walk(dir: string): string[] {
   return readdirSync(dir).flatMap((f) => {

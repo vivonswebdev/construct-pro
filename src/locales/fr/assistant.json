@@ -1,1 +1,24 @@
-{}
+{
+  "title": "Assistant IA",
+  "subtitle": "Analyse vos chantiers, vos devis et vos obligations belges en temps réel.",
+  "intro": "Posez une question sur vos données. L'assistant connaît vos chantiers, votre personnel, votre flotte, vos devis et votre stock.",
+  "suggestions": {
+    "budget": "Quels chantiers risquent de dépasser leur budget ?",
+    "quotes": "Quels devis sont en attente et lesquels faut-il relancer ?",
+    "fleet": "Résume l'état de ma flotte et les contrôles techniques à venir.",
+    "deadlines": "Quelles sont mes échéances de précompte et d'ONSS ce mois-ci ?"
+  },
+  "thinking": "Analyse de vos données…",
+  "placeholder": "Posez votre question…",
+  "send": "Envoyer",
+  "disclaimer": "Réponses indicatives — à valider avec votre comptable pour toute obligation fiscale.",
+  "emptyAnswer": "(réponse vide)",
+  "errors": {
+    "trop_de_requetes": "Trop de requêtes, réessayez dans un instant.",
+    "credits_epuises": "Crédits IA épuisés.",
+    "erreur_ia": "Erreur du service IA (code {{status}}).",
+    "cle_manquante": "Assistant indisponible (clé IA manquante).",
+    "injoignable": "Assistant injoignable. Réessayez plus tard.",
+    "generic": "Une erreur est survenue. Réessayez."
+  }
+}

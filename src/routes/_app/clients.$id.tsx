@@ -12,6 +12,7 @@ import { StatusBadge } from "./facturation.index";
 import { useTranslation } from "react-i18next";
 import { pageHead } from "@/lib/head";
 import { toCode } from "@/lib/statuts";
+import { TranslatableText } from "@/components/TranslatableText";
 
 export const Route = createFileRoute("/_app/clients/$id")({
   head: () => pageHead("client"),
@@ -125,7 +126,12 @@ function ClientDetail() {
               {c.telephone}
             </p>
           )}
-          {c.notes && <p className="rounded-md bg-muted p-3 text-muted-foreground">{c.notes}</p>}
+          {c.notes && (
+            <TranslatableText
+              text={c.notes}
+              className="rounded-md bg-muted p-3 text-muted-foreground"
+            />
+          )}
         </div>
 
         <div className="space-y-4 lg:col-span-2">

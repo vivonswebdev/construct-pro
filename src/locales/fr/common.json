@@ -89,7 +89,11 @@
     "devisDetail": {
       "title": "Devis",
       "description": "Édition d'un devis avec lignes, TVA belge et export PDF."
+    },
+    "assistant": {
+      "title": "Assistant IA",
+      "description": "Posez vos questions sur vos chantiers, vos devis et la conformité belge : l'assistant répond à partir de vos données."
     }
   },
-  "indicatif":"Indicatif — à valider par votre comptable / secrétariat social."
+  "indicatif": "Indicatif — à valider par votre comptable / secrétariat social."
 }
