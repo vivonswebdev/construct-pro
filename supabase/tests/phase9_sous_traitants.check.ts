@@ -21,7 +21,9 @@ await db.exec(`
   GRANT USAGE ON SCHEMA public TO authenticated, anon, service_role;
 `);
 
-for (const f of readdirSync(MIG).filter((f) => f.endsWith(".sql")).sort()) {
+for (const f of readdirSync(MIG)
+  .filter((f) => f.endsWith(".sql"))
+  .sort()) {
   try {
     await db.exec(readFileSync(join(MIG, f), "utf8"));
     console.log("migration ok   ", f);
@@ -46,7 +48,9 @@ async function expectError(sql: string, code: string, label: string) {
   }
 }
 const as = async (uid: string) =>
-  db.exec(`RESET ROLE; SELECT set_config('request.jwt.claim.sub', '${uid}', false); SET ROLE authenticated;`);
+  db.exec(
+    `RESET ROLE; SELECT set_config('request.jwt.claim.sub', '${uid}', false); SET ROLE authenticated;`,
+  );
 
 // Deux sociétés via le trigger d'inscription
 const U1 = "11111111-1111-1111-1111-111111111111";
@@ -55,14 +59,19 @@ await db.exec(`
   INSERT INTO auth.users VALUES ('${U1}', 'a@a.be', '{"company_name":"Société A"}'),
                                 ('${U2}', 'b@b.be', '{"company_name":"Société B"}');`);
 const comp = async (uid: string) =>
-  (await db.query<{ company_id: string }>(`SELECT company_id FROM public.profiles WHERE id = '${uid}'`)).rows[0]
-    .company_id;
+  (
+    await db.query<{ company_id: string }>(
+      `SELECT company_id FROM public.profiles WHERE id = '${uid}'`,
+    )
+  ).rows[0].company_id;
 const C1 = await comp(U1);
 const C2 = await comp(U2);
 
 // --- Société A ---------------------------------------------------------------
 await as(U1);
-await db.exec(`INSERT INTO public.chantiers (id, company_id, name) VALUES ('aaaaaaaa-0000-0000-0000-000000000001', '${C1}', 'Chantier A');`);
+await db.exec(
+  `INSERT INTO public.chantiers (id, company_id, name) VALUES ('aaaaaaaa-0000-0000-0000-000000000001', '${C1}', 'Chantier A');`,
+);
 await db.exec(`
   INSERT INTO public.sous_traitants (id, company_id, raison_sociale, forme_juridique, numero_bce)
   VALUES ('aaaaaaaa-0000-0000-0000-0000000000a1', '${C1}', 'Plafonnage Martin SRL', 'srl', '0123.456.789'),
@@ -108,8 +117,13 @@ await expectError(
 await db.exec(`
   INSERT INTO public.achat_paiements (company_id, contrat_id, date_paiement, montant_ht, retenue_onss, retenue_spf, verification_30bis_id)
   VALUES ('${C1}', 'aaaaaaaa-0000-0000-0000-0000000000c1', ${today}, 5000, 1750, 750, 'aaaaaaaa-0000-0000-0000-0000000000f1');`);
-const verse = await db.query<{ montant_verse: string }>(`SELECT montant_verse FROM public.achat_paiements`);
-ok(Number(verse.rows[0].montant_verse) === 2500, `paiement avec retenues 35 % + 15 % accepté, versé = ${verse.rows[0].montant_verse}`);
+const verse = await db.query<{ montant_verse: string }>(
+  `SELECT montant_verse FROM public.achat_paiements`,
+);
+ok(
+  Number(verse.rows[0].montant_verse) === 2500,
+  `paiement avec retenues 35 % + 15 % accepté, versé = ${verse.rows[0].montant_verse}`,
+);
 await expectError(
   `INSERT INTO public.achat_paiements (company_id, contrat_id, date_paiement, montant_ht, retenue_onss, retenue_spf, verification_30bis_id) VALUES ('${C1}', 'aaaaaaaa-0000-0000-0000-0000000000c1', ${today} + 1, 5000, 1750, 750, 'aaaaaaaa-0000-0000-0000-0000000000f1')`,
   "verification_30bis_pas_du_jour",
@@ -127,7 +141,11 @@ await expectError(
 // Preuve immuable
 await db.exec(`UPDATE public.verifications_30bis SET dette_sociale = false`).then(
   () => ok(false, "modification d'une vérification 30bis refusée (aucune erreur)"),
-  (e) => ok(/permission denied/.test((e as Error).message), "modification d'une vérification 30bis refusée"),
+  (e) =>
+    ok(
+      /permission denied/.test((e as Error).message),
+      "modification d'une vérification 30bis refusée",
+    ),
 );
 
 // --- Société B : isolation ------------------------------------------------------
@@ -144,7 +162,9 @@ await expectError(
   "row-level security",
   "la société B ne peut pas écrire dans la société A",
 );
-await db.exec(`INSERT INTO public.sous_traitants (id, company_id, raison_sociale) VALUES ('bbbbbbbb-0000-0000-0000-0000000000b1', '${C2}', 'ST de B')`);
+await db.exec(
+  `INSERT INTO public.sous_traitants (id, company_id, raison_sociale) VALUES ('bbbbbbbb-0000-0000-0000-0000000000b1', '${C2}', 'ST de B')`,
+);
 await expectError(
   `INSERT INTO public.sous_traitant_contrats (company_id, sous_traitant_id, chantier_id, descriptif_prestations, montant_forfait_ht) VALUES ('${C2}', 'bbbbbbbb-0000-0000-0000-0000000000b1', 'aaaaaaaa-0000-0000-0000-000000000001', 'Vol de chantier', 1)`,
   "foreign key",
