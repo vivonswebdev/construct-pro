@@ -1,5 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
+import { CONTRATS_SALARIES } from "@/lib/statuts";
 
 const DEFAULT_PHASES = [
   "Préparation du site",
@@ -44,7 +45,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ville: "Liège",
       email: "contact@dumont-immo.be",
       telephone: "+32 4 222 33 44",
-      langue: "FR",
+      langue: "fr",
     },
     {
       type: "entreprise",
@@ -58,7 +59,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ville: "Hasselt",
       email: "info@techlog.be",
       telephone: "+32 11 45 67 89",
-      langue: "NL",
+      langue: "nl",
     },
     {
       type: "entreprise",
@@ -72,7 +73,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ville: "Namur",
       email: "direction@jardinsducoeur.be",
       telephone: "+32 81 12 34 56",
-      langue: "FR",
+      langue: "fr",
     },
     {
       type: "particulier",
@@ -83,7 +84,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ville: "Namur",
       email: "luc.pirard@gmail.com",
       telephone: "+32 475 12 34 56",
-      langue: "FR",
+      langue: "fr",
     },
     {
       type: "particulier",
@@ -94,7 +95,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ville: "Wavre",
       email: "anne.collignon@skynet.be",
       telephone: "+32 476 98 76 54",
-      langue: "FR",
+      langue: "fr",
     },
     {
       type: "particulier",
@@ -105,7 +106,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ville: "Gent",
       email: "p.vermeulen@telenet.be",
       telephone: "+32 477 55 44 33",
-      langue: "NL",
+      langue: "nl",
     },
   ].map((c) => ({
     raison_sociale: null,
@@ -131,7 +132,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       actual_costs: 142400,
       start_date: inDays(-90),
       end_date: inDays(120),
-      status: "En cours",
+      status: "en_cours",
       progress: 55,
       description: "Construction d'un immeuble résidentiel de 12 appartements.",
     },
@@ -142,7 +143,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       actual_costs: 31200,
       start_date: inDays(-40),
       end_date: inDays(80),
-      status: "En cours",
+      status: "en_cours",
       progress: 35,
       description: "Extension de 45 m² avec toiture plate et baie vitrée.",
     },
@@ -153,7 +154,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       actual_costs: 128200,
       start_date: inDays(-150),
       end_date: inDays(-20),
-      status: "En retard",
+      status: "en_retard",
       progress: 72,
       description: "Extension d'entrepôt logistique 1 500 m².",
     },
@@ -164,7 +165,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       actual_costs: 56600,
       start_date: inDays(-200),
       end_date: inDays(-25),
-      status: "Terminé",
+      status: "termine",
       progress: 100,
       description: "Rénovation complète d'une villa de 220 m² (TVA 6 %).",
     },
@@ -175,7 +176,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       actual_costs: 0,
       start_date: inDays(30),
       end_date: inDays(240),
-      status: "En attente",
+      status: "en_attente",
       progress: 0,
       description: "En préparation — construction d'une salle polyvalente de 300 m².",
     },
@@ -200,9 +201,9 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
         0,
         Math.min(100, Math.round((c.progress - (i * 100) / 7) * 7)),
       );
-      let status = "En attente";
-      if (phaseProgress >= 100) status = "Terminé";
-      else if (phaseProgress > 0) status = "En cours";
+      let status = "en_attente";
+      if (phaseProgress >= 100) status = "termine";
+      else if (phaseProgress > 0) status = "en_cours";
       return { chantier_id: c.id, name, order_index: i, progress: phaseProgress, status };
     }),
   );
@@ -212,7 +213,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   const personnelData = [
     {
       full_name: "Marc Dubois",
-      contract_type: "CDI",
+      contract_type: "cdi",
       hourly_rate: 24.5,
       nrn: "85.04.12-345.67",
       email: "marc.dubois@example.be",
@@ -220,7 +221,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       full_name: "Julien Lefèvre",
-      contract_type: "CDI",
+      contract_type: "cdi",
       hourly_rate: 23.0,
       nrn: "82.09.30-123.45",
       email: "j.lefevre@example.be",
@@ -228,7 +229,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       full_name: "Ahmed Benali",
-      contract_type: "CDD",
+      contract_type: "cdd",
       hourly_rate: 21.5,
       nrn: "90.06.18-432.10",
       email: "a.benali@example.be",
@@ -236,7 +237,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       full_name: "Sophie Vandenberg",
-      contract_type: "Intérim",
+      contract_type: "interim",
       hourly_rate: 19.0,
       nrn: "92.11.05-678.90",
       email: "s.vandenberg@example.be",
@@ -244,13 +245,13 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       full_name: "Pierre Goossens",
-      contract_type: "Indépendant",
+      contract_type: "independant",
       hourly_rate: 35.0,
       nrn: "78.02.22-111.22",
       email: "p.goossens@example.be",
       phone: "+32 470 99 88 77",
     },
-  ].map((p) => ({ ...p, company_id: companyId, status: "Actif" }));
+  ].map((p) => ({ ...p, company_id: companyId, status: "actif" }));
 
   const { data: personnel } = await supabase.from("personnel").insert(personnelData).select();
   if (!personnel) return true;
@@ -267,15 +268,15 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       const dow = date.getDay();
       if (dow === 0 || dow === 6) continue;
       const r = Math.random();
-      let status: string = "Présent";
-      if (r < 0.05) status = "Absent";
-      else if (r < 0.1) status = "Congé";
+      let status: string = "present";
+      if (r < 0.05) status = "absent";
+      else if (r < 0.1) status = "conge";
       presenceRows.push({
         personnel_id: p.id,
         date: date.toISOString().slice(0, 10),
         status,
-        hours: status === "Présent" ? 8 : 0,
-        chantier_id: status === "Présent" ? chantiers[Math.floor(Math.random() * 2)].id : null,
+        hours: status === "present" ? 8 : 0,
+        chantier_id: status === "present" ? chantiers[Math.floor(Math.random() * 2)].id : null,
       });
     }
   }
@@ -312,7 +313,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
   // Véhicules : 7 (3 camionnettes, 1 camion benne, 1 mini-pelle, 1 remorque, 1 voiture dirigeant)
   const vehiculesData = [
     {
-      type: "Camionnette",
+      type: "camionnette",
       brand: "Ford",
       model: "Transit",
       year: 2021,
@@ -322,10 +323,10 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ct_date: inDays(15),
       insurance_date: inDays(145),
       maintenance_date: inDays(40),
-      status: "Affecté",
+      status: "affecte",
     },
     {
-      type: "Camionnette",
+      type: "camionnette",
       brand: "Renault",
       model: "Master",
       year: 2020,
@@ -335,10 +336,10 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ct_date: inDays(190),
       insurance_date: inDays(60),
       maintenance_date: inDays(-10),
-      status: "Affecté",
+      status: "affecte",
     },
     {
-      type: "Camionnette",
+      type: "camionnette",
       brand: "Volkswagen",
       model: "Crafter",
       year: 2023,
@@ -348,10 +349,10 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ct_date: inDays(420),
       insurance_date: inDays(260),
       maintenance_date: inDays(120),
-      status: "Disponible",
+      status: "disponible",
     },
     {
-      type: "Camion",
+      type: "camion",
       brand: "MAN",
       model: "TGS 26.400 benne",
       year: 2019,
@@ -361,10 +362,10 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ct_date: inDays(75),
       insurance_date: inDays(30),
       maintenance_date: inDays(-35),
-      status: "Affecté",
+      status: "affecte",
     },
     {
-      type: "Engin",
+      type: "engin",
       brand: "Kubota",
       model: "U27-4 mini-pelle",
       year: 2021,
@@ -374,10 +375,10 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ct_date: inDays(300),
       insurance_date: inDays(95),
       maintenance_date: inDays(20),
-      status: "Affecté",
+      status: "affecte",
     },
     {
-      type: "Remorque",
+      type: "remorque",
       brand: "Humbaur",
       model: "HT 3.5t",
       year: 2018,
@@ -387,10 +388,10 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ct_date: inDays(230),
       insurance_date: inDays(180),
       maintenance_date: inDays(160),
-      status: "Disponible",
+      status: "disponible",
     },
     {
-      type: "Voiture",
+      type: "voiture",
       brand: "BMW",
       model: "520e hybride",
       year: 2024,
@@ -400,7 +401,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       ct_date: inDays(900),
       insurance_date: inDays(210),
       maintenance_date: inDays(95),
-      status: "Disponible",
+      status: "disponible",
     },
   ].map((v) => ({ ...v, company_id: companyId }));
   const { data: vehicules } = await supabase.from("vehicules").insert(vehiculesData).select();
@@ -448,27 +449,27 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
       client_name: "Immobilière Dumont SA",
       client_vat_number: "BE0123456789",
       is_eligible: true,
-      raw_response: { message: "Aucune retenue obligatoire" },
+      raw_response: { resultat: "conforme", source: "auto" },
     },
     {
       company_id: companyId,
       client_name: "TechLog BV",
       client_vat_number: "BE0456789012",
       is_eligible: true,
-      raw_response: { message: "Aucune retenue obligatoire" },
+      raw_response: { resultat: "conforme", source: "auto" },
     },
     {
       company_id: companyId,
       client_name: "Sous-traitant Dubois SRL",
       client_vat_number: "BE0789012345",
       is_eligible: false,
-      raw_response: { message: "Retenue obligatoire — dettes fiscales détectées" },
+      raw_response: { resultat: "retenue", source: "auto" },
     },
   ]);
 
   // Salary / précompte / ONSS seed
   const contractWorkers = personnel.filter((p) =>
-    ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""),
+    CONTRATS_SALARIES.includes(p.contract_type ?? ""),
   );
   const currentY = now.getFullYear();
   const currentM = now.getMonth() + 1; // 1-12
@@ -581,7 +582,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     {
       client: cl[0],
       chantier: chantiers[0],
-      status: "Accepté",
+      status: "accepte",
       issue: -110,
       valid: -80,
       autoliq: true,
@@ -596,7 +597,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     {
       client: cl[4],
       chantier: chantiers[1],
-      status: "Accepté",
+      status: "accepte",
       issue: -55,
       valid: -25,
       lignes: [
@@ -610,7 +611,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     {
       client: cl[1],
       chantier: chantiers[2],
-      status: "Accepté",
+      status: "accepte",
       issue: -170,
       valid: -140,
       autoliq: true,
@@ -623,7 +624,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     {
       client: cl[3],
       chantier: chantiers[3],
-      status: "Accepté",
+      status: "accepte",
       issue: -220,
       valid: -190,
       att6: true,
@@ -637,7 +638,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       client: cl[5],
-      status: "Envoyé",
+      status: "envoye",
       issue: -8,
       valid: 22,
       att6: true,
@@ -649,7 +650,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       client: cl[2],
-      status: "Brouillon",
+      status: "brouillon",
       issue: -2,
       valid: 28,
       lignes: [
@@ -661,7 +662,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       client: cl[4],
-      status: "Refusé",
+      status: "refuse",
       issue: -70,
       valid: -40,
       lignes: [
@@ -671,7 +672,7 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     },
     {
       client: cl[1],
-      status: "Expiré",
+      status: "expire",
       issue: -95,
       valid: -65,
       autoliq: true,

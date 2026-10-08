@@ -19,10 +19,13 @@ import {
   onssDueDate,
   precompteDueDate,
   DEFAULTS,
-  MONTHS_FR,
 } from "@/lib/belgian";
 import { formatDateBE, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
+import { backdropClose } from "@/lib/modal";
+import { useTranslation } from "react-i18next";
+import { nomMois } from "@/lib/i18n";
+import { CONTRATS_SALARIES, toCode } from "@/lib/statuts";
 
 export const Route = createFileRoute("/_app/precompte")({
   component: PrecomptePage,
@@ -31,6 +34,7 @@ export const Route = createFileRoute("/_app/precompte")({
 type PayKind = "salary" | "precompte" | "onss";
 
 function PrecomptePage() {
+  const { t } = useTranslation(["precompte", "common"]);
   const { profile } = useAuth();
   const qc = useQueryClient();
   const companyId = profile?.company_id;
@@ -79,10 +83,10 @@ function PrecomptePage() {
         { onConflict: "company_id" },
       );
       if (error) {
-        toast.error("Impossible d'enregistrer les taux");
+        toast.error(t("toasts.ratesError"));
         return;
       }
-      toast.success("Taux enregistrés");
+      toast.success(t("toasts.ratesSaved"));
       qc.invalidateQueries({ queryKey: ["company_settings", companyId] });
     }, 600);
   };
@@ -103,7 +107,7 @@ function PrecomptePage() {
     enabled: !!companyId,
     queryFn: async () => {
       const [pers, sal, prec, onss, aff] = await Promise.all([
-        supabase.from("personnel").select("*").eq("company_id", companyId!).eq("status", "Actif"),
+        supabase.from("personnel").select("*").eq("company_id", companyId!),
         supabase
           .from("salary_payments")
           .select("*")
@@ -125,8 +129,10 @@ function PrecomptePage() {
         supabase.from("affectations").select("personnel_id, chantiers(name)").is("end_date", null),
       ]);
       return {
-        personnel: (pers.data ?? []).filter((p) =>
-          ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""),
+        // Filtre en codes (tolère les anciennes valeurs « Actif », « CDI »…)
+        personnel: (pers.data ?? []).filter(
+          (p) =>
+            toCode(p.status) === "actif" && CONTRATS_SALARIES.includes(toCode(p.contract_type)),
         ),
         salaries: sal.data ?? [],
         precomptes: prec.data ?? [],
@@ -199,7 +205,7 @@ function PrecomptePage() {
           paid: true,
           paid_date: paidDate,
           reference,
-          payment_method: "Virement",
+          payment_method: "virement",
         },
         { onConflict: "personnel_id,period_month,period_year" },
       );
@@ -239,7 +245,7 @@ function PrecomptePage() {
     }
     if (error) toast.error(error.message);
     else {
-      toast.success("Paiement enregistré");
+      toast.success(t("toasts.paymentSaved"));
       setPayModal(null);
       qc.invalidateQueries({ queryKey: ["precompte"] });
     }
@@ -258,10 +264,12 @@ function PrecomptePage() {
       .eq("id", rowId);
     if (error) toast.error(error.message);
     else {
-      toast.success("Paiement annulé");
+      toast.success(t("toasts.paymentCancelled"));
       qc.invalidateQueries({ queryKey: ["precompte"] });
     }
   };
+
+  const periode = `${nomMois(period.month)} ${period.year}`;
 
   return (
     <div className="space-y-6">
@@ -271,10 +279,8 @@ function PrecomptePage() {
             <Landmark className="h-5 w-5" />
           </div>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Précompte & ONSS</h1>
-            <p className="text-sm text-muted-foreground">
-              Suivi des obligations sociales et fiscales par ouvrier
-            </p>
+            <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+            <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
@@ -290,7 +296,7 @@ function PrecomptePage() {
             <ChevronLeft className="h-4 w-4" />
           </button>
           <span className="min-w-[140px] rounded-md border border-border bg-card px-3 py-1.5 text-center text-sm font-semibold">
-            {MONTHS_FR[period.month]} {period.year}
+            {periode}
           </span>
           <button
             onClick={() =>
@@ -306,7 +312,7 @@ function PrecomptePage() {
           <button
             onClick={() => setShowSettings((s) => !s)}
             className="rounded-md border border-border p-1.5 hover:bg-muted"
-            title="Paramètres des taux"
+            title={t("ratesSettings")}
           >
             <Settings className="h-4 w-4" />
           </button>
@@ -315,22 +321,21 @@ function PrecomptePage() {
 
       {showSettings && (
         <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
-          <h3 className="mb-3 text-sm font-semibold">
-            Paramètres des taux (CP 124 construction par défaut)
-          </h3>
+          <h3 className="mb-1 text-sm font-semibold">{t("ratesTitle")}</h3>
+          <p className="mb-3 text-xs text-amber-700">{t("common:indicatif")}</p>
           <div className="grid gap-3 md:grid-cols-3">
             <RateInput
-              label="Précompte professionnel"
+              label={t("rates.precompte")}
               value={rates.precompteRate}
               onChange={(v) => updateRates({ ...rates, precompteRate: v })}
             />
             <RateInput
-              label="ONSS travailleur"
+              label={t("rates.onssEmployee")}
               value={rates.onssEmployeeRate}
               onChange={(v) => updateRates({ ...rates, onssEmployeeRate: v })}
             />
             <RateInput
-              label="ONSS employeur"
+              label={t("rates.onssEmployer")}
               value={rates.onssEmployerRate}
               onChange={(v) => updateRates({ ...rates, onssEmployerRate: v })}
             />
@@ -341,25 +346,29 @@ function PrecomptePage() {
       {/* KPIs */}
       <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
         <KpiCard
-          label="Salaires payés"
+          label={t("kpi.salariesPaid")}
           value={`${stats.salPaid}/${stats.total}`}
           tone={
             stats.salPaid === stats.total ? "success" : stats.salPaid > 0 ? "warning" : "danger"
           }
         />
         <KpiCard
-          label="Précompte payé"
+          label={t("kpi.precomptePaid")}
           value={`${stats.precPaid}/${stats.total}`}
           tone={
             stats.precPaid === stats.total ? "success" : stats.precPaid > 0 ? "warning" : "danger"
           }
         />
         <KpiCard
-          label={`ONSS Q${quarter}/${period.year}`}
-          value={stats.anyOnssPaid ? "Payé" : `${stats.onssPaid}/${stats.total}`}
+          label={t("kpi.onss", { quarter, year: period.year })}
+          value={stats.anyOnssPaid ? t("kpi.paid") : `${stats.onssPaid}/${stats.total}`}
           tone={stats.anyOnssPaid ? "success" : "danger"}
         />
-        <KpiCard label="Total obligations" value={formatEURBE(stats.totalUnpaid)} tone="danger" />
+        <KpiCard
+          label={t("kpi.totalObligations")}
+          value={formatEURBE(stats.totalUnpaid)}
+          tone="danger"
+        />
       </div>
 
       {/* Alerts */}
@@ -368,13 +377,21 @@ function PrecomptePage() {
           {stats.precPaid < stats.total && (
             <AlertBar
               tone="warning"
-              text={`Précompte ${MONTHS_FR[period.month]} ${period.year} non payé pour ${stats.total - stats.precPaid} ouvrier(s) — Échéance : ${formatDateBE(precompteDue)}`}
+              text={t("alerts.precompteUnpaid", {
+                period: periode,
+                count: stats.total - stats.precPaid,
+                date: formatDateBE(precompteDue),
+              })}
             />
           )}
           {stats.onssPaid < stats.total && (
             <AlertBar
               tone="danger"
-              text={`ONSS Q${quarter} ${period.year} non payé — Échéance : ${formatDateBE(onssDue)}`}
+              text={t("alerts.onssUnpaid", {
+                quarter,
+                year: period.year,
+                date: formatDateBE(onssDue),
+              })}
             />
           )}
         </div>
@@ -383,29 +400,27 @@ function PrecomptePage() {
       {/* Table */}
       <div className="rounded-xl border border-border bg-card shadow-sm">
         <div className="border-b border-border px-5 py-3">
-          <h2 className="text-base font-semibold">
-            Ouvriers actifs — {MONTHS_FR[period.month]} {period.year}
-          </h2>
+          <h2 className="text-base font-semibold">{t("table.title", { period: periode })}</h2>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border bg-muted/30 text-left text-[11px] uppercase tracking-wider text-muted-foreground">
-                <th className="px-3 py-2">Ouvrier</th>
-                <th className="px-3 py-2">Chantier</th>
-                <th className="px-3 py-2 text-right">Salaire net</th>
-                <th className="px-3 py-2">Statut salaire</th>
-                <th className="px-3 py-2 text-right">Précompte</th>
-                <th className="px-3 py-2">Statut précompte</th>
-                <th className="px-3 py-2 text-right">ONSS Q{quarter}</th>
-                <th className="px-3 py-2">Statut ONSS</th>
+                <th className="px-3 py-2">{t("table.worker")}</th>
+                <th className="px-3 py-2">{t("table.site")}</th>
+                <th className="px-3 py-2 text-right">{t("table.netSalary")}</th>
+                <th className="px-3 py-2">{t("table.salaryStatus")}</th>
+                <th className="px-3 py-2 text-right">{t("table.precompte")}</th>
+                <th className="px-3 py-2">{t("table.precompteStatus")}</th>
+                <th className="px-3 py-2 text-right">{t("table.onss", { quarter })}</th>
+                <th className="px-3 py-2">{t("table.onssStatus")}</th>
               </tr>
             </thead>
             <tbody>
               {rows.length === 0 && (
                 <tr>
                   <td colSpan={8} className="px-3 py-8 text-center text-sm text-muted-foreground">
-                    Aucun ouvrier actif (CDI/CDD/Intérim).
+                    {t("table.empty")}
                   </td>
                 </tr>
               )}
@@ -506,22 +521,22 @@ function PrecomptePage() {
 
       <div className="flex flex-wrap items-center gap-2">
         <button
-          onClick={() => toast.info("Export PDF bientôt disponible")}
+          onClick={() => toast.info(t("exports.pdfSoon"))}
           className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
         >
-          <FileDown className="h-3.5 w-3.5" /> Exporter PDF — Récapitulatif
+          <FileDown className="h-3.5 w-3.5" /> {t("exports.pdf")}
         </button>
         <button
-          onClick={() => toast.info("Export CSV bientôt disponible")}
+          onClick={() => toast.info(t("exports.csvSoon"))}
           className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
         >
-          <FileDown className="h-3.5 w-3.5" /> Exporter CSV
+          <FileDown className="h-3.5 w-3.5" /> {t("exports.csv")}
         </button>
         <button
           disabled
           className="inline-flex cursor-not-allowed items-center gap-1.5 rounded-md border border-border bg-muted px-3 py-1.5 text-xs font-semibold text-muted-foreground"
         >
-          Fiche Belcotax (bientôt)
+          {t("exports.belcotax")}
         </button>
       </div>
 
@@ -615,17 +630,18 @@ function PayStatusCell({
   onPay: () => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation("precompte");
   if (paid) {
     return (
       <div className="flex flex-col gap-0.5">
         <span className="inline-flex w-fit items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700">
-          ✓ Payé le {formatDateBE(paidDate)}
+          {t("status.paidOn", { date: formatDateBE(paidDate) })}
         </span>
         <button
           onClick={onCancel}
           className="w-fit text-[10px] text-muted-foreground hover:text-red-600 hover:underline"
         >
-          Annuler
+          {t("status.cancel")}
         </button>
       </div>
     );
@@ -635,7 +651,7 @@ function PayStatusCell({
       onClick={onPay}
       className="rounded-md border border-primary px-2 py-1 text-xs font-semibold text-primary hover:bg-primary hover:text-white"
     >
-      Payer
+      {t("status.pay")}
     </button>
   );
 }
@@ -649,26 +665,27 @@ function PayModal({
   onClose: () => void;
   onConfirm: (paidDate: string, reference: string, amount: number) => void;
 }) {
+  const { t } = useTranslation(["precompte", "common"]);
   const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
   const [reference, setReference] = useState("");
   const [amount, setAmount] = useState(modal.defaultAmount.toFixed(2));
   const title =
     modal.kind === "salary"
-      ? "Paiement du salaire"
+      ? t("modal.salary")
       : modal.kind === "precompte"
-        ? "Paiement du précompte"
-        : "Paiement ONSS";
+        ? t("modal.precompte")
+        : t("modal.onss");
   const note =
     modal.kind === "precompte"
-      ? "À verser au SPF Finances avant le 15 du mois suivant."
+      ? t("modal.notePrecompte")
       : modal.kind === "onss"
-        ? "À verser à l'ONSS avant le dernier jour du mois suivant le trimestre."
+        ? t("modal.noteOnss")
         : null;
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <div
         className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl"
@@ -676,11 +693,12 @@ function PayModal({
       >
         <h3 className="text-lg font-semibold">{title}</h3>
         <p className="mt-1 text-sm text-muted-foreground">
-          Ouvrier : <span className="font-medium text-foreground">{modal.personName}</span>
+          {t("modal.worker")}{" "}
+          <span className="font-medium text-foreground">{modal.personName}</span>
         </p>
 
         <div className="mt-4 space-y-3">
-          <Field label="Montant (€)">
+          <Field label={t("modal.amount")}>
             <input
               type="number"
               step="0.01"
@@ -689,7 +707,7 @@ function PayModal({
               className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm"
             />
           </Field>
-          <Field label="Date de paiement">
+          <Field label={t("modal.date")}>
             <input
               type="date"
               value={date}
@@ -697,12 +715,12 @@ function PayModal({
               className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm"
             />
           </Field>
-          <Field label="Référence virement">
+          <Field label={t("modal.reference")}>
             <input
               type="text"
               value={reference}
               onChange={(e) => setReference(e.target.value)}
-              placeholder="Ex: VIR-2025-06-001"
+              placeholder={t("modal.referencePlaceholder")}
               className="w-full rounded-md border border-border bg-background px-3 py-1.5 text-sm"
             />
           </Field>
@@ -716,13 +734,13 @@ function PayModal({
             onClick={onClose}
             className="rounded-lg border border-border px-4 py-2 text-sm font-semibold hover:bg-muted"
           >
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             onClick={() => onConfirm(date, reference, parseFloat(amount) || 0)}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
           >
-            Confirmer le paiement
+            {t("modal.confirm")}
           </button>
         </div>
       </div>

@@ -1,0 +1,90 @@
+{
+  "title": "Offertes",
+  "subtitle": "Belgische btw per regel (21 % / 6 % / 0 %) en verlegging van heffing",
+  "exportCsv": "Exporteren naar CSV",
+  "csvFileName": "offertes",
+  "new": "Nieuwe offerte",
+  "count_one": "{{count}} offerte",
+  "count_other": "{{count}} offertes",
+  "kpi": {
+    "totalQuoted": "Totaal in offertes (excl. btw)",
+    "accepted": "Aanvaard (excl. btw)",
+    "pending": "Openstaande offertes",
+    "acceptRate": "Aanvaardingsgraad"
+  },
+  "searchPlaceholder": "Een nummer of klant zoeken…",
+  "allStatuses": "Alle statussen",
+  "empty": "Nog geen offertes.",
+  "columns": {
+    "number": "Nummer",
+    "client": "Klant",
+    "date": "Datum",
+    "validity": "Geldig tot",
+    "totalIncl": "Totaal incl. btw",
+    "status": "Status",
+    "excl": "Excl. btw (€)",
+    "vat": "Btw (€)",
+    "incl": "Incl. btw (€)"
+  },
+  "form": {
+    "client": "Klant *",
+    "number": "Nummer",
+    "issueDate": "Uitgiftedatum",
+    "validUntil": "Geldig tot",
+    "createAndEdit": "Aanmaken en bewerken",
+    "creating": "Aanmaken…"
+  },
+  "validation": {
+    "selectClient": "Kies een klant"
+  },
+  "toasts": {
+    "created": "Offerte aangemaakt",
+    "saved": "Opgeslagen",
+    "statusChanged": "Status: {{status}}",
+    "duplicated": "Offerte gedupliceerd",
+    "siteCreated": "Werf aangemaakt",
+    "deleted": "Verwijderd"
+  },
+  "detail": {
+    "title": "Offerte {{number}}",
+    "issued": "Uitgegeven op {{issue}} · geldig tot {{until}}",
+    "pdf": "Pdf",
+    "pdfLanguage": "Pdf in het {{language}} (taal van de klant)",
+    "duplicate": "Dupliceren",
+    "markSent": "Als verzonden markeren",
+    "accepted": "Aanvaard",
+    "refused": "Geweigerd",
+    "viewSite": "Werf bekijken",
+    "createSite": "Werf aanmaken",
+    "save": "Opslaan",
+    "client": "Klant",
+    "clientVat": "Btw: {{value}}",
+    "vatLiable": "Btw-plichtig",
+    "reverseCharge": "Verlegging van heffing",
+    "reverseChargeHelp": "Btw 0 %, vermelding « {{mention}} » op de pdf.",
+    "details": "Details",
+    "lines": "Posten",
+    "addLine": "Toevoegen",
+    "noLines": "Geen posten. Klik op « Toevoegen ».",
+    "linePlaceholder": "Bv. grondwerken, ruwbouw, dakwerken…",
+    "subtotalExcl": "Subtotaal excl. btw",
+    "vatOn": "Btw {{rate}} % (op {{base}})",
+    "totalIncl": "Totaal incl. btw",
+    "notes": "Notities",
+    "notesPlaceholder": "Bericht aan de klant",
+    "conditions": "Voorwaarden",
+    "conditionsPlaceholder": "Geldigheid, voorschot, termijnen…",
+    "siteNamePrompt": "Naam van de werf",
+    "siteNameDefault": "Werf {{client}}",
+    "siteDescription": "Aangemaakt op basis van offerte {{number}}",
+    "confirmDelete": "Deze offerte definitief verwijderen?",
+    "defaultCompany": "Mijn onderneming"
+  },
+  "columnsLines": {
+    "description": "Omschrijving",
+    "qty": "Aant.",
+    "unitPrice": "Eenheidsprijs",
+    "vat": "Btw",
+    "totalExcl": "Totaal excl. btw"
+  }
+}

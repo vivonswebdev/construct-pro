@@ -1,0 +1,79 @@
+{
+  "title": "Werven",
+  "new": "Nieuwe werf",
+  "create": "Werf aanmaken",
+  "searchPlaceholder": "Een werf zoeken…",
+  "notFound": "Werf niet gevonden.",
+  "backToList": "Terug naar de werven",
+  "exportCsv": "Exporteren naar CSV",
+  "exportPdf": "Exporteren naar pdf",
+  "columns": {
+    "site": "Werf",
+    "client": "Klant",
+    "budget": "Budget",
+    "progress": "Voortgang",
+    "status": "Status",
+    "handover": "Oplevering",
+    "actions": "Acties"
+  },
+  "empty": {
+    "title": "Nog geen werven",
+    "text": "Begin met het aanmaken van uw eerste werf."
+  },
+  "form": {
+    "name": "Naam van de werf",
+    "client": "Klant",
+    "address": "Adres",
+    "budget": "Budget (€)",
+    "start": "Start",
+    "handover": "Oplevering",
+    "description": "Omschrijving"
+  },
+  "toasts": {
+    "created": "Werf aangemaakt",
+    "stepUpdated": "Fase bijgewerkt"
+  },
+  "phases": {
+    "preparation": "Werfvoorbereiding",
+    "fondations": "Funderingen",
+    "grosOeuvre": "Ruwbouw",
+    "charpente": "Dakconstructie & dakwerken",
+    "secondOeuvre": "Technieken (elektriciteit, sanitair)",
+    "finitions": "Afwerking & schilderwerk",
+    "reception": "Opkuis & oplevering"
+  },
+  "detail": {
+    "budget": "Budget",
+    "totalCosts": "Totale uitgaven",
+    "realtime": "realtime",
+    "ofWhichMaterials": "waarvan materialen",
+    "profit": "Winst",
+    "overallProgress": "Totale voortgang",
+    "phasesTitle": "Fasen van de werf",
+    "stepsCompleted": "{{done}}/{{total}} fasen afgewerkt",
+    "team": "Ploeg op deze werf",
+    "noTeam": "Geen arbeiders toegewezen.",
+    "vehicles": "Toegewezen voertuigen",
+    "noVehicles": "Geen voertuigen toegewezen.",
+    "inProgress": "Lopend",
+    "materials": "Verbruikte materialen",
+    "manageStock": "Voorraad beheren →",
+    "noMaterials": "Geen voorraadbewegingen voor deze werf.",
+    "materialsTotal": "Totaal materialen",
+    "materialColumns": {
+      "date": "Datum",
+      "type": "Type",
+      "material": "Materiaal",
+      "qty": "Aant.",
+      "total": "Totaal"
+    }
+  },
+  "phase": {
+    "progress": "Voortgang: {{value}} %",
+    "startDate": "Startdatum",
+    "endDate": "Einddatum",
+    "notes": "Notities",
+    "markDone": "Als afgewerkt markeren",
+    "start": "Starten"
+  }
+}

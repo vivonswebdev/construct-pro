@@ -1,0 +1,90 @@
+{
+  "title": "Devis",
+  "subtitle": "TVA belge par ligne (21 % / 6 % / 0 %) et autoliquidation",
+  "exportCsv": "Exporter CSV",
+  "csvFileName": "devis",
+  "new": "Nouveau devis",
+  "count_one": "{{count}} devis",
+  "count_other": "{{count}} devis",
+  "kpi": {
+    "totalQuoted": "Total devisé (HT)",
+    "accepted": "Accepté (HT)",
+    "pending": "Devis en attente",
+    "acceptRate": "Taux d'acceptation"
+  },
+  "searchPlaceholder": "Rechercher un numéro ou un client…",
+  "allStatuses": "Tous les statuts",
+  "empty": "Aucun devis pour le moment.",
+  "columns": {
+    "number": "Numéro",
+    "client": "Client",
+    "date": "Date",
+    "validity": "Validité",
+    "totalIncl": "Total TTC",
+    "status": "Statut",
+    "excl": "HT (€)",
+    "vat": "TVA (€)",
+    "incl": "TTC (€)"
+  },
+  "form": {
+    "client": "Client *",
+    "number": "Numéro",
+    "issueDate": "Date d'émission",
+    "validUntil": "Valable jusqu'au",
+    "createAndEdit": "Créer et éditer",
+    "creating": "Création…"
+  },
+  "validation": {
+    "selectClient": "Sélectionnez un client"
+  },
+  "toasts": {
+    "created": "Devis créé",
+    "saved": "Enregistré",
+    "statusChanged": "Statut : {{status}}",
+    "duplicated": "Devis dupliqué",
+    "siteCreated": "Chantier créé",
+    "deleted": "Supprimé"
+  },
+  "detail": {
+    "title": "Devis {{number}}",
+    "issued": "Émis le {{issue}} · valable jusqu'au {{until}}",
+    "pdf": "PDF",
+    "pdfLanguage": "PDF en {{language}} (langue du client)",
+    "duplicate": "Dupliquer",
+    "markSent": "Marquer envoyé",
+    "accepted": "Accepté",
+    "refused": "Refusé",
+    "viewSite": "Voir le chantier",
+    "createSite": "Créer le chantier",
+    "save": "Enregistrer",
+    "client": "Client",
+    "clientVat": "TVA : {{value}}",
+    "vatLiable": "Assujetti",
+    "reverseCharge": "Autoliquidation",
+    "reverseChargeHelp": "TVA 0 %, mention « {{mention}} » sur le PDF.",
+    "details": "Détails",
+    "lines": "Postes",
+    "addLine": "Ajouter",
+    "noLines": "Aucun poste. Cliquez sur « Ajouter ».",
+    "linePlaceholder": "Ex : terrassement, gros œuvre, toiture…",
+    "subtotalExcl": "Sous-total HT",
+    "vatOn": "TVA {{rate}} % (sur {{base}})",
+    "totalIncl": "Total TTC",
+    "notes": "Notes",
+    "notesPlaceholder": "Message au client",
+    "conditions": "Conditions",
+    "conditionsPlaceholder": "Validité, acompte, délais…",
+    "siteNamePrompt": "Nom du chantier",
+    "siteNameDefault": "Chantier {{client}}",
+    "siteDescription": "Créé depuis le devis {{number}}",
+    "confirmDelete": "Supprimer définitivement ce devis ?",
+    "defaultCompany": "Mon entreprise"
+  },
+  "columnsLines": {
+    "description": "Description",
+    "qty": "Qté",
+    "unitPrice": "Prix unit.",
+    "vat": "TVA",
+    "totalExcl": "Total HT"
+  }
+}

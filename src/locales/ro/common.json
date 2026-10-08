@@ -1,0 +1,100 @@
+{
+  "appName": "ConstructFlow",
+  "meta": {
+    "title": "ConstructFlow — Gestionarea șantierelor",
+    "description": "Platformă de gestionare a șantierelor pentru firmele de construcții din Belgia."
+  },
+  "actions": {
+    "add": "Adaugă",
+    "cancel": "Anulează",
+    "close": "Închide",
+    "confirm": "Confirmă",
+    "create": "Creează",
+    "delete": "Șterge",
+    "edit": "Modifică",
+    "save": "Salvează",
+    "saving": "Se salvează…",
+    "search": "Caută",
+    "back": "Înapoi",
+    "see": "Vezi",
+    "export": "Exportă",
+    "understood": "Am înțeles",
+    "translate": "Traduce",
+    "showOriginal": "Vezi originalul",
+    "translating": "Se traduce…"
+  },
+  "labels": {
+    "all": "Toate",
+    "none": "Niciunul",
+    "unknown": "—",
+    "notes": "Note",
+    "status": "Stare",
+    "date": "Dată",
+    "total": "Total",
+    "language": "Limbă",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "address": "Adresă",
+    "postalCode": "Cod poștal",
+    "city": "Localitate",
+    "vat": "TVA",
+    "bce": "Număr de întreprindere",
+    "name": "Nume",
+    "firstName": "Prenume",
+    "description": "Descriere",
+    "quantity": "Cant.",
+    "type": "Tip",
+    "user": "Utilizator"
+  },
+  "units": {
+    "days_one": "{{count}} zi",
+    "days_few": "{{count}} zile",
+    "days_other": "{{count}} de zile",
+    "daysShort": "{{count}} z",
+    "hoursShort": "{{count}} h",
+    "km": "{{value}} km"
+  },
+  "time": {
+    "daysLeft": "încă {{count}} z",
+    "daysLate": "{{count}} z întârziere"
+  },
+  "errors": {
+    "generic": "A apărut o eroare",
+    "notFound": "Pagina nu a fost găsită",
+    "backHome": "Înapoi la pagina principală",
+    "loading": "Se încarcă…"
+  },
+  "toasts": {
+    "saved": "Salvat",
+    "updated": "Actualizat",
+    "deleted": "Șters",
+    "created": "Creat"
+  },
+  "translation": {
+    "translatedFrom": "Tradus automat",
+    "failed": "Traducerea a eșuat"
+  },
+  "pages": {
+    "clients": {
+      "title": "Clienți",
+      "description": "Gestionați clienții persoane fizice și firme, numerele lor de TVA și șantierele lor."
+    },
+    "client": {
+      "title": "Fișa clientului",
+      "description": "Datele clientului, șantierele și devizele asociate."
+    },
+    "devis": {
+      "title": "Devize",
+      "description": "Devize cu TVA belgian, taxare inversă și TVA 6 %."
+    },
+    "devisDetail": {
+      "title": "Deviz",
+      "description": "Editarea unui deviz cu linii, TVA belgian și export PDF."
+    },
+    "assistant": {
+      "title": "Asistent AI",
+      "description": "Puneți întrebări despre șantiere, devize și obligațiile din Belgia: asistentul răspunde pe baza datelor dumneavoastră."
+    }
+  },
+  "indicatif": "Orientativ — de confirmat cu contabilul / secretariatul social."
+}

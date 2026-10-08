@@ -16,6 +16,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
+import { backdropClose } from "@/lib/modal";
+import { useTranslation } from "react-i18next";
+import { intlLocale } from "@/lib/i18n";
+import { toCode } from "@/lib/statuts";
 
 export const Route = createFileRoute("/_app/stock/")({
   component: StockPage,
@@ -48,6 +52,7 @@ type Mouvement = {
 };
 
 function StockPage() {
+  const { t } = useTranslation(["stock", "statuts", "common"]);
   const { profile } = useAuth();
   const qc = useQueryClient();
   const [tab, setTab] = useState<"catalog" | "mouvements">("catalog");
@@ -108,23 +113,23 @@ function StockPage() {
     const matMap = new Map(materiaux.map((m) => [m.id, m]));
     const rows = [
       [
-        "Date",
-        "Type",
-        "Matériau",
-        "SKU",
-        "Qté",
-        "Unité",
-        "Prix unit.",
-        "Total",
-        "Chantier",
-        "Fournisseur",
-        "Référence",
+        t("columns.date"),
+        t("columns.type"),
+        t("columns.material"),
+        t("columns.sku"),
+        t("columns.qty"),
+        t("columns.unit"),
+        t("columns.unitPrice"),
+        t("columns.total"),
+        t("columns.site"),
+        t("columns.supplier"),
+        t("columns.reference"),
       ],
       ...mouvements.map((m) => {
         const mat = matMap.get(m.materiau_id);
         return [
           formatDateBE(m.date),
-          m.type,
+          t(`statuts:mouvement.${toCode(m.type)}`, { defaultValue: m.type }),
           mat?.name ?? "",
           mat?.sku ?? "",
           String(m.quantity).replace(".", ","),
@@ -144,7 +149,7 @@ function StockPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `mouvements_stock_${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `${t("csvFileName")}_${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -154,46 +159,44 @@ function StockPage() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight">
-            <Package className="h-6 w-6 text-primary" /> Stock & Matériaux
+            <Package className="h-6 w-6 text-primary" /> {t("title")}
           </h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Catalogue, achats, sorties et impact sur le bénéfice des chantiers
-          </p>
+          <p className="mt-1 text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
             onClick={exportCSV}
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium hover:bg-muted/30"
           >
-            <Download className="h-4 w-4" /> Export CSV
+            <Download className="h-4 w-4" /> {t("exportCsv")}
           </button>
           <button
             onClick={() => setShowMvtModal({ type: "achat" })}
             className="inline-flex items-center gap-2 rounded-lg bg-success px-3 py-2 text-sm font-semibold text-white hover:opacity-90"
           >
-            <ArrowDownToLine className="h-4 w-4" /> Achat
+            <ArrowDownToLine className="h-4 w-4" /> {t("purchase")}
           </button>
           <button
             onClick={() => setShowMvtModal({ type: "sortie" })}
             className="inline-flex items-center gap-2 rounded-lg bg-info px-3 py-2 text-sm font-semibold text-white hover:opacity-90"
           >
-            <ArrowUpFromLine className="h-4 w-4" /> Bon de sortie
+            <ArrowUpFromLine className="h-4 w-4" /> {t("issueSlip")}
           </button>
           <button
             onClick={() => setShowMatModal(true)}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primary/90"
           >
-            <Plus className="h-4 w-4" /> Nouveau matériau
+            <Plus className="h-4 w-4" /> {t("newMaterial")}
           </button>
         </div>
       </div>
 
       {/* KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Kpi label="Références" value={String(materiaux.length)} />
-        <Kpi label="Valeur du stock" value={formatEUR(stockValue)} />
-        <Kpi label="Achats (récents)" value={formatEUR(totalAchats)} tone="info" />
-        <Kpi label="Sorties chantier" value={formatEUR(totalSorties)} tone="warn" />
+        <Kpi label={t("kpi.references")} value={String(materiaux.length)} />
+        <Kpi label={t("kpi.stockValue")} value={formatEUR(stockValue)} />
+        <Kpi label={t("kpi.recentPurchases")} value={formatEUR(totalAchats)} tone="info" />
+        <Kpi label={t("kpi.siteIssues")} value={formatEUR(totalSorties)} tone="warn" />
       </div>
 
       {lowStock.length > 0 && (
@@ -201,7 +204,7 @@ function StockPage() {
           <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-amber-600" />
           <div className="text-sm">
             <p className="font-semibold text-amber-900">
-              {lowStock.length} produit{lowStock.length > 1 ? "s" : ""} sous le seuil minimum
+              {t("lowStock", { count: lowStock.length })}
             </p>
             <p className="mt-1 text-amber-800">
               {lowStock
@@ -222,7 +225,7 @@ function StockPage() {
             onClick={() => setTab(k)}
             className={`relative px-4 py-2 text-sm font-semibold transition ${tab === k ? "text-primary" : "text-muted-foreground hover:text-foreground"}`}
           >
-            {k === "catalog" ? "Catalogue" : "Mouvements"}
+            {k === "catalog" ? t("tabs.catalog") : t("tabs.movements")}
             {tab === k && <span className="absolute inset-x-0 -bottom-px h-0.5 bg-primary" />}
           </button>
         ))}
@@ -235,24 +238,24 @@ function StockPage() {
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher un matériau ou SKU…"
+              placeholder={t("searchPlaceholder")}
               className="flex-1 bg-transparent text-sm outline-none"
             />
           </div>
           {isLoading ? (
             <div className="h-40 animate-pulse rounded-b-xl bg-muted/30" />
           ) : filtered.length === 0 ? (
-            <div className="p-8 text-center text-sm text-muted-foreground">Aucun matériau.</div>
+            <div className="p-8 text-center text-sm text-muted-foreground">{t("noMaterial")}</div>
           ) : (
             <table className="w-full text-sm">
               <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
                 <tr>
-                  <th className="px-4 py-2 text-left">Nom</th>
-                  <th className="px-4 py-2 text-left">SKU</th>
-                  <th className="px-4 py-2 text-right">Stock</th>
-                  <th className="px-4 py-2 text-right">Prix unit.</th>
-                  <th className="px-4 py-2 text-right">Valeur</th>
-                  <th className="px-4 py-2 text-left">Fournisseur</th>
+                  <th className="px-4 py-2 text-left">{t("columns.name")}</th>
+                  <th className="px-4 py-2 text-left">{t("columns.sku")}</th>
+                  <th className="px-4 py-2 text-right">{t("columns.stock")}</th>
+                  <th className="px-4 py-2 text-right">{t("columns.unitPrice")}</th>
+                  <th className="px-4 py-2 text-right">{t("columns.value")}</th>
+                  <th className="px-4 py-2 text-left">{t("columns.supplier")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -267,7 +270,7 @@ function StockPage() {
                       </td>
                       <td className="px-4 py-2 text-right">
                         <span className={low ? "font-semibold text-amber-600" : ""}>
-                          {Number(m.stock_quantity).toLocaleString("fr-BE")} {m.unit}
+                          {Number(m.stock_quantity).toLocaleString(intlLocale())} {m.unit}
                         </span>
                         {low && <AlertTriangle className="ml-1 inline h-3 w-3 text-amber-600" />}
                       </td>
@@ -288,18 +291,18 @@ function StockPage() {
       {tab === "mouvements" && (
         <div className="rounded-xl border border-border bg-card shadow-sm">
           {mouvements.length === 0 ? (
-            <div className="p-8 text-center text-sm text-muted-foreground">Aucun mouvement.</div>
+            <div className="p-8 text-center text-sm text-muted-foreground">{t("noMovement")}</div>
           ) : (
             <table className="w-full text-sm">
               <thead className="bg-muted/30 text-xs uppercase text-muted-foreground">
                 <tr>
-                  <th className="px-4 py-2 text-left">Date</th>
-                  <th className="px-4 py-2 text-left">Type</th>
-                  <th className="px-4 py-2 text-left">Matériau</th>
-                  <th className="px-4 py-2 text-right">Qté</th>
-                  <th className="px-4 py-2 text-right">Total</th>
-                  <th className="px-4 py-2 text-left">Chantier</th>
-                  <th className="px-4 py-2 text-left">Fournisseur / Réf.</th>
+                  <th className="px-4 py-2 text-left">{t("columns.date")}</th>
+                  <th className="px-4 py-2 text-left">{t("columns.type")}</th>
+                  <th className="px-4 py-2 text-left">{t("columns.material")}</th>
+                  <th className="px-4 py-2 text-right">{t("columns.qty")}</th>
+                  <th className="px-4 py-2 text-right">{t("columns.total")}</th>
+                  <th className="px-4 py-2 text-left">{t("columns.site")}</th>
+                  <th className="px-4 py-2 text-left">{t("columns.supplierRef")}</th>
                   <th className="px-4 py-2"></th>
                 </tr>
               </thead>
@@ -315,7 +318,7 @@ function StockPage() {
                       </td>
                       <td className="px-4 py-2 font-medium">{mat?.name ?? "—"}</td>
                       <td className="px-4 py-2 text-right">
-                        {Number(m.quantity).toLocaleString("fr-BE")} {mat?.unit}
+                        {Number(m.quantity).toLocaleString(intlLocale())} {mat?.unit}
                       </td>
                       <td className="px-4 py-2 text-right font-semibold">{formatEUR(m.total)}</td>
                       <td className="px-4 py-2 text-muted-foreground">{ch?.name ?? "—"}</td>
@@ -326,20 +329,20 @@ function StockPage() {
                       <td className="px-4 py-2 text-right">
                         <button
                           onClick={async () => {
-                            if (!confirm("Supprimer ce mouvement ? Le stock sera ajusté.")) return;
+                            if (!confirm(t("confirmDeleteMovement"))) return;
                             const { error } = await supabase
                               .from("stock_mouvements")
                               .delete()
                               .eq("id", m.id);
                             if (error) toast.error(error.message);
                             else {
-                              toast.success("Supprimé");
+                              toast.success(t("common:toasts.deleted"));
                               qc.invalidateQueries({ queryKey: ["stock"] });
                               qc.invalidateQueries({ queryKey: ["chantier"] });
                             }
                           }}
                           className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-danger"
-                          title="Supprimer"
+                          title={t("common:actions.delete")}
                         >
                           <X className="h-4 w-4" />
                         </button>
@@ -386,22 +389,23 @@ function TypeBadge({ type }: { type: string }) {
     sortie: "bg-cyan-100 text-cyan-700",
     retour: "bg-amber-100 text-amber-700",
   };
-  const labels: Record<string, string> = { achat: "Achat", sortie: "Sortie", retour: "Retour" };
+  const { t } = useTranslation("statuts");
   return (
     <span
       className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${styles[type] ?? "bg-muted"}`}
     >
-      {labels[type] ?? type}
+      {t(`mouvement.${toCode(type)}`, { defaultValue: type })}
     </span>
   );
 }
 
 function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId: string }) {
+  const { t } = useTranslation(["stock", "common"]);
   const qc = useQueryClient();
   const [form, setForm] = useState({
     name: "",
     sku: "",
-    unit: "pièce",
+    unit: t("materialForm.defaultUnit"),
     unit_price: 0,
     stock_quantity: 0,
     min_stock: 0,
@@ -412,7 +416,7 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
 
   const save = async () => {
     if (!form.name) {
-      toast.error("Nom requis");
+      toast.error(t("validation.nameRequired"));
       return;
     }
     setSaving(true);
@@ -428,15 +432,15 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
       toast.error(error.message);
       return;
     }
-    toast.success("Matériau créé");
+    toast.success(t("toasts.materialCreated"));
     qc.invalidateQueries({ queryKey: ["stock"] });
     onClose();
   };
 
   return (
-    <Modal title="Nouveau matériau" onClose={onClose}>
+    <Modal title={t("newMaterial")} onClose={onClose}>
       <div className="space-y-3">
-        <Field label="Nom *">
+        <Field label={t("materialForm.name")}>
           <input
             className={inputCls}
             value={form.name}
@@ -444,14 +448,14 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
           />
         </Field>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="SKU">
+          <Field label={t("materialForm.sku")}>
             <input
               className={inputCls}
               value={form.sku}
               onChange={(e) => setForm({ ...form, sku: e.target.value })}
             />
           </Field>
-          <Field label="Unité">
+          <Field label={t("materialForm.unit")}>
             <input
               className={inputCls}
               value={form.unit}
@@ -460,7 +464,7 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
           </Field>
         </div>
         <div className="grid grid-cols-3 gap-3">
-          <Field label="Prix unit. (€)">
+          <Field label={t("materialForm.unitPrice")}>
             <input
               type="number"
               step="0.01"
@@ -469,7 +473,7 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
               onChange={(e) => setForm({ ...form, unit_price: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Stock initial">
+          <Field label={t("materialForm.initialStock")}>
             <input
               type="number"
               step="0.01"
@@ -478,7 +482,7 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
               onChange={(e) => setForm({ ...form, stock_quantity: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Seuil min.">
+          <Field label={t("materialForm.minStock")}>
             <input
               type="number"
               step="0.01"
@@ -489,14 +493,14 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
           </Field>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Fournisseur">
+          <Field label={t("materialForm.supplier")}>
             <input
               className={inputCls}
               value={form.supplier}
               onChange={(e) => setForm({ ...form, supplier: e.target.value })}
             />
           </Field>
-          <Field label="Catégorie">
+          <Field label={t("materialForm.category")}>
             <input
               className={inputCls}
               value={form.category}
@@ -506,14 +510,14 @@ function MateriauModal({ onClose, companyId }: { onClose: () => void; companyId:
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <button onClick={onClose} className="rounded-md border border-border px-3 py-2 text-sm">
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={saving}
             onClick={save}
             className="rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
           >
-            Créer
+            {t("common:actions.create")}
           </button>
         </div>
       </div>
@@ -534,6 +538,7 @@ function MouvementModal({
   companyId: string;
   onClose: () => void;
 }) {
+  const { t } = useTranslation(["stock", "common"]);
   const qc = useQueryClient();
   const [form, setForm] = useState({
     materiau_id: materiaux[0]?.id ?? "",
@@ -549,19 +554,19 @@ function MouvementModal({
 
   const mat = materiaux.find((m) => m.id === form.materiau_id);
   const total = Number(form.quantity) * Number(form.unit_price);
-  const labels = { achat: "Achat", sortie: "Bon de sortie", retour: "Retour" };
+  const labels = { achat: t("purchase"), sortie: t("issueSlip"), retour: t("return") };
 
   const save = async () => {
     if (!form.materiau_id) {
-      toast.error("Matériau requis");
+      toast.error(t("validation.materialRequired"));
       return;
     }
     if (type === "sortie" && !form.chantier_id) {
-      toast.error("Chantier requis pour une sortie");
+      toast.error(t("validation.siteRequiredForIssue"));
       return;
     }
     if (type === "sortie" && mat && Number(form.quantity) > Number(mat.stock_quantity)) {
-      if (!confirm(`Stock insuffisant (${mat.stock_quantity} ${mat.unit} disponible). Continuer ?`))
+      if (!confirm(t("validation.insufficientStock", { qty: mat.stock_quantity, unit: mat.unit })))
         return;
     }
     setSaving(true);
@@ -583,7 +588,7 @@ function MouvementModal({
       toast.error(error.message);
       return;
     }
-    toast.success(`${labels[type]} enregistré`);
+    toast.success(t("toasts.movementSaved", { label: labels[type] }));
     qc.invalidateQueries({ queryKey: ["stock"] });
     qc.invalidateQueries({ queryKey: ["chantier"] });
     onClose();
@@ -592,7 +597,7 @@ function MouvementModal({
   return (
     <Modal title={labels[type]} onClose={onClose}>
       <div className="space-y-3">
-        <Field label="Matériau *">
+        <Field label={t("movementForm.material")}>
           <select
             className={inputCls}
             value={form.materiau_id}
@@ -605,21 +610,29 @@ function MouvementModal({
               });
             }}
           >
-            <option value="">— Choisir —</option>
+            <option value="">{t("movementForm.choose")}</option>
             {materiaux.map((m) => (
               <option key={m.id} value={m.id}>
-                {m.name} ({Number(m.stock_quantity)} {m.unit} dispo)
+                {t("movementForm.materialOption", {
+                  name: m.name,
+                  qty: Number(m.stock_quantity),
+                  unit: m.unit,
+                })}
               </option>
             ))}
           </select>
         </Field>
-        <Field label={type === "sortie" ? "Chantier *" : "Chantier (optionnel)"}>
+        <Field
+          label={
+            type === "sortie" ? t("movementForm.siteRequired") : t("movementForm.siteOptional")
+          }
+        >
           <select
             className={inputCls}
             value={form.chantier_id}
             onChange={(e) => setForm({ ...form, chantier_id: e.target.value })}
           >
-            <option value="">— Aucun —</option>
+            <option value="">{t("movementForm.none")}</option>
             {chantiers.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
@@ -628,7 +641,7 @@ function MouvementModal({
           </select>
         </Field>
         <div className="grid grid-cols-3 gap-3">
-          <Field label={`Quantité (${mat?.unit ?? ""})`}>
+          <Field label={t("movementForm.quantity", { unit: mat?.unit ?? "" })}>
             <input
               type="number"
               step="0.01"
@@ -637,7 +650,7 @@ function MouvementModal({
               onChange={(e) => setForm({ ...form, quantity: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Prix unit. (€)">
+          <Field label={t("movementForm.unitPrice")}>
             <input
               type="number"
               step="0.01"
@@ -646,7 +659,7 @@ function MouvementModal({
               onChange={(e) => setForm({ ...form, unit_price: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Date">
+          <Field label={t("movementForm.date")}>
             <input
               type="date"
               className={inputCls}
@@ -657,14 +670,14 @@ function MouvementModal({
         </div>
         {type === "achat" && (
           <div className="grid grid-cols-2 gap-3">
-            <Field label="Fournisseur">
+            <Field label={t("movementForm.supplier")}>
               <input
                 className={inputCls}
                 value={form.supplier}
                 onChange={(e) => setForm({ ...form, supplier: e.target.value })}
               />
             </Field>
-            <Field label="Référence facture">
+            <Field label={t("movementForm.invoiceRef")}>
               <input
                 className={inputCls}
                 value={form.reference}
@@ -673,7 +686,7 @@ function MouvementModal({
             </Field>
           </div>
         )}
-        <Field label="Notes">
+        <Field label={t("movementForm.notes")}>
           <textarea
             rows={2}
             className={inputCls}
@@ -682,12 +695,12 @@ function MouvementModal({
           />
         </Field>
         <div className="flex items-center justify-between rounded-lg bg-muted/30 p-3">
-          <span className="text-sm font-medium">Total</span>
+          <span className="text-sm font-medium">{t("movementForm.total")}</span>
           <span className="text-lg font-bold text-primary">{formatEUR(total)}</span>
         </div>
         <div className="flex justify-end gap-2 pt-2">
           <button onClick={onClose} className="rounded-md border border-border px-3 py-2 text-sm">
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={saving}
@@ -697,7 +710,7 @@ function MouvementModal({
             {type === "achat" && <ArrowDownToLine className="h-4 w-4" />}
             {type === "sortie" && <ArrowUpFromLine className="h-4 w-4" />}
             {type === "retour" && <RotateCcw className="h-4 w-4" />}
-            Enregistrer
+            {t("common:actions.save")}
           </button>
         </div>
       </div>
@@ -727,7 +740,7 @@ function Modal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <div
         className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl"

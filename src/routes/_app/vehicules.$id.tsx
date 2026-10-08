@@ -6,13 +6,19 @@ import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
+import { formatEURBE } from "@/lib/belgian";
+import { useTranslation } from "react-i18next";
+import { intlLocale } from "@/lib/i18n";
+import { toCode } from "@/lib/statuts";
 import { toast } from "sonner";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/vehicules/$id")({
   component: VehiculeDetail,
 });
 
 function VehiculeDetail() {
+  const { t } = useTranslation(["vehicules", "statuts", "common"]);
   const { id } = Route.useParams();
   const { profile } = useAuth();
   const companyId = profile?.company_id;
@@ -43,7 +49,7 @@ function VehiculeDetail() {
   });
 
   if (isLoading || !data) return <div className="h-40 animate-pulse rounded-xl bg-muted" />;
-  if (!data.v) return <div>Véhicule introuvable.</div>;
+  if (!data.v) return <div>{t("notFound")}</div>;
 
   const v = data.v;
   const current = data.affectations.find((a) => !a.end_date);
@@ -58,19 +64,16 @@ function VehiculeDetail() {
     patch[field] = newDate.toISOString().slice(0, 10);
     const { error } = await supabase.from("vehicules").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Mis à jour");
+    toast.success(t("toasts.updated"));
     qc.invalidateQueries({ queryKey: ["vehicule", id] });
     qc.invalidateQueries({ queryKey: ["vehicules"] });
   };
 
   const closeAffectation = async (aff: Tables<"vehicule_affectations">) => {
-    const endKmStr = prompt(
-      `Kilométrage de fin (km actuel: ${v.current_km}) :`,
-      String(v.current_km),
-    );
+    const endKmStr = prompt(t("detail.endKmPrompt", { km: v.current_km }), String(v.current_km));
     if (!endKmStr) return;
     const endKm = Number(endKmStr);
-    if (isNaN(endKm)) return toast.error("Kilométrage invalide");
+    if (isNaN(endKm)) return toast.error(t("validation.invalidKm"));
     const { error } = await supabase
       .from("vehicule_affectations")
       .update({
@@ -81,23 +84,23 @@ function VehiculeDetail() {
     if (error) return toast.error(error.message);
     await supabase
       .from("vehicules")
-      .update({ current_km: endKm, status: "Disponible" })
+      .update({ current_km: endKm, status: "disponible" })
       .eq("id", id);
     qc.invalidateQueries({ queryKey: ["vehicule", id] });
     qc.invalidateQueries({ queryKey: ["vehicules"] });
-    toast.success("Affectation clôturée");
+    toast.success(t("toasts.assignmentClosed"));
   };
 
   const deleteVeh = async () => {
-    if (!confirm("Supprimer ce véhicule et son historique ?")) return;
+    if (!confirm(t("detail.confirmDelete"))) return;
     await supabase.from("vehicule_affectations").delete().eq("vehicule_id", id);
     const { error } = await supabase.from("vehicules").delete().eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Véhicule supprimé");
+    toast.success(t("toasts.deleted"));
     window.location.href = "/vehicules";
   };
 
-  const Icon = v.type === "Voiture" ? Car : Truck;
+  const Icon = toCode(v.type) === "voiture" ? Car : Truck;
 
   return (
     <div className="space-y-6">
@@ -105,7 +108,7 @@ function VehiculeDetail() {
         to="/vehicules"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" /> Retour à la flotte
+        <ArrowLeft className="h-4 w-4" /> {t("backToList")}
       </Link>
 
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
@@ -124,8 +127,10 @@ function VehiculeDetail() {
                 </span>
               </div>
               <p className="mt-1 text-sm text-muted-foreground">
-                {v.type} · {v.year ?? "—"} · {v.current_km.toLocaleString("fr-BE")} km ·{" "}
-                {formatEUR(v.cost_per_km)} / km
+                {t(`statuts:vehiculeType.${toCode(v.type)}`, { defaultValue: v.type })} ·{" "}
+                {v.year ?? "—"} ·{" "}
+                {t("common:units.km", { value: v.current_km.toLocaleString(intlLocale()) })} ·{" "}
+                {t("perKm", { amount: formatEURBE(v.cost_per_km) })}
               </p>
             </div>
           </div>
@@ -136,7 +141,7 @@ function VehiculeDetail() {
               </span>
             ) : (
               <span className="rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-                ● Disponible
+                {t("available")}
               </span>
             )}
             <button
@@ -151,16 +156,16 @@ function VehiculeDetail() {
 
       {/* Alertes / entretiens */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">Alertes & Entretiens</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t("detail.alertsTitle")}</h2>
         <div className="space-y-2">
-          <AlertRow label="Contrôle technique" date={v.ct_date} onRenew={() => renew("ct_date")} />
+          <AlertRow label={t("detail.ct")} date={v.ct_date} onRenew={() => renew("ct_date")} />
           <AlertRow
-            label="Assurance"
+            label={t("detail.insurance")}
             date={v.insurance_date}
             onRenew={() => renew("insurance_date")}
           />
           <AlertRow
-            label="Dernier entretien"
+            label={t("detail.lastMaintenance")}
             date={v.maintenance_date}
             reverse
             onRenew={() => renew("maintenance_date")}
@@ -171,27 +176,27 @@ function VehiculeDetail() {
       {/* Affectations */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Historique d'affectations</h2>
+          <h2 className="text-lg font-semibold">{t("detail.historyTitle")}</h2>
           {!current && (
             <button
               onClick={() => setAffModal(true)}
               className="inline-flex items-center gap-1 rounded-lg bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
             >
-              <Plus className="h-3 w-3" /> Affecter à un chantier
+              <Plus className="h-3 w-3" /> {t("detail.assignToSite")}
             </button>
           )}
         </div>
         {data.affectations.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucune affectation.</p>
+          <p className="text-sm text-muted-foreground">{t("detail.noAssignment")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-xs uppercase text-muted-foreground">
-                  <th className="pb-2">Chantier</th>
-                  <th className="pb-2">Période</th>
-                  <th className="pb-2">Km parcourus</th>
-                  <th className="pb-2">Coût véhicule</th>
+                  <th className="pb-2">{t("detail.columns.site")}</th>
+                  <th className="pb-2">{t("detail.columns.period")}</th>
+                  <th className="pb-2">{t("detail.columns.km")}</th>
+                  <th className="pb-2">{t("detail.columns.cost")}</th>
                   <th className="pb-2"></th>
                 </tr>
               </thead>
@@ -215,11 +220,13 @@ function VehiculeDetail() {
                         {a.end_date ? (
                           formatDateBE(a.end_date)
                         ) : (
-                          <span className="text-info">En cours</span>
+                          <span className="text-info">{t("detail.inProgress")}</span>
                         )}
                       </td>
                       <td className="py-2">
-                        {km !== null ? `${km.toLocaleString("fr-BE")} km` : "—"}
+                        {km !== null
+                          ? t("common:units.km", { value: km.toLocaleString(intlLocale()) })
+                          : "—"}
                       </td>
                       <td className="py-2 font-semibold">
                         {cost !== null ? formatEUR(cost) : "—"}
@@ -230,7 +237,7 @@ function VehiculeDetail() {
                             onClick={() => closeAffectation(a)}
                             className="text-xs font-semibold text-primary hover:underline"
                           >
-                            Clôturer
+                            {t("detail.close")}
                           </button>
                         )}
                       </td>
@@ -271,21 +278,25 @@ function AlertRow({
   reverse?: boolean;
   onRenew: () => void;
 }) {
+  const { t } = useTranslation(["vehicules", "common"]);
   const d = daysUntil(date);
   let tone = "bg-muted text-muted-foreground";
-  let info = "Non renseigné";
+  let info = t("detail.notSet");
   if (date) {
     if (reverse) {
       const ago = d === null ? 0 : -d;
-      info = `Effectué le ${formatDateBE(date)} · il y a ${ago} j`;
+      info =
+        ago >= 0
+          ? t("detail.maintenanceDone", { date: formatDateBE(date), count: ago })
+          : t("detail.maintenancePlanned", { date: formatDateBE(date), count: -ago });
       if (ago > 365) tone = "bg-red-100 text-red-700";
       else if (ago > 335) tone = "bg-amber-100 text-amber-700";
       else tone = "bg-emerald-100 text-emerald-700";
     } else {
       info =
         d! < 0
-          ? `Expiré depuis ${Math.abs(d!)} j (${formatDateBE(date)})`
-          : `Expire le ${formatDateBE(date)} (${d} j)`;
+          ? t("detail.expiredSince", { count: Math.abs(d!), date: formatDateBE(date) })
+          : t("detail.expiresOn", { date: formatDateBE(date), count: d! });
       if (d! < 0) tone = "bg-red-100 text-red-700";
       else if (d! < 30) tone = "bg-amber-100 text-amber-700";
       else tone = "bg-emerald-100 text-emerald-700";
@@ -298,13 +309,21 @@ function AlertRow({
         <p className="text-xs text-muted-foreground">{info}</p>
       </div>
       <span className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${tone}`}>
-        {date ? (reverse ? "Entretien" : d! < 0 ? "Expiré" : d! < 30 ? "Bientôt" : "OK") : "—"}
+        {date
+          ? reverse
+            ? t("detail.badgeMaintenance")
+            : d! < 0
+              ? t("detail.badgeExpired")
+              : d! < 30
+                ? t("detail.badgeSoon")
+                : t("detail.badgeOk")
+          : "—"}
       </span>
       <button
         onClick={onRenew}
         className="inline-flex items-center gap-1 rounded-md border border-border px-2.5 py-1 text-xs font-semibold hover:bg-muted"
       >
-        <RefreshCw className="h-3 w-3" /> Renouveler
+        <RefreshCw className="h-3 w-3" /> {t("detail.renew")}
       </button>
     </div>
   );
@@ -323,6 +342,7 @@ function AffectationModal({
   onClose: () => void;
   onSaved: () => void;
 }) {
+  const { t } = useTranslation(["vehicules", "common"]);
   const [chantierId, setChantierId] = useState(chantiers[0]?.id ?? "");
   const [startDate, setStartDate] = useState(new Date().toISOString().slice(0, 10));
   const [startKm, setStartKm] = useState(currentKm);
@@ -330,7 +350,7 @@ function AffectationModal({
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!chantierId) return toast.error("Sélectionnez un chantier");
+    if (!chantierId) return toast.error(t("validation.selectSite"));
     setSaving(true);
     const { error } = await supabase.from("vehicule_affectations").insert({
       vehicule_id: vehiculeId,
@@ -338,17 +358,17 @@ function AffectationModal({
       start_date: startDate,
       start_km: Number(startKm),
     });
-    if (!error) await supabase.from("vehicules").update({ status: "Affecté" }).eq("id", vehiculeId);
+    if (!error) await supabase.from("vehicules").update({ status: "affecte" }).eq("id", vehiculeId);
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Véhicule affecté");
+    toast.success(t("toasts.assigned"));
     onSaved();
   };
 
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <form
         onSubmit={submit}
@@ -356,14 +376,14 @@ function AffectationModal({
         className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Affecter à un chantier</h3>
+          <h3 className="text-lg font-semibold">{t("assignModal.title")}</h3>
           <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted">
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="space-y-3">
           <label className="block">
-            <span className="mb-1 block text-xs font-medium">Chantier</span>
+            <span className="mb-1 block text-xs font-medium">{t("assignModal.site")}</span>
             <select
               className={inputCls}
               value={chantierId}
@@ -377,7 +397,7 @@ function AffectationModal({
             </select>
           </label>
           <label className="block">
-            <span className="mb-1 block text-xs font-medium">Date de début</span>
+            <span className="mb-1 block text-xs font-medium">{t("assignModal.startDate")}</span>
             <input
               type="date"
               className={inputCls}
@@ -386,7 +406,7 @@ function AffectationModal({
             />
           </label>
           <label className="block">
-            <span className="mb-1 block text-xs font-medium">Kilométrage de départ</span>
+            <span className="mb-1 block text-xs font-medium">{t("assignModal.startKm")}</span>
             <input
               type="number"
               className={inputCls}
@@ -401,13 +421,13 @@ function AffectationModal({
             onClick={onClose}
             className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={saving}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
           >
-            {saving ? "…" : "Affecter"}
+            {saving ? "…" : t("assignModal.submit")}
           </button>
         </div>
       </form>

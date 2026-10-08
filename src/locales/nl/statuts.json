@@ -1,0 +1,58 @@
+{
+  "chantier": {
+    "en_attente": "In afwachting",
+    "en_cours": "Lopend",
+    "en_retard": "Vertraagd",
+    "termine": "Afgewerkt"
+  },
+  "devis": {
+    "brouillon": "Concept",
+    "envoye": "Verzonden",
+    "accepte": "Aanvaard",
+    "refuse": "Geweigerd",
+    "expire": "Vervallen"
+  },
+  "presence": {
+    "present": "Aanwezig",
+    "absent": "Afwezig",
+    "conge": "Verlof"
+  },
+  "personnel": {
+    "actif": "Actief",
+    "inactif": "Inactief"
+  },
+  "contrat": {
+    "cdi": "Onbepaalde duur",
+    "cdd": "Bepaalde duur",
+    "interim": "Uitzendarbeid",
+    "independant": "Zelfstandige"
+  },
+  "vehicule": {
+    "disponible": "Beschikbaar",
+    "affecte": "Toegewezen",
+    "maintenance": "In onderhoud"
+  },
+  "vehiculeType": {
+    "camionnette": "Bestelwagen",
+    "camion": "Vrachtwagen",
+    "voiture": "Personenwagen",
+    "engin": "Werfmachine",
+    "remorque": "Aanhangwagen"
+  },
+  "mouvement": {
+    "achat": "Aankoop",
+    "sortie": "Uitgifte",
+    "retour": "Retour"
+  },
+  "clientType": {
+    "particulier": "Particulier",
+    "entreprise": "Onderneming"
+  },
+  "langue": {
+    "fr": "Frans",
+    "nl": "Nederlands",
+    "en": "Engels",
+    "ro": "Roemeens",
+    "pl": "Pools"
+  }
+}

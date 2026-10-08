@@ -1,0 +1,52 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Overzicht van uw activiteit",
+  "kpi": {
+    "ca": "Totale omzet",
+    "caSub_one": "Gecumuleerd budget van {{count}} werf",
+    "caSub_other": "Gecumuleerd budget van {{count}} werven",
+    "profit": "Totale winst",
+    "marginPositive": "Positieve marge",
+    "marginNegative": "Negatieve marge",
+    "activeSites": "Actieve werven",
+    "lateCount_one": "{{count}} vertraagd",
+    "lateCount_other": "{{count}} vertraagd",
+    "activeWorkers": "Actieve arbeiders",
+    "unassignedCount_one": "{{count}} zonder toewijzing",
+    "unassignedCount_other": "{{count}} zonder toewijzing",
+    "pendingQuotes": "Openstaande offertes",
+    "acceptRate": "Aanvaardingsgraad",
+    "acceptRateSub": "{{accepted}} aanvaard / {{decided}} beslist"
+  },
+  "chart": {
+    "title": "Financiële evolutie",
+    "subtitle": "Omzet vs kosten — laatste 6 maanden",
+    "revenue": "Omzet",
+    "costs": "Kosten"
+  },
+  "top": {
+    "title": "Top 5 — Rendabiliteit",
+    "subtitle": "Meest rendabele werven",
+    "empty": "Nog geen werven."
+  },
+  "alerts": {
+    "title": "Meldingen & vereiste acties",
+    "lateSites_one": "{{count}} vertraagde werf",
+    "lateSites_other": "{{count}} vertraagde werven",
+    "noLate": "Geen vertraging 🎉",
+    "unassigned_one": "{{count}} arbeider zonder toewijzing",
+    "unassigned_other": "{{count}} arbeiders zonder toewijzing",
+    "allAssigned": "Iedereen toegewezen",
+    "unpaidSalaries_one": "{{count}} loon niet betaald deze maand",
+    "unpaidSalaries_other": "{{count}} lonen niet betaald deze maand",
+    "unpaidSalariesText": "Zie de module Bedrijfsvoorheffing & RSZ om te regulariseren",
+    "precompteDue": "Bedrijfsvoorheffing te betalen vóór {{date}}",
+    "precompteDueText": "{{amount}} te storten aan de FOD Financiën",
+    "onssDue": "RSZ K{{quarter}} te betalen vóór {{date}}",
+    "onssDueText": "{{amount}} te storten aan de RSZ",
+    "ctExpired_one": "🚛 {{count}} voertuig met vervallen keuring",
+    "ctExpired_other": "🚛 {{count}} voertuigen met vervallen keuring",
+    "insuranceSoon": "⚠️ Voertuigverzekering te vernieuwen",
+    "insuranceSoonItem": "{{plate}} ({{days}} d)"
+  }
+}

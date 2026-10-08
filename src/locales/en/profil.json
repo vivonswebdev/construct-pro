@@ -1,0 +1,20 @@
+{
+  "title": "My profile",
+  "subtitle": "Manage your personal details and those of your company.",
+  "personal": "Personal details",
+  "role": "Role: {{role}}",
+  "fullName": "Full name",
+  "avatarUrl": "Avatar URL (optional)",
+  "language": "Interface language",
+  "languageHelp": "Saved to your profile: it follows you on all your devices.",
+  "company": "My company",
+  "companyName": "Company name",
+  "address": "Address",
+  "bce": "Company number",
+  "logoUrl": "Logo URL (optional)",
+  "avatarAlt": "Avatar",
+  "toasts": {
+    "profileUpdated": "Profile updated",
+    "companyUpdated": "Company updated"
+  }
+}

@@ -12,9 +12,17 @@
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
+/** Codes d'erreur (traduits côté interface : assistant:errors.*). */
+export type ChatErreur =
+  | "trop_de_requetes"
+  | "credits_epuises"
+  | "erreur_ia"
+  | "cle_manquante"
+  | "injoignable";
+
 export type ChatResult =
   | { ok: true; content: string }
-  | { ok: false; error: string; status?: number };
+  | { ok: false; error: ChatErreur; status?: number };
 
 type Provider = "lovable" | "anthropic";
 
@@ -30,10 +38,9 @@ function provider(): Provider {
 }
 
 function httpError(status: number): ChatResult {
-  if (status === 429)
-    return { ok: false, status, error: "Trop de requêtes, réessayez dans un instant." };
-  if (status === 402) return { ok: false, status, error: "Crédits IA épuisés." };
-  return { ok: false, status, error: `Erreur IA (${status}).` };
+  if (status === 429) return { ok: false, status, error: "trop_de_requetes" };
+  if (status === 402) return { ok: false, status, error: "credits_epuises" };
+  return { ok: false, status, error: "erreur_ia" };
 }
 
 export async function chat(opts: {
@@ -45,9 +52,8 @@ export async function chat(opts: {
   const model = process.env["AI_MODEL"] || DEFAULT_MODELS[p];
   try {
     return p === "anthropic" ? await chatAnthropic(model, opts) : await chatLovable(model, opts);
-  } catch (err) {
-    const msg = err instanceof Error ? err.message : "Erreur inconnue";
-    return { ok: false, error: `Assistant injoignable : ${msg}` };
+  } catch {
+    return { ok: false, error: "injoignable" };
   }
 }
 
@@ -56,7 +62,7 @@ async function chatLovable(
   { system, messages, maxTokens }: { system: string; messages: ChatMessage[]; maxTokens?: number },
 ): Promise<ChatResult> {
   const apiKey = process.env["LOVABLE_API_KEY"];
-  if (!apiKey) return { ok: false, error: "Assistant indisponible (clé IA manquante)." };
+  if (!apiKey) return { ok: false, error: "cle_manquante" };
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
@@ -77,7 +83,7 @@ async function chatAnthropic(
   { system, messages, maxTokens }: { system: string; messages: ChatMessage[]; maxTokens?: number },
 ): Promise<ChatResult> {
   const apiKey = process.env["ANTHROPIC_API_KEY"];
-  if (!apiKey) return { ok: false, error: "Assistant indisponible (clé IA manquante)." };
+  if (!apiKey) return { ok: false, error: "cle_manquante" };
   const res = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {

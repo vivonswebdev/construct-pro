@@ -1,0 +1,79 @@
+{
+  "title": "Stock & matériaux",
+  "subtitle": "Catalogue, achats, sorties et impact sur le bénéfice des chantiers",
+  "exportCsv": "Export CSV",
+  "purchase": "Achat",
+  "issueSlip": "Bon de sortie",
+  "return": "Retour",
+  "newMaterial": "Nouveau matériau",
+  "csvFileName": "mouvements_stock",
+  "kpi": {
+    "references": "Références",
+    "stockValue": "Valeur du stock",
+    "recentPurchases": "Achats (récents)",
+    "siteIssues": "Sorties chantier"
+  },
+  "lowStock_one": "{{count}} produit sous le seuil minimum",
+  "lowStock_other": "{{count}} produits sous le seuil minimum",
+  "tabs": {
+    "catalog": "Catalogue",
+    "movements": "Mouvements"
+  },
+  "searchPlaceholder": "Rechercher un matériau ou SKU…",
+  "noMaterial": "Aucun matériau.",
+  "noMovement": "Aucun mouvement.",
+  "columns": {
+    "name": "Nom",
+    "sku": "SKU",
+    "stock": "Stock",
+    "unitPrice": "Prix unit.",
+    "value": "Valeur",
+    "supplier": "Fournisseur",
+    "date": "Date",
+    "type": "Type",
+    "material": "Matériau",
+    "qty": "Qté",
+    "unit": "Unité",
+    "total": "Total",
+    "site": "Chantier",
+    "supplierRef": "Fournisseur / réf.",
+    "reference": "Référence"
+  },
+  "confirmDeleteMovement": "Supprimer ce mouvement ? Le stock sera ajusté.",
+  "materialForm": {
+    "name": "Nom *",
+    "sku": "SKU",
+    "unit": "Unité",
+    "defaultUnit": "pièce",
+    "unitPrice": "Prix unit. (€)",
+    "initialStock": "Stock initial",
+    "minStock": "Seuil min.",
+    "supplier": "Fournisseur",
+    "category": "Catégorie"
+  },
+  "movementForm": {
+    "material": "Matériau *",
+    "choose": "— Choisir —",
+    "materialOption": "{{name}} ({{qty}} {{unit}} dispo)",
+    "siteRequired": "Chantier *",
+    "siteOptional": "Chantier (optionnel)",
+    "none": "— Aucun —",
+    "quantity": "Quantité ({{unit}})",
+    "unitPrice": "Prix unit. (€)",
+    "date": "Date",
+    "supplier": "Fournisseur",
+    "invoiceRef": "Référence facture",
+    "notes": "Notes",
+    "total": "Total"
+  },
+  "validation": {
+    "nameRequired": "Nom requis",
+    "materialRequired": "Matériau requis",
+    "siteRequiredForIssue": "Chantier requis pour une sortie",
+    "insufficientStock": "Stock insuffisant ({{qty}} {{unit}} disponible). Continuer ?"
+  },
+  "toasts": {
+    "materialCreated": "Matériau créé",
+    "movementSaved": "{{label}} enregistré"
+  }
+}

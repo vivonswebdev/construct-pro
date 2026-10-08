@@ -24,6 +24,11 @@ Langue de travail : **français**.
 
 - Tout changement de schéma = **nouvelle** migration dans `supabase/migrations/`
   (`AAAAMMJJHHMMSS_description.sql`). Ne jamais modifier une migration existante.
+- Retour arrière : bloc SQL **entièrement commenté** en fin de fichier (`-- ROLLBACK :` puis chaque
+  ligne préfixée `--`). Jamais de section `-- migrate:down` exécutable : Supabase/Lovable exécutent
+  le fichier en entier.
+- Lovable ne voit que `main` et **recopie** sous un autre nom les migrations qu'on lui fait exécuter :
+  après exécution, supprimer l'original s'il fait doublon avec la copie.
 - Chaque table : `company_id` (FK `companies`, `ON DELETE CASCADE`), RLS activée, 4 policies
   select/insert/update/delete sur `company_id = public.get_user_company_id(auth.uid())`, index sur
   `company_id` et les clés étrangères.
@@ -43,6 +48,24 @@ Langue de travail : **français**.
 - Erreurs dans les `catch` : `errorMessage(err)` (`src/lib/utils.ts`), jamais `err.message` sur `unknown`.
 - Aucune chaîne visible en dur une fois l'i18n en place (phase 1).
 - Pages utilisables sur tablette ; `/m` pensé pour téléphone.
+
+## Multilingue (i18n)
+
+- 5 langues : fr (référence et secours), nl, en, ro, pl. Fichiers `src/locales/<langue>/<module>.json`,
+  un namespace par module ; tout nouveau namespace s'ajoute aussi dans `src/i18next.d.ts`.
+- Composants : `const { t } = useTranslation(["module", "common", "statuts"])`, clés typées ; préfixer
+  les autres namespaces (`t("common:actions.save")`). Hors React : `i18n.t(...)` (`src/lib/i18n.ts`).
+- Pluriels i18next (`_one`, `_few`, `_many`, `_other` selon la langue) avec `{ count }`.
+- Statuts et types : codes neutres en base, libellé `t(\`statuts:chantier.${toCode(s)}\`)`;
+comparer avec`toCode()` (`src/lib/statuts.ts`), jamais avec un libellé.
+- Dates, mois, jours : `intlLocale()`, `nomMois()`, `joursSemaineCourts()` ; montants : `formatEURBE`.
+- Titres de page : `head: () => pageHead("cle")` (`src/lib/head.ts`, clés dans `common:pages`).
+- Documents officiels (devis, contrats, CG, e-mails) dans la langue du **client** (fr/nl/en) :
+  `langueDocument(client.langue)` + `i18n.getFixedT(lang, "pdf")`. Rapports internes : langue de l'interface.
+- Contenu saisi par les utilisateurs : `<TranslatableText>` (bouton Traduire / Voir l'original,
+  `translateText()` serveur + cache `traductions`).
+- `bun run i18n:check` doit passer : clés identiques dans les 5 langues, aucune chaîne visible en dur
+  (exception ponctuelle : commentaire `i18n-ignore`).
 
 ## Règles fiscales et sociales belges
 

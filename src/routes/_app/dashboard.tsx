@@ -25,12 +25,16 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, daysUntil } from "@/lib/format";
+import { useTranslation } from "react-i18next";
+import { intlLocale } from "@/lib/i18n";
+import { toCode, CONTRATS_SALARIES } from "@/lib/statuts";
 
 export const Route = createFileRoute("/_app/dashboard")({
   component: Dashboard,
 });
 
 function Dashboard() {
+  const { t } = useTranslation(["dashboard", "common"]);
   const { profile } = useAuth();
   const companyId = profile?.company_id;
 
@@ -102,16 +106,16 @@ function Dashboard() {
     quarter,
     devis,
   } = data;
-  const devisPending = devis.filter((d) => d.status === "Envoyé" || d.status === "Brouillon");
-  const devisAccepted = devis.filter((d) => d.status === "Accepté").length;
+  const devisPending = devis.filter((d) => ["envoye", "brouillon"].includes(toCode(d.status)));
+  const devisAccepted = devis.filter((d) => toCode(d.status) === "accepte").length;
   const devisDecided = devis.filter((d) =>
-    ["Accepté", "Refusé", "Expiré"].includes(d.status),
+    ["accepte", "refuse", "expire"].includes(toCode(d.status)),
   ).length;
   const acceptRate = devisDecided ? Math.round((devisAccepted / devisDecided) * 100) : 0;
 
   // Compliance metrics for active workers under contract
   const eligibleWorkers = personnel.filter(
-    (p) => p.status === "Actif" && ["CDI", "CDD", "Intérim"].includes(p.contract_type ?? ""),
+    (p) => toCode(p.status) === "actif" && CONTRATS_SALARIES.includes(toCode(p.contract_type)),
   );
   const totalElig = eligibleWorkers.length;
   const unpaidSalaries = totalElig - salaries.filter((s) => s.paid).length;
@@ -138,22 +142,22 @@ function Dashboard() {
     const days = daysUntil(c.end_date);
     return c.progress < 100 && days !== null && days < 0;
   });
-  const active = chantiers.filter((c) => c.status === "En cours" || c.status === "En retard");
+  const active = chantiers.filter((c) => ["en_cours", "en_retard"].includes(toCode(c.status)));
 
   const caTotal = chantiers.reduce((s, c) => s + Number(c.budget ?? 0), 0);
   const coutsTotal = chantiers.reduce((s, c) => s + Number(c.actual_costs ?? 0), 0);
   const beneficeTotal = caTotal - coutsTotal;
 
-  const activePersonnel = personnel.filter((p) => p.status === "Actif");
+  const activePersonnel = personnel.filter((p) => toCode(p.status) === "actif");
   const affectedIds = new Set(affectations.map((a) => a.personnel_id));
   const unassigned = activePersonnel.filter((p) => !affectedIds.has(p.id));
 
   // Chart: aggregate by month (last 6 months, approximation from start_date)
-  const months: { name: string; CA: number; Coûts: number }[] = [];
+  const months: { name: string; ca: number; couts: number }[] = [];
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const label = d.toLocaleDateString("fr-BE", { month: "short" }).replace(".", "");
-    months.push({ name: label.charAt(0).toUpperCase() + label.slice(1), CA: 0, Coûts: 0 });
+    const label = d.toLocaleDateString(intlLocale(), { month: "short" }).replace(".", "");
+    months.push({ name: label.charAt(0).toUpperCase() + label.slice(1), ca: 0, couts: 0 });
   }
   chantiers.forEach((c) => {
     if (!c.start_date) return;
@@ -163,16 +167,16 @@ function Dashboard() {
       return d.getFullYear() === target.getFullYear() && d.getMonth() === target.getMonth();
     });
     if (idx >= 0) {
-      months[idx].CA += Number(c.budget ?? 0) / 6;
-      months[idx].Coûts += Number(c.actual_costs ?? 0) / 6;
+      months[idx].ca += Number(c.budget ?? 0) / 6;
+      months[idx].couts += Number(c.actual_costs ?? 0) / 6;
     }
   });
   // If all zero, spread totals across last 6 months for visual feedback
-  if (months.every((m) => m.CA === 0)) {
+  if (months.every((m) => m.ca === 0)) {
     months.forEach((m, i) => {
       const factor = 0.6 + i * 0.12;
-      m.CA = Math.round((caTotal / 6) * factor);
-      m.Coûts = Math.round((coutsTotal / 6) * factor);
+      m.ca = Math.round((caTotal / 6) * factor);
+      m.couts = Math.round((coutsTotal / 6) * factor);
     });
   }
 
@@ -189,54 +193,54 @@ function Dashboard() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Vue d'ensemble de votre activité</p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       {/* KPIs */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-6">
         <KpiCard
           icon={TrendingUp}
-          label="CA Total"
+          label={t("kpi.ca")}
           value={formatEUR(caTotal)}
-          sub="+12% vs mois dernier"
+          sub={t("kpi.caSub", { count: chantiers.length })}
           tone="primary"
         />
         <KpiCard
           icon={Euro}
-          label="Bénéfice Total"
+          label={t("kpi.profit")}
           value={formatEUR(beneficeTotal)}
-          sub={beneficeTotal >= 0 ? "Marge positive" : "Marge négative"}
+          sub={beneficeTotal >= 0 ? t("kpi.marginPositive") : t("kpi.marginNegative")}
           tone={beneficeTotal >= 0 ? "success" : "danger"}
         />
         <KpiCard
           icon={HardHat}
-          label="Chantiers Actifs"
+          label={t("kpi.activeSites")}
           value={String(active.length)}
-          sub={`${late.length} en retard`}
+          sub={t("kpi.lateCount", { count: late.length })}
           subTone={late.length > 0 ? "danger" : "muted"}
           tone="primary"
         />
         <KpiCard
           icon={Users}
-          label="Ouvriers Actifs"
+          label={t("kpi.activeWorkers")}
           value={String(activePersonnel.length)}
-          sub={`${unassigned.length} sans affectation`}
+          sub={t("kpi.unassignedCount", { count: unassigned.length })}
           subTone={unassigned.length > 0 ? "warning" : "muted"}
           tone="primary"
         />
         <KpiCard
           icon={FileText}
-          label="Devis en attente"
+          label={t("kpi.pendingQuotes")}
           value={String(devisPending.length)}
           sub={formatEUR(devisPending.reduce((s, d) => s + Number(d.total_ttc ?? 0), 0))}
           tone="primary"
         />
         <KpiCard
           icon={Percent}
-          label="Taux d'acceptation"
+          label={t("kpi.acceptRate")}
           value={`${acceptRate}%`}
-          sub={`${devisAccepted} accepté(s) / ${devisDecided} décidé(s)`}
+          sub={t("kpi.acceptRateSub", { accepted: devisAccepted, decided: devisDecided })}
           tone={acceptRate >= 50 ? "success" : "danger"}
         />
       </div>
@@ -245,8 +249,8 @@ function Dashboard() {
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <div className="mb-4">
-            <h3 className="text-base font-semibold">Évolution financière</h3>
-            <p className="text-xs text-muted-foreground">CA vs Coûts — 6 derniers mois</p>
+            <h3 className="text-base font-semibold">{t("chart.title")}</h3>
+            <p className="text-xs text-muted-foreground">{t("chart.subtitle")}</p>
           </div>
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
@@ -273,8 +277,18 @@ function Dashboard() {
                   formatter={(v: number) => formatEUR(v)}
                 />
                 <Legend iconType="circle" wrapperStyle={{ fontSize: 12, paddingTop: 8 }} />
-                <Bar dataKey="CA" fill="oklch(0.62 0.12 210)" radius={[6, 6, 0, 0]} />
-                <Bar dataKey="Coûts" fill="oklch(0.62 0.22 27)" radius={[6, 6, 0, 0]} />
+                <Bar
+                  dataKey="ca"
+                  name={t("chart.revenue")}
+                  fill="oklch(0.62 0.12 210)"
+                  radius={[6, 6, 0, 0]}
+                />
+                <Bar
+                  dataKey="couts"
+                  name={t("chart.costs")}
+                  fill="oklch(0.62 0.22 27)"
+                  radius={[6, 6, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -282,12 +296,12 @@ function Dashboard() {
 
         <Card>
           <div className="mb-4">
-            <h3 className="text-base font-semibold">Top 5 — Rentabilité</h3>
-            <p className="text-xs text-muted-foreground">Chantiers les plus rentables</p>
+            <h3 className="text-base font-semibold">{t("top.title")}</h3>
+            <p className="text-xs text-muted-foreground">{t("top.subtitle")}</p>
           </div>
           <div className="space-y-3">
             {topRentables.length === 0 && (
-              <p className="text-sm text-muted-foreground">Aucun chantier pour le moment.</p>
+              <p className="text-sm text-muted-foreground">{t("top.empty")}</p>
             )}
             {topRentables.map((c) => {
               const r = Math.round(c.rentabilite);
@@ -326,53 +340,55 @@ function Dashboard() {
       <Card>
         <div className="mb-4 flex items-center gap-2">
           <AlertTriangle className="h-5 w-5 text-warning" />
-          <h3 className="text-base font-semibold">Alertes & Actions requises</h3>
+          <h3 className="text-base font-semibold">{t("alerts.title")}</h3>
         </div>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          <AlertCard
-            tone="danger"
-            title={`${late.length} chantier${late.length > 1 ? "s" : ""} en retard`}
-          >
+          <AlertCard tone="danger" title={t("alerts.lateSites", { count: late.length })}>
             {late.length === 0
-              ? "Aucun retard 🎉"
+              ? t("alerts.noLate")
               : late
                   .slice(0, 2)
                   .map((c) => c.name)
                   .join(", ")}
           </AlertCard>
-          <AlertCard
-            tone="warning"
-            title={`${unassigned.length} ouvrier${unassigned.length > 1 ? "s" : ""} sans affectation`}
-          >
+          <AlertCard tone="warning" title={t("alerts.unassigned", { count: unassigned.length })}>
             {unassigned.length === 0
-              ? "Tous affectés"
+              ? t("alerts.allAssigned")
               : unassigned
                   .slice(0, 2)
                   .map((p) => p.full_name)
                   .join(", ")}
           </AlertCard>
           {unpaidSalaries > 0 && (
-            <AlertCard
-              tone="warning"
-              title={`${unpaidSalaries} salaire${unpaidSalaries > 1 ? "s" : ""} non payé${unpaidSalaries > 1 ? "s" : ""} ce mois`}
-            >
-              Voir le module Précompte & ONSS pour régulariser
+            <AlertCard tone="warning" title={t("alerts.unpaidSalaries", { count: unpaidSalaries })}>
+              {t("alerts.unpaidSalariesText")}
             </AlertCard>
           )}
           {unpaidPrecompte > 0 && (
             <AlertCard
               tone="danger"
-              title={`Précompte dû avant le ${nextMonth.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}
+              title={t("alerts.precompteDue", {
+                date: nextMonth.toLocaleDateString(intlLocale(), {
+                  day: "2-digit",
+                  month: "2-digit",
+                }),
+              })}
             >
-              {formatEUR(precompteAmount)} à verser au SPF Finances
+              {t("alerts.precompteDueText", { amount: formatEUR(precompteAmount) })}
             </AlertCard>
           )}
           {onssDue && (
             <AlertCard
               tone="danger"
-              title={`ONSS Q${quarter} dû avant le ${onssDueDate.toLocaleDateString("fr-BE", { day: "2-digit", month: "2-digit" })}`}
+              title={t("alerts.onssDue", {
+                quarter,
+                date: onssDueDate.toLocaleDateString(intlLocale(), {
+                  day: "2-digit",
+                  month: "2-digit",
+                }),
+              })}
             >
-              {formatEUR(onssAmount)} à verser à l'ONSS
+              {t("alerts.onssDueText", { amount: formatEUR(onssAmount) })}
             </AlertCard>
           )}
           {(() => {
@@ -388,7 +404,7 @@ function Dashboard() {
                 {ctExpired.length > 0 && (
                   <AlertCard
                     tone="danger"
-                    title={`🚛 ${ctExpired.length} véhicule${ctExpired.length > 1 ? "s" : ""} avec CT expiré`}
+                    title={t("alerts.ctExpired", { count: ctExpired.length })}
                   >
                     {ctExpired
                       .slice(0, 2)
@@ -397,10 +413,15 @@ function Dashboard() {
                   </AlertCard>
                 )}
                 {insSoon.length > 0 && (
-                  <AlertCard tone="warning" title={`⚠️ Assurance véhicule à renouveler`}>
+                  <AlertCard tone="warning" title={t("alerts.insuranceSoon")}>
                     {insSoon
                       .slice(0, 2)
-                      .map((v) => `${v.plate} (${daysUntil(v.insurance_date)} j)`)
+                      .map((v) =>
+                        t("alerts.insuranceSoonItem", {
+                          plate: v.plate,
+                          days: daysUntil(v.insurance_date),
+                        }),
+                      )
                       .join(", ")}
                   </AlertCard>
                 )}
@@ -481,12 +502,13 @@ function AlertCard({
     info: { border: "border-l-info", bg: "bg-blue-50/50", text: "text-info" },
   } as const;
   const s = map[tone];
+  const { t } = useTranslation("common");
   return (
     <div className={`rounded-lg border border-border ${s.bg} border-l-4 ${s.border} p-3`}>
       <p className={`text-sm font-semibold ${s.text}`}>{title}</p>
       <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{children}</p>
       <button className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-        Voir <ArrowRight className="h-3 w-3" />
+        {t("actions.see")} <ArrowRight className="h-3 w-3" />
       </button>
     </div>
   );

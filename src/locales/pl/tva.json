@@ -1,0 +1,70 @@
+{
+  "title": "Zgodność VAT i potrącenia",
+  "subtitle": "Sprawdź obowiązek potrącenia dla klientów i podwykonawców (art. 402 CIR)",
+  "form": {
+    "title": "Sprawdź numer VAT",
+    "clientName": "Nazwa klienta",
+    "clientNamePlaceholder": "Np. Immobilière Dumont SA",
+    "vat": "Nr VAT",
+    "vatHint": "Format: BE + 10 cyfr",
+    "checking": "Sprawdzanie…",
+    "checkNow": "Sprawdź teraz",
+    "source": "ⓘ Dane z checkobligationderetenue.be — wynik SPF Finances (art. 402 CIR 92)"
+  },
+  "validation": {
+    "clientNameRequired": "Podaj nazwę klienta",
+    "vatInvalid": "Nieprawidłowy numer VAT (BE + 10 cyfr)"
+  },
+  "errors": {
+    "format_invalide": "Nieprawidłowy format VAT (oczekiwano: BE + 10 cyfr)",
+    "site_indisponible": "Oficjalna strona niedostępna (HTTP {{status}}). Użyj wprowadzania ręcznego.",
+    "site_injoignable": "Nie można połączyć się z oficjalną stroną. Użyj wprowadzania ręcznego.",
+    "manualHint": "Możesz sprawdzić oficjalną stronę i zapisać wynik ręcznie."
+  },
+  "result": {
+    "noWithholding": "✓ Brak obowiązku potrącenia",
+    "withholding": "⚠ Obowiązkowe potrącenie!",
+    "toConfirm": "Wynik do potwierdzenia ręcznie",
+    "msgNoWithholding": "Brak obowiązku potrącenia — wszystko w porządku.",
+    "msgWithholding": "Obowiązkowe potrącenie — stwierdzono zaległości podatkowe lub socjalne.",
+    "msgAmbiguous": "Niejasny wynik. Sprawdź ręcznie na oficjalnej stronie.",
+    "msgManualOk": "Wprowadzono ręcznie — zgodny",
+    "msgManualWithholding": "Wprowadzono ręcznie — obowiązkowe potrącenie",
+    "checkedAt": "Sprawdzono {{date}} o {{time}}",
+    "officialSite": "Zobacz na oficjalnej stronie",
+    "manualEntry": "Wprowadzanie ręczne:",
+    "compliant": "✓ Zgodny",
+    "withholdingShort": "⚠ Potrącenie"
+  },
+  "calc": {
+    "title": "Obliczenie potrącenia",
+    "invoiceAmount": "Kwota faktury",
+    "withholding": "Potrącenie {{rate}} %",
+    "toSpf": "Do wpłaty na rzecz SPF",
+    "netToClient": "Netto dla klienta",
+    "balance": "Saldo do zapłaty",
+    "gross": "Kwota brutto",
+    "invoiced": "Suma zafakturowana"
+  },
+  "history": {
+    "title": "Historia sprawdzeń",
+    "searchPlaceholder": "Szukaj klienta lub nr VAT",
+    "exportCsv": "Eksport CSV",
+    "noResult": "Brak wyników —",
+    "launchCheck": "Uruchomić sprawdzenie?",
+    "empty": "Brak zapisanych sprawdzeń. Użyj formularza powyżej.",
+    "unknown": "Nieznany",
+    "recheck": "Sprawdź ponownie",
+    "csvFileName": "sprawdzenia-vat",
+    "columns": {
+      "status": "Status",
+      "client": "Klient",
+      "vat": "Nr VAT",
+      "checkedOn": "Sprawdzono",
+      "actions": "Działania"
+    }
+  },
+  "toasts": {
+    "saved": "Sprawdzenie zapisane"
+  }
+}

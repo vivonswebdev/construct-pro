@@ -1,0 +1,28 @@
+{
+  "activeModules": "Module active",
+  "comingSoon": "În curând",
+  "soon": "În curând",
+  "comingSoonText": "Acest modul va fi disponibil în următoarea actualizare.",
+  "signOut": "Deconectare",
+  "language": "Limba interfeței",
+  "items": {
+    "dashboard": "Panou de control",
+    "chantiers": "Șantiere",
+    "clients": "Clienți",
+    "personnel": "Personal",
+    "vehicules": "Vehicule",
+    "stock": "Stoc",
+    "devis": "Devize",
+    "tva": "Conformitate TVA",
+    "precompte": "Reținere la sursă & ONSS",
+    "assistant": "Asistent AI",
+    "profil": "Profilul meu",
+    "belcotax": "Belcotax",
+    "peppol": "Facturare (Peppol)"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "gerant": "Administrator firmă",
+    "ouvrier": "Muncitor"
+  }
+}

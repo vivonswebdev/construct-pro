@@ -1,12 +1,14 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { applyLangue, detectLangue, isLangue, type Langue } from "@/lib/i18n";
 
 type Profile = {
   id: string;
   company_id: string | null;
   full_name: string | null;
   role: string;
+  langue: string;
 };
 
 type Company = {
@@ -25,6 +27,8 @@ type AuthCtx = {
   loading: boolean;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  /** Change la langue de l'interface et l'enregistre (profil si connecté, sinon appareil). */
+  setLangue: (l: Langue) => Promise<void>;
 };
 
 const Ctx = createContext<AuthCtx | undefined>(undefined);
@@ -36,25 +40,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   const loadProfile = async (userId: string) => {
-    const { data: p } = await supabase
-      .from("profiles")
-      .select("id, company_id, full_name, role")
-      .eq("id", userId)
-      .maybeSingle();
-    setProfile(p as Profile | null);
+    // select("*") : reste compatible si la colonne langue n'est pas encore migrée.
+    const { data: p } = await supabase.from("profiles").select("*").eq("id", userId).maybeSingle();
+    setProfile(p);
+    if (p && isLangue(p.langue)) applyLangue(p.langue, true);
     if (p?.company_id) {
       const { data: c } = await supabase
         .from("companies")
         .select("id, name, bce_number, address, logo_url")
         .eq("id", p.company_id)
         .maybeSingle();
-      setCompany(c as Company | null);
+      setCompany(c);
     } else {
       setCompany(null);
     }
   };
 
   useEffect(() => {
+    // Premier rendu en français (identique au SSR), puis langue de l'appareil/navigateur.
+    applyLangue(detectLangue());
+
     const { data: sub } = supabase.auth.onAuthStateChange((_event, sess) => {
       setSession(sess);
       if (sess?.user) {
@@ -83,6 +88,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (session?.user) await loadProfile(session.user.id);
   };
 
+  const setLangue = async (l: Langue) => {
+    applyLangue(l, true);
+    if (!profile) return;
+    setProfile({ ...profile, langue: l });
+    await supabase.from("profiles").update({ langue: l }).eq("id", profile.id);
+  };
+
   return (
     <Ctx.Provider
       value={{
@@ -93,6 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         loading,
         signOut,
         refreshProfile,
+        setLangue,
       }}
     >
       {children}

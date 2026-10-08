@@ -1,0 +1,28 @@
+{
+  "activeModules": "Actieve modules",
+  "comingSoon": "Binnenkort beschikbaar",
+  "soon": "Binnenkort",
+  "comingSoonText": "Deze module wordt beschikbaar in de volgende update.",
+  "signOut": "Afmelden",
+  "language": "Taal van de interface",
+  "items": {
+    "dashboard": "Dashboard",
+    "chantiers": "Werven",
+    "clients": "Klanten",
+    "personnel": "Personeel",
+    "vehicules": "Voertuigen",
+    "stock": "Voorraad",
+    "devis": "Offertes",
+    "tva": "Btw-conformiteit",
+    "precompte": "Bedrijfsvoorheffing & RSZ",
+    "assistant": "AI-assistent",
+    "profil": "Mijn profiel",
+    "belcotax": "Belcotax",
+    "peppol": "Facturatie (Peppol)"
+  },
+  "roles": {
+    "admin": "Beheerder",
+    "gerant": "Zaakvoerder",
+    "ouvrier": "Arbeider"
+  }
+}

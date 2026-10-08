@@ -1,0 +1,99 @@
+{
+  "appName": "ConstructFlow",
+  "meta": {
+    "title": "ConstructFlow — Gestion de chantiers",
+    "description": "Plateforme de gestion de chantiers pour entreprises de construction belges."
+  },
+  "actions": {
+    "add": "Ajouter",
+    "cancel": "Annuler",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "create": "Créer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "save": "Enregistrer",
+    "saving": "Enregistrement…",
+    "search": "Rechercher",
+    "back": "Retour",
+    "see": "Voir",
+    "export": "Exporter",
+    "understood": "Compris",
+    "translate": "Traduire",
+    "showOriginal": "Voir l'original",
+    "translating": "Traduction…"
+  },
+  "labels": {
+    "all": "Tous",
+    "none": "Aucun",
+    "unknown": "—",
+    "notes": "Notes",
+    "status": "Statut",
+    "date": "Date",
+    "total": "Total",
+    "language": "Langue",
+    "email": "Email",
+    "phone": "Téléphone",
+    "address": "Adresse",
+    "postalCode": "Code postal",
+    "city": "Ville",
+    "vat": "TVA",
+    "bce": "Numéro BCE",
+    "name": "Nom",
+    "firstName": "Prénom",
+    "description": "Description",
+    "quantity": "Qté",
+    "type": "Type",
+    "user": "Utilisateur"
+  },
+  "units": {
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "daysShort": "{{count}} j",
+    "hoursShort": "{{count}} h",
+    "km": "{{value}} km"
+  },
+  "time": {
+    "daysLeft": "{{count}} j restants",
+    "daysLate": "{{count}} j de retard"
+  },
+  "errors": {
+    "generic": "Une erreur est survenue",
+    "notFound": "Page introuvable",
+    "backHome": "Retour à l'accueil",
+    "loading": "Chargement…"
+  },
+  "toasts": {
+    "saved": "Enregistré",
+    "updated": "Mis à jour",
+    "deleted": "Supprimé",
+    "created": "Créé"
+  },
+  "translation": {
+    "translatedFrom": "Traduit automatiquement",
+    "failed": "Traduction impossible"
+  },
+  "pages": {
+    "clients": {
+      "title": "Clients",
+      "description": "Gérez vos clients particuliers et entreprises, leurs numéros de TVA et leurs chantiers."
+    },
+    "client": {
+      "title": "Fiche client",
+      "description": "Informations client, chantiers et devis liés."
+    },
+    "devis": {
+      "title": "Devis",
+      "description": "Devis clients avec TVA belge, autoliquidation et TVA 6 %."
+    },
+    "devisDetail": {
+      "title": "Devis",
+      "description": "Édition d'un devis avec lignes, TVA belge et export PDF."
+    },
+    "assistant": {
+      "title": "Assistant IA",
+      "description": "Posez vos questions sur vos chantiers, vos devis et la conformité belge : l'assistant répond à partir de vos données."
+    }
+  },
+  "indicatif": "Indicatif — à valider par votre comptable / secrétariat social."
+}

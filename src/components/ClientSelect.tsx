@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { clientLabel, type Client } from "@/lib/clients";
 import { ClientFormModal } from "./ClientFormModal";
+import { useTranslation } from "react-i18next";
 
 export function useClients() {
   const { profile } = useAuth();
@@ -32,6 +33,7 @@ export function ClientSelect({
   onChange: (id: string, client: Client | null) => void;
   className?: string;
 }) {
+  const { t } = useTranslation("clients");
   const { data: clients } = useClients();
   const qc = useQueryClient();
   const [open, setOpen] = useState(false);
@@ -47,11 +49,11 @@ export function ClientSelect({
           onChange(e.target.value, clients?.find((c) => c.id === e.target.value) ?? null)
         }
       >
-        <option value="">— Sélectionner un client —</option>
+        <option value="">{t("select")}</option>
         {(clients ?? []).map((c) => (
           <option key={c.id} value={c.id}>
             {clientLabel(c)}
-            {c.type === "entreprise" ? " (entreprise)" : ""}
+            {c.type === "entreprise" ? ` ${t("companySuffix")}` : ""}
           </option>
         ))}
       </select>
@@ -60,7 +62,7 @@ export function ClientSelect({
         onClick={() => setOpen(true)}
         className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-card px-2.5 text-xs font-semibold text-primary hover:bg-muted"
       >
-        <Plus className="h-3.5 w-3.5" /> Nouveau client
+        <Plus className="h-3.5 w-3.5" /> {t("new")}
       </button>
       {open && (
         <ClientFormModal

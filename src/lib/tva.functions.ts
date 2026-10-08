@@ -5,22 +5,25 @@ const inputSchema = z.object({
   vat_number: z.string().min(12).max(14),
 });
 
+/** Codes d'erreur renvoyés au client (traduits à l'affichage : tva:errors.*). */
+export type CheckTvaErreur = "format_invalide" | "site_indisponible" | "site_injoignable";
+
 /**
- * Proxies the Belgian government withholding-obligation checker.
+ * Interroge le service officiel de vérification de l'obligation de retenue.
  * https://www.checkobligationderetenue.be/
- * Returns { eligible, message, raw_html } where eligible=true means
- * NO withholding required (green), false means withholding required (red).
+ * eligible = true : aucune retenue (vert) ; false : retenue obligatoire (rouge) ;
+ * null : résultat ambigu, à confirmer manuellement.
  */
 export const checkTva = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data }) => {
     const vat = data.vat_number.replace(/[\s.-]/g, "").toUpperCase();
     if (!/^BE\d{10}$/.test(vat)) {
-      return { ok: false as const, error: "Format de TVA invalide (attendu BE + 10 chiffres)" };
+      return { ok: false as const, error: "format_invalide" as CheckTvaErreur };
     }
+    const url = `https://www.checkobligationderetenue.be/result/?vat=${encodeURIComponent(vat)}`;
 
     try {
-      const url = `https://www.checkobligationderetenue.be/result/?vat=${encodeURIComponent(vat)}`;
       const res = await fetch(url, {
         method: "GET",
         headers: {
@@ -34,14 +37,15 @@ export const checkTva = createServerFn({ method: "POST" })
       if (!res.ok) {
         return {
           ok: false as const,
-          error: `Site officiel indisponible (HTTP ${res.status}). Utilisez la saisie manuelle.`,
+          error: "site_indisponible" as CheckTvaErreur,
+          status: res.status,
+          source_url: url,
         };
       }
 
       const html = await res.text();
-      const lower = html.toLowerCase();
 
-      // Heuristics: look for indicators in the HTML
+      // Heuristiques sur la page (en français, cf. Accept-Language)
       const hasRed =
         /retenue.*obligatoire/i.test(html) ||
         /dette.*fiscal/i.test(html) ||
@@ -54,22 +58,9 @@ export const checkTva = createServerFn({ method: "POST" })
       let eligible: boolean | null = null;
       if (hasGreen && !hasRed) eligible = true;
       else if (hasRed && !hasGreen) eligible = false;
-      // ambiguous -> null, user logs manually
 
-      return {
-        ok: true as const,
-        eligible,
-        message:
-          eligible === true
-            ? "Aucune retenue obligatoire — sous-traitant en règle."
-            : eligible === false
-              ? "Retenue obligatoire de 15% — dettes fiscales/sociales détectées."
-              : "Résultat ambigu. Vérifiez manuellement sur le site officiel.",
-        raw_html: html.slice(0, 5000),
-        source_url: url,
-      };
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Erreur inconnue";
-      return { ok: false as const, error: `Impossible de contacter le site officiel: ${msg}` };
+      return { ok: true as const, eligible, raw_html: html.slice(0, 5000), source_url: url };
+    } catch {
+      return { ok: false as const, error: "site_injoignable" as CheckTvaErreur, source_url: url };
     }
   });

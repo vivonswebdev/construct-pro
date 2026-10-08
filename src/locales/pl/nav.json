@@ -1,0 +1,28 @@
+{
+  "activeModules": "Aktywne moduły",
+  "comingSoon": "Wkrótce dostępne",
+  "soon": "Wkrótce",
+  "comingSoonText": "Ten moduł będzie dostępny w następnej aktualizacji.",
+  "signOut": "Wyloguj się",
+  "language": "Język interfejsu",
+  "items": {
+    "dashboard": "Pulpit",
+    "chantiers": "Budowy",
+    "clients": "Klienci",
+    "personnel": "Pracownicy",
+    "vehicules": "Pojazdy",
+    "stock": "Magazyn",
+    "devis": "Oferty",
+    "tva": "Zgodność VAT",
+    "precompte": "Zaliczka na podatek & ONSS",
+    "assistant": "Asystent AI",
+    "profil": "Mój profil",
+    "belcotax": "Belcotax",
+    "peppol": "Fakturowanie (Peppol)"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "gerant": "Kierownik",
+    "ouvrier": "Pracownik"
+  }
+}

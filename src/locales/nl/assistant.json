@@ -1,0 +1,24 @@
+{
+  "title": "AI-assistent",
+  "subtitle": "Analyseert uw werven, offertes en Belgische verplichtingen in realtime.",
+  "intro": "Stel een vraag over uw gegevens. De assistent kent uw werven, personeel, wagenpark, offertes en voorraad.",
+  "suggestions": {
+    "budget": "Welke werven dreigen hun budget te overschrijden?",
+    "quotes": "Welke offertes staan nog open en welke moet ik opvolgen?",
+    "fleet": "Vat de toestand van mijn wagenpark en de komende keuringen samen.",
+    "deadlines": "Wat zijn mijn vervaldagen voor bedrijfsvoorheffing en RSZ deze maand?"
+  },
+  "thinking": "Uw gegevens worden geanalyseerd…",
+  "placeholder": "Stel uw vraag…",
+  "send": "Versturen",
+  "disclaimer": "Indicatieve antwoorden — laat elke fiscale verplichting bevestigen door uw boekhouder.",
+  "emptyAnswer": "(leeg antwoord)",
+  "errors": {
+    "trop_de_requetes": "Te veel aanvragen, probeer het zo dadelijk opnieuw.",
+    "credits_epuises": "AI-tegoed opgebruikt.",
+    "erreur_ia": "Fout van de AI-dienst (code {{status}}).",
+    "cle_manquante": "Assistent niet beschikbaar (AI-sleutel ontbreekt).",
+    "injoignable": "Assistent niet bereikbaar. Probeer het later opnieuw.",
+    "generic": "Er is een fout opgetreden. Probeer het opnieuw."
+  }
+}

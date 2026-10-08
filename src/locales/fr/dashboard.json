@@ -1,0 +1,52 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Vue d'ensemble de votre activité",
+  "kpi": {
+    "ca": "CA total",
+    "caSub_one": "Budget cumulé de {{count}} chantier",
+    "caSub_other": "Budget cumulé de {{count}} chantiers",
+    "profit": "Bénéfice total",
+    "marginPositive": "Marge positive",
+    "marginNegative": "Marge négative",
+    "activeSites": "Chantiers actifs",
+    "lateCount_one": "{{count}} en retard",
+    "lateCount_other": "{{count}} en retard",
+    "activeWorkers": "Ouvriers actifs",
+    "unassignedCount_one": "{{count}} sans affectation",
+    "unassignedCount_other": "{{count}} sans affectation",
+    "pendingQuotes": "Devis en attente",
+    "acceptRate": "Taux d'acceptation",
+    "acceptRateSub": "{{accepted}} accepté(s) / {{decided}} décidé(s)"
+  },
+  "chart": {
+    "title": "Évolution financière",
+    "subtitle": "CA vs coûts — 6 derniers mois",
+    "revenue": "CA",
+    "costs": "Coûts"
+  },
+  "top": {
+    "title": "Top 5 — Rentabilité",
+    "subtitle": "Chantiers les plus rentables",
+    "empty": "Aucun chantier pour le moment."
+  },
+  "alerts": {
+    "title": "Alertes & actions requises",
+    "lateSites_one": "{{count}} chantier en retard",
+    "lateSites_other": "{{count}} chantiers en retard",
+    "noLate": "Aucun retard 🎉",
+    "unassigned_one": "{{count}} ouvrier sans affectation",
+    "unassigned_other": "{{count}} ouvriers sans affectation",
+    "allAssigned": "Tous affectés",
+    "unpaidSalaries_one": "{{count}} salaire non payé ce mois",
+    "unpaidSalaries_other": "{{count}} salaires non payés ce mois",
+    "unpaidSalariesText": "Voir le module Précompte & ONSS pour régulariser",
+    "precompteDue": "Précompte dû avant le {{date}}",
+    "precompteDueText": "{{amount}} à verser au SPF Finances",
+    "onssDue": "ONSS T{{quarter}} dû avant le {{date}}",
+    "onssDueText": "{{amount}} à verser à l'ONSS",
+    "ctExpired_one": "🚛 {{count}} véhicule avec CT expiré",
+    "ctExpired_other": "🚛 {{count}} véhicules avec CT expiré",
+    "insuranceSoon": "⚠️ Assurance véhicule à renouveler",
+    "insuranceSoonItem": "{{plate}} ({{days}} j)"
+  }
+}
