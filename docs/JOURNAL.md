@@ -4,6 +4,67 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-06 — Phase 9 : migration préparée (non appliquée)
+
+Branche : `phase-09-sous-traitants` (préparée pendant que la phase 1 est terminée par Youssef).
+
+- Migration `20261006120000_phase9_sous_traitants.sql` : `sous_traitants`, `parametres_30bis`
+  (taux de retenue datés, globaux, indicatifs 35 % / 15 %), `verifications_30bis` (preuve datée,
+  **ni modifiable ni supprimable**), `sous_traitant_contrats`, `sous_traitant_prestations`,
+  `achat_paiements` (liés au contrat ; `achat_id` ajouté en phase 12).
+- Règles en base (trigger) : paiement refusé sans vérification 30bis **du jour** et **du même
+  sous-traitant** ; si dette, retenue exacte exigée (taux en vigueur à la date du paiement) ;
+  `montant_verse` calculé (colonne générée).
+- Isolation entre sociétés : RLS + clés étrangères composites `(id, company_id)` — impossible de
+  rattacher un contrat au chantier d'une autre société, même en connaissant son identifiant.
+- Formes juridiques en codes (`srl`, `sa`, `sc`, `scomm`, `independant`, `autre`) ; « sprl » refusé.
+- **Testé** sur PostgreSQL en mémoire (PGlite) : les 13 migrations du dépôt rejouées sur base vide,
+  13 tests OK (30bis, contraintes, RLS, FK composites), rollback vérifié puis migration rejouée.
+  Script : `supabase/tests/phase9_sous_traitants.check.ts` (prérequis : `bun add -d @electric-sql/pglite`).
+- Pas encore fait (à la reprise de la phase 9) : `types.ts`, `documents_conformite` et checklists,
+  écrans, i18n, données de démo.
+- Corrections du 06/10 (soir) : un sous-traitant ayant une vérification 30bis ne peut plus être
+  supprimé (la suppression en cascade aurait effacé la preuve) → statut « bloque » ;
+  `company_settings.duree_conservation_ouvriers_ans` (défaut 10, à confirmer). 15 tests OK.
+- Question ouverte : plafond éventuel de la retenue au montant de la dette. Rappel : la base de
+  calcul est le montant HTVA **du paiement** (35 % / 15 % de la facture), pas la dette.
+
+---
+
+## 2026-10-06 — Compléments de périmètre (PASSATION §10.6)
+
+- Schémas reçus intégrés aux phases 9, 12, 13 et à l'annexe A : `sous_traitant_contrats`,
+  `sous_traitant_prestations`, liens achats ↔ sous-traitance (`achat_prestations`,
+  `achat_paiements`), `livre_caisse`, enrichissement de `equipements` pour l'inventaire.
+- Corrections principales : 30bis vérifié et daté **à chaque paiement** (pas un booléen sur la
+  fiche) ; chantier obligatoire seulement pour la sous-traitance ; solde de caisse calculé, jamais
+  stocké ; pas de tables `inventaire_*` séparées (double saisie) ; rien côté factures de vente
+  (hors périmètre) ; prix « % du CA » remplacé par « unitaire ».
+- Nouveaux CA : solde de caisse exact après correction ; paiement de sous-traitance refusé sans
+  vérification 30bis du jour.
+
+---
+
+## 2026-09-29 — Mise à jour du périmètre (PASSATION §10)
+
+- Proposition externe examinée (sous-traitants, associés actifs « loi 2027 », frais de restaurant,
+  inventaire). Schéma proposé non retenu tel quel (tables en anglais, `projects`/`users`/
+  `user_companies` inexistants, « SPRL », TVA restaurant « 50 % déductible »).
+- **Retenu** : phase 9 + contrats et journal de prestations des sous-traitants (factures via la
+  phase 12) ; phase 12 + catégorie « Frais de restaurant » ; phase 13 + export « Inventaire à date »
+  sans amortissements. Taux restaurant indicatifs (69 % impôt, TVA 0 %) en table de paramètres.
+- **En attente** : feuilles de temps des associés actifs, tant qu'aucune source officielle n'est
+  fournie. NISS non stocké sauf obligation légale.
+- Corrections apportées à la note reçue :
+  - RLS via `get_user_company_id()` (pas de table `user_companies`) ;
+  - forme juridique de la société dans `companies`, pas dans `company_settings` ;
+  - **pas de section `-- migrate:down` exécutable** : Supabase/Lovable exécutent le fichier entier,
+    le retour arrière serait appliqué aussitôt. Convention : bloc `-- ROLLBACK` entièrement
+    commenté en fin de migration (appliquée à la migration de phase 1).
+- Ordre des phases maintenu ; phases 9 et 12 avançables après la phase 3.
+
+---
+
 ## 2026-09-24 (nuit) — Migrations phase 0 appliquées, nettoyage
 
 Branche : `phase-00-suivi`.

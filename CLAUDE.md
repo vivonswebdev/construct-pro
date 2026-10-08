@@ -24,6 +24,11 @@ Langue de travail : **français**.
 
 - Tout changement de schéma = **nouvelle** migration dans `supabase/migrations/`
   (`AAAAMMJJHHMMSS_description.sql`). Ne jamais modifier une migration existante.
+- Retour arrière : bloc SQL **entièrement commenté** en fin de fichier (`-- ROLLBACK :` puis chaque
+  ligne préfixée `--`). Jamais de section `-- migrate:down` exécutable : Supabase/Lovable exécutent
+  le fichier en entier.
+- Lovable ne voit que `main` et **recopie** sous un autre nom les migrations qu'on lui fait exécuter :
+  après exécution, supprimer l'original s'il fait doublon avec la copie.
 - Chaque table : `company_id` (FK `companies`, `ON DELETE CASCADE`), RLS activée, 4 policies
   select/insert/update/delete sur `company_id = public.get_user_company_id(auth.uid())`, index sur
   `company_id` et les clés étrangères.
