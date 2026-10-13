@@ -27,7 +27,8 @@
       "amount": "Introduceți o sumă pozitivă",
       "delay": "Termen de plată între 0 și 365 de zile",
       "dates": "Data de sfârșit trebuie să fie după data de început"
-    }
+    },
+    "editTitle": "Modifică contractul"
   },
   "send": {
     "title": "Trimite contractul spre semnare",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contract creat",
-    "cancelled": "Cerere anulată"
+    "cancelled": "Cerere anulată",
+    "contractUpdated": "Contract actualizat"
   },
   "sign": {
     "title": "Contract de subcontractare de semnat",

@@ -16,6 +16,8 @@ export type Database = {
     Tables: {
       achat_paiements: {
         Row: {
+          annule_le: string | null
+          annule_par: string | null
           company_id: string
           contrat_id: string
           created_at: string
@@ -26,6 +28,7 @@ export type Database = {
           montant_ht: number
           montant_tva: number
           montant_verse: number | null
+          motif_annulation: string | null
           preuve_fichier: string | null
           reference: string | null
           retenue_onss: number
@@ -33,6 +36,8 @@ export type Database = {
           verification_30bis_id: string | null
         }
         Insert: {
+          annule_le?: string | null
+          annule_par?: string | null
           company_id: string
           contrat_id: string
           created_at?: string
@@ -43,6 +48,7 @@ export type Database = {
           montant_ht: number
           montant_tva?: number
           montant_verse?: never
+          motif_annulation?: string | null
           preuve_fichier?: string | null
           reference?: string | null
           retenue_onss?: number
@@ -50,6 +56,8 @@ export type Database = {
           verification_30bis_id?: string | null
         }
         Update: {
+          annule_le?: string | null
+          annule_par?: string | null
           company_id?: string
           contrat_id?: string
           created_at?: string
@@ -60,6 +68,7 @@ export type Database = {
           montant_ht?: number
           montant_tva?: number
           montant_verse?: never
+          motif_annulation?: string | null
           preuve_fichier?: string | null
           reference?: string | null
           retenue_onss?: number
@@ -67,6 +76,13 @@ export type Database = {
           verification_30bis_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "achat_paiements_annule_par_fkey"
+            columns: ["annule_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "achat_paiements_company_id_fkey"
             columns: ["company_id"]
@@ -1473,6 +1489,8 @@ export type Database = {
           dette_fiscale: boolean
           dette_sociale: boolean
           id: string
+          montant_dette_onss: number | null
+          montant_dette_spf: number | null
           notes: string | null
           preuve_fichier: string | null
           source_url: string | null
@@ -1486,6 +1504,8 @@ export type Database = {
           dette_fiscale: boolean
           dette_sociale: boolean
           id?: string
+          montant_dette_onss?: number | null
+          montant_dette_spf?: number | null
           notes?: string | null
           preuve_fichier?: string | null
           source_url?: string | null
@@ -1499,6 +1519,8 @@ export type Database = {
           dette_fiscale?: boolean
           dette_sociale?: boolean
           id?: string
+          montant_dette_onss?: number | null
+          montant_dette_spf?: number | null
           notes?: string | null
           preuve_fichier?: string | null
           source_url?: string | null
@@ -1537,6 +1559,7 @@ export type Database = {
     Functions: {
       contrat_a_signer: { Args: { _token: string }; Returns: Json }
       dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined }
+      est_gestionnaire: { Args: never; Returns: boolean }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       seed_lock: { Args: { _company_id: string }; Returns: string }
       signer_contrat: {

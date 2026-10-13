@@ -4,6 +4,56 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-14 — Phase 9, PR B : contrats, prestations, paiements, retenue plafonnée
+
+Branche : `phase-09-paiements`. Règles validées par Youssef le 14/10 (plan :
+`docs/plans/phase-09-suite.md`).
+
+### Migration `20261014090000_phase9_paiements_plafond.sql` (idempotente, rollback commenté)
+
+- `verifications_30bis` + `montant_dette_onss`, `montant_dette_spf` : dettes affichées par le
+  service officiel, saisies à chaque vérification (contrainte : pas de montant sans dette).
+- `check_paiement_30bis` remplacé : retenue par type = min(HTVA × taux, dette du type − retenues
+  du même type déjà appliquées sur les paiements non annulés liés à la même vérification). Dette
+  non saisie (anciennes vérifications) = retenue pleine. Verrou par vérification (paiements
+  simultanés). Le total retenu reste ≤ montant du paiement (CHECK `montant_verse >= 0`).
+- `achat_paiements` + `annule_le`, `annule_par`, `motif_annulation` ; garde : suppression le jour
+  même uniquement ; ensuite annulation avec motif (auteur et date imposés, rien d'autre ne
+  change, ligne figée et conservée) ; modification interdite après le jour de saisie ; une
+  annulation ne peut pas être pré-remplie à l'insertion.
+- Contrat dont une demande de signature est signée : non modifiable.
+- `est_gestionnaire()` (rôles `admin`, `gerant`) ; validation d'une prestation réservée aux
+  gestionnaires, auteur et date imposés.
+
+### Écrans (fiche sous-traitant)
+
+- Vérification : montants de dette ONSS / SPF (obligatoires si dette cochée), affichés dans
+  l'historique.
+- Contrats : modification tant que non signé ; payé / reste à payer (forfait).
+- Journal des prestations : date, heures, description, ouvriers (nom, fonction, heures),
+  Checkinatwork ; validation par admin / gérant ; suppression tant que non validée.
+- Paiement : vérification du jour obligatoire (« Vérifier maintenant » sans quitter le
+  formulaire) ; retenues ONSS / SPF calculées et plafonnées, montant à verser au sous-traitant,
+  à l'ONSS, au SPF ; erreurs de la base traduites. Liste : suppression le jour même, annulation
+  avec motif ensuite (ligne barrée, motif visible) ; KPI hors paiements annulés.
+- Démo : Nowak, dette ONSS 3 000 € → retenue plafonnée (au lieu de 4 900 €).
+
+### Tests
+
+- PGlite `supabase/tests/phase9_paiements.check.ts` : 21 OK (dont migration rejouée deux fois,
+  plafond ONSS / SPF, plafond partagé entre deux paiements, annulation qui libère le plafond,
+  gardes, contrat signé, validation par rôle), avec les droits par défaut de Supabase simulés.
+- Parité JS / SQL du calcul plafonné : 2 000 cas aléatoires, 0 écart.
+- Contrôle en lecture seule : `supabase/tests/controle_paiements_plafond.sql`.
+- Non testé connecté (identifiants requis).
+
+### Reste à faire
+
+- Prestations visibles aussi sur la fiche chantier.
+- PR C (captures), PR D (conformité, blocage d'affectation).
+
+---
+
 ## 2026-10-14 — Phase 9, PR A : taux 30bis paramétrés (sans migration)
 
 Branche : `phase-09-taux-30bis`.

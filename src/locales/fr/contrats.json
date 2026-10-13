@@ -27,7 +27,8 @@
       "amount": "Indiquez un montant positif",
       "delay": "Délai de paiement entre 0 et 365 jours",
       "dates": "La date de fin doit suivre la date de début"
-    }
+    },
+    "editTitle": "Modifier le contrat"
   },
   "send": {
     "title": "Envoyer le contrat à signer",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contrat créé",
-    "cancelled": "Demande annulée"
+    "cancelled": "Demande annulée",
+    "contractUpdated": "Contrat mis à jour"
   },
   "sign": {
     "title": "Contrat de sous-traitance à signer",

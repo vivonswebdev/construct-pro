@@ -56,7 +56,12 @@
     "created": "Sous-traitant créé",
     "updated": "Sous-traitant mis à jour",
     "verificationSaved": "Vérification enregistrée",
-    "demoLoaded": "Sous-traitants de démonstration ajoutés"
+    "demoLoaded": "Sous-traitants de démonstration ajoutés",
+    "paymentSaved": "Paiement enregistré",
+    "paymentDeleted": "Paiement supprimé",
+    "paymentCancelled": "Paiement annulé",
+    "prestationValidated": "Prestation validée",
+    "prestationSaved": "Prestation enregistrée"
   },
   "detail": {
     "info": "Informations",
@@ -72,7 +77,8 @@
     "block": "Bloquer",
     "unblock": "Débloquer",
     "confirmDelete": "Supprimer ce sous-traitant et ses contrats ?",
-    "deleteBlocked": "Suppression impossible : des vérifications 30bis, des paiements ou des contrats signés sont enregistrés (preuves à conserver). Bloquez plutôt ce sous-traitant."
+    "deleteBlocked": "Suppression impossible : des vérifications 30bis, des paiements ou des contrats signés sont enregistrés (preuves à conserver). Bloquez plutôt ce sous-traitant.",
+    "paidOnContract": "Payé (HTVA) : {{paid}} · reste : {{remaining}}"
   },
   "verification": {
     "title": "Dettes sociales et fiscales (30bis)",
@@ -93,13 +99,90 @@
     "socialDebtFound": "Dette sociale constatée (ONSS)",
     "taxDebtFound": "Dette fiscale constatée (SPF Finances)",
     "notes": "Notes",
-    "proofLater": "Le dépôt de la capture d'écran du résultat sera ajouté prochainement."
+    "proofLater": "Le dépôt de la capture d'écran du résultat sera ajouté prochainement.",
+    "socialDebtAmount": "Dette ONSS affichée par le service officiel (€)",
+    "taxDebtAmount": "Dette SPF Finances affichée par le service officiel (€)",
+    "socialDebtShown": "Dette ONSS : {{amount}}",
+    "taxDebtShown": "Dette SPF : {{amount}}",
+    "validation": {
+      "debtAmount": "Indiquez le montant de chaque dette constatée (0 ou plus)."
+    }
   },
   "payments": {
     "date": "Date",
     "contract": "Contrat",
     "net": "Montant HTVA",
     "withheld": "Retenues",
-    "paid": "Versé"
+    "paid": "Versé",
+    "new": "Nouveau paiement",
+    "save": "Enregistrer le paiement",
+    "mode": "Mode de paiement",
+    "amountExclVat": "Montant HTVA",
+    "vat": "TVA",
+    "vatHint": "0 en cas d'autoliquidation (cocontractant).",
+    "reference": "Référence (facture, communication)",
+    "verifOk": "Vérification 30bis du jour : aucune dette. Aucune retenue.",
+    "verifDebt": "Vérification 30bis du jour : dette constatée. Retenue calculée ci-dessous.",
+    "verifMissing": "Aucune vérification 30bis aujourd'hui : elle est obligatoire avant chaque versement.",
+    "verifMissingPast": "Aucune vérification 30bis à cette date : le paiement ne peut pas être enregistré.",
+    "verifyNow": "Vérifier maintenant",
+    "withheldOnss": "Retenue ONSS (30bis)",
+    "withheldSpf": "Retenue SPF Finances (402 CIR)",
+    "capped": "Plafonnée à la dette restante : {{amount}}",
+    "toSubcontractor": "À verser au sous-traitant",
+    "toOnss": "{{amount}} à verser à l'ONSS.",
+    "toSpf": "{{amount}} à verser au SPF Finances.",
+    "blockedWarning": "Ce sous-traitant est bloqué. Vérifiez la situation avant de le payer.",
+    "needContract": "Créez d'abord un contrat.",
+    "confirmDelete": "Supprimer ce paiement saisi aujourd'hui ?",
+    "delete": "Supprimer (le jour même)",
+    "cancel": "Annuler le paiement",
+    "cancelReason": "Motif de l'annulation (conservé dans la piste d'audit) :",
+    "cancelledOn": "Annulé le {{date}} — {{reason}}",
+    "auditHint": "Un paiement se supprime le jour même ; ensuite, il s'annule avec un motif et reste visible.",
+    "validation": {
+      "contract": "Choisissez un contrat.",
+      "futureDate": "La date de paiement ne peut pas être dans le futur.",
+      "amount": "Indiquez un montant HTVA positif.",
+      "vat": "La TVA ne peut pas être négative."
+    },
+    "errors": {
+      "verification_30bis_requise": "Une vérification 30bis est requise pour enregistrer un paiement.",
+      "verification_30bis_autre_sous_traitant": "La vérification choisie concerne un autre sous-traitant.",
+      "verification_30bis_pas_du_jour": "Aucune vérification 30bis datée du jour du paiement : vérifiez d'abord les dettes.",
+      "parametres_30bis_absents": "Taux de retenue indisponibles pour cette date.",
+      "retenue_30bis_incorrecte": "Les retenues ne correspondent pas au calcul attendu : rechargez la page et recommencez.",
+      "suppression_paiement_jour_meme": "Un paiement ne peut être supprimé que le jour de sa saisie. Annulez-le plutôt.",
+      "modification_paiement_interdite": "Un paiement ne peut plus être modifié après le jour de sa saisie. Annulez-le puis saisissez-le à nouveau.",
+      "paiement_annule_fige": "Ce paiement est annulé : il ne peut plus être modifié.",
+      "annulation_seulement": "Lors d'une annulation, aucune autre donnée du paiement ne peut changer.",
+      "motif_annulation_requis": "Indiquez le motif de l'annulation.",
+      "contrat_signe_non_modifiable": "Ce contrat est signé : il ne peut plus être modifié. Créez un nouveau contrat (avenant).",
+      "validation_reservee_gestionnaire": "Seuls un administrateur ou un gérant peuvent valider une prestation."
+    }
+  },
+  "prestations": {
+    "title": "Journal des prestations",
+    "new": "Nouvelle prestation",
+    "empty": "Aucune prestation enregistrée.",
+    "hours_one": "{{count}} heure",
+    "hours_other": "{{count}} heures",
+    "checkinRecorded": "Checkinatwork enregistré",
+    "validatedOn": "Validée le {{date}}",
+    "validate": "Valider",
+    "confirmDelete": "Supprimer cette prestation ?",
+    "totalHours": "Heures (total)",
+    "description": "Description des travaux",
+    "workers": "Ouvriers présents",
+    "workerName": "Nom",
+    "workerRole": "Fonction",
+    "workerHours": "Heures",
+    "addWorker": "Ajouter un ouvrier",
+    "gdprHint": "Noms conservés comme preuve de prestation uniquement (RGPD).",
+    "checkin": "Présences enregistrées dans Checkinatwork",
+    "validation": {
+      "workerName": "Indiquez le nom de chaque ouvrier.",
+      "hours": "Nombre d'heures invalide."
+    }
   }
 }

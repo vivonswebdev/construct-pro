@@ -56,7 +56,12 @@
     "created": "Onderaannemer aangemaakt",
     "updated": "Onderaannemer bijgewerkt",
     "verificationSaved": "Controle geregistreerd",
-    "demoLoaded": "Demo-onderaannemers toegevoegd"
+    "demoLoaded": "Demo-onderaannemers toegevoegd",
+    "paymentSaved": "Betaling geregistreerd",
+    "paymentDeleted": "Betaling verwijderd",
+    "paymentCancelled": "Betaling geannuleerd",
+    "prestationValidated": "Prestatie gevalideerd",
+    "prestationSaved": "Prestatie geregistreerd"
   },
   "detail": {
     "info": "Gegevens",
@@ -72,7 +77,8 @@
     "block": "Blokkeren",
     "unblock": "Deblokkeren",
     "confirmDelete": "Deze onderaannemer en zijn contracten verwijderen?",
-    "deleteBlocked": "Verwijderen niet mogelijk: er zijn 30bis-controles, betalingen of ondertekende contracten geregistreerd (te bewaren bewijzen). Blokkeer deze onderaannemer in de plaats."
+    "deleteBlocked": "Verwijderen niet mogelijk: er zijn 30bis-controles, betalingen of ondertekende contracten geregistreerd (te bewaren bewijzen). Blokkeer deze onderaannemer in de plaats.",
+    "paidOnContract": "Betaald (excl. btw): {{paid}} · resterend: {{remaining}}"
   },
   "verification": {
     "title": "Sociale en fiscale schulden (30bis)",
@@ -93,13 +99,90 @@
     "socialDebtFound": "Sociale schuld vastgesteld (RSZ)",
     "taxDebtFound": "Fiscale schuld vastgesteld (FOD Financiën)",
     "notes": "Notities",
-    "proofLater": "Het opladen van een schermafdruk van het resultaat volgt binnenkort."
+    "proofLater": "Het opladen van een schermafdruk van het resultaat volgt binnenkort.",
+    "socialDebtAmount": "RSZ-schuld getoond door de officiële dienst (€)",
+    "taxDebtAmount": "Schuld FOD Financiën getoond door de officiële dienst (€)",
+    "socialDebtShown": "RSZ-schuld: {{amount}}",
+    "taxDebtShown": "Fiscale schuld: {{amount}}",
+    "validation": {
+      "debtAmount": "Geef het bedrag van elke vastgestelde schuld op (0 of meer)."
+    }
   },
   "payments": {
     "date": "Datum",
     "contract": "Contract",
     "net": "Bedrag excl. btw",
     "withheld": "Inhoudingen",
-    "paid": "Betaald"
+    "paid": "Betaald",
+    "new": "Nieuwe betaling",
+    "save": "Betaling registreren",
+    "mode": "Betaalwijze",
+    "amountExclVat": "Bedrag excl. btw",
+    "vat": "Btw",
+    "vatHint": "0 bij verlegging (medecontractant).",
+    "reference": "Referentie (factuur, mededeling)",
+    "verifOk": "30bis-controle van vandaag: geen schulden. Geen inhouding.",
+    "verifDebt": "30bis-controle van vandaag: schuld vastgesteld. Inhouding hieronder berekend.",
+    "verifMissing": "Vandaag geen 30bis-controle: die is verplicht vóór elke betaling.",
+    "verifMissingPast": "Geen 30bis-controle op deze datum: de betaling kan niet worden geregistreerd.",
+    "verifyNow": "Nu controleren",
+    "withheldOnss": "Inhouding RSZ (30bis)",
+    "withheldSpf": "Inhouding FOD Financiën (402 WIB)",
+    "capped": "Beperkt tot de resterende schuld: {{amount}}",
+    "toSubcontractor": "Te betalen aan de onderaannemer",
+    "toOnss": "{{amount}} door te storten aan de RSZ.",
+    "toSpf": "{{amount}} door te storten aan de FOD Financiën.",
+    "blockedWarning": "Deze onderaannemer is geblokkeerd. Controleer de situatie vóór betaling.",
+    "needContract": "Maak eerst een contract aan.",
+    "confirmDelete": "Deze vandaag ingevoerde betaling verwijderen?",
+    "delete": "Verwijderen (dezelfde dag)",
+    "cancel": "Betaling annuleren",
+    "cancelReason": "Reden van annulering (bewaard in het auditspoor):",
+    "cancelledOn": "Geannuleerd op {{date}} — {{reason}}",
+    "auditHint": "Een betaling wordt op dezelfde dag verwijderd; daarna wordt ze geannuleerd met een reden en blijft ze zichtbaar.",
+    "validation": {
+      "contract": "Kies een contract.",
+      "futureDate": "De betalingsdatum mag niet in de toekomst liggen.",
+      "amount": "Geef een positief bedrag excl. btw op.",
+      "vat": "De btw mag niet negatief zijn."
+    },
+    "errors": {
+      "verification_30bis_requise": "Een 30bis-controle is vereist om een betaling te registreren.",
+      "verification_30bis_autre_sous_traitant": "De gekozen controle betreft een andere onderaannemer.",
+      "verification_30bis_pas_du_jour": "Geen 30bis-controle van de betalingsdag: controleer eerst de schulden.",
+      "parametres_30bis_absents": "Inhoudingspercentages niet beschikbaar voor deze datum.",
+      "retenue_30bis_incorrecte": "De inhoudingen komen niet overeen met de verwachte berekening: herlaad de pagina en probeer opnieuw.",
+      "suppression_paiement_jour_meme": "Een betaling kan enkel worden verwijderd op de dag van invoer. Annuleer ze in de plaats.",
+      "modification_paiement_interdite": "Een betaling kan na de dag van invoer niet meer worden gewijzigd. Annuleer ze en voer ze opnieuw in.",
+      "paiement_annule_fige": "Deze betaling is geannuleerd: ze kan niet meer worden gewijzigd.",
+      "annulation_seulement": "Bij een annulering mag geen enkel ander gegeven van de betaling wijzigen.",
+      "motif_annulation_requis": "Geef de reden van de annulering op.",
+      "contrat_signe_non_modifiable": "Dit contract is ondertekend: het kan niet meer worden gewijzigd. Maak een nieuw contract (aanhangsel).",
+      "validation_reservee_gestionnaire": "Enkel een beheerder of zaakvoerder kan een prestatie valideren."
+    }
+  },
+  "prestations": {
+    "title": "Prestatielogboek",
+    "new": "Nieuwe prestatie",
+    "empty": "Geen prestaties geregistreerd.",
+    "hours_one": "{{count}} uur",
+    "hours_other": "{{count}} uur",
+    "checkinRecorded": "Checkinatwork geregistreerd",
+    "validatedOn": "Gevalideerd op {{date}}",
+    "validate": "Valideren",
+    "confirmDelete": "Deze prestatie verwijderen?",
+    "totalHours": "Uren (totaal)",
+    "description": "Omschrijving van de werken",
+    "workers": "Aanwezige arbeiders",
+    "workerName": "Naam",
+    "workerRole": "Functie",
+    "workerHours": "Uren",
+    "addWorker": "Arbeider toevoegen",
+    "gdprHint": "Namen enkel bewaard als bewijs van prestatie (AVG).",
+    "checkin": "Aanwezigheden geregistreerd in Checkinatwork",
+    "validation": {
+      "workerName": "Geef de naam van elke arbeider op.",
+      "hours": "Ongeldig aantal uren."
+    }
   }
 }

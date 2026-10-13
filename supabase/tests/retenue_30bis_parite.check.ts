@@ -5,7 +5,12 @@
 // Lancer : bun supabase/tests/retenue_30bis_parite.check.ts
 
 import { PGlite } from "@electric-sql/pglite";
-import { calculerRetenues, produitArrondiCent, tauxEnVigueur } from "../../src/lib/retenue-30bis";
+import {
+  calculerRetenues,
+  calculerRetenuesPlafonnees,
+  produitArrondiCent,
+  tauxEnVigueur,
+} from "../../src/lib/retenue-30bis";
 
 const db = new PGlite();
 let fails = 0;
@@ -63,6 +68,54 @@ const lignes = [
 ok(tauxEnVigueur(lignes, "2026-10-13")?.source === "a", "taux en vigueur avant changement");
 ok(tauxEnVigueur(lignes, "2027-01-01")?.source === "b", "taux en vigueur le jour du changement");
 ok(tauxEnVigueur(lignes, "1999-12-31") === null, "aucun taux avant la première date");
+
+// Plafond (PR B) : même formule que le trigger, sur des cas aléatoires.
+let ecartsPlafond = 0;
+const cas = Array.from({ length: 2000 }, () => ({
+  m: Math.round(Math.random() * 5_000_000) / 100,
+  d: Math.round(Math.random() * 2_000_000) / 100,
+  deja: Math.round(Math.random() * 1_000_000) / 100,
+}));
+const { rows: plaf } = await db.query<{ i: number; r: string }>(
+  `SELECT i, least(round(c.m * 0.35, 2), greatest(c.d - c.deja, 0))::text AS r
+   FROM ROWS FROM (jsonb_to_recordset($1::jsonb) AS (m numeric, d numeric, deja numeric)) WITH ORDINALITY AS c(m, d, deja, i)
+   ORDER BY i`,
+  [JSON.stringify(cas)],
+);
+plaf.forEach((row, k) => {
+  const c = cas[k];
+  const js = calculerRetenuesPlafonnees({
+    montantHt: c.m,
+    verification: {
+      dette_sociale: true,
+      dette_fiscale: false,
+      montant_dette_onss: c.d,
+      montant_dette_spf: null,
+    },
+    dejaRetenu: { onss: c.deja, spf: 0 },
+    taux: p,
+  }).onss;
+  if (js !== Number(row.r)) {
+    if (ecartsPlafond++ < 5)
+      console.log(`  écart plafond : ${JSON.stringify(c)} → SQL ${row.r}, JS ${js}`);
+  }
+});
+ok(ecartsPlafond === 0, `plafond identique au trigger (${cas.length} cas)`);
+const pl = calculerRetenuesPlafonnees({
+  montantHt: 14000,
+  verification: {
+    dette_sociale: true,
+    dette_fiscale: true,
+    montant_dette_onss: 3000,
+    montant_dette_spf: null,
+  },
+  dejaRetenu: { onss: 0, spf: 0 },
+  taux: p,
+});
+ok(
+  pl.onss === 3000 && pl.plafondOnss && pl.spf === 2100 && !pl.plafondSpf,
+  "14 000 € : ONSS plafonnée à 3 000 €, SPF pleine (dette SPF non saisie)",
+);
 
 console.log(fails ? `\n✖ ${fails} échec(s)` : "\n✓ tous les tests passent");
 process.exit(fails ? 1 : 0);

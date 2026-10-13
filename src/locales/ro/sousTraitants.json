@@ -58,7 +58,12 @@
     "created": "Subcontractor creat",
     "updated": "Subcontractor actualizat",
     "verificationSaved": "Verificare înregistrată",
-    "demoLoaded": "Subcontractori demonstrativi adăugați"
+    "demoLoaded": "Subcontractori demonstrativi adăugați",
+    "paymentSaved": "Plată înregistrată",
+    "paymentDeleted": "Plată ștearsă",
+    "paymentCancelled": "Plată anulată",
+    "prestationValidated": "Prestație validată",
+    "prestationSaved": "Prestație înregistrată"
   },
   "detail": {
     "info": "Informații",
@@ -75,7 +80,8 @@
     "block": "Blochează",
     "unblock": "Deblochează",
     "confirmDelete": "Ștergeți acest subcontractor și contractele sale?",
-    "deleteBlocked": "Ștergere imposibilă: există verificări 30bis, plăți sau contracte semnate înregistrate (dovezi de păstrat). Blocați mai degrabă acest subcontractor."
+    "deleteBlocked": "Ștergere imposibilă: există verificări 30bis, plăți sau contracte semnate înregistrate (dovezi de păstrat). Blocați mai degrabă acest subcontractor.",
+    "paidOnContract": "Plătit (fără TVA): {{paid}} · rest: {{remaining}}"
   },
   "verification": {
     "title": "Datorii sociale și fiscale (30bis)",
@@ -96,13 +102,91 @@
     "socialDebtFound": "Datorie socială constatată (ONSS)",
     "taxDebtFound": "Datorie fiscală constatată (SPF Finanțe)",
     "notes": "Note",
-    "proofLater": "Încărcarea unei capturi de ecran a rezultatului va fi adăugată în curând."
+    "proofLater": "Încărcarea unei capturi de ecran a rezultatului va fi adăugată în curând.",
+    "socialDebtAmount": "Datoria ONSS afișată de serviciul oficial (€)",
+    "taxDebtAmount": "Datoria SPF Finanțe afișată de serviciul oficial (€)",
+    "socialDebtShown": "Datorie ONSS: {{amount}}",
+    "taxDebtShown": "Datorie SPF: {{amount}}",
+    "validation": {
+      "debtAmount": "Introduceți suma fiecărei datorii constatate (0 sau mai mult)."
+    }
   },
   "payments": {
     "date": "Data",
     "contract": "Contract",
     "net": "Sumă fără TVA",
     "withheld": "Rețineri",
-    "paid": "Plătit"
+    "paid": "Plătit",
+    "new": "Plată nouă",
+    "save": "Înregistrează plata",
+    "mode": "Mod de plată",
+    "amountExclVat": "Sumă fără TVA",
+    "vat": "TVA",
+    "vatHint": "0 în caz de taxare inversă.",
+    "reference": "Referință (factură, comunicare)",
+    "verifOk": "Verificarea 30bis de azi: nicio datorie. Nicio reținere.",
+    "verifDebt": "Verificarea 30bis de azi: datorie constatată. Reținerea este calculată mai jos.",
+    "verifMissing": "Nicio verificare 30bis azi: este obligatorie înainte de fiecare plată.",
+    "verifMissingPast": "Nicio verificare 30bis la această dată: plata nu poate fi înregistrată.",
+    "verifyNow": "Verifică acum",
+    "withheldOnss": "Reținere ONSS (30bis)",
+    "withheldSpf": "Reținere SPF Finanțe (402 CIR)",
+    "capped": "Plafonată la datoria rămasă: {{amount}}",
+    "toSubcontractor": "De plătit subcontractorului",
+    "toOnss": "{{amount}} de vărsat la ONSS.",
+    "toSpf": "{{amount}} de vărsat la SPF Finanțe.",
+    "blockedWarning": "Acest subcontractor este blocat. Verificați situația înainte de plată.",
+    "needContract": "Creați mai întâi un contract.",
+    "confirmDelete": "Ștergeți această plată introdusă astăzi?",
+    "delete": "Șterge (în aceeași zi)",
+    "cancel": "Anulează plata",
+    "cancelReason": "Motivul anulării (păstrat în pista de audit):",
+    "cancelledOn": "Anulată pe {{date}} — {{reason}}",
+    "auditHint": "O plată se poate șterge în aceeași zi; ulterior se anulează cu un motiv și rămâne vizibilă.",
+    "validation": {
+      "contract": "Alegeți un contract.",
+      "futureDate": "Data plății nu poate fi în viitor.",
+      "amount": "Introduceți o sumă pozitivă fără TVA.",
+      "vat": "TVA nu poate fi negativă."
+    },
+    "errors": {
+      "verification_30bis_requise": "Este necesară o verificare 30bis pentru a înregistra o plată.",
+      "verification_30bis_autre_sous_traitant": "Verificarea aleasă privește un alt subcontractor.",
+      "verification_30bis_pas_du_jour": "Nicio verificare 30bis din ziua plății: verificați mai întâi datoriile.",
+      "parametres_30bis_absents": "Cotele de reținere nu sunt disponibile pentru această dată.",
+      "retenue_30bis_incorrecte": "Reținerile nu corespund calculului așteptat: reîncărcați pagina și reîncercați.",
+      "suppression_paiement_jour_meme": "O plată poate fi ștearsă doar în ziua introducerii. Anulați-o în schimb.",
+      "modification_paiement_interdite": "O plată nu mai poate fi modificată după ziua introducerii. Anulați-o și introduceți-o din nou.",
+      "paiement_annule_fige": "Această plată este anulată: nu mai poate fi modificată.",
+      "annulation_seulement": "La anulare, nicio altă dată a plății nu poate fi modificată.",
+      "motif_annulation_requis": "Indicați motivul anulării.",
+      "contrat_signe_non_modifiable": "Acest contract este semnat: nu mai poate fi modificat. Creați un contract nou (act adițional).",
+      "validation_reservee_gestionnaire": "Doar un administrator sau un manager poate valida o prestație."
+    }
+  },
+  "prestations": {
+    "title": "Jurnalul prestațiilor",
+    "new": "Prestație nouă",
+    "empty": "Nicio prestație înregistrată.",
+    "hours_one": "{{count}} oră",
+    "hours_few": "{{count}} ore",
+    "hours_other": "{{count}} de ore",
+    "checkinRecorded": "Checkinatwork înregistrat",
+    "validatedOn": "Validată pe {{date}}",
+    "validate": "Validează",
+    "confirmDelete": "Ștergeți această prestație?",
+    "totalHours": "Ore (total)",
+    "description": "Descrierea lucrărilor",
+    "workers": "Muncitori prezenți",
+    "workerName": "Nume",
+    "workerRole": "Funcție",
+    "workerHours": "Ore",
+    "addWorker": "Adaugă un muncitor",
+    "gdprHint": "Nume păstrate doar ca dovadă a prestației (GDPR).",
+    "checkin": "Prezențe înregistrate în Checkinatwork",
+    "validation": {
+      "workerName": "Introduceți numele fiecărui muncitor.",
+      "hours": "Număr de ore invalid."
+    }
   }
 }
