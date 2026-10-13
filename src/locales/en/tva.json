@@ -44,7 +44,11 @@
     "netToClient": "Net to the client",
     "balance": "Balance to pay",
     "gross": "Gross amount",
-    "invoiced": "Total invoiced"
+    "invoiced": "Total invoiced",
+    "rateUnavailable": "Withholding rate unavailable (30bis parameters not loaded): no calculation shown.",
+    "rateInfo": "FPS Finance rate (art. 402 ITC) in force since {{since}}: {{rate}} % — source: {{source}}.",
+    "verifiedOn": "Verified on {{date}}.",
+    "notVerified": "Verification date still to be filled in."
   },
   "history": {
     "title": "Check history",

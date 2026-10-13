@@ -4,6 +4,29 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-14 — Phase 9, PR A : taux 30bis paramétrés (sans migration)
+
+Branche : `phase-09-taux-30bis`.
+
+- `src/lib/retenue-30bis.ts` : `tauxEnVigueur()` (ligne de `parametres_30bis` la plus récente avec
+  `date_debut <= date`), `calculerRetenues()` (montant HTVA × taux, arrondi au cent) et
+  `produitArrondiCent()`. Hook `useParametres30bis()`.
+- **Arrondi exact** : calcul en entiers (BigInt). En flottant, 51 383,70 × 35 % = 17 984,2949…
+  arrondissait à 17 984,29 € au lieu de 17 984,30 € comme PostgreSQL : le trigger
+  `check_paiement_30bis` aurait refusé le paiement. Test de parité JS / SQL sur 12 044 cas
+  (`supabase/tests/retenue_30bis_parite.check.ts`, PGlite, sans base réelle).
+- Conformité TVA : le 15 % écrit en dur est supprimé ; taux SPF lu dans `parametres_30bis`, avec
+  date d'entrée en vigueur, source, date de vérification et mention « indicatif ». Sans taux
+  chargé, aucun calcul n'est affiché.
+- Assistant IA : les taux ONSS / SPF du prompt viennent de `parametres_30bis` (présentés comme
+  indicatifs) ; sans paramètres, consigne de n'en citer aucun.
+- Démo : même fonction de calcul que l'écran et le trigger.
+- Règles métier provisoires reçues pour les PR B à D (plafond au montant restant dû, vérification
+  à chaque versement, documents obligatoires, blocage d'affectation, captures 5 Mo JPG/PNG/PDF) :
+  voir `docs/plans/phase-09-suite.md`.
+
+---
+
 ## 2026-10-13 (soir) — Phase 9 : contrat de sous-traitance signé par lien
 
 Branche : `phase-09-contrat-signature` (part de `phase-09-sous-traitants-ui`, PR #7).

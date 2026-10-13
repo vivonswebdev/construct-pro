@@ -44,7 +44,11 @@
     "netToClient": "Netto aan de klant",
     "balance": "Te betalen saldo",
     "gross": "Brutobedrag",
-    "invoiced": "Totaal gefactureerd"
+    "invoiced": "Totaal gefactureerd",
+    "rateUnavailable": "Inhoudingspercentage niet beschikbaar (30bis-parameters niet geladen): geen berekening getoond.",
+    "rateInfo": "Tarief FOD Financiën (art. 402 WIB) van kracht sinds {{since}}: {{rate}} % — bron: {{source}}.",
+    "verifiedOn": "Gecontroleerd op {{date}}.",
+    "notVerified": "Controledatum nog in te vullen."
   },
   "history": {
     "title": "Geschiedenis van de controles",

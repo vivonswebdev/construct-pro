@@ -44,7 +44,11 @@
     "netToClient": "Net către client",
     "balance": "Sold de plătit",
     "gross": "Sumă brută",
-    "invoiced": "Total facturat"
+    "invoiced": "Total facturat",
+    "rateUnavailable": "Cota de reținere indisponibilă (parametrii 30bis nu s-au încărcat): niciun calcul afișat.",
+    "rateInfo": "Cota SPF (art. 402 CIR) în vigoare din {{since}}: {{rate}} % — sursa: {{source}}.",
+    "verifiedOn": "Verificat pe {{date}}.",
+    "notVerified": "Data verificării trebuie completată."
   },
   "history": {
     "title": "Istoricul verificărilor",
