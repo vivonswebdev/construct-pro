@@ -184,5 +184,54 @@ ok(conserv.rows[0]?.d === 10, "durée de conservation RGPD par défaut = 10 ans"
 const params = await db.query(`SELECT * FROM public.parametres_30bis`);
 ok(params.rows.length === 1, "paramètres 30bis lisibles par un utilisateur connecté");
 
+// Données de démo (seedSousTraitants) : vérification horodatée à 10 h (+02:00) un jour passé,
+// paiement du même jour avec retenue ONSS = montant HTVA × taux → accepté par le trigger.
+await db
+  .exec(
+    `
+  INSERT INTO public.verifications_30bis (id, company_id, sous_traitant_id, verifie_le, dette_sociale, dette_fiscale)
+  VALUES ('aaaaaaaa-0000-0000-0000-0000000000f3', '${C1}', 'aaaaaaaa-0000-0000-0000-0000000000a1',
+          ((${today} - 15)::text || 'T10:00:00+02:00')::timestamptz, true, false);
+  INSERT INTO public.achat_paiements (company_id, contrat_id, date_paiement, montant_ht, montant_tva, retenue_onss, retenue_spf, verification_30bis_id)
+  VALUES ('${C1}', 'aaaaaaaa-0000-0000-0000-0000000000c1', ${today} - 15, 14000, 0, 4900, 0, 'aaaaaaaa-0000-0000-0000-0000000000f3');`,
+  )
+  .then(
+    () => ok(true, "paiement de démo daté du passé, avec retenue ONSS, accepté"),
+    (e) => ok(false, `paiement de démo refusé → ${(e as Error).message}`),
+  );
+
+// Phase 1 : création d'un client et d'un ouvrier avec les valeurs envoyées par l'interface.
+await db
+  .exec(
+    `
+  INSERT INTO public.clients (company_id, type, nom, prenom, langue) VALUES ('${C1}', 'particulier', 'Dupont', 'Marie', 'fr');
+  INSERT INTO public.clients (company_id, type, raison_sociale, nom, numero_tva, assujetti_tva, langue)
+  VALUES ('${C1}', 'entreprise', 'Bouwbedrijf Janssens NV', 'Janssens', 'BE0456781215', true, 'nl');`,
+  )
+  .then(
+    () => ok(true, "création de clients (particulier FR, entreprise NL) acceptée"),
+    (e) => ok(false, `création de client refusée → ${(e as Error).message}`),
+  );
+await expectError(
+  `INSERT INTO public.clients (company_id, type, nom, langue) VALUES ('${C1}', 'particulier', 'X', 'ro')`,
+  "clients_langue_chk",
+  "langue de document hors fr/nl/en refusée pour un client",
+);
+await db
+  .exec(
+    `
+  INSERT INTO public.personnel (company_id, full_name, contract_type, hourly_rate, langue, status)
+  VALUES ('${C1}', 'Ion Popescu', 'cdi', 22.5, 'ro', 'actif');`,
+  )
+  .then(
+    () => ok(true, "création d'un ouvrier (CDI, langue RO, actif) acceptée"),
+    (e) => ok(false, `création d'ouvrier refusée → ${(e as Error).message}`),
+  );
+await expectError(
+  `INSERT INTO public.personnel (company_id, full_name, contract_type, status) VALUES ('${C1}', 'Y', 'CDI', 'Actif')`,
+  "check constraint",
+  "anciens libellés (« CDI », « Actif ») refusés pour un ouvrier",
+);
+
 console.log(fails ? `\n✖ ${fails} échec(s)` : "\n✓ tous les tests passent");
 process.exit(fails ? 1 : 0);

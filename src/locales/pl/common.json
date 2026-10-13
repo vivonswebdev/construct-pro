@@ -95,6 +95,14 @@
     "assistant": {
       "title": "Asystent AI",
       "description": "Zadawaj pytania o budowy, oferty i belgijskie obowiązki: asystent odpowiada na podstawie Twoich danych."
+    },
+    "sousTraitants": {
+      "title": "Podwykonawcy",
+      "description": "Karty podwykonawców, datowane weryfikacje 30bis, umowy i płatności."
+    },
+    "sousTraitant": {
+      "title": "Karta podwykonawcy",
+      "description": "Informacje, weryfikacja zadłużenia socjalnego i podatkowego, umowy i płatności."
     }
   },
   "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny."

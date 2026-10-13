@@ -1,0 +1,105 @@
+{
+  "title": "Subcontractors",
+  "count_one": "{{count}} subcontractor",
+  "count_other": "{{count}} subcontractors",
+  "toCheck_one": "{{count}} to check before payment",
+  "toCheck_other": "{{count}} to check before payment",
+  "new": "New subcontractor",
+  "edit": "Edit subcontractor",
+  "searchPlaceholder": "Search by name, city, VAT or company number…",
+  "allTrades": "All trades",
+  "allStatuses": "All statuses",
+  "empty": "No subcontractors found.",
+  "loadDemo": "Load demo subcontractors",
+  "notFound": "Subcontractor not found.",
+  "columns": {
+    "name": "Subcontractor",
+    "trades": "Trades",
+    "vat": "VAT no.",
+    "contact": "Contact",
+    "check30bis": "30bis check",
+    "status": "Status"
+  },
+  "conformity": {
+    "a_jour": "Checked today",
+    "a_verifier": "To check",
+    "dette": "Debt found"
+  },
+  "form": {
+    "name": "Company name *",
+    "namePlaceholder": "E.g. Lambert Electrics SRL",
+    "legalForm": "Legal form",
+    "status": "Status",
+    "bce": "Company number (CBE)",
+    "vat": "VAT no.",
+    "address": "Address",
+    "postalCode": "Postcode",
+    "city": "City",
+    "email": "Email",
+    "phone": "Phone",
+    "contactSection": "Contact person",
+    "contactName": "Name",
+    "trades": "Trades",
+    "iban": "IBAN",
+    "conditions": "Agreed terms",
+    "conditionsPlaceholder": "E.g. payment within 30 days, materials supplied by the contractor…",
+    "internalNote": "Internal note"
+  },
+  "validation": {
+    "nameRequired": "Company name is required",
+    "bceInvalid": "Invalid company number (10 digits, e.g. 0123.456.749)",
+    "vatInvalid": "Invalid Belgian VAT number (format BE0123456789)",
+    "emailInvalid": "Invalid email address",
+    "bceDuplicate": "A subcontractor with this company number already exists"
+  },
+  "toasts": {
+    "created": "Subcontractor created",
+    "updated": "Subcontractor updated",
+    "verificationSaved": "Check recorded",
+    "demoLoaded": "Demo subcontractors added"
+  },
+  "detail": {
+    "info": "Details",
+    "contracts": "Contracts",
+    "noContracts": "No contracts.",
+    "payments": "Payments",
+    "noPayments": "No payments.",
+    "totalPaid": "Total paid",
+    "totalWithheld": "30bis withholdings",
+    "paymentDelay_one": "payment within {{count}} day",
+    "paymentDelay_other": "payment within {{count}} days",
+    "exclVat": "excl. VAT",
+    "block": "Block",
+    "unblock": "Unblock",
+    "confirmDelete": "Delete this subcontractor and its contracts?",
+    "deleteBlocked": "Cannot delete: 30bis checks or payments are recorded (evidence to keep). Block this subcontractor instead."
+  },
+  "verification": {
+    "title": "Social and tax debts (30bis)",
+    "hint": {
+      "a_jour": "Checked today with no debt: a payment can be recorded today.",
+      "a_verifier": "Check for debts on the day of each payment, then record the result.",
+      "dette": "Debt found: a withholding must be applied to every payment and paid to the NSSO / FPS Finance."
+    },
+    "openOfficial": "Check on the official service",
+    "record": "Record the result",
+    "empty": "No checks recorded.",
+    "socialDebt": "Social debt",
+    "taxDebt": "Tax debt",
+    "noDebt": "No debt",
+    "immutable": "Each check is dated evidence: it can be neither edited nor deleted.",
+    "confirm": "Record this result? It cannot be changed afterwards.",
+    "modalHint": "Enter the result shown by the official service for {{name}}. The date and time are recorded automatically.",
+    "socialDebtFound": "Social debt found (NSSO)",
+    "taxDebtFound": "Tax debt found (FPS Finance)",
+    "notes": "Notes",
+    "proofLater": "Uploading a screenshot of the result will be added soon."
+  },
+  "payments": {
+    "date": "Date",
+    "contract": "Contract",
+    "net": "Amount excl. VAT",
+    "withheld": "Withholdings",
+    "paid": "Paid"
+  }
+}

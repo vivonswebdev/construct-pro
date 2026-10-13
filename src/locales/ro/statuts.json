@@ -54,5 +54,59 @@
     "en": "Engleză",
     "ro": "Română",
     "pl": "Poloneză"
+  },
+  "sousTraitant": {
+    "actif": "Activ",
+    "bloque": "Blocat"
+  },
+  "formeJuridique": {
+    "srl": "SRL (societate cu răspundere limitată)",
+    "sa": "SA (societate pe acțiuni)",
+    "sc": "SC (cooperativă)",
+    "scomm": "SComm (societate în comandită)",
+    "independant": "Independent (persoană fizică)",
+    "autre": "Alta"
+  },
+  "metier": {
+    "gros_oeuvre": "Structură (gros œuvre)",
+    "terrassement": "Terasamente",
+    "charpente": "Dulgherie",
+    "toiture": "Acoperișuri",
+    "menuiserie": "Tâmplărie",
+    "electricite": "Electricitate",
+    "plomberie": "Instalații sanitare",
+    "chauffage": "Încălzire",
+    "isolation": "Izolații",
+    "platrerie": "Tencuieli",
+    "carrelage": "Faianță și gresie",
+    "peinture": "Zugrăveli",
+    "facade": "Fațade",
+    "autre": "Altele"
+  },
+  "typePrix": {
+    "forfait": "Preț forfetar",
+    "horaire": "Pe oră",
+    "unitaire": "Preț unitar"
+  },
+  "unite": {
+    "heure": "oră",
+    "jour": "zi",
+    "m2": "m²",
+    "m3": "m³",
+    "m": "m",
+    "piece": "bucată",
+    "forfait": "forfet"
+  },
+  "frequencePaiement": {
+    "a_la_facture": "La factură",
+    "hebdomadaire": "Săptămânal",
+    "mensuelle": "Lunar",
+    "avancement": "După avansare"
+  },
+  "modePaiement": {
+    "virement": "Transfer bancar",
+    "especes": "Numerar",
+    "domiciliation": "Debit direct",
+    "carte": "Card"
   }
 }

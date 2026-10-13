@@ -1,0 +1,108 @@
+{
+  "title": "Subcontractori",
+  "count_one": "{{count}} subcontractor",
+  "count_few": "{{count}} subcontractori",
+  "count_other": "{{count}} de subcontractori",
+  "toCheck_one": "{{count}} de verificat înainte de plată",
+  "toCheck_few": "{{count}} de verificat înainte de plată",
+  "toCheck_other": "{{count}} de verificat înainte de plată",
+  "new": "Subcontractor nou",
+  "edit": "Modifică subcontractorul",
+  "searchPlaceholder": "Caută după nume, oraș, nr. TVA sau nr. de întreprindere…",
+  "allTrades": "Toate meseriile",
+  "allStatuses": "Toate statusurile",
+  "empty": "Niciun subcontractor găsit.",
+  "loadDemo": "Încarcă subcontractori demonstrativi",
+  "notFound": "Subcontractor negăsit.",
+  "columns": {
+    "name": "Subcontractor",
+    "trades": "Meserii",
+    "vat": "Nr. TVA",
+    "contact": "Contact",
+    "check30bis": "Verificare 30bis",
+    "status": "Status"
+  },
+  "conformity": {
+    "a_jour": "Verificat astăzi",
+    "a_verifier": "De verificat",
+    "dette": "Datorie constatată"
+  },
+  "form": {
+    "name": "Denumire *",
+    "namePlaceholder": "Ex.: Électricité Lambert SRL",
+    "legalForm": "Formă juridică",
+    "status": "Status",
+    "bce": "Nr. de întreprindere (BCE)",
+    "vat": "Nr. TVA",
+    "address": "Adresă",
+    "postalCode": "Cod poștal",
+    "city": "Oraș",
+    "email": "Email",
+    "phone": "Telefon",
+    "contactSection": "Persoană de contact",
+    "contactName": "Nume",
+    "trades": "Meserii",
+    "iban": "IBAN",
+    "conditions": "Condiții convenite",
+    "conditionsPlaceholder": "Ex.: plată la 30 de zile, materiale furnizate de antreprenor…",
+    "internalNote": "Notă internă"
+  },
+  "validation": {
+    "nameRequired": "Denumirea este obligatorie",
+    "bceInvalid": "Număr de întreprindere invalid (10 cifre, ex.: 0123.456.749)",
+    "vatInvalid": "Număr de TVA belgian invalid (format BE0123456789)",
+    "emailInvalid": "Adresă de email invalidă",
+    "bceDuplicate": "Există deja un subcontractor cu acest număr de întreprindere"
+  },
+  "toasts": {
+    "created": "Subcontractor creat",
+    "updated": "Subcontractor actualizat",
+    "verificationSaved": "Verificare înregistrată",
+    "demoLoaded": "Subcontractori demonstrativi adăugați"
+  },
+  "detail": {
+    "info": "Informații",
+    "contracts": "Contracte",
+    "noContracts": "Niciun contract.",
+    "payments": "Plăți",
+    "noPayments": "Nicio plată.",
+    "totalPaid": "Total plătit",
+    "totalWithheld": "Rețineri 30bis",
+    "paymentDelay_one": "plată la {{count}} zi",
+    "paymentDelay_few": "plată la {{count}} zile",
+    "paymentDelay_other": "plată la {{count}} de zile",
+    "exclVat": "fără TVA",
+    "block": "Blochează",
+    "unblock": "Deblochează",
+    "confirmDelete": "Ștergeți acest subcontractor și contractele sale?",
+    "deleteBlocked": "Ștergere imposibilă: există verificări 30bis sau plăți înregistrate (dovezi de păstrat). Blocați mai degrabă acest subcontractor."
+  },
+  "verification": {
+    "title": "Datorii sociale și fiscale (30bis)",
+    "hint": {
+      "a_jour": "Verificat astăzi, fără datorii: o plată poate fi înregistrată astăzi.",
+      "a_verifier": "Verificați datoriile în ziua fiecărei plăți, apoi înregistrați rezultatul.",
+      "dette": "Datorie constatată: la fiecare plată trebuie aplicată o reținere, vărsată la ONSS / SPF Finanțe."
+    },
+    "openOfficial": "Verifică pe serviciul oficial",
+    "record": "Înregistrează rezultatul",
+    "empty": "Nicio verificare înregistrată.",
+    "socialDebt": "Datorie socială",
+    "taxDebt": "Datorie fiscală",
+    "noDebt": "Nicio datorie",
+    "immutable": "Fiecare verificare este o dovadă datată: nu poate fi modificată sau ștearsă.",
+    "confirm": "Înregistrați acest rezultat? Nu va mai putea fi modificat.",
+    "modalHint": "Introduceți rezultatul afișat de serviciul oficial pentru {{name}}. Data și ora sunt înregistrate automat.",
+    "socialDebtFound": "Datorie socială constatată (ONSS)",
+    "taxDebtFound": "Datorie fiscală constatată (SPF Finanțe)",
+    "notes": "Note",
+    "proofLater": "Încărcarea unei capturi de ecran a rezultatului va fi adăugată în curând."
+  },
+  "payments": {
+    "date": "Data",
+    "contract": "Contract",
+    "net": "Sumă fără TVA",
+    "withheld": "Rețineri",
+    "paid": "Plătit"
+  }
+}

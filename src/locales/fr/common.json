@@ -93,6 +93,14 @@
     "assistant": {
       "title": "Assistant IA",
       "description": "Posez vos questions sur vos chantiers, vos devis et la conformité belge : l'assistant répond à partir de vos données."
+    },
+    "sousTraitants": {
+      "title": "Sous-traitants",
+      "description": "Fiches des sous-traitants, vérifications 30bis datées, contrats et paiements."
+    },
+    "sousTraitant": {
+      "title": "Fiche sous-traitant",
+      "description": "Informations, vérifications des dettes sociales et fiscales, contrats et paiements."
     }
   },
   "indicatif": "Indicatif — à valider par votre comptable / secrétariat social."

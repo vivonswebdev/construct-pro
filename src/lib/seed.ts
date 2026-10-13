@@ -982,5 +982,290 @@ export async function seedDataIfEmpty(companyId: string): Promise<boolean> {
     if (mvts.length) await supabase.from("stock_mouvements").insert(mvts);
   }
 
+  // Sous-traitants (phase 9) : une erreur ici ne doit pas bloquer le reste de la démo.
+  await seedSousTraitants(companyId).catch(() => undefined);
+
   return true;
+}
+
+/**
+ * Démo phase 9 : 5 sous-traitants (dont 1 avec dette sociale constatée et 1 bloqué), contrats,
+ * prestations et paiements. Chaque paiement est précédé d'une vérification 30bis du même jour
+ * et ses retenues suivent les taux de parametres_30bis : le trigger check_paiement_30bis les
+ * accepte donc tels quels. Appelée à la création de la démo ou depuis la liste vide.
+ */
+export async function seedSousTraitants(companyId: string): Promise<void> {
+  const ilYa = (n: number) => {
+    const d = new Date();
+    d.setDate(d.getDate() - n);
+    return d.toLocaleDateString("en-CA", { timeZone: "Europe/Brussels" });
+  };
+  // 10 h à Bruxelles : même date calendaire, été comme hiver.
+  const verifieLe = (date: string) => `${date}T10:00:00+02:00`;
+
+  const { data: chantiers } = await supabase
+    .from("chantiers")
+    .select("id")
+    .order("created_at")
+    .limit(3);
+  const chantier = (i: number) => chantiers?.[i % (chantiers?.length || 1)]?.id ?? null;
+
+  const { data: taux } = await supabase
+    .from("parametres_30bis")
+    .select("*")
+    .order("date_debut", { ascending: false });
+  const tauxAu = (date: string) => taux?.find((r) => r.date_debut <= date);
+
+  const stSeed: TablesInsert<"sous_traitants">[] = [
+    {
+      raison_sociale: "Électricité Lambert SRL",
+      forme_juridique: "srl",
+      numero_bce: "0456781215",
+      numero_tva: "BE0456781215",
+      adresse: "Rue des Artisans 14",
+      code_postal: "1400",
+      ville: "Nivelles",
+      email: "info@lambert-elec.be",
+      telephone: "067 21 45 80",
+      contact_nom: "Julien Lambert",
+      contact_telephone: "0475 12 34 56",
+      iban: "BE68539007547034",
+      metiers: ["electricite"],
+      conditions: "Paiement à 30 jours fin de mois. Petit matériel fourni par le sous-traitant.",
+    },
+    {
+      raison_sociale: "Dakwerken Peeters BV",
+      forme_juridique: "srl",
+      numero_bce: "0712349885",
+      numero_tva: "BE0712349885",
+      adresse: "Industrieweg 3",
+      code_postal: "3000",
+      ville: "Leuven",
+      email: "planning@peeters-dak.be",
+      contact_nom: "Koen Peeters",
+      metiers: ["toiture", "charpente"],
+    },
+    {
+      raison_sociale: "Carrelages Costa",
+      forme_juridique: "independant",
+      numero_bce: "0876543270",
+      numero_tva: "BE0876543270",
+      code_postal: "6000",
+      ville: "Charleroi",
+      telephone: "0486 55 21 09",
+      metiers: ["carrelage"],
+    },
+    {
+      raison_sociale: "Gros Œuvre Nowak SRL",
+      forme_juridique: "srl",
+      numero_bce: "0654321913",
+      numero_tva: "BE0654321913",
+      adresse: "Chaussée de Mons 210",
+      code_postal: "1070",
+      ville: "Anderlecht",
+      email: "contact@nowak-construct.be",
+      contact_nom: "Piotr Nowak",
+      metiers: ["gros_oeuvre", "terrassement"],
+    },
+    {
+      raison_sociale: "Plafonnage Ionescu SComm",
+      forme_juridique: "scomm",
+      numero_bce: "0987612329",
+      numero_tva: "BE0987612329",
+      code_postal: "1030",
+      ville: "Schaerbeek",
+      contact_nom: "Andrei Ionescu",
+      metiers: ["platrerie", "peinture"],
+      statut: "bloque",
+      note_interne: "Bloqué : attestation d'assurance RC non fournie.",
+    },
+  ].map((st) => ({ ...st, company_id: companyId }));
+
+  const { data: sts, error: stErr } = await supabase
+    .from("sous_traitants")
+    .insert(stSeed)
+    .select("id, numero_bce");
+  if (stErr) throw stErr;
+  const st = (bce: string) => sts.find((x) => x.numero_bce === bce)!.id;
+  const lambert = st("0456781215");
+  const peeters = st("0712349885");
+  const costa = st("0876543270");
+  const nowak = st("0654321913");
+  const ionescu = st("0987612329");
+
+  // Contrats
+  const contratsSeed: TablesInsert<"sous_traitant_contrats">[] = [
+    {
+      sous_traitant_id: lambert,
+      chantier_id: chantier(0),
+      descriptif_prestations: "Installation électrique complète (tableau, circuits, prises)",
+      type_prix: "forfait",
+      montant_forfait_ht: 18500,
+      frequence_paiement: "avancement",
+      date_debut: ilYa(60),
+      date_fin: ilYa(-30),
+      bon_commande_ref: "BC-ST-001",
+    },
+    {
+      sous_traitant_id: peeters,
+      chantier_id: chantier(1),
+      descriptif_prestations: "Pose de toiture plate EPDM et rives",
+      type_prix: "horaire",
+      prix_unitaire_ht: 48,
+      unite: "heure",
+      frequence_paiement: "mensuelle",
+      date_debut: ilYa(45),
+    },
+    {
+      sous_traitant_id: costa,
+      chantier_id: chantier(2),
+      descriptif_prestations: "Carrelage sols et faïence des salles de bain",
+      type_prix: "unitaire",
+      prix_unitaire_ht: 38,
+      unite: "m2",
+      frequence_paiement: "a_la_facture",
+      delai_paiement_jours: 15,
+      date_debut: ilYa(-10),
+    },
+    {
+      sous_traitant_id: nowak,
+      chantier_id: chantier(0),
+      descriptif_prestations: "Maçonnerie et fondations de l'extension",
+      type_prix: "forfait",
+      montant_forfait_ht: 42000,
+      frequence_paiement: "avancement",
+      date_debut: ilYa(90),
+    },
+    {
+      sous_traitant_id: ionescu,
+      chantier_id: chantier(1),
+      descriptif_prestations: "Plafonnage des murs intérieurs",
+      type_prix: "unitaire",
+      prix_unitaire_ht: 14,
+      unite: "m2",
+      date_debut: ilYa(120),
+      date_fin: ilYa(100),
+    },
+  ].map((c) => ({ ...c, company_id: companyId }));
+  const { data: contrats, error: ctErr } = await supabase
+    .from("sous_traitant_contrats")
+    .insert(contratsSeed)
+    .select("id, sous_traitant_id");
+  if (ctErr) throw ctErr;
+  const contrat = (stId: string) => contrats.find((c) => c.sous_traitant_id === stId)!.id;
+
+  // Prestations (journal)
+  await supabase.from("sous_traitant_prestations").insert([
+    {
+      company_id: companyId,
+      contrat_id: contrat(lambert),
+      chantier_id: chantier(0),
+      date_prestation: ilYa(20),
+      description: "Tirage des câbles au rez-de-chaussée",
+      heures: 16,
+      ouvriers: [
+        { nom: "J. Lambert", fonction: "Électricien", heures: 8 },
+        { nom: "M. Renard", fonction: "Aide-électricien", heures: 8 },
+      ],
+      presence_enregistree: true,
+    },
+    {
+      company_id: companyId,
+      contrat_id: contrat(peeters),
+      chantier_id: chantier(1),
+      date_prestation: ilYa(12),
+      description: "Pose de la membrane EPDM",
+      heures: 24,
+      ouvriers: [
+        { nom: "K. Peeters", fonction: "Couvreur", heures: 8 },
+        { nom: "T. Janssens", fonction: "Couvreur", heures: 8 },
+        { nom: "W. Maes", fonction: "Manœuvre", heures: 8 },
+      ],
+      presence_enregistree: true,
+    },
+    {
+      company_id: companyId,
+      contrat_id: contrat(nowak),
+      chantier_id: chantier(0),
+      date_prestation: ilYa(35),
+      description: "Coulage des semelles de fondation",
+      heures: 32,
+      ouvriers: [
+        { nom: "P. Nowak", fonction: "Maçon", heures: 8 },
+        { nom: "A. Kowalski", fonction: "Maçon", heures: 8 },
+        { nom: "R. Wiśniewski", fonction: "Coffreur", heures: 8 },
+        { nom: "D. Zieliński", fonction: "Manœuvre", heures: 8 },
+      ],
+    },
+  ]);
+
+  // Vérifications 30bis : une au jour de chaque paiement, plus celle d'aujourd'hui pour Lambert.
+  const verifs = [
+    { st: lambert, date: ilYa(40), sociale: false, notes: null },
+    { st: lambert, date: ilYa(10), sociale: false, notes: null },
+    { st: lambert, date: ilYa(0), sociale: false, notes: null },
+    { st: peeters, date: ilYa(5), sociale: false, notes: null },
+    { st: nowak, date: ilYa(55), sociale: false, notes: null },
+    {
+      st: nowak,
+      date: ilYa(15),
+      sociale: true,
+      notes: "Dette ONSS constatée : retenue appliquée sur le paiement.",
+    },
+  ];
+  const { data: vfs, error: vfErr } = await supabase
+    .from("verifications_30bis")
+    .insert(
+      verifs.map((v) => ({
+        company_id: companyId,
+        sous_traitant_id: v.st,
+        verifie_le: verifieLe(v.date),
+        dette_sociale: v.sociale,
+        dette_fiscale: false,
+        source_url: "https://www.checkobligationderetenue.be/",
+        notes: v.notes,
+      })),
+    )
+    .select("id, sous_traitant_id, verifie_le, dette_sociale, dette_fiscale");
+  if (vfErr) throw vfErr;
+  const verifDu = (stId: string, date: string) =>
+    vfs.find(
+      (v) =>
+        v.sous_traitant_id === stId &&
+        new Date(v.verifie_le).toLocaleDateString("en-CA", { timeZone: "Europe/Brussels" }) ===
+          date,
+    )!;
+
+  // Paiements : retenues calculées comme le trigger (montant HTVA × taux en vigueur).
+  const arrondi = (x: number) => Math.round(x * 100) / 100;
+  const paiement = (
+    stId: string,
+    date: string,
+    montantHt: number,
+    reference: string,
+  ): TablesInsert<"achat_paiements"> => {
+    const v = verifDu(stId, date);
+    const t = tauxAu(date);
+    return {
+      company_id: companyId,
+      contrat_id: contrat(stId),
+      date_paiement: date,
+      montant_ht: montantHt,
+      montant_tva: 0, // autoliquidation (cocontractant)
+      retenue_onss: v.dette_sociale && t ? arrondi(montantHt * Number(t.taux_retenue_onss)) : 0,
+      retenue_spf: v.dette_fiscale && t ? arrondi(montantHt * Number(t.taux_retenue_spf)) : 0,
+      reference,
+      verification_30bis_id: v.id,
+    };
+  };
+  const { error: pmErr } = await supabase
+    .from("achat_paiements")
+    .insert([
+      paiement(lambert, ilYa(40), 5500, "Acompte 1 — 30 %"),
+      paiement(lambert, ilYa(10), 7400, "Acompte 2 — 40 %"),
+      paiement(peeters, ilYa(5), 1152, "Mensualité — 24 h"),
+      paiement(nowak, ilYa(55), 12000, "Situation 1"),
+      paiement(nowak, ilYa(15), 14000, "Situation 2"),
+    ]);
+  if (pmErr) throw pmErr;
 }

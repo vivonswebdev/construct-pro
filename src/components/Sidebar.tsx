@@ -14,6 +14,7 @@ import {
   Sparkles,
   Contact,
   Receipt,
+  Handshake,
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -26,6 +27,7 @@ const ACTIVE_NAV = [
   { to: "/dashboard", key: "dashboard", icon: LayoutDashboard },
   { to: "/chantiers", key: "chantiers", icon: HardHat },
   { to: "/clients", key: "clients", icon: Contact },
+  { to: "/sous-traitants", key: "sousTraitants", icon: Handshake },
   { to: "/personnel", key: "personnel", icon: Users },
   { to: "/vehicules", key: "vehicules", icon: Truck },
   { to: "/stock", key: "stock", icon: Package },

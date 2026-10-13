@@ -54,5 +54,59 @@
     "en": "Anglais",
     "ro": "Roumain",
     "pl": "Polonais"
+  },
+  "sousTraitant": {
+    "actif": "Actif",
+    "bloque": "Bloqué"
+  },
+  "formeJuridique": {
+    "srl": "SRL",
+    "sa": "SA",
+    "sc": "SC",
+    "scomm": "SComm",
+    "independant": "Indépendant (personne physique)",
+    "autre": "Autre"
+  },
+  "metier": {
+    "gros_oeuvre": "Gros œuvre",
+    "terrassement": "Terrassement",
+    "charpente": "Charpente",
+    "toiture": "Toiture",
+    "menuiserie": "Menuiserie",
+    "electricite": "Électricité",
+    "plomberie": "Plomberie",
+    "chauffage": "Chauffage",
+    "isolation": "Isolation",
+    "platrerie": "Plafonnage",
+    "carrelage": "Carrelage",
+    "peinture": "Peinture",
+    "facade": "Façade",
+    "autre": "Autre"
+  },
+  "typePrix": {
+    "forfait": "Forfait",
+    "horaire": "Horaire",
+    "unitaire": "Prix unitaire"
+  },
+  "unite": {
+    "heure": "heure",
+    "jour": "jour",
+    "m2": "m²",
+    "m3": "m³",
+    "m": "m",
+    "piece": "pièce",
+    "forfait": "forfait"
+  },
+  "frequencePaiement": {
+    "a_la_facture": "À la facture",
+    "hebdomadaire": "Hebdomadaire",
+    "mensuelle": "Mensuelle",
+    "avancement": "À l'avancement"
+  },
+  "modePaiement": {
+    "virement": "Virement",
+    "especes": "Espèces",
+    "domiciliation": "Domiciliation",
+    "carte": "Carte"
   }
 }

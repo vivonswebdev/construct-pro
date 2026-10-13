@@ -54,5 +54,59 @@
     "en": "Angielski",
     "ro": "Rumuński",
     "pl": "Polski"
+  },
+  "sousTraitant": {
+    "actif": "Aktywny",
+    "bloque": "Zablokowany"
+  },
+  "formeJuridique": {
+    "srl": "SRL (spółka z o.o.)",
+    "sa": "SA (spółka akcyjna)",
+    "sc": "SC (spółdzielnia)",
+    "scomm": "SComm (spółka komandytowa)",
+    "independant": "Samozatrudniony (osoba fizyczna)",
+    "autre": "Inna"
+  },
+  "metier": {
+    "gros_oeuvre": "Stan surowy",
+    "terrassement": "Roboty ziemne",
+    "charpente": "Więźba dachowa",
+    "toiture": "Pokrycia dachowe",
+    "menuiserie": "Stolarka",
+    "electricite": "Elektryka",
+    "plomberie": "Hydraulika",
+    "chauffage": "Ogrzewanie",
+    "isolation": "Izolacje",
+    "platrerie": "Tynkowanie",
+    "carrelage": "Glazura",
+    "peinture": "Malowanie",
+    "facade": "Elewacje",
+    "autre": "Inne"
+  },
+  "typePrix": {
+    "forfait": "Ryczałt",
+    "horaire": "Stawka godzinowa",
+    "unitaire": "Cena jednostkowa"
+  },
+  "unite": {
+    "heure": "godz.",
+    "jour": "dzień",
+    "m2": "m²",
+    "m3": "m³",
+    "m": "m",
+    "piece": "szt.",
+    "forfait": "ryczałt"
+  },
+  "frequencePaiement": {
+    "a_la_facture": "Według faktury",
+    "hebdomadaire": "Co tydzień",
+    "mensuelle": "Co miesiąc",
+    "avancement": "Według postępu prac"
+  },
+  "modePaiement": {
+    "virement": "Przelew",
+    "especes": "Gotówka",
+    "domiciliation": "Polecenie zapłaty",
+    "carte": "Karta"
   }
 }
