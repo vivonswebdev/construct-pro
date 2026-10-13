@@ -15,6 +15,7 @@ import {
   Plus,
   PenLine,
   Pencil,
+  Paperclip,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,6 +30,8 @@ import { VerificationModal } from "@/components/sous-traitants/VerificationModal
 import { formatEURBE, formatVATDisplay } from "@/lib/belgian";
 import { formatDateBE } from "@/lib/format";
 import { pageHead } from "@/lib/head";
+import { ouvrirDocument } from "@/lib/stockage";
+import { errorMessage } from "@/lib/utils";
 import { intlLocale } from "@/lib/i18n";
 import {
   ETAT_CONFORMITE_STYLES,
@@ -367,6 +370,18 @@ function SousTraitantDetail() {
                     )}
                     {v.notes && (
                       <span className="w-full text-xs text-muted-foreground">{v.notes}</span>
+                    )}
+                    {v.preuve_fichier && (
+                      <button
+                        onClick={() =>
+                          ouvrirDocument(v.preuve_fichier!).catch((err) =>
+                            toast.error(errorMessage(err)),
+                          )
+                        }
+                        className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
+                      >
+                        <Paperclip className="h-3.5 w-3.5" /> {t("verification.capture.view")}
+                      </button>
                     )}
                   </div>
                 );

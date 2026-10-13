@@ -4,6 +4,35 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-14 — Phase 9, PR C : captures des vérifications 30bis (stockage privé)
+
+Branche : `phase-09-captures` (part de `phase-09-paiements`, PR #12 : même fenêtre de
+vérification). Fusionner la PR B d'abord.
+
+- Migration `20261014120000_storage_documents_30bis.sql` (idempotente, rollback commenté) :
+  - premier bucket du projet, **`documents`, privé**, 5 Mo maximum, JPG / PNG / PDF (limites
+    imposées par Supabase, contrôlées aussi dans le navigateur) ;
+  - policies `storage.objects` : chemin `<company_id>/…` obligatoire (lecture, dépôt) ; dans
+    `<company_id>/30bis/`, **aucun remplacement**, suppression seulement d'un fichier qu'aucune
+    vérification ne cite (orphelin) ; autres dossiers de la société : remplacement et suppression
+    permis (documents de conformité, PR D) ;
+  - `verifications_30bis.preuve_fichier` : contrainte de chemin (`<company_id>/30bis/<uuid>.ext`
+    de la même société) ;
+  - droits par défaut de Supabase retirés sur `verifications_30bis` (pas d'UPDATE / DELETE pour
+    `authenticated`, aucun accès `anon`) : la vérification et le lien vers sa capture sont
+    réellement immuables (avant, une modification était sans effet mais sans erreur).
+- Fenêtre « Enregistrer le résultat » : dépôt facultatif de la capture **avant**
+  l'enregistrement (la vérification est immuable) ; si l'enregistrement échoue, le fichier
+  orphelin est supprimé. Historique : « Voir la capture » (URL signée, 5 minutes).
+- Tests : environnement Supabase simulé partagé (`supabase/tests/supabase_simule.ts` : auth,
+  droits par défaut, storage avec RLS) ; `phase9_captures.check.ts` 12 OK ; les autres suites
+  rejouées dans cet environnement (OK). Contrôle en lecture seule :
+  `supabase/tests/controle_captures_30bis.sql`.
+- Non testé connecté (identifiants requis) ; le dépôt réel dans Supabase Storage sera à vérifier
+  après application de la migration.
+
+---
+
 ## 2026-10-14 — Phase 9, PR B : contrats, prestations, paiements, retenue plafonnée
 
 Branche : `phase-09-paiements`. Règles validées par Youssef le 14/10 (plan :

@@ -96,19 +96,29 @@
     "socialDebt": "Datorie socială",
     "taxDebt": "Datorie fiscală",
     "noDebt": "Nicio datorie",
-    "immutable": "Fiecare verificare este o dovadă datată: nu poate fi modificată sau ștearsă.",
+    "immutable": "Fiecare verificare și captura sa sunt dovezi datate: nu pot fi modificate sau șterse.",
     "confirm": "Înregistrați acest rezultat? Nu va mai putea fi modificat.",
     "modalHint": "Introduceți rezultatul afișat de serviciul oficial pentru {{name}}. Data și ora sunt înregistrate automat.",
     "socialDebtFound": "Datorie socială constatată (ONSS)",
     "taxDebtFound": "Datorie fiscală constatată (SPF Finanțe)",
     "notes": "Note",
-    "proofLater": "Încărcarea unei capturi de ecran a rezultatului va fi adăugată în curând.",
     "socialDebtAmount": "Datoria ONSS afișată de serviciul oficial (€)",
     "taxDebtAmount": "Datoria SPF Finanțe afișată de serviciul oficial (€)",
     "socialDebtShown": "Datorie ONSS: {{amount}}",
     "taxDebtShown": "Datorie SPF: {{amount}}",
     "validation": {
       "debtAmount": "Introduceți suma fiecărei datorii constatate (0 sau mai mult)."
+    },
+    "capture": {
+      "label": "Captura rezultatului (opțional)",
+      "choose": "Alegeți un fișier JPG, PNG sau PDF",
+      "hint": "Maximum 5 MB. Stocare privată; după înregistrarea verificării, captura nu mai poate fi ștearsă.",
+      "view": "Vezi captura",
+      "uploadFailed": "Încărcarea capturii a eșuat: {{error}}",
+      "errors": {
+        "taille": "Fișier prea mare (maximum 5 MB).",
+        "format": "Format refuzat: doar JPG, PNG sau PDF."
+      }
     }
   },
   "payments": {

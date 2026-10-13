@@ -93,19 +93,29 @@
     "socialDebt": "Dette sociale",
     "taxDebt": "Dette fiscale",
     "noDebt": "Aucune dette",
-    "immutable": "Chaque vérification est une preuve datée : elle ne peut être ni modifiée ni supprimée.",
+    "immutable": "Chaque vérification et sa capture sont des preuves datées : elles ne peuvent être ni modifiées ni supprimées.",
     "confirm": "Enregistrer ce résultat ? Il ne pourra plus être modifié.",
     "modalHint": "Reportez le résultat affiché par le service officiel pour {{name}}. La date et l'heure sont enregistrées automatiquement.",
     "socialDebtFound": "Dette sociale constatée (ONSS)",
     "taxDebtFound": "Dette fiscale constatée (SPF Finances)",
     "notes": "Notes",
-    "proofLater": "Le dépôt de la capture d'écran du résultat sera ajouté prochainement.",
     "socialDebtAmount": "Dette ONSS affichée par le service officiel (€)",
     "taxDebtAmount": "Dette SPF Finances affichée par le service officiel (€)",
     "socialDebtShown": "Dette ONSS : {{amount}}",
     "taxDebtShown": "Dette SPF : {{amount}}",
     "validation": {
       "debtAmount": "Indiquez le montant de chaque dette constatée (0 ou plus)."
+    },
+    "capture": {
+      "label": "Capture du résultat (facultatif)",
+      "choose": "Choisir un fichier JPG, PNG ou PDF",
+      "hint": "5 Mo maximum. Stockage privé ; une fois la vérification enregistrée, la capture ne peut plus être supprimée.",
+      "view": "Voir la capture",
+      "uploadFailed": "Dépôt de la capture impossible : {{error}}",
+      "errors": {
+        "taille": "Fichier trop volumineux (5 Mo maximum).",
+        "format": "Format refusé : JPG, PNG ou PDF uniquement."
+      }
     }
   },
   "payments": {

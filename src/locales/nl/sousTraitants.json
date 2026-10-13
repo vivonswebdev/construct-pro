@@ -93,19 +93,29 @@
     "socialDebt": "Sociale schuld",
     "taxDebt": "Fiscale schuld",
     "noDebt": "Geen schulden",
-    "immutable": "Elke controle is een gedateerd bewijs: ze kan niet worden gewijzigd of verwijderd.",
+    "immutable": "Elke controle en haar schermafdruk zijn gedateerde bewijzen: ze kunnen niet worden gewijzigd of verwijderd.",
     "confirm": "Dit resultaat registreren? Het kan daarna niet meer worden gewijzigd.",
     "modalHint": "Neem het resultaat over dat de officiële dienst voor {{name}} toont. Datum en uur worden automatisch geregistreerd.",
     "socialDebtFound": "Sociale schuld vastgesteld (RSZ)",
     "taxDebtFound": "Fiscale schuld vastgesteld (FOD Financiën)",
     "notes": "Notities",
-    "proofLater": "Het opladen van een schermafdruk van het resultaat volgt binnenkort.",
     "socialDebtAmount": "RSZ-schuld getoond door de officiële dienst (€)",
     "taxDebtAmount": "Schuld FOD Financiën getoond door de officiële dienst (€)",
     "socialDebtShown": "RSZ-schuld: {{amount}}",
     "taxDebtShown": "Fiscale schuld: {{amount}}",
     "validation": {
       "debtAmount": "Geef het bedrag van elke vastgestelde schuld op (0 of meer)."
+    },
+    "capture": {
+      "label": "Schermafdruk van het resultaat (facultatief)",
+      "choose": "Kies een JPG-, PNG- of PDF-bestand",
+      "hint": "Maximaal 5 MB. Privé-opslag; zodra de controle geregistreerd is, kan de schermafdruk niet meer worden verwijderd.",
+      "view": "Schermafdruk bekijken",
+      "uploadFailed": "Opladen van de schermafdruk mislukt: {{error}}",
+      "errors": {
+        "taille": "Bestand te groot (maximaal 5 MB).",
+        "format": "Formaat geweigerd: enkel JPG, PNG of PDF."
+      }
     }
   },
   "payments": {

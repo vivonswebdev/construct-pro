@@ -99,19 +99,29 @@
     "socialDebt": "Zadłużenie socjalne",
     "taxDebt": "Zadłużenie podatkowe",
     "noDebt": "Brak zadłużenia",
-    "immutable": "Każda weryfikacja jest datowanym dowodem: nie można jej zmienić ani usunąć.",
+    "immutable": "Każda weryfikacja i jej zrzut ekranu są datowanymi dowodami: nie można ich zmienić ani usunąć.",
     "confirm": "Zapisać ten wynik? Nie będzie można go później zmienić.",
     "modalHint": "Wprowadź wynik wyświetlony przez oficjalny serwis dla {{name}}. Data i godzina są zapisywane automatycznie.",
     "socialDebtFound": "Stwierdzono zadłużenie socjalne (ONSS)",
     "taxDebtFound": "Stwierdzono zadłużenie podatkowe (SPF Finances)",
     "notes": "Uwagi",
-    "proofLater": "Przesyłanie zrzutu ekranu z wynikiem zostanie wkrótce dodane.",
     "socialDebtAmount": "Zadłużenie ONSS wskazane przez oficjalny serwis (€)",
     "taxDebtAmount": "Zadłużenie SPF Finances wskazane przez oficjalny serwis (€)",
     "socialDebtShown": "Zadłużenie ONSS: {{amount}}",
     "taxDebtShown": "Zadłużenie SPF: {{amount}}",
     "validation": {
       "debtAmount": "Podaj kwotę każdego stwierdzonego zadłużenia (0 lub więcej)."
+    },
+    "capture": {
+      "label": "Zrzut ekranu z wynikiem (opcjonalnie)",
+      "choose": "Wybierz plik JPG, PNG lub PDF",
+      "hint": "Maksymalnie 5 MB. Prywatne przechowywanie; po zapisaniu weryfikacji zrzutu nie można usunąć.",
+      "view": "Zobacz zrzut ekranu",
+      "uploadFailed": "Nie udało się przesłać zrzutu ekranu: {{error}}",
+      "errors": {
+        "taille": "Plik jest za duży (maksymalnie 5 MB).",
+        "format": "Niedozwolony format: tylko JPG, PNG lub PDF."
+      }
     }
   },
   "payments": {

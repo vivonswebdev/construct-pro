@@ -1,10 +1,17 @@
 import { useState } from "react";
-import { ExternalLink, X } from "lucide-react";
+import { ExternalLink, Paperclip, X } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { backdropClose } from "@/lib/modal";
+import {
+  ACCEPT_CAPTURE,
+  controlerFichier,
+  deposerCapture30bis,
+  supprimerOrphelin,
+} from "@/lib/stockage";
+import { errorMessage } from "@/lib/utils";
 import {
   urlVerification30bis,
   type SousTraitant,
@@ -35,6 +42,7 @@ export function VerificationModal({
   const [montantOnss, setMontantOnss] = useState("");
   const [montantSpf, setMontantSpf] = useState("");
   const [notes, setNotes] = useState("");
+  const [capture, setCapture] = useState<File | null>(null);
   const [saving, setSaving] = useState(false);
 
   const montant = z.coerce
@@ -54,6 +62,17 @@ export function VerificationModal({
     if (!parsed.success) return toast.error(t("verification.validation.debtAmount"));
     if (!confirm(t("verification.confirm"))) return;
     setSaving(true);
+    // La vérification est immuable : la capture est déposée AVANT l'enregistrement ; si
+    // l'enregistrement échoue, le fichier (encore orphelin) est supprimé.
+    let chemin: string | null = null;
+    if (capture) {
+      try {
+        chemin = await deposerCapture30bis(profile.company_id, capture);
+      } catch (err) {
+        setSaving(false);
+        return toast.error(t("verification.capture.uploadFailed", { error: errorMessage(err) }));
+      }
+    }
     const { data, error } = await supabase
       .from("verifications_30bis")
       .insert({
@@ -65,12 +84,16 @@ export function VerificationModal({
         montant_dette_spf: detteFiscale ? Number(lire(montantSpf)) : null,
         source_url: urlVerification30bis(sousTraitant),
         notes: notes.trim() || null,
+        preuve_fichier: chemin,
         verifie_par: profile.id,
       })
       .select()
       .single();
     setSaving(false);
-    if (error) return toast.error(error.message);
+    if (error) {
+      if (chemin) await supprimerOrphelin(chemin);
+      return toast.error(error.message);
+    }
     toast.success(t("toasts.verificationSaved"));
     onSaved(data);
   };
@@ -155,7 +178,29 @@ export function VerificationModal({
             className={inputCls}
           />
         </label>
-        <p className="text-xs text-muted-foreground">{t("verification.proofLater")}</p>
+        <div>
+          <span className="mb-1 block text-xs font-medium">{t("verification.capture.label")}</span>
+          <label className="flex cursor-pointer items-center gap-2 rounded-md border border-dashed border-border px-3 py-2 text-sm hover:bg-muted">
+            <Paperclip className="h-4 w-4 text-muted-foreground" />
+            <span className="truncate">
+              {capture ? capture.name : t("verification.capture.choose")}
+            </span>
+            <input
+              type="file"
+              accept={ACCEPT_CAPTURE}
+              className="sr-only"
+              onChange={(e) => {
+                const f = e.target.files?.[0] ?? null;
+                e.target.value = "";
+                if (!f) return;
+                const err = controlerFichier(f);
+                if (err) return toast.error(t(`verification.capture.errors.${err}`));
+                setCapture(f);
+              }}
+            />
+          </label>
+          <p className="mt-1 text-[11px] text-muted-foreground">{t("verification.capture.hint")}</p>
+        </div>
         <div className="flex justify-end gap-2">
           <button
             type="button"
