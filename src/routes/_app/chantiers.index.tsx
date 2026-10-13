@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { errorMessage } from "@/lib/utils";
 import { ClientSelect } from "@/components/ClientSelect";
 import { clientLabel, clientAddress } from "@/lib/clients";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/chantiers/")({
   component: ChantiersList,
@@ -301,7 +302,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <form
         onSubmit={submit}

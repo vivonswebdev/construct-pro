@@ -7,6 +7,7 @@ import type { Tables, TablesUpdate } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE, daysUntil } from "@/lib/format";
 import { toast } from "sonner";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/vehicules/$id")({
   component: VehiculeDetail,
@@ -348,7 +349,7 @@ function AffectationModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <form
         onSubmit={submit}

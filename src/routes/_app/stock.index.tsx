@@ -16,6 +16,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/stock/")({
   component: StockPage,
@@ -727,7 +728,7 @@ function Modal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <div
         className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl"

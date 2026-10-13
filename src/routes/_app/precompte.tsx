@@ -23,6 +23,7 @@ import {
 } from "@/lib/belgian";
 import { formatDateBE, initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
+import { backdropClose } from "@/lib/modal";
 
 export const Route = createFileRoute("/_app/precompte")({
   component: PrecomptePage,
@@ -668,7 +669,7 @@ function PayModal({
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <div
         className="w-full max-w-md rounded-2xl bg-card p-6 shadow-xl"
