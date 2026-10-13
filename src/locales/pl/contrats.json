@@ -1,0 +1,143 @@
+{
+  "new": "Nowa umowa",
+  "sendForSignature": "Wyślij do podpisu",
+  "status": {
+    "envoye": "Oczekuje na podpis",
+    "signe": "Podpisana",
+    "annule": "Anulowana",
+    "expire": "Link wygasł"
+  },
+  "form": {
+    "title": "Nowa umowa podwykonawcza",
+    "site": "Budowa",
+    "noSite": "— Brak budowy —",
+    "description": "Opis prac *",
+    "priceType": "Rodzaj ceny",
+    "lumpSum": "Kwota ryczałtowa netto (€)",
+    "unitPrice": "Cena jednostkowa netto (€)",
+    "unit": "Jednostka",
+    "frequency": "Częstotliwość płatności",
+    "paymentDelay": "Termin płatności (dni)",
+    "start": "Data rozpoczęcia",
+    "end": "Data zakończenia",
+    "orderRef": "Nr zamówienia",
+    "quoteRef": "Nr oferty podwykonawcy",
+    "validation": {
+      "description": "Opis prac jest wymagany",
+      "amount": "Podaj kwotę dodatnią",
+      "delay": "Termin płatności od 0 do 365 dni",
+      "dates": "Data zakończenia musi być późniejsza niż data rozpoczęcia"
+    }
+  },
+  "send": {
+    "title": "Wyślij umowę do podpisu",
+    "step": {
+      "donnees": "1. Dane umowy",
+      "signature": "2. Weryfikacja i podpis",
+      "lien": "3. Link do podpisu"
+    },
+    "templateNotice": "Ogólny wzór umowy ramowej o podwykonawstwo (prawo belgijskie, po francusku): do zatwierdzenia przez prawnika. Pola są wstępnie wypełnione z karty podwykonawcy, umowy i budowy; można wszystko poprawić.",
+    "emptyHint": "Puste pole pojawi się w umowie jako wykropkowana linia.",
+    "next": "Sprawdź i podpisz",
+    "rolePlaceholder": "Np.: prezes, członek zarządu",
+    "validity": "Ważność linku (dni)",
+    "yourSignature": "Twój podpis",
+    "reviewed": "Przeczytałem umowę i podpisuję ją w imieniu firmy.",
+    "signAndCreate": "Podpisz i utwórz link",
+    "validation": {
+      "signer": "Podaj nazwę, przedstawiciela i jego stanowisko",
+      "signature": "Złóż podpis",
+      "reviewed": "Potwierdź zapoznanie się z umową",
+      "days": "Ważność linku: od 1 do 90 dni"
+    },
+    "created": "Umowa podpisana po Twojej stronie. Wyślij ten link podwykonawcy:",
+    "copy": "Kopiuj link",
+    "copied": "Skopiowano link",
+    "byEmail": "Wyślij e-mailem",
+    "byWhatsapp": "Wyślij przez WhatsApp",
+    "subject": "Umowa podwykonawcza do podpisu — {{company}}",
+    "message": "Dzień dobry {{name}},\n\n{{company}} zaprasza do zapoznania się z umową podwykonawczą i podpisania jej elektronicznie pod tym linkiem (ważny {{days}} dni):\n{{link}}\n\nTwoje dane są już wypełnione: sprawdź je, uzupełnij w razie potrzeby i podpisz na ekranie.\n\nZ poważaniem,\n{{company}}",
+    "linkHint": "Link jest osobisty: każdy, kto go posiada, może przeglądać i podpisać umowę. Możesz go anulować, dopóki nie zostanie podpisany."
+  },
+  "list": {
+    "sentOn": "Wysłano {{date}}",
+    "viewed": "Otwarto {{date}}",
+    "signedBy": "Podpisał(a) {{name}} {{date}}",
+    "cancel": "Anuluj prośbę",
+    "confirmCancel": "Anulować tę prośbę o podpis? Link przestanie działać.",
+    "pdf": "Pobierz PDF"
+  },
+  "toasts": {
+    "contractCreated": "Utworzono umowę",
+    "cancelled": "Anulowano prośbę"
+  },
+  "sign": {
+    "title": "Umowa podwykonawcza do podpisu",
+    "intro": "{{company}} zaprasza do zapoznania się z tą umową podwykonawczą i jej podpisania. Link jest ważny do {{date}}.",
+    "languageNotice": "Umowa jest sporządzona w języku francuskim; wiążąca jest wyłącznie ta wersja.",
+    "yourDetails": "Twoje dane i podpis",
+    "place": "Miejscowość podpisania",
+    "yourSignature": "Twój podpis",
+    "accept": "Przeczytałem umowę zaproponowaną przez {{company}} wraz z załącznikami i akceptuję ją w imieniu podwykonawcy.",
+    "mustAccept": "Zaznacz pole akceptacji, aby podpisać",
+    "legal": "Podpis elektroniczny: data, godzina, Twój adres IP i odcisk dokumentu są zapisywane jako dowód.",
+    "submit": "Podpisz umowę",
+    "done": "Umowa podpisana",
+    "doneDetail": "Podpisał(a) {{name}} {{date}}. Pobierz swój egzemplarz w PDF.",
+    "downloadPdf": "Pobierz podpisaną umowę (PDF)",
+    "contactSender": "Skontaktuj się z firmą, która wysłała Ci ten link.",
+    "errors": {
+      "lien_invalide": "Ten link do podpisu jest nieprawidłowy.",
+      "lien_annule": "Ta prośba o podpis została anulowana.",
+      "lien_expire": "Ten link do podpisu wygasł.",
+      "deja_signe": "Ta umowa została już podpisana.",
+      "document_modifie": "Wzór umowy zmienił się od wysłania: poproś o nowy link.",
+      "champs_requis": "Podaj imię i nazwisko, stanowisko i miejsce podpisania.",
+      "signature_invalide": "Nie udało się zapisać podpisu. Złóż go ponownie."
+    }
+  },
+  "fields": {
+    "entreprise": {
+      "title": "Wykonawca główny (Twoja firma)",
+      "denomination": "Nazwa",
+      "formeJuridique": "Forma prawna",
+      "bceTva": "BCE / VAT",
+      "adresse": "Siedziba (pełny adres)",
+      "pays": "Kraj",
+      "representant": "Przedstawiciel (imię i nazwisko)",
+      "qualite": "Stanowisko"
+    },
+    "sousTraitant": {
+      "title": "Podwykonawca",
+      "denomination": "Nazwa",
+      "formeJuridique": "Forma prawna",
+      "bceTva": "BCE / VAT",
+      "siege": "Siedziba",
+      "representant": "Przedstawiciel (imię i nazwisko)",
+      "qualite": "Stanowisko",
+      "contact": "Telefon / e-mail do powiadomień",
+      "iban": "Rachunek bankowy IBAN"
+    },
+    "fiche": {
+      "title": "Załącznik 1 — Karta zamówienia / budowy",
+      "reference": "Numer zamówienia",
+      "maitreOuvrage": "Inwestor / klient końcowy",
+      "adresseChantier": "Pełny adres budowy",
+      "natureTravaux": "Rodzaj i dokładny zakres robót",
+      "documentsPlans": "Dokumenty umowne i wersje planów",
+      "dates": "Data rozpoczęcia / etapy / data zakończenia",
+      "prix": "Cena netto i metoda",
+      "tva": "VAT i adnotacja na fakturze",
+      "etatsAvancement": "Protokoły zaawansowania i załączniki",
+      "delaiPaiementJours": "Termin płatności (dni)",
+      "penaliteJour": "Kara za opóźnienie (EUR/dzień)",
+      "penalitePlafond": "Limit kary (EUR)",
+      "assurances": "Wymagane ubezpieczenia i kwoty",
+      "securite": "BHP / koordynator / dostęp",
+      "dechets": "Odpady, składowanie, zabezpieczenia i sprzątanie",
+      "reception": "Odbiór, zastrzeżenia i gwarancja umowna",
+      "contacts": "Osoby kontaktowe / e-maile"
+    },
+    "garanties": "Artykuł 13 — Szczególne gwarancje umowne"
+  }
+}

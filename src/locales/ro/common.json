@@ -102,7 +102,16 @@
     "sousTraitant": {
       "title": "Fișă subcontractor",
       "description": "Informații, verificări ale datoriilor sociale și fiscale, contracte și plăți."
+    },
+    "signer": {
+      "title": "Semnarea contractului",
+      "description": "Citiți și semnați electronic contractul de subcontractare."
     }
   },
-  "indicatif": "Orientativ — de confirmat cu contabilul / secretariatul social."
+  "indicatif": "Orientativ — de confirmat cu contabilul / secretariatul social.",
+  "signature": {
+    "area": "Zonă de semnătură",
+    "hint": "Semnați aici (deget, stylus sau mouse)",
+    "clear": "Șterge"
+  }
 }

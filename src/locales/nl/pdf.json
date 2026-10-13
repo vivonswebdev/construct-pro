@@ -80,5 +80,24 @@
     "estimatedCost": "Geschatte kost",
     "hoursValue": "{{value}} u",
     "presenceFile": "aanwezigheden"
+  },
+  "contrat": {
+    "signatures": "HANDTEKENINGEN",
+    "forContractor": "Voor {{name}}",
+    "forSubcontractor": "Voor de Onderaannemer",
+    "name": "Naam: {{value}}",
+    "role": "Hoedanigheid: {{value}}",
+    "signedOn": "Elektronisch ondertekend op {{date}}",
+    "notSigned": "Wacht op handtekening",
+    "audit": "AUDITSPOOR — ELEKTRONISCHE HANDTEKENING",
+    "auditSent": "Verzending en ondertekening door de aannemer: {{date}}",
+    "auditViewed": "Eerste opening van de link: {{date}}",
+    "auditSigned": "Ondertekening door de onderaannemer: {{date}}",
+    "auditIp": "IP-adres van de ondertekenaar: {{value}}",
+    "auditUa": "Browser van de ondertekenaar: {{value}}",
+    "auditHashSent": "SHA-256-vingerafdruk van het verzonden document: {{value}}",
+    "auditHashSigned": "SHA-256-vingerafdruk van het ondertekende document: {{value}}",
+    "auditNote": "Gewone elektronische handtekening in de zin van Verordening (EU) nr. 910/2014 (eIDAS). Servertijd (Brusselse tijd). Document aangemaakt via ConstructFlow.",
+    "page": "Pagina {{page}} / {{total}}"
   }
 }

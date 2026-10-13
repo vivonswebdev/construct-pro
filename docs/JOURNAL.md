@@ -4,6 +4,54 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-13 (soir) — Phase 9 : contrat de sous-traitance signé par lien
+
+Branche : `phase-09-contrat-signature` (part de `phase-09-sous-traitants-ui`, PR #7).
+
+### Fait
+
+- **Modèle** `sous_traitance_cadre_v1` (`src/lib/contrats/sous-traitance.ts`) : texte intégral du
+  modèle générique fourni par Youssef (19 articles, annexe 1 fiche de commande, annexe 2 liste de
+  contrôle, références juridiques). « [ENTREPRENEUR PRINCIPAL] » et les pointillés sont remplacés
+  par les données ; un champ vide reste en pointillés. Le document est en **français** (seule version
+  qui fait foi) ; l'interface autour est traduite en 5 langues.
+- **Pré-remplissage** depuis la société, le profil, la fiche sous-traitant, le contrat et le chantier
+  (maître d'ouvrage, adresse, prix, délai, autoliquidation…) ; tout est modifiable avant l'envoi.
+- **Circuit** : fiche sous-traitant → « Nouveau contrat » (mission) → « Contrat à signer » →
+  données → relecture + signature manuscrite de l'entrepreneur → lien unique (validité 1 à 90 jours)
+  à copier, envoyer par e-mail (mailto) ou WhatsApp. Suivi : en attente / consulté / signé /
+  annulé / expiré ; annulation ; PDF.
+- **Page publique** `/signer/$token` (sans compte, `noindex`) : contrat pré-rempli, le sous-traitant
+  corrige représentant, qualité, contact, IBAN, indique le lieu, coche l'acceptation et signe au
+  doigt ou à la souris ; PDF signé téléchargeable ensuite.
+- **Migration** `20261013160000_phase9_contrat_signatures.sql` : table `contrat_signatures`
+  (données figées à l'envoi, empreinte SHA-256 du texte envoyé), RPC `security definer`
+  `contrat_a_signer` / `signer_contrat` (seuls accès anonymes), trigger de garde (jeton imposé,
+  pas de création « déjà signée », demande signée ou annulée figée), pas de suppression, contrat
+  signé non supprimable. Signature refusée si le texte présenté diffère de celui envoyé
+  (`document_modifie`). IP et navigateur du signataire enregistrés (piste d'audit).
+- Droits par défaut de Supabase (ALL pour anon/authenticated sur les nouvelles tables) retirés
+  explicitement ; le test PGlite les simule.
+- **PDF** (jsPDF, compressé) : contrat complet, zone de signatures (images), piste d'audit
+  (dates, IP, navigateur, empreintes, mention eIDAS). Lettres hors WinAnsi translittérées
+  (Wiśniewski → Wisniewski) ; signatures converties en JPEG (le PNG sortait sur fond noir).
+- Tests PGlite : 20 OK (`supabase/tests/phase9_contrat_signatures.check.ts`) ; contrôle en lecture
+  seule `supabase/tests/controle_contrat_signatures.sql`. Parcours de signature testé dans le
+  navigateur avec une réponse simulée de la base (empreinte vérifiée, champs transmis).
+
+### Points d'attention
+
+- Signature électronique **simple** (eIDAS) : valable entre professionnels, force probante à
+  apprécier ; pour une signature qualifiée (itsme, eID), passer par un prestataire (à décider).
+- Le modèle est un **modèle générique à faire valider par un juriste**. Toute modification du texte
+  = nouvelle version (`sous_traitance_cadre_v2`), sinon les liens déjà envoyés deviennent
+  insignables (empreinte différente).
+- Versions NL / EN du contrat : à rédiger et faire valider.
+- Envoi automatique par e-mail (sans passer par la messagerie de l'utilisateur) : nécessite un
+  fournisseur d'e-mails (à choisir).
+
+---
+
 ## 2026-10-13 — Migrations appliquées ; phase 9 : écrans sous-traitants (1re partie)
 
 Branche : `phase-09-sous-traitants-ui`.

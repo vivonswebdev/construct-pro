@@ -101,7 +101,16 @@
     "sousTraitant": {
       "title": "Fiche onderaannemer",
       "description": "Gegevens, controles van sociale en fiscale schulden, contracten en betalingen."
+    },
+    "signer": {
+      "title": "Contract ondertekenen",
+      "description": "Lees en onderteken uw onderaannemingscontract elektronisch."
     }
   },
-  "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat."
+  "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat.",
+  "signature": {
+    "area": "Handtekeningveld",
+    "hint": "Teken hier (vinger, stylus of muis)",
+    "clear": "Wissen"
+  }
 }
