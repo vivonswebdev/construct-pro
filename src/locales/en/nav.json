@@ -1,0 +1,28 @@
+{
+  "activeModules": "Active modules",
+  "comingSoon": "Coming soon",
+  "soon": "Soon",
+  "comingSoonText": "This module will be available in the next update.",
+  "signOut": "Sign out",
+  "language": "Interface language",
+  "items": {
+    "dashboard": "Dashboard",
+    "chantiers": "Sites",
+    "clients": "Clients",
+    "personnel": "Staff",
+    "vehicules": "Vehicles",
+    "stock": "Stock",
+    "devis": "Quotes",
+    "tva": "VAT compliance",
+    "precompte": "Withholding tax & NSSO",
+    "assistant": "AI assistant",
+    "profil": "My profile",
+    "belcotax": "Belcotax",
+    "peppol": "Invoicing (Peppol)"
+  },
+  "roles": {
+    "admin": "Administrator",
+    "gerant": "Manager",
+    "ouvrier": "Worker"
+  }
+}

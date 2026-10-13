@@ -1,0 +1,59 @@
+{
+  "title": "Panou de control",
+  "subtitle": "Prezentarea generală a activității",
+  "kpi": {
+    "ca": "Cifră de afaceri totală",
+    "caSub_one": "Buget cumulat pentru {{count}} șantier",
+    "caSub_few": "Buget cumulat pentru {{count}} șantiere",
+    "caSub_other": "Buget cumulat pentru {{count}} de șantiere",
+    "profit": "Profit total",
+    "marginPositive": "Marjă pozitivă",
+    "marginNegative": "Marjă negativă",
+    "activeSites": "Șantiere active",
+    "lateCount_one": "{{count}} întârziat",
+    "lateCount_few": "{{count}} întârziate",
+    "lateCount_other": "{{count}} de întârziate",
+    "activeWorkers": "Muncitori activi",
+    "unassignedCount_one": "{{count}} nealocat",
+    "unassignedCount_few": "{{count}} nealocați",
+    "unassignedCount_other": "{{count}} de nealocați",
+    "pendingQuotes": "Devize în așteptare",
+    "acceptRate": "Rată de acceptare",
+    "acceptRateSub": "{{accepted}} acceptate / {{decided}} decise"
+  },
+  "chart": {
+    "title": "Evoluție financiară",
+    "subtitle": "Cifră de afaceri vs costuri — ultimele 6 luni",
+    "revenue": "Cifră de afaceri",
+    "costs": "Costuri"
+  },
+  "top": {
+    "title": "Top 5 — Rentabilitate",
+    "subtitle": "Cele mai rentabile șantiere",
+    "empty": "Niciun șantier deocamdată."
+  },
+  "alerts": {
+    "title": "Alerte & acțiuni necesare",
+    "lateSites_one": "{{count}} șantier întârziat",
+    "lateSites_few": "{{count}} șantiere întârziate",
+    "lateSites_other": "{{count}} de șantiere întârziate",
+    "noLate": "Nicio întârziere 🎉",
+    "unassigned_one": "{{count}} muncitor nealocat",
+    "unassigned_few": "{{count}} muncitori nealocați",
+    "unassigned_other": "{{count}} de muncitori nealocați",
+    "allAssigned": "Toți sunt alocați",
+    "unpaidSalaries_one": "{{count}} salariu neplătit luna aceasta",
+    "unpaidSalaries_few": "{{count}} salarii neplătite luna aceasta",
+    "unpaidSalaries_other": "{{count}} de salarii neplătite luna aceasta",
+    "unpaidSalariesText": "Vedeți modulul Reținere la sursă & ONSS pentru regularizare",
+    "precompteDue": "Reținerea la sursă trebuie plătită înainte de {{date}}",
+    "precompteDueText": "{{amount}} de plătit către SPF Finanțe",
+    "onssDue": "ONSS T{{quarter}} de plătit înainte de {{date}}",
+    "onssDueText": "{{amount}} de plătit către ONSS",
+    "ctExpired_one": "🚛 {{count}} vehicul cu ITP expirat",
+    "ctExpired_few": "🚛 {{count}} vehicule cu ITP expirat",
+    "ctExpired_other": "🚛 {{count}} de vehicule cu ITP expirat",
+    "insuranceSoon": "⚠️ Asigurare de vehicul de reînnoit",
+    "insuranceSoonItem": "{{plate}} ({{days}} z)"
+  }
+}

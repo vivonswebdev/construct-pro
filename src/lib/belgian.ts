@@ -48,18 +48,3 @@ export const DEFAULTS = {
   onssEmployeeRate: 0.1307,
   onssEmployerRate: 0.27,
 };
-
-export const MONTHS_FR = [
-  "Janvier",
-  "Février",
-  "Mars",
-  "Avril",
-  "Mai",
-  "Juin",
-  "Juillet",
-  "Août",
-  "Septembre",
-  "Octobre",
-  "Novembre",
-  "Décembre",
-];

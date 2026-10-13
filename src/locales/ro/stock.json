@@ -1,0 +1,80 @@
+{
+  "title": "Stoc & materiale",
+  "subtitle": "Catalog, achiziții, ieșiri și impactul asupra profitului șantierelor",
+  "exportCsv": "Export CSV",
+  "purchase": "Achiziție",
+  "issueSlip": "Bon de ieșire",
+  "return": "Retur",
+  "newMaterial": "Material nou",
+  "csvFileName": "miscari_stoc",
+  "kpi": {
+    "references": "Referințe",
+    "stockValue": "Valoarea stocului",
+    "recentPurchases": "Achiziții (recente)",
+    "siteIssues": "Ieșiri către șantiere"
+  },
+  "lowStock_one": "{{count}} produs sub stocul minim",
+  "lowStock_few": "{{count}} produse sub stocul minim",
+  "lowStock_other": "{{count}} de produse sub stocul minim",
+  "tabs": {
+    "catalog": "Catalog",
+    "movements": "Mișcări"
+  },
+  "searchPlaceholder": "Căutați un material sau un SKU…",
+  "noMaterial": "Niciun material.",
+  "noMovement": "Nicio mișcare.",
+  "columns": {
+    "name": "Nume",
+    "sku": "SKU",
+    "stock": "Stoc",
+    "unitPrice": "Preț unitar",
+    "value": "Valoare",
+    "supplier": "Furnizor",
+    "date": "Dată",
+    "type": "Tip",
+    "material": "Material",
+    "qty": "Cant.",
+    "unit": "Unitate",
+    "total": "Total",
+    "site": "Șantier",
+    "supplierRef": "Furnizor / ref.",
+    "reference": "Referință"
+  },
+  "confirmDeleteMovement": "Ștergeți această mișcare? Stocul va fi ajustat.",
+  "materialForm": {
+    "name": "Nume *",
+    "sku": "SKU",
+    "unit": "Unitate",
+    "defaultUnit": "bucată",
+    "unitPrice": "Preț unitar (€)",
+    "initialStock": "Stoc inițial",
+    "minStock": "Stoc minim",
+    "supplier": "Furnizor",
+    "category": "Categorie"
+  },
+  "movementForm": {
+    "material": "Material *",
+    "choose": "— Alegeți —",
+    "materialOption": "{{name}} ({{qty}} {{unit}} disponibil)",
+    "siteRequired": "Șantier *",
+    "siteOptional": "Șantier (opțional)",
+    "none": "— Niciunul —",
+    "quantity": "Cantitate ({{unit}})",
+    "unitPrice": "Preț unitar (€)",
+    "date": "Dată",
+    "supplier": "Furnizor",
+    "invoiceRef": "Referința facturii",
+    "notes": "Note",
+    "total": "Total"
+  },
+  "validation": {
+    "nameRequired": "Numele este obligatoriu",
+    "materialRequired": "Materialul este obligatoriu",
+    "siteRequiredForIssue": "Șantierul este obligatoriu pentru o ieșire",
+    "insufficientStock": "Stoc insuficient ({{qty}} {{unit}} disponibil). Continuați?"
+  },
+  "toasts": {
+    "materialCreated": "Material creat",
+    "movementSaved": "{{label}} înregistrat"
+  }
+}

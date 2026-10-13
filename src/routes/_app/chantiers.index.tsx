@@ -10,34 +10,22 @@ import { toast } from "sonner";
 import { errorMessage } from "@/lib/utils";
 import { ClientSelect } from "@/components/ClientSelect";
 import { clientLabel, clientAddress } from "@/lib/clients";
+import { backdropClose } from "@/lib/modal";
+import { useTranslation } from "react-i18next";
+import { CHANTIER_STATUTS, toCode } from "@/lib/statuts";
+import { nomsPhasesParDefaut, statutChantierStyle } from "@/lib/chantiers";
 
 export const Route = createFileRoute("/_app/chantiers/")({
   component: ChantiersList,
 });
 
-const STATUS_STYLES: Record<string, string> = {
-  "En cours": "bg-cyan-100 text-cyan-700",
-  "En retard": "bg-red-100 text-red-700",
-  Terminé: "bg-emerald-100 text-emerald-700",
-  "En attente": "bg-amber-100 text-amber-700",
-};
-
-const DEFAULT_PHASES = [
-  "Préparation du site",
-  "Fondations",
-  "Gros œuvre",
-  "Charpente & Toiture",
-  "Second œuvre (électricité, plomberie)",
-  "Finitions & Peinture",
-  "Nettoyage & Réception",
-];
-
 function ChantiersList() {
+  const { t } = useTranslation(["chantiers", "common", "statuts"]);
   const { profile, company } = useAuth();
   const qc = useQueryClient();
   const companyId = profile?.company_id;
   const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("Tous");
+  const [status, setStatus] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   const { data: chantiers = [], isLoading } = useQuery({
@@ -54,7 +42,7 @@ function ChantiersList() {
   });
 
   const filtered = chantiers.filter((c) => {
-    if (status !== "Tous" && c.status !== status) return false;
+    if (status && toCode(c.status) !== status) return false;
     if (search && !`${c.name} ${c.client_name ?? ""}`.toLowerCase().includes(search.toLowerCase()))
       return false;
     return true;
@@ -64,7 +52,7 @@ function ChantiersList() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight">Chantiers</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
             {chantiers.length}
           </span>
@@ -74,7 +62,7 @@ function ChantiersList() {
             onClick={() => exportChantiersCSV(filtered)}
             disabled={filtered.length === 0}
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted disabled:opacity-50"
-            title="Exporter en CSV"
+            title={t("exportCsv")}
           >
             <FileSpreadsheet className="h-4 w-4" /> CSV
           </button>
@@ -82,7 +70,7 @@ function ChantiersList() {
             onClick={() => exportChantiersPDF(filtered, company?.name)}
             disabled={filtered.length === 0}
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-semibold text-foreground hover:bg-muted disabled:opacity-50"
-            title="Exporter en PDF"
+            title={t("exportPdf")}
           >
             <FileDown className="h-4 w-4" /> PDF
           </button>
@@ -91,7 +79,7 @@ function ChantiersList() {
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90"
           >
             <Plus className="h-4 w-4" />
-            Nouveau chantier
+            {t("new")}
           </button>
         </div>
       </div>
@@ -102,7 +90,7 @@ function ChantiersList() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher un chantier..."
+            placeholder={t("searchPlaceholder")}
             className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -111,8 +99,11 @@ function ChantiersList() {
           onChange={(e) => setStatus(e.target.value)}
           className="rounded-lg border border-border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
         >
-          {["Tous", "En cours", "En retard", "Terminé", "En attente"].map((s) => (
-            <option key={s}>{s}</option>
+          <option value="">{t("common:labels.all")}</option>
+          {CHANTIER_STATUTS.map((s) => (
+            <option key={s} value={s}>
+              {t(`statuts:chantier.${s}`)}
+            </option>
           ))}
         </select>
       </div>
@@ -130,13 +121,13 @@ function ChantiersList() {
           <table className="w-full text-sm">
             <thead className="border-b border-border bg-muted/50 text-xs uppercase tracking-wider text-muted-foreground">
               <tr>
-                <Th>Chantier</Th>
-                <Th>Client</Th>
-                <Th>Budget</Th>
-                <Th>Progression</Th>
-                <Th>Statut</Th>
-                <Th>Remise</Th>
-                <Th className="text-right">Actions</Th>
+                <Th>{t("columns.site")}</Th>
+                <Th>{t("columns.client")}</Th>
+                <Th>{t("columns.budget")}</Th>
+                <Th>{t("columns.progress")}</Th>
+                <Th>{t("columns.status")}</Th>
+                <Th>{t("columns.handover")}</Th>
+                <Th className="text-right">{t("columns.actions")}</Th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -161,9 +152,9 @@ function ChantiersList() {
                     </Td>
                     <Td>
                       <span
-                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${STATUS_STYLES[c.status] ?? "bg-muted"}`}
+                        className={`rounded-full px-2.5 py-1 text-xs font-semibold ${statutChantierStyle(c.status)}`}
                       >
-                        {c.status}
+                        {t(`statuts:chantier.${toCode(c.status)}`, { defaultValue: c.status })}
                       </span>
                     </Td>
                     <Td>
@@ -172,7 +163,9 @@ function ChantiersList() {
                         <div
                           className={`text-xs ${urgent ? "text-danger font-semibold" : "text-muted-foreground"}`}
                         >
-                          {days < 0 ? `${Math.abs(days)} j de retard` : `${days} j restants`}
+                          {days < 0
+                            ? t("common:time.daysLate", { count: Math.abs(days) })
+                            : t("common:time.daysLeft", { count: days })}
                         </div>
                       )}
                     </Td>
@@ -221,26 +214,26 @@ function Td({ children, className = "" }: { children: React.ReactNode; className
 }
 
 function EmptyState({ onCreate }: { onCreate: () => void }) {
+  const { t } = useTranslation("chantiers");
   return (
     <div className="flex flex-col items-center justify-center py-16 text-center">
       <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-muted">
         <Plus className="h-7 w-7 text-muted-foreground" />
       </div>
-      <h3 className="text-base font-semibold">Aucun chantier pour le moment</h3>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Démarrez en créant votre premier chantier.
-      </p>
+      <h3 className="text-base font-semibold">{t("empty.title")}</h3>
+      <p className="mt-1 text-sm text-muted-foreground">{t("empty.text")}</p>
       <button
         onClick={onCreate}
         className="mt-4 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
       >
-        Créer un chantier
+        {t("create")}
       </button>
     </div>
   );
 }
 
 function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+  const { t } = useTranslation(["chantiers", "common"]);
   const { profile } = useAuth();
   const [form, setForm] = useState({
     name: "",
@@ -272,7 +265,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
           start_date: form.start_date || null,
           end_date: form.end_date || null,
           description: form.description,
-          status: "En attente",
+          status: "en_attente",
           progress: 0,
         })
         .select()
@@ -280,16 +273,16 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
       if (error) throw error;
 
       await supabase.from("etapes").insert(
-        DEFAULT_PHASES.map((name, i) => ({
+        nomsPhasesParDefaut(t).map((name, i) => ({
           chantier_id: chantier.id,
           name,
           order_index: i,
-          status: "En attente",
+          status: "en_attente",
           progress: 0,
         })),
       );
 
-      toast.success("Chantier créé");
+      toast.success(t("toasts.created"));
       onCreated();
     } catch (err) {
       toast.error(errorMessage(err));
@@ -301,7 +294,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-      onClick={onClose}
+      {...backdropClose(onClose)}
     >
       <form
         onSubmit={submit}
@@ -309,13 +302,13 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
         className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Nouveau chantier</h3>
+          <h3 className="text-lg font-semibold">{t("new")}</h3>
           <button type="button" onClick={onClose} className="rounded-md p-1 hover:bg-muted">
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="grid gap-3">
-          <ModalField label="Nom du chantier">
+          <ModalField label={t("form.name")}>
             <input
               required
               className="modal-input"
@@ -323,7 +316,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
               onChange={(e) => setForm({ ...form, name: e.target.value })}
             />
           </ModalField>
-          <ModalField label="Client">
+          <ModalField label={t("form.client")}>
             <ClientSelect
               value={form.client_id}
               onChange={(id, c) =>
@@ -336,7 +329,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
               }
             />
           </ModalField>
-          <ModalField label="Adresse">
+          <ModalField label={t("form.address")}>
             <input
               className="modal-input"
               value={form.address}
@@ -344,7 +337,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
             />
           </ModalField>
           <div className="grid grid-cols-3 gap-3">
-            <ModalField label="Budget (€)">
+            <ModalField label={t("form.budget")}>
               <input
                 type="number"
                 min="0"
@@ -353,7 +346,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
                 onChange={(e) => setForm({ ...form, budget: e.target.value })}
               />
             </ModalField>
-            <ModalField label="Début">
+            <ModalField label={t("form.start")}>
               <input
                 type="date"
                 className="modal-input"
@@ -361,7 +354,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
                 onChange={(e) => setForm({ ...form, start_date: e.target.value })}
               />
             </ModalField>
-            <ModalField label="Remise">
+            <ModalField label={t("form.handover")}>
               <input
                 type="date"
                 className="modal-input"
@@ -370,7 +363,7 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
               />
             </ModalField>
           </div>
-          <ModalField label="Description">
+          <ModalField label={t("form.description")}>
             <textarea
               rows={3}
               className="modal-input"
@@ -385,14 +378,14 @@ function NewChantierModal({ onClose, onCreated }: { onClose: () => void; onCreat
             onClick={onClose}
             className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             type="submit"
             disabled={saving}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
           >
-            {saving ? "..." : "Créer"}
+            {saving ? "…" : t("common:actions.create")}
           </button>
         </div>
         <style>{`

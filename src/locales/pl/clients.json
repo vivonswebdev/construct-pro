@@ -1,0 +1,66 @@
+{
+  "title": "Klienci",
+  "count_one": "{{count}} klient — osoby prywatne i firmy",
+  "count_few": "{{count}} klientów — osoby prywatne i firmy",
+  "count_many": "{{count}} klientów — osoby prywatne i firmy",
+  "count_other": "{{count}} klienta — osoby prywatne i firmy",
+  "new": "Nowy klient",
+  "edit": "Edytuj klienta",
+  "searchPlaceholder": "Szukaj klienta, miejscowości, nr VAT…",
+  "allTypes": "Wszystkie typy",
+  "particuliers": "Osoby prywatne",
+  "entreprises": "Firmy",
+  "empty": "Nie znaleziono klientów.",
+  "notFound": "Nie znaleziono klienta.",
+  "select": "— Wybierz klienta —",
+  "companySuffix": "(firma)",
+  "columns": {
+    "client": "Klient",
+    "type": "Typ",
+    "vat": "Nr VAT",
+    "city": "Miejscowość",
+    "contact": "Kontakt",
+    "language": "Język"
+  },
+  "vatLiable": "Płatnik VAT",
+  "vatLiableLong": "Płatnik VAT",
+  "form": {
+    "companyName": "Nazwa firmy *",
+    "companyNamePlaceholder": "Np. Dumont Immo SRL",
+    "bce": "Nr przedsiębiorstwa",
+    "contactName": "Osoba kontaktowa (nazwisko)",
+    "firstName": "Imię",
+    "lastName": "Nazwisko *",
+    "vat": "Nr VAT",
+    "vatInvalid": "Nieprawidłowy format",
+    "vatLiable": "Płatnik VAT",
+    "address": "Adres",
+    "postalCode": "Kod pocztowy",
+    "city": "Miejscowość",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "language": "Język dokumentów",
+    "notes": "Notatki"
+  },
+  "validation": {
+    "companyNameRequired": "Nazwa firmy jest wymagana",
+    "lastNameRequired": "Nazwisko jest wymagane",
+    "vatInvalid": "Nieprawidłowy belgijski numer VAT (format BE0123456789)",
+    "vatRequiredIfLiable": "Klient będący płatnikiem VAT musi mieć numer VAT"
+  },
+  "toasts": {
+    "created": "Klient utworzony",
+    "updated": "Klient zaktualizowany"
+  },
+  "detail": {
+    "totalQuoted": "Suma ofert (netto)",
+    "totalAccepted": "Suma zaakceptowana (netto)",
+    "sites": "Budowy",
+    "info": "Informacje",
+    "linkedSites": "Powiązane budowy",
+    "noSites": "Brak budów.",
+    "linkedQuotes": "Powiązane oferty",
+    "noQuotes": "Brak ofert.",
+    "confirmDelete": "Usunąć tego klienta? Powiązane budowy i oferty zostaną zachowane."
+  }
+}

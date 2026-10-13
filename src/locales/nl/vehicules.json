@@ -1,0 +1,78 @@
+{
+  "title": "Wagenpark",
+  "count_one": "{{count}} geregistreerd voertuig",
+  "count_other": "{{count}} geregistreerde voertuigen",
+  "add": "Voertuig toevoegen",
+  "new": "Nieuw voertuig",
+  "empty": "Geen voertuigen. Voeg uw eerste voertuig toe om te beginnen.",
+  "notFound": "Voertuig niet gevonden.",
+  "backToList": "Terug naar het wagenpark",
+  "available": "● Beschikbaar",
+  "assigned": "Toegewezen",
+  "perKm": "{{amount}} / km",
+  "badges": {
+    "ct": "Keuring",
+    "insurance": "Verzekering",
+    "maintenance": "Onderhoud"
+  },
+  "form": {
+    "type": "Type",
+    "plate": "Nummerplaat *",
+    "brand": "Merk",
+    "model": "Model",
+    "year": "Bouwjaar",
+    "km": "Kilometerstand",
+    "costPerKm": "Kost/km (€)",
+    "ctDate": "Keuringsdatum",
+    "insuranceDate": "Verzekeringsdatum",
+    "lastMaintenance": "Laatste onderhoud"
+  },
+  "validation": {
+    "plateRequired": "De nummerplaat is verplicht",
+    "invalidKm": "Ongeldige kilometerstand",
+    "selectSite": "Kies een werf"
+  },
+  "toasts": {
+    "added": "Voertuig toegevoegd",
+    "updated": "Bijgewerkt",
+    "assignmentClosed": "Toewijzing afgesloten",
+    "deleted": "Voertuig verwijderd",
+    "assigned": "Voertuig toegewezen"
+  },
+  "detail": {
+    "alertsTitle": "Meldingen & onderhoud",
+    "ct": "Technische keuring",
+    "insurance": "Verzekering",
+    "lastMaintenance": "Laatste onderhoud",
+    "notSet": "Niet ingevuld",
+    "maintenanceDone": "Uitgevoerd op {{date}} · {{count}} d geleden",
+    "maintenancePlanned": "Gepland op {{date}} (over {{count}} d)",
+    "expiredSince": "Vervallen sinds {{count}} d ({{date}})",
+    "expiresOn": "Vervalt op {{date}} ({{count}} d)",
+    "badgeMaintenance": "Onderhoud",
+    "badgeExpired": "Vervallen",
+    "badgeSoon": "Binnenkort",
+    "badgeOk": "OK",
+    "renew": "Vernieuwen",
+    "historyTitle": "Geschiedenis van toewijzingen",
+    "assignToSite": "Aan een werf toewijzen",
+    "noAssignment": "Geen toewijzingen.",
+    "inProgress": "Lopend",
+    "close": "Afsluiten",
+    "endKmPrompt": "Eindkilometerstand (huidige stand: {{km}}):",
+    "confirmDelete": "Dit voertuig en zijn geschiedenis verwijderen?",
+    "columns": {
+      "site": "Werf",
+      "period": "Periode",
+      "km": "Gereden km",
+      "cost": "Voertuigkost"
+    }
+  },
+  "assignModal": {
+    "title": "Aan een werf toewijzen",
+    "site": "Werf",
+    "startDate": "Startdatum",
+    "startKm": "Beginkilometerstand",
+    "submit": "Toewijzen"
+  }
+}

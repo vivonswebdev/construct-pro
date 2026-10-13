@@ -1,0 +1,52 @@
+{
+  "title": "Dashboard",
+  "subtitle": "Overview of your business",
+  "kpi": {
+    "ca": "Total revenue",
+    "caSub_one": "Combined budget of {{count}} site",
+    "caSub_other": "Combined budget of {{count}} sites",
+    "profit": "Total profit",
+    "marginPositive": "Positive margin",
+    "marginNegative": "Negative margin",
+    "activeSites": "Active sites",
+    "lateCount_one": "{{count}} delayed",
+    "lateCount_other": "{{count}} delayed",
+    "activeWorkers": "Active workers",
+    "unassignedCount_one": "{{count}} unassigned",
+    "unassignedCount_other": "{{count}} unassigned",
+    "pendingQuotes": "Pending quotes",
+    "acceptRate": "Acceptance rate",
+    "acceptRateSub": "{{accepted}} accepted / {{decided}} decided"
+  },
+  "chart": {
+    "title": "Financial trend",
+    "subtitle": "Revenue vs costs — last 6 months",
+    "revenue": "Revenue",
+    "costs": "Costs"
+  },
+  "top": {
+    "title": "Top 5 — Profitability",
+    "subtitle": "Most profitable sites",
+    "empty": "No sites yet."
+  },
+  "alerts": {
+    "title": "Alerts & required actions",
+    "lateSites_one": "{{count}} delayed site",
+    "lateSites_other": "{{count}} delayed sites",
+    "noLate": "No delays 🎉",
+    "unassigned_one": "{{count}} unassigned worker",
+    "unassigned_other": "{{count}} unassigned workers",
+    "allAssigned": "Everyone assigned",
+    "unpaidSalaries_one": "{{count}} salary unpaid this month",
+    "unpaidSalaries_other": "{{count}} salaries unpaid this month",
+    "unpaidSalariesText": "See the Withholding tax & NSSO module to settle",
+    "precompteDue": "Withholding tax due before {{date}}",
+    "precompteDueText": "{{amount}} to pay to the FPS Finance",
+    "onssDue": "NSSO Q{{quarter}} due before {{date}}",
+    "onssDueText": "{{amount}} to pay to the NSSO",
+    "ctExpired_one": "🚛 {{count}} vehicle with expired inspection",
+    "ctExpired_other": "🚛 {{count}} vehicles with expired inspection",
+    "insuranceSoon": "⚠️ Vehicle insurance to renew",
+    "insuranceSoonItem": "{{plate}} ({{days}} d)"
+  }
+}

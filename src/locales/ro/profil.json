@@ -1,0 +1,20 @@
+{
+  "title": "Profilul meu",
+  "subtitle": "Gestionați datele personale și pe cele ale firmei.",
+  "personal": "Date personale",
+  "role": "Rol: {{role}}",
+  "fullName": "Nume complet",
+  "avatarUrl": "URL avatar (opțional)",
+  "language": "Limba interfeței",
+  "languageHelp": "Salvată în profil: vă urmează pe toate dispozitivele.",
+  "company": "Firma mea",
+  "companyName": "Numele firmei",
+  "address": "Adresă",
+  "bce": "Număr de întreprindere",
+  "logoUrl": "URL logo (opțional)",
+  "avatarAlt": "Avatar",
+  "toasts": {
+    "profileUpdated": "Profil actualizat",
+    "companyUpdated": "Firmă actualizată"
+  }
+}

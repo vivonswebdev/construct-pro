@@ -1,0 +1,99 @@
+{
+  "appName": "ConstructFlow",
+  "meta": {
+    "title": "ConstructFlow — Construction site management",
+    "description": "Site management platform for Belgian construction companies."
+  },
+  "actions": {
+    "add": "Add",
+    "cancel": "Cancel",
+    "close": "Close",
+    "confirm": "Confirm",
+    "create": "Create",
+    "delete": "Delete",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving…",
+    "search": "Search",
+    "back": "Back",
+    "see": "View",
+    "export": "Export",
+    "understood": "Got it",
+    "translate": "Translate",
+    "showOriginal": "Show original",
+    "translating": "Translating…"
+  },
+  "labels": {
+    "all": "All",
+    "none": "None",
+    "unknown": "—",
+    "notes": "Notes",
+    "status": "Status",
+    "date": "Date",
+    "total": "Total",
+    "language": "Language",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "postalCode": "Postcode",
+    "city": "Town",
+    "vat": "VAT",
+    "bce": "Company number",
+    "name": "Name",
+    "firstName": "First name",
+    "description": "Description",
+    "quantity": "Qty",
+    "type": "Type",
+    "user": "User"
+  },
+  "units": {
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "daysShort": "{{count}} d",
+    "hoursShort": "{{count}} h",
+    "km": "{{value}} km"
+  },
+  "time": {
+    "daysLeft": "{{count}} d left",
+    "daysLate": "{{count}} d late"
+  },
+  "errors": {
+    "generic": "Something went wrong",
+    "notFound": "Page not found",
+    "backHome": "Back to home",
+    "loading": "Loading…"
+  },
+  "toasts": {
+    "saved": "Saved",
+    "updated": "Updated",
+    "deleted": "Deleted",
+    "created": "Created"
+  },
+  "translation": {
+    "translatedFrom": "Automatically translated",
+    "failed": "Translation failed"
+  },
+  "pages": {
+    "clients": {
+      "title": "Clients",
+      "description": "Manage your private and business clients, their VAT numbers and their sites."
+    },
+    "client": {
+      "title": "Client record",
+      "description": "Client details, linked sites and quotes."
+    },
+    "devis": {
+      "title": "Quotes",
+      "description": "Client quotes with Belgian VAT, reverse charge and 6% VAT."
+    },
+    "devisDetail": {
+      "title": "Quote",
+      "description": "Edit a quote with lines, Belgian VAT and PDF export."
+    },
+    "assistant": {
+      "title": "AI assistant",
+      "description": "Ask questions about your sites, quotes and Belgian compliance: the assistant answers from your data."
+    }
+  },
+  "indicatif": "Indicative — to be confirmed by your accountant / social secretariat."
+}

@@ -1,0 +1,79 @@
+{
+  "title": "Parc auto",
+  "count_one": "{{count}} vehicul înregistrat",
+  "count_few": "{{count}} vehicule înregistrate",
+  "count_other": "{{count}} de vehicule înregistrate",
+  "add": "Adaugă un vehicul",
+  "new": "Vehicul nou",
+  "empty": "Niciun vehicul. Adăugați primul vehicul pentru a începe.",
+  "notFound": "Vehiculul nu a fost găsit.",
+  "backToList": "Înapoi la parcul auto",
+  "available": "● Disponibil",
+  "assigned": "Alocat",
+  "perKm": "{{amount}} / km",
+  "badges": {
+    "ct": "ITP",
+    "insurance": "Asigurare",
+    "maintenance": "Revizie"
+  },
+  "form": {
+    "type": "Tip",
+    "plate": "Număr de înmatriculare *",
+    "brand": "Marcă",
+    "model": "Model",
+    "year": "An",
+    "km": "Kilometraj",
+    "costPerKm": "Cost/km (€)",
+    "ctDate": "Data ITP",
+    "insuranceDate": "Data asigurării",
+    "lastMaintenance": "Ultima revizie"
+  },
+  "validation": {
+    "plateRequired": "Numărul de înmatriculare este obligatoriu",
+    "invalidKm": "Kilometraj invalid",
+    "selectSite": "Selectați un șantier"
+  },
+  "toasts": {
+    "added": "Vehicul adăugat",
+    "updated": "Actualizat",
+    "assignmentClosed": "Alocare închisă",
+    "deleted": "Vehicul șters",
+    "assigned": "Vehicul alocat"
+  },
+  "detail": {
+    "alertsTitle": "Alerte & revizii",
+    "ct": "Inspecție tehnică periodică",
+    "insurance": "Asigurare",
+    "lastMaintenance": "Ultima revizie",
+    "notSet": "Necompletat",
+    "maintenanceDone": "Efectuată la {{date}} · acum {{count}} z",
+    "maintenancePlanned": "Programată la {{date}} (peste {{count}} z)",
+    "expiredSince": "Expirat de {{count}} z ({{date}})",
+    "expiresOn": "Expiră la {{date}} ({{count}} z)",
+    "badgeMaintenance": "Revizie",
+    "badgeExpired": "Expirat",
+    "badgeSoon": "În curând",
+    "badgeOk": "OK",
+    "renew": "Reînnoiește",
+    "historyTitle": "Istoricul alocărilor",
+    "assignToSite": "Alocă unui șantier",
+    "noAssignment": "Nicio alocare.",
+    "inProgress": "În curs",
+    "close": "Închide",
+    "endKmPrompt": "Kilometraj final (actual: {{km}} km):",
+    "confirmDelete": "Ștergeți acest vehicul și istoricul său?",
+    "columns": {
+      "site": "Șantier",
+      "period": "Perioadă",
+      "km": "Km parcurși",
+      "cost": "Cost vehicul"
+    }
+  },
+  "assignModal": {
+    "title": "Alocă unui șantier",
+    "site": "Șantier",
+    "startDate": "Data de început",
+    "startKm": "Kilometraj inițial",
+    "submit": "Alocă"
+  }
+}

@@ -2,6 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { chat } from "./ai.server";
+import { toCode } from "./statuts";
 
 const inputSchema = z.object({
   messages: z
@@ -13,7 +14,17 @@ const inputSchema = z.object({
     )
     .min(1)
     .max(30),
+  /** Langue de l'interface : l'assistant répond dans cette langue. */
+  langue: z.enum(["fr", "nl", "en", "ro", "pl"]).default("fr"),
 });
+
+const NOMS_LANGUES = {
+  fr: "français",
+  nl: "néerlandais",
+  en: "anglais",
+  ro: "roumain",
+  pl: "polonais",
+} as const;
 
 function eur(n: number) {
   return `${Math.round(Number(n) || 0).toLocaleString("fr-BE")} €`;
@@ -42,9 +53,11 @@ export const askAssistant = createServerFn({ method: "POST" })
     const devis = deRes.data ?? [];
     const materiaux = maRes.data ?? [];
 
-    const devisAttente = devis.filter((f) => f.status === "Envoyé" || f.status === "Brouillon");
-    const devisAcc = devis.filter((f) => f.status === "Accepté").length;
-    const devisDec = devis.filter((f) => ["Accepté", "Refusé", "Expiré"].includes(f.status)).length;
+    const devisAttente = devis.filter((f) => ["envoye", "brouillon"].includes(toCode(f.status)));
+    const devisAcc = devis.filter((f) => toCode(f.status) === "accepte").length;
+    const devisDec = devis.filter((f) =>
+      ["accepte", "refuse", "expire"].includes(toCode(f.status)),
+    ).length;
     const lowStock = materiaux.filter(
       (m) => Number(m.stock_quantity) <= Number(m.min_stock) && Number(m.min_stock) > 0,
     );
@@ -75,7 +88,7 @@ export const askAssistant = createServerFn({ method: "POST" })
     ].join("\n");
 
     const system = `Tu es l'assistant IA de ConstructFlow, un logiciel de gestion pour entreprises de construction belges.
-Tu réponds TOUJOURS en français, de façon concise et opérationnelle (listes à puces, chiffres précis).
+Tu réponds TOUJOURS en ${NOMS_LANGUES[data.langue]}, de façon concise et opérationnelle (listes à puces, chiffres précis), même si les données ci-dessous sont en français. Les statuts sont des codes (en_cours, accepte…) : traduis-les dans ta réponse.
 Formats belges : montants "245 000 €", dates JJ/MM/AAAA.
 Tu connais la réglementation belge du secteur : TVA 21/12/6/0 %, autoliquidation entre assujettis, obligation de retenue 15 % (checkobligationderetenue.be), précompte professionnel, ONSS trimestriel, commission paritaire 124.
 Base tes réponses UNIQUEMENT sur les données ci-dessous. Si une information manque, dis-le clairement.

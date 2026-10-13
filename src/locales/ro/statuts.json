@@ -1,0 +1,58 @@
+{
+  "chantier": {
+    "en_attente": "În așteptare",
+    "en_cours": "În curs",
+    "en_retard": "Întârziat",
+    "termine": "Finalizat"
+  },
+  "devis": {
+    "brouillon": "Ciornă",
+    "envoye": "Trimis",
+    "accepte": "Acceptat",
+    "refuse": "Refuzat",
+    "expire": "Expirat"
+  },
+  "presence": {
+    "present": "Prezent",
+    "absent": "Absent",
+    "conge": "Concediu"
+  },
+  "personnel": {
+    "actif": "Activ",
+    "inactif": "Inactiv"
+  },
+  "contrat": {
+    "cdi": "Durată nedeterminată",
+    "cdd": "Durată determinată",
+    "interim": "Muncă temporară",
+    "independant": "Independent"
+  },
+  "vehicule": {
+    "disponible": "Disponibil",
+    "affecte": "Alocat",
+    "maintenance": "În service"
+  },
+  "vehiculeType": {
+    "camionnette": "Dubă",
+    "camion": "Camion",
+    "voiture": "Autoturism",
+    "engin": "Utilaj",
+    "remorque": "Remorcă"
+  },
+  "mouvement": {
+    "achat": "Achiziție",
+    "sortie": "Ieșire",
+    "retour": "Retur"
+  },
+  "clientType": {
+    "particulier": "Persoană fizică",
+    "entreprise": "Firmă"
+  },
+  "langue": {
+    "fr": "Franceză",
+    "nl": "Neerlandeză",
+    "en": "Engleză",
+    "ro": "Română",
+    "pl": "Poloneză"
+  }
+}

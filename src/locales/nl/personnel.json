@@ -1,0 +1,43 @@
+{
+  "title": "Personeel",
+  "add": "Arbeider toevoegen",
+  "addFirst": "Uw eerste arbeider toevoegen",
+  "new": "Nieuwe arbeider",
+  "searchPlaceholder": "Een arbeider zoeken…",
+  "empty": "Nog geen arbeiders",
+  "backToList": "Terug naar het personeel",
+  "card": {
+    "site": "Werf",
+    "contract": "Contract",
+    "notAssigned": "Niet toegewezen",
+    "last7Days": "Laatste 7 dagen"
+  },
+  "form": {
+    "fullName": "Volledige naam",
+    "nrn": "Rijksregisternummer",
+    "phone": "Telefoon",
+    "email": "E-mail",
+    "contract": "Soort contract",
+    "hourlyRate": "Uurloon (€/u)",
+    "language": "Taal van de arbeider"
+  },
+  "toasts": {
+    "added": "Arbeider toegevoegd",
+    "languageSaved": "Taal opgeslagen"
+  },
+  "detail": {
+    "hourlyRate": "Uurloon",
+    "hourlyRateValue": "{{value}} €/u",
+    "presenceTitle": "Aanwezigheden — {{month}}",
+    "reportPdf": "Pdf-rapport",
+    "reportPdfTitle": "Het maandrapport als pdf exporteren",
+    "clickToChange": "Klik om te wijzigen",
+    "statPresent": "dagen aanwezig",
+    "statAbsent": "afwezig",
+    "statLeave": "verlof",
+    "statHours": "gewerkte uren",
+    "sites": "Toegewezen werven",
+    "noAssignment": "Geen lopende toewijzing.",
+    "since": "sinds {{date}}"
+  }
+}

@@ -5,12 +5,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { LanguageSelector } from "@/components/LanguageSelector";
 
 export const Route = createFileRoute("/_app/profil")({
   component: ProfilPage,
 });
 
 function ProfilPage() {
+  const { t } = useTranslation(["profil", "nav", "common"]);
   const { user, profile, company, refreshProfile } = useAuth();
 
   const [fullName, setFullName] = useState("");
@@ -59,7 +62,7 @@ function ProfilPage() {
     setSavingProfile(false);
     if (error) toast.error(error.message);
     else {
-      toast.success("Profil mis à jour");
+      toast.success(t("toasts.profileUpdated"));
       refreshProfile();
     }
   };
@@ -79,7 +82,7 @@ function ProfilPage() {
     setSavingCompany(false);
     if (error) toast.error(error.message);
     else {
-      toast.success("Entreprise mise à jour");
+      toast.success(t("toasts.companyUpdated"));
       refreshProfile();
     }
   };
@@ -87,20 +90,22 @@ function ProfilPage() {
   return (
     <div className="mx-auto max-w-3xl space-y-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Mon profil</h1>
-        <p className="text-sm text-muted-foreground">
-          Gérez vos informations personnelles et celles de votre entreprise.
-        </p>
+        <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           <User className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold">Informations personnelles</h2>
+          <h2 className="text-lg font-semibold">{t("personal")}</h2>
         </div>
         <div className="flex items-center gap-4">
           {avatarUrl ? (
-            <img src={avatarUrl} alt="avatar" className="h-16 w-16 rounded-full object-cover" />
+            <img
+              src={avatarUrl}
+              alt={t("avatarAlt")}
+              className="h-16 w-16 rounded-full object-cover"
+            />
           ) : (
             <div
               className={`flex h-16 w-16 items-center justify-center rounded-full text-lg font-bold text-white ${avatarColor(fullName || "?")}`}
@@ -110,24 +115,34 @@ function ProfilPage() {
           )}
           <div className="text-sm text-muted-foreground">
             <div className="font-semibold text-foreground">{user?.email}</div>
-            <div>Rôle : {profile?.role ?? "—"}</div>
+            <div>
+              {t("role", {
+                role: profile?.role
+                  ? t(`nav:roles.${profile.role}`, { defaultValue: profile.role })
+                  : "—",
+              })}
+            </div>
           </div>
         </div>
         <div className="mt-5 grid gap-3">
-          <Field label="Nom complet">
+          <Field label={t("fullName")}>
             <input
               className="pf-input"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
             />
           </Field>
-          <Field label="URL de l'avatar (optionnel)">
+          <Field label={t("avatarUrl")}>
             <input
               className="pf-input"
               placeholder="https://..."
               value={avatarUrl}
               onChange={(e) => setAvatarUrl(e.target.value)}
             />
+          </Field>
+          <Field label={t("language")}>
+            <LanguageSelector className="pf-input" />
+            <span className="mt-1 block text-xs text-muted-foreground">{t("languageHelp")}</span>
           </Field>
         </div>
         <div className="mt-5 flex justify-end">
@@ -136,7 +151,7 @@ function ProfilPage() {
             disabled={savingProfile}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
           >
-            <Save className="h-4 w-4" /> {savingProfile ? "..." : "Enregistrer"}
+            <Save className="h-4 w-4" /> {savingProfile ? "…" : t("common:actions.save")}
           </button>
         </div>
       </section>
@@ -144,17 +159,17 @@ function ProfilPage() {
       <section className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex items-center gap-2">
           <Building2 className="h-5 w-5 text-primary" />
-          <h2 className="text-lg font-semibold">Mon entreprise</h2>
+          <h2 className="text-lg font-semibold">{t("company")}</h2>
         </div>
         <div className="grid gap-3">
-          <Field label="Nom de l'entreprise">
+          <Field label={t("companyName")}>
             <input
               className="pf-input"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
             />
           </Field>
-          <Field label="Adresse">
+          <Field label={t("address")}>
             <input
               className="pf-input"
               value={address}
@@ -162,7 +177,7 @@ function ProfilPage() {
             />
           </Field>
           <div className="grid gap-3 sm:grid-cols-2">
-            <Field label="Numéro BCE">
+            <Field label={t("bce")}>
               <input
                 className="pf-input"
                 placeholder="BE 0123.456.789"
@@ -170,7 +185,7 @@ function ProfilPage() {
                 onChange={(e) => setBce(e.target.value)}
               />
             </Field>
-            <Field label="URL du logo (optionnel)">
+            <Field label={t("logoUrl")}>
               <input
                 className="pf-input"
                 placeholder="https://..."
@@ -186,7 +201,7 @@ function ProfilPage() {
             disabled={savingCompany}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
           >
-            <Save className="h-4 w-4" /> {savingCompany ? "..." : "Enregistrer"}
+            <Save className="h-4 w-4" /> {savingCompany ? "…" : t("common:actions.save")}
           </button>
         </div>
       </section>

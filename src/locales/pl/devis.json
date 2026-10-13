@@ -1,0 +1,92 @@
+{
+  "title": "Oferty",
+  "subtitle": "Belgijski VAT dla każdej pozycji (21 % / 6 % / 0 %) i odwrotne obciążenie",
+  "exportCsv": "Eksport CSV",
+  "csvFileName": "oferty",
+  "new": "Nowa oferta",
+  "count_one": "{{count}} oferta",
+  "count_few": "{{count}} oferty",
+  "count_many": "{{count}} ofert",
+  "count_other": "{{count}} oferty",
+  "kpi": {
+    "totalQuoted": "Suma ofert (netto)",
+    "accepted": "Zaakceptowane (netto)",
+    "pending": "Oczekujące oferty",
+    "acceptRate": "Wskaźnik akceptacji"
+  },
+  "searchPlaceholder": "Szukaj numeru lub klienta…",
+  "allStatuses": "Wszystkie statusy",
+  "empty": "Brak ofert.",
+  "columns": {
+    "number": "Numer",
+    "client": "Klient",
+    "date": "Data",
+    "validity": "Ważna do",
+    "totalIncl": "Suma brutto",
+    "status": "Status",
+    "excl": "Netto (€)",
+    "vat": "VAT (€)",
+    "incl": "Brutto (€)"
+  },
+  "form": {
+    "client": "Klient *",
+    "number": "Numer",
+    "issueDate": "Data wystawienia",
+    "validUntil": "Ważna do",
+    "createAndEdit": "Utwórz i edytuj",
+    "creating": "Tworzenie…"
+  },
+  "validation": {
+    "selectClient": "Wybierz klienta"
+  },
+  "toasts": {
+    "created": "Oferta utworzona",
+    "saved": "Zapisano",
+    "statusChanged": "Status: {{status}}",
+    "duplicated": "Oferta zduplikowana",
+    "siteCreated": "Budowa utworzona",
+    "deleted": "Usunięto"
+  },
+  "detail": {
+    "title": "Oferta {{number}}",
+    "issued": "Wystawiona {{issue}} · ważna do {{until}}",
+    "pdf": "PDF",
+    "pdfLanguage": "PDF w języku: {{language}} (język klienta)",
+    "duplicate": "Duplikuj",
+    "markSent": "Oznacz jako wysłaną",
+    "accepted": "Zaakceptowana",
+    "refused": "Odrzucona",
+    "viewSite": "Zobacz budowę",
+    "createSite": "Utwórz budowę",
+    "save": "Zapisz",
+    "client": "Klient",
+    "clientVat": "VAT: {{value}}",
+    "vatLiable": "Płatnik VAT",
+    "reverseCharge": "Odwrotne obciążenie",
+    "reverseChargeHelp": "VAT 0 %, adnotacja „{{mention}}” na PDF.",
+    "details": "Szczegóły",
+    "lines": "Pozycje",
+    "addLine": "Dodaj",
+    "noLines": "Brak pozycji. Kliknij „Dodaj”.",
+    "linePlaceholder": "Np. roboty ziemne, stan surowy, dach…",
+    "subtotalExcl": "Suma częściowa netto",
+    "vatOn": "VAT {{rate}} % (od {{base}})",
+    "totalIncl": "Suma brutto",
+    "notes": "Notatki",
+    "notesPlaceholder": "Wiadomość dla klienta",
+    "conditions": "Warunki",
+    "conditionsPlaceholder": "Ważność, zaliczka, terminy…",
+    "siteNamePrompt": "Nazwa budowy",
+    "siteNameDefault": "Budowa {{client}}",
+    "siteDescription": "Utworzona z oferty {{number}}",
+    "confirmDelete": "Trwale usunąć tę ofertę?",
+    "defaultCompany": "Moja firma"
+  },
+  "columnsLines": {
+    "description": "Opis",
+    "qty": "Ilość",
+    "unitPrice": "Cena jedn.",
+    "vat": "VAT",
+    "totalExcl": "Suma netto"
+  }
+}

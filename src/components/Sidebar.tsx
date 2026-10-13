@@ -16,29 +16,33 @@ import {
   Receipt,
 } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { useAuth } from "@/lib/auth";
 import { initials } from "@/lib/format";
+import { backdropClose } from "@/lib/modal";
 
 const ACTIVE_NAV = [
-  { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/chantiers", label: "Chantiers", icon: HardHat },
-  { to: "/clients", label: "Clients", icon: Contact },
-  { to: "/personnel", label: "Personnel", icon: Users },
-  { to: "/vehicules", label: "Véhicules", icon: Truck },
-  { to: "/stock", label: "Stock", icon: Package },
-  { to: "/facturation", label: "Devis", icon: FileText },
-  { to: "/conformite-tva", label: "Conformité TVA", icon: ShieldCheck },
-  { to: "/precompte", label: "Précompte & ONSS", icon: Landmark },
-  { to: "/assistant", label: "Assistant IA", icon: Sparkles },
-  { to: "/profil", label: "Mon profil", icon: UserCircle },
+  { to: "/dashboard", key: "dashboard", icon: LayoutDashboard },
+  { to: "/chantiers", key: "chantiers", icon: HardHat },
+  { to: "/clients", key: "clients", icon: Contact },
+  { to: "/personnel", key: "personnel", icon: Users },
+  { to: "/vehicules", key: "vehicules", icon: Truck },
+  { to: "/stock", key: "stock", icon: Package },
+  { to: "/facturation", key: "devis", icon: FileText },
+  { to: "/conformite-tva", key: "tva", icon: ShieldCheck },
+  { to: "/precompte", key: "precompte", icon: Landmark },
+  { to: "/assistant", key: "assistant", icon: Sparkles },
+  { to: "/profil", key: "profil", icon: UserCircle },
 ] as const;
 
 const COMING_SOON = [
-  { key: "belcotax", label: "Belcotax", icon: Calculator },
-  { key: "peppol", label: "Facturation (Peppol)", icon: Receipt },
+  { key: "belcotax", icon: Calculator },
+  { key: "peppol", icon: Receipt },
 ] as const;
 
 export function Sidebar() {
+  const { t } = useTranslation(["nav", "common"]);
   const { profile, company, signOut } = useAuth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [csModal, setCsModal] = useState<string | null>(null);
@@ -52,10 +56,10 @@ export function Sidebar() {
         {/* Logo */}
         <div className="flex items-center gap-3 px-5 py-5">
           <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-bold text-white">
-            CF
+            CF {/* i18n-ignore : monogramme */}
           </div>
           <div className="leading-tight">
-            <div className="text-sm font-bold text-white">ConstructFlow</div>
+            <div className="text-sm font-bold text-white">{t("common:appName")}</div>
             <div className="truncate text-xs text-sidebar-text">{company?.name ?? "—"}</div>
           </div>
         </div>
@@ -63,7 +67,7 @@ export function Sidebar() {
         {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-2 py-2">
           <div className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-wider text-sidebar-text/60">
-            Modules actifs
+            {t("activeModules")}
           </div>
           {ACTIVE_NAV.map((item) => {
             const active = isActive(item.to);
@@ -79,13 +83,13 @@ export function Sidebar() {
                 }`}
               >
                 <Icon className="h-4 w-4" />
-                {item.label}
+                {t(`items.${item.key}`)}
               </Link>
             );
           })}
 
           <div className="mb-1 mt-5 px-3 text-[10px] font-semibold uppercase tracking-wider text-sidebar-text/60">
-            Bientôt disponible
+            {t("comingSoon")}
           </div>
           {COMING_SOON.map((item) => {
             const Icon = item.icon;
@@ -93,13 +97,13 @@ export function Sidebar() {
               <button
                 key={item.key}
                 type="button"
-                onClick={() => setCsModal(item.label)}
+                onClick={() => setCsModal(t(`items.${item.key}`))}
                 className="mx-1 mb-1 flex w-[calc(100%-0.5rem)] items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-sidebar-text/70 transition hover:bg-white/5 hover:text-white"
               >
                 <Icon className="h-4 w-4" />
-                <span className="flex-1 text-left">{item.label}</span>
+                <span className="flex-1 text-left">{t(`items.${item.key}`)}</span>
                 <span className="rounded-full bg-white/10 px-1.5 py-0.5 text-[10px] font-semibold text-sidebar-text">
-                  Bientôt
+                  {t("soon")}
                 </span>
               </button>
             );
@@ -108,20 +112,23 @@ export function Sidebar() {
 
         {/* User */}
         <div className="border-t border-white/5 p-3">
+          <LanguageSelector className="mb-2 w-full rounded-md border border-white/10 bg-white/5 px-2 py-1.5 text-xs text-sidebar-text outline-none hover:bg-white/10 [&>option]:text-foreground" />
           <div className="flex items-center gap-3 rounded-lg px-2 py-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
               {initials(profile?.full_name)}
             </div>
             <div className="min-w-0 flex-1 leading-tight">
               <div className="truncate text-xs font-semibold text-white">
-                {profile?.full_name ?? "Utilisateur"}
+                {profile?.full_name ?? t("common:labels.user")}
               </div>
-              <div className="text-[11px] text-sidebar-text capitalize">{profile?.role ?? ""}</div>
+              <div className="text-[11px] text-sidebar-text">
+                {profile?.role ? t(`roles.${profile.role}`, { defaultValue: profile.role }) : ""}
+              </div>
             </div>
             <button
               onClick={signOut}
               className="rounded-md p-1.5 text-sidebar-text transition hover:bg-white/10 hover:text-white"
-              title="Se déconnecter"
+              title={t("signOut")}
             >
               <LogOut className="h-4 w-4" />
             </button>
@@ -133,7 +140,7 @@ export function Sidebar() {
       {csModal && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
-          onClick={() => setCsModal(null)}
+          {...backdropClose(() => setCsModal(null))}
         >
           <div
             className="w-full max-w-sm rounded-2xl bg-card p-6 text-center shadow-xl"
@@ -143,14 +150,12 @@ export function Sidebar() {
               <Package className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-lg font-semibold">{csModal}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Ce module sera disponible dans la prochaine mise à jour.
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground">{t("comingSoonText")}</p>
             <button
               onClick={() => setCsModal(null)}
               className="mt-5 w-full rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
             >
-              Compris
+              {t("common:actions.understood")}
             </button>
           </div>
         </div>

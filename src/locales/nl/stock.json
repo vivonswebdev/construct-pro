@@ -1,0 +1,79 @@
+{
+  "title": "Voorraad & materialen",
+  "subtitle": "Catalogus, aankopen, uitgiften en impact op de winst van de werven",
+  "exportCsv": "CSV-export",
+  "purchase": "Aankoop",
+  "issueSlip": "Uitgiftebon",
+  "return": "Retour",
+  "newMaterial": "Nieuw materiaal",
+  "csvFileName": "voorraadbewegingen",
+  "kpi": {
+    "references": "Referenties",
+    "stockValue": "Waarde van de voorraad",
+    "recentPurchases": "Aankopen (recent)",
+    "siteIssues": "Uitgiften naar werven"
+  },
+  "lowStock_one": "{{count}} product onder de minimumvoorraad",
+  "lowStock_other": "{{count}} producten onder de minimumvoorraad",
+  "tabs": {
+    "catalog": "Catalogus",
+    "movements": "Bewegingen"
+  },
+  "searchPlaceholder": "Een materiaal of SKU zoeken…",
+  "noMaterial": "Geen materialen.",
+  "noMovement": "Geen bewegingen.",
+  "columns": {
+    "name": "Naam",
+    "sku": "SKU",
+    "stock": "Voorraad",
+    "unitPrice": "Eenheidsprijs",
+    "value": "Waarde",
+    "supplier": "Leverancier",
+    "date": "Datum",
+    "type": "Type",
+    "material": "Materiaal",
+    "qty": "Aant.",
+    "unit": "Eenheid",
+    "total": "Totaal",
+    "site": "Werf",
+    "supplierRef": "Leverancier / ref.",
+    "reference": "Referentie"
+  },
+  "confirmDeleteMovement": "Deze beweging verwijderen? De voorraad wordt aangepast.",
+  "materialForm": {
+    "name": "Naam *",
+    "sku": "SKU",
+    "unit": "Eenheid",
+    "defaultUnit": "stuk",
+    "unitPrice": "Eenheidsprijs (€)",
+    "initialStock": "Beginvoorraad",
+    "minStock": "Minimumvoorraad",
+    "supplier": "Leverancier",
+    "category": "Categorie"
+  },
+  "movementForm": {
+    "material": "Materiaal *",
+    "choose": "— Kiezen —",
+    "materialOption": "{{name}} ({{qty}} {{unit}} beschikbaar)",
+    "siteRequired": "Werf *",
+    "siteOptional": "Werf (optioneel)",
+    "none": "— Geen —",
+    "quantity": "Hoeveelheid ({{unit}})",
+    "unitPrice": "Eenheidsprijs (€)",
+    "date": "Datum",
+    "supplier": "Leverancier",
+    "invoiceRef": "Factuurreferentie",
+    "notes": "Notities",
+    "total": "Totaal"
+  },
+  "validation": {
+    "nameRequired": "Naam verplicht",
+    "materialRequired": "Materiaal verplicht",
+    "siteRequiredForIssue": "Werf verplicht voor een uitgifte",
+    "insufficientStock": "Onvoldoende voorraad ({{qty}} {{unit}} beschikbaar). Toch doorgaan?"
+  },
+  "toasts": {
+    "materialCreated": "Materiaal aangemaakt",
+    "movementSaved": "{{label}} geregistreerd"
+  }
+}

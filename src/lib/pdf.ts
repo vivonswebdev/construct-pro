@@ -1,6 +1,13 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatEUR, formatDateBE } from "./format";
+import i18n, { intlLocale, joursSemaineCourts } from "./i18n";
+import { toCode } from "./statuts";
+
+/**
+ * Rapports internes (liste des chantiers, présences) : dans la langue de l'interface.
+ * Les documents destinés aux clients (devis) sont dans invoice-pdf.ts, dans la langue du client.
+ */
 
 /** Position Y de fin du dernier tableau jspdf-autotable (propriété ajoutée au document). */
 export function lastTableY(doc: jsPDF): number {
@@ -19,7 +26,8 @@ type Chantier = {
   end_date: string | null;
 };
 
-const today = () => formatDateBE(new Date());
+const t = () => i18n.getFixedT(i18n.language, "pdf");
+const statutChantier = (s: string) => i18n.t(`statuts:chantier.${toCode(s)}`, { defaultValue: s });
 
 function header(doc: jsPDF, title: string, subtitle?: string) {
   doc.setFillColor(15, 23, 42);
@@ -30,7 +38,12 @@ function header(doc: jsPDF, title: string, subtitle?: string) {
   doc.text("ConstructFlow", 14, 14);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.text(`Édité le ${today()}`, doc.internal.pageSize.getWidth() - 14, 14, { align: "right" });
+  doc.text(
+    t()("reports.editedOn", { date: formatDateBE(new Date()) }),
+    doc.internal.pageSize.getWidth() - 14,
+    14,
+    { align: "right" },
+  );
   doc.setTextColor(15, 23, 42);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
@@ -45,8 +58,9 @@ function header(doc: jsPDF, title: string, subtitle?: string) {
 }
 
 export function exportChantiersPDF(chantiers: Chantier[], companyName?: string) {
+  const tr = t();
   const doc = new jsPDF({ orientation: "landscape" });
-  header(doc, "Liste des chantiers", companyName ?? undefined);
+  header(doc, tr("reports.sitesTitle"), companyName ?? undefined);
 
   const totalBudget = chantiers.reduce((s, c) => s + Number(c.budget ?? 0), 0);
   const totalCosts = chantiers.reduce((s, c) => s + Number(c.actual_costs ?? 0), 0);
@@ -57,13 +71,13 @@ export function exportChantiersPDF(chantiers: Chantier[], companyName?: string) 
 
   autoTable(doc, {
     startY: 46,
-    head: [["Indicateur", "Valeur"]],
+    head: [[tr("reports.indicator"), tr("reports.value")]],
     body: [
-      ["Nombre de chantiers", String(chantiers.length)],
-      ["Budget total", formatEUR(totalBudget)],
-      ["Coûts engagés", formatEUR(totalCosts)],
-      ["Marge prévisionnelle", formatEUR(margin)],
-      ["Progression moyenne", `${avgProgress}%`],
+      [tr("reports.sitesCount"), String(chantiers.length)],
+      [tr("reports.totalBudget"), formatEUR(totalBudget)],
+      [tr("reports.committedCosts"), formatEUR(totalCosts)],
+      [tr("reports.forecastMargin"), formatEUR(margin)],
+      [tr("reports.avgProgress"), `${avgProgress} %`],
     ],
     theme: "grid",
     headStyles: { fillColor: [20, 184, 166], textColor: 255, fontStyle: "bold" },
@@ -74,7 +88,16 @@ export function exportChantiersPDF(chantiers: Chantier[], companyName?: string) 
   autoTable(doc, {
     startY: lastTableY(doc) + 8,
     head: [
-      ["Chantier", "Client", "Début", "Remise", "Budget", "Dépenses", "Progression", "Statut"],
+      [
+        tr("reports.cols.site"),
+        tr("reports.cols.client"),
+        tr("reports.cols.start"),
+        tr("reports.cols.handover"),
+        tr("reports.cols.budget"),
+        tr("reports.cols.costs"),
+        tr("reports.cols.progress"),
+        tr("reports.cols.status"),
+      ],
     ],
     body: chantiers.map((c) => [
       c.name,
@@ -83,29 +106,30 @@ export function exportChantiersPDF(chantiers: Chantier[], companyName?: string) 
       formatDateBE(c.end_date),
       formatEUR(c.budget),
       formatEUR(c.actual_costs),
-      `${c.progress}%`,
-      c.status,
+      `${c.progress} %`,
+      statutChantier(c.status),
     ]),
     theme: "striped",
     headStyles: { fillColor: [15, 23, 42], textColor: 255 },
     styles: { fontSize: 9, cellPadding: 3 },
   });
 
-  doc.save(`chantiers_${new Date().toISOString().slice(0, 10)}.pdf`);
+  doc.save(`${tr("reports.sitesFile")}_${new Date().toISOString().slice(0, 10)}.pdf`);
 }
 
 export function exportChantiersCSV(chantiers: Chantier[]) {
+  const tr = t();
   const headers = [
-    "Nom",
-    "Client",
-    "Adresse",
-    "Début",
-    "Remise",
-    "Budget (€)",
-    "Dépenses (€)",
-    "Marge (€)",
-    "Progression (%)",
-    "Statut",
+    tr("reports.cols.name"),
+    tr("reports.cols.client"),
+    tr("reports.cols.address"),
+    tr("reports.cols.start"),
+    tr("reports.cols.handover"),
+    tr("reports.cols.budgetEur"),
+    tr("reports.cols.costsEur"),
+    tr("reports.cols.marginEur"),
+    tr("reports.cols.progressPct"),
+    tr("reports.cols.status"),
   ];
   const rows = chantiers.map((c) => [
     c.name,
@@ -117,16 +141,16 @@ export function exportChantiersCSV(chantiers: Chantier[]) {
     String(Math.round(Number(c.actual_costs ?? 0))).replace(".", ","),
     String(Math.round(Number(c.budget ?? 0) - Number(c.actual_costs ?? 0))).replace(".", ","),
     String(c.progress),
-    c.status,
+    statutChantier(c.status),
   ]);
   const esc = (v: string) => `"${v.replace(/"/g, '""')}"`;
   const csv =
-    "\uFEFF" + [headers, ...rows].map((r) => r.map((v) => esc(String(v))).join(";")).join("\r\n");
+    "﻿" + [headers, ...rows].map((r) => r.map((v) => esc(String(v))).join(";")).join("\r\n");
   const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `chantiers_${new Date().toISOString().slice(0, 10)}.csv`;
+  a.download = `${tr("reports.sitesFile")}_${new Date().toISOString().slice(0, 10)}.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -136,23 +160,25 @@ type PresenceRow = { date: string; status: string; hours: number | null };
 export function exportPresencePDF(opts: {
   personName: string;
   year: number;
-  month: number; // 0-indexed
+  month: number; // 0 = janvier
   presence: PresenceRow[];
   hourlyRate?: number | null;
   companyName?: string;
 }) {
+  const tr = t();
   const { personName, year, month, presence, hourlyRate, companyName } = opts;
-  const monthLabel = new Date(year, month, 1).toLocaleDateString("fr-BE", {
+  const monthLabel = new Date(year, month, 1).toLocaleDateString(intlLocale(), {
     month: "long",
     year: "numeric",
   });
   const doc = new jsPDF();
   header(
     doc,
-    `Rapport de présences — ${personName}`,
+    tr("reports.presenceTitle", { name: personName }),
     `${monthLabel}${companyName ? " · " + companyName : ""}`,
   );
 
+  const jours = joursSemaineCourts();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const rows: string[][] = [];
   let totalP = 0,
@@ -163,26 +189,37 @@ export function exportPresencePDF(opts: {
     const dateObj = new Date(year, month, d);
     const iso = dateObj.toISOString().slice(0, 10);
     const dowIdx = (dateObj.getDay() + 6) % 7;
-    const dowName = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"][dowIdx];
     const weekend = dowIdx >= 5;
     const pr = presence.find((p) => p.date === iso);
-    const status = weekend ? "Week-end" : (pr?.status ?? "—");
+    const code = pr ? toCode(pr.status) : "";
     const hours = pr?.hours ?? 0;
-    if (status === "Présent") totalP++;
-    else if (status === "Absent") totalA++;
-    else if (status === "Congé") totalC++;
+    if (code === "present") totalP++;
+    else if (code === "absent") totalA++;
+    else if (code === "conge") totalC++;
     totalH += Number(hours);
+    const label = weekend
+      ? tr("reports.weekend")
+      : pr
+        ? i18n.t(`statuts:presence.${code}`, { defaultValue: pr.status })
+        : "—";
     rows.push([
       formatDateBE(iso),
-      dowName,
-      status,
-      status === "Présent" ? `${Number(hours)} h` : "—",
+      jours[dowIdx],
+      label,
+      code === "present" ? tr("reports.hoursValue", { value: Number(hours) }) : "—",
     ]);
   }
 
   autoTable(doc, {
     startY: 46,
-    head: [["Date", "Jour", "Statut", "Heures"]],
+    head: [
+      [
+        tr("reports.cols.date"),
+        tr("reports.cols.day"),
+        tr("reports.cols.status"),
+        tr("reports.cols.hours"),
+      ],
+    ],
     body: rows,
     theme: "striped",
     headStyles: { fillColor: [15, 23, 42], textColor: 255 },
@@ -192,18 +229,18 @@ export function exportPresencePDF(opts: {
 
   const summaryY = lastTableY(doc) + 8;
   const summary: (string | number)[][] = [
-    ["Jours présents", totalP],
-    ["Jours absents", totalA],
-    ["Jours de congé", totalC],
-    ["Total heures travaillées", `${totalH} h`],
+    [tr("reports.daysPresent"), totalP],
+    [tr("reports.daysAbsent"), totalA],
+    [tr("reports.daysLeave"), totalC],
+    [tr("reports.totalHours"), tr("reports.hoursValue", { value: totalH })],
   ];
   if (hourlyRate) {
-    summary.push(["Taux horaire", `${hourlyRate} €/h`]);
-    summary.push(["Coût estimé", formatEUR(totalH * Number(hourlyRate))]);
+    summary.push([tr("reports.hourlyRate"), tr("reports.hourlyRateValue", { value: hourlyRate })]);
+    summary.push([tr("reports.estimatedCost"), formatEUR(totalH * Number(hourlyRate))]);
   }
   autoTable(doc, {
     startY: summaryY,
-    head: [["Synthèse", "Valeur"]],
+    head: [[tr("reports.summary"), tr("reports.value")]],
     body: summary,
     theme: "grid",
     headStyles: { fillColor: [20, 184, 166], textColor: 255 },
@@ -212,6 +249,6 @@ export function exportPresencePDF(opts: {
   });
 
   doc.save(
-    `presences_${personName.replace(/\s+/g, "_")}_${year}-${String(month + 1).padStart(2, "0")}.pdf`,
+    `${tr("reports.presenceFile")}_${personName.replace(/\s+/g, "_")}_${year}-${String(month + 1).padStart(2, "0")}.pdf`,
   );
 }

@@ -1,0 +1,58 @@
+{
+  "chantier": {
+    "en_attente": "Oczekuje",
+    "en_cours": "W toku",
+    "en_retard": "Opóźniona",
+    "termine": "Zakończona"
+  },
+  "devis": {
+    "brouillon": "Szkic",
+    "envoye": "Wysłana",
+    "accepte": "Zaakceptowana",
+    "refuse": "Odrzucona",
+    "expire": "Wygasła"
+  },
+  "presence": {
+    "present": "Obecny",
+    "absent": "Nieobecny",
+    "conge": "Urlop"
+  },
+  "personnel": {
+    "actif": "Aktywny",
+    "inactif": "Nieaktywny"
+  },
+  "contrat": {
+    "cdi": "Umowa na czas nieokreślony",
+    "cdd": "Umowa na czas określony",
+    "interim": "Praca tymczasowa",
+    "independant": "Samozatrudniony"
+  },
+  "vehicule": {
+    "disponible": "Dostępny",
+    "affecte": "Przydzielony",
+    "maintenance": "W serwisie"
+  },
+  "vehiculeType": {
+    "camionnette": "Bus dostawczy",
+    "camion": "Ciężarówka",
+    "voiture": "Samochód osobowy",
+    "engin": "Maszyna budowlana",
+    "remorque": "Przyczepa"
+  },
+  "mouvement": {
+    "achat": "Zakup",
+    "sortie": "Wydanie",
+    "retour": "Zwrot"
+  },
+  "clientType": {
+    "particulier": "Osoba prywatna",
+    "entreprise": "Firma"
+  },
+  "langue": {
+    "fr": "Francuski",
+    "nl": "Niderlandzki",
+    "en": "Angielski",
+    "ro": "Rumuński",
+    "pl": "Polski"
+  }
+}

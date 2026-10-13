@@ -1,0 +1,70 @@
+{
+  "title": "Btw-conformiteit & inhouding",
+  "subtitle": "Controleer de inhoudingsplicht voor uw klanten en onderaannemers (art. 402 WIB)",
+  "form": {
+    "title": "Een btw-nummer controleren",
+    "clientName": "Naam van de klant",
+    "clientNamePlaceholder": "Bv. Janssens Vastgoed NV",
+    "vat": "Btw-nr.",
+    "vatHint": "Formaat: BE + 10 cijfers",
+    "checking": "Controle bezig…",
+    "checkNow": "Nu controleren",
+    "source": "ⓘ Gegevens van checkobligationderetenue.be — resultaat FOD Financiën (art. 402 WIB 92)"
+  },
+  "validation": {
+    "clientNameRequired": "Vul de naam van de klant in",
+    "vatInvalid": "Ongeldig btw-nummer (BE + 10 cijfers)"
+  },
+  "errors": {
+    "format_invalide": "Ongeldig btw-formaat (verwacht: BE + 10 cijfers)",
+    "site_indisponible": "Officiële site niet beschikbaar (HTTP {{status}}). Gebruik de manuele invoer.",
+    "site_injoignable": "Officiële site niet bereikbaar. Gebruik de manuele invoer.",
+    "manualHint": "U kunt de officiële site raadplegen en het resultaat manueel registreren."
+  },
+  "result": {
+    "noWithholding": "✓ Geen verplichte inhouding",
+    "withholding": "⚠ Verplichte inhouding!",
+    "toConfirm": "Resultaat manueel te bevestigen",
+    "msgNoWithholding": "Geen verplichte inhouding — in orde.",
+    "msgWithholding": "Verplichte inhouding — fiscale of sociale schulden vastgesteld.",
+    "msgAmbiguous": "Onduidelijk resultaat. Controleer manueel op de officiële site.",
+    "msgManualOk": "Manuele invoer — in orde",
+    "msgManualWithholding": "Manuele invoer — verplichte inhouding",
+    "checkedAt": "Gecontroleerd op {{date}} om {{time}}",
+    "officialSite": "Bekijken op de officiële site",
+    "manualEntry": "Manuele invoer:",
+    "compliant": "✓ In orde",
+    "withholdingShort": "⚠ Inhouding"
+  },
+  "calc": {
+    "title": "Berekening van de inhouding",
+    "invoiceAmount": "Factuurbedrag",
+    "withholding": "Inhouding {{rate}} %",
+    "toSpf": "Te storten aan de FOD",
+    "netToClient": "Netto aan de klant",
+    "balance": "Te betalen saldo",
+    "gross": "Brutobedrag",
+    "invoiced": "Totaal gefactureerd"
+  },
+  "history": {
+    "title": "Geschiedenis van de controles",
+    "searchPlaceholder": "Klant of btw-nr. zoeken",
+    "exportCsv": "CSV-export",
+    "noResult": "Geen resultaat —",
+    "launchCheck": "Een controle starten?",
+    "empty": "Nog geen controles geregistreerd. Gebruik het formulier hierboven.",
+    "unknown": "Onbekend",
+    "recheck": "Opnieuw controleren",
+    "csvFileName": "btw-controles",
+    "columns": {
+      "status": "Status",
+      "client": "Klant",
+      "vat": "Btw-nr.",
+      "checkedOn": "Gecontroleerd op",
+      "actions": "Acties"
+    }
+  },
+  "toasts": {
+    "saved": "Controle geregistreerd"
+  }
+}
