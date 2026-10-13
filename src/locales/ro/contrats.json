@@ -1,0 +1,143 @@
+{
+  "new": "Contract nou",
+  "sendForSignature": "Trimite spre semnare",
+  "status": {
+    "envoye": "În așteptarea semnăturii",
+    "signe": "Semnat",
+    "annule": "Anulat",
+    "expire": "Link expirat"
+  },
+  "form": {
+    "title": "Contract de subcontractare nou",
+    "site": "Șantier",
+    "noSite": "— Niciun șantier —",
+    "description": "Descrierea prestațiilor *",
+    "priceType": "Tip de preț",
+    "lumpSum": "Sumă forfetară fără TVA (€)",
+    "unitPrice": "Preț unitar fără TVA (€)",
+    "unit": "Unitate",
+    "frequency": "Frecvența plăților",
+    "paymentDelay": "Termen de plată (zile)",
+    "start": "Data de început",
+    "end": "Data de sfârșit",
+    "orderRef": "Ref. comandă",
+    "quoteRef": "Ref. ofertă subcontractor",
+    "validation": {
+      "description": "Descrierea prestațiilor este obligatorie",
+      "amount": "Introduceți o sumă pozitivă",
+      "delay": "Termen de plată între 0 și 365 de zile",
+      "dates": "Data de sfârșit trebuie să fie după data de început"
+    }
+  },
+  "send": {
+    "title": "Trimite contractul spre semnare",
+    "step": {
+      "donnees": "1. Datele contractului",
+      "signature": "2. Recitire și semnare",
+      "lien": "3. Link de semnare"
+    },
+    "templateNotice": "Model generic de contract-cadru de subcontractare (drept belgian, în franceză): de validat de juristul dvs. Câmpurile sunt precompletate din fișa subcontractorului, contract și șantier; puteți corecta totul.",
+    "emptyHint": "Un câmp lăsat gol apare ca linie punctată în contract.",
+    "next": "Recitește și semnează",
+    "rolePlaceholder": "Ex.: administrator, director",
+    "validity": "Valabilitatea linkului (zile)",
+    "yourSignature": "Semnătura dvs.",
+    "reviewed": "Am recitit contractul și îl semnez în numele societății.",
+    "signAndCreate": "Semnează și creează linkul",
+    "validation": {
+      "signer": "Introduceți denumirea, reprezentantul și calitatea acestuia",
+      "signature": "Desenați semnătura",
+      "reviewed": "Confirmați că ați recitit contractul",
+      "days": "Valabilitatea linkului: între 1 și 90 de zile"
+    },
+    "created": "Contract semnat din partea dvs. Trimiteți acest link subcontractorului:",
+    "copy": "Copiază linkul",
+    "copied": "Link copiat",
+    "byEmail": "Trimite prin e-mail",
+    "byWhatsapp": "Trimite prin WhatsApp",
+    "subject": "Contract de subcontractare de semnat — {{company}}",
+    "message": "Bună ziua {{name}},\n\n{{company}} vă invită să citiți și să semnați electronic contractul de subcontractare prin acest link (valabil {{days}} zile):\n{{link}}\n\nDatele dvs. sunt deja completate: verificați-le, completați-le dacă e nevoie și semnați pe ecran.\n\nCu stimă,\n{{company}}",
+    "linkHint": "Linkul este personal: oricine îl are poate consulta și semna contractul. Îl puteți anula cât timp nu este semnat."
+  },
+  "list": {
+    "sentOn": "Trimis pe {{date}}",
+    "viewed": "Consultat pe {{date}}",
+    "signedBy": "Semnat de {{name}} pe {{date}}",
+    "cancel": "Anulează cererea",
+    "confirmCancel": "Anulați această cerere de semnare? Linkul nu va mai funcționa.",
+    "pdf": "Descarcă PDF"
+  },
+  "toasts": {
+    "contractCreated": "Contract creat",
+    "cancelled": "Cerere anulată"
+  },
+  "sign": {
+    "title": "Contract de subcontractare de semnat",
+    "intro": "{{company}} vă invită să citiți și să semnați acest contract de subcontractare. Linkul este valabil până la {{date}}.",
+    "languageNotice": "Contractul este redactat în franceză; doar această versiune este autentică.",
+    "yourDetails": "Datele și semnătura dvs.",
+    "place": "Întocmit la (oraș)",
+    "yourSignature": "Semnătura dvs.",
+    "accept": "Am citit contractul propus de {{company}} și anexele sale și îl accept în numele subcontractorului.",
+    "mustAccept": "Bifați caseta de acceptare pentru a semna",
+    "legal": "Semnătură electronică: data, ora, adresa dvs. IP și amprenta documentului sunt înregistrate ca dovadă.",
+    "submit": "Semnează contractul",
+    "done": "Contract semnat",
+    "doneDetail": "Semnat de {{name}} pe {{date}}. Descărcați exemplarul dvs. în PDF.",
+    "downloadPdf": "Descarcă contractul semnat (PDF)",
+    "contactSender": "Contactați societatea care v-a trimis acest link.",
+    "errors": {
+      "lien_invalide": "Acest link de semnare nu este valid.",
+      "lien_annule": "Această cerere de semnare a fost anulată.",
+      "lien_expire": "Acest link de semnare a expirat.",
+      "deja_signe": "Acest contract a fost deja semnat.",
+      "document_modifie": "Modelul de contract s-a schimbat de la trimitere: cereți un link nou.",
+      "champs_requis": "Introduceți numele, calitatea și locul semnării.",
+      "signature_invalide": "Semnătura nu a putut fi salvată. Desenați-o din nou."
+    }
+  },
+  "fields": {
+    "entreprise": {
+      "title": "Antreprenor principal (societatea dvs.)",
+      "denomination": "Denumire",
+      "formeJuridique": "Formă juridică",
+      "bceTva": "BCE / TVA",
+      "adresse": "Sediu (adresă completă)",
+      "pays": "Țară",
+      "representant": "Reprezentant (nume și prenume)",
+      "qualite": "Calitate"
+    },
+    "sousTraitant": {
+      "title": "Subcontractor",
+      "denomination": "Denumire",
+      "formeJuridique": "Formă juridică",
+      "bceTva": "BCE / TVA",
+      "siege": "Sediu",
+      "representant": "Reprezentant (nume și prenume)",
+      "qualite": "Calitate",
+      "contact": "Telefon / e-mail pentru notificări",
+      "iban": "Cont bancar IBAN"
+    },
+    "fiche": {
+      "title": "Anexa 1 — Fișă de comandă / șantier",
+      "reference": "Referință comandă",
+      "maitreOuvrage": "Beneficiar / client final",
+      "adresseChantier": "Adresa completă a șantierului",
+      "natureTravaux": "Natura și limitele exacte ale lucrărilor",
+      "documentsPlans": "Documente contractuale și versiuni ale planurilor",
+      "dates": "Data de început / etape / data de sfârșit",
+      "prix": "Preț fără TVA și metodă",
+      "tva": "TVA și mențiune pe factură",
+      "etatsAvancement": "Situații de lucrări și documente anexate",
+      "delaiPaiementJours": "Termen de plată (zile)",
+      "penaliteJour": "Penalitate de întârziere (EUR/zi)",
+      "penalitePlafond": "Plafonul penalității (EUR)",
+      "assurances": "Asigurări cerute și sume",
+      "securite": "Securitate / coordonator / acces",
+      "dechets": "Deșeuri, depozitare, protecții și curățenie",
+      "reception": "Recepție, rezerve și garanție contractuală",
+      "contacts": "Persoane de contact / e-mailuri"
+    },
+    "garanties": "Articolul 13 — Garanții contractuale speciale"
+  }
+}

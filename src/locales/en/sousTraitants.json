@@ -72,7 +72,7 @@
     "block": "Block",
     "unblock": "Unblock",
     "confirmDelete": "Delete this subcontractor and its contracts?",
-    "deleteBlocked": "Cannot delete: 30bis checks or payments are recorded (evidence to keep). Block this subcontractor instead."
+    "deleteBlocked": "Cannot delete: 30bis checks, payments or signed contracts are recorded (evidence to keep). Block this subcontractor instead."
   },
   "verification": {
     "title": "Social and tax debts (30bis)",

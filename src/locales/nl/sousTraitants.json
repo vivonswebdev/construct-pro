@@ -72,7 +72,7 @@
     "block": "Blokkeren",
     "unblock": "Deblokkeren",
     "confirmDelete": "Deze onderaannemer en zijn contracten verwijderen?",
-    "deleteBlocked": "Verwijderen niet mogelijk: er zijn 30bis-controles of betalingen geregistreerd (te bewaren bewijzen). Blokkeer deze onderaannemer in de plaats."
+    "deleteBlocked": "Verwijderen niet mogelijk: er zijn 30bis-controles, betalingen of ondertekende contracten geregistreerd (te bewaren bewijzen). Blokkeer deze onderaannemer in de plaats."
   },
   "verification": {
     "title": "Sociale en fiscale schulden (30bis)",

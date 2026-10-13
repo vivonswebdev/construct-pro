@@ -13,11 +13,16 @@ import {
   Lock,
   Unlock,
   X,
+  Plus,
+  PenLine,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { SousTraitantFormModal } from "@/components/SousTraitantFormModal";
 import { TranslatableText } from "@/components/TranslatableText";
+import { ContratFormModal } from "@/components/sous-traitants/ContratFormModal";
+import { ContratSignatureModal } from "@/components/sous-traitants/ContratSignatureModal";
+import { SignaturesContrat } from "@/components/sous-traitants/SignaturesContrat";
 import { useAuth } from "@/lib/auth";
 import { formatEURBE, formatVATDisplay } from "@/lib/belgian";
 import { formatDateBE } from "@/lib/format";
@@ -29,6 +34,7 @@ import {
   etatConformite,
   formatBCE,
   urlVerification30bis,
+  type ContratSousTraitance,
   type SousTraitant,
 } from "@/lib/sous-traitants";
 import { useTranslation } from "react-i18next";
@@ -39,12 +45,14 @@ export const Route = createFileRoute("/_app/sous-traitants/$id")({
 });
 
 function SousTraitantDetail() {
-  const { t } = useTranslation(["sousTraitants", "common", "statuts"]);
+  const { t } = useTranslation(["sousTraitants", "common", "statuts", "contrats"]);
   const { id } = Route.useParams();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [edit, setEdit] = useState(false);
   const [verif, setVerif] = useState(false);
+  const [nouveauContrat, setNouveauContrat] = useState(false);
+  const [aSigner, setASigner] = useState<ContratSousTraitance | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["sous_traitant", id],
@@ -65,7 +73,7 @@ function SousTraitantDetail() {
       const contrats = ct.data ?? [];
       const contratIds = contrats.map((c) => c.id);
       const chantierIds = [...new Set(contrats.map((c) => c.chantier_id).filter(Boolean))];
-      const [pm, ch] = await Promise.all([
+      const [pm, ch, sg] = await Promise.all([
         contratIds.length
           ? supabase
               .from("achat_paiements")
@@ -76,8 +84,15 @@ function SousTraitantDetail() {
         chantierIds.length
           ? supabase
               .from("chantiers")
-              .select("id, name")
+              .select("id, name, address, client_name")
               .in("id", chantierIds as string[])
+          : Promise.resolve({ data: [] }),
+        contratIds.length
+          ? supabase
+              .from("contrat_signatures")
+              .select("*")
+              .in("contrat_id", contratIds)
+              .order("created_at", { ascending: false })
           : Promise.resolve({ data: [] }),
       ]);
       return {
@@ -85,7 +100,8 @@ function SousTraitantDetail() {
         verifications: vf.data ?? [],
         contrats,
         paiements: pm.data ?? [],
-        chantiers: new Map((ch.data ?? []).map((c) => [c.id, c.name])),
+        chantiers: new Map((ch.data ?? []).map((c) => [c.id, c])),
+        signatures: sg.data ?? [],
       };
     },
   });
@@ -333,38 +349,58 @@ function SousTraitantDetail() {
 
           {/* Contrats */}
           <div className="rounded-xl border border-border bg-card">
-            <h3 className="border-b border-border px-5 py-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              {t("detail.contracts")}
-            </h3>
+            <div className="flex items-center justify-between border-b border-border px-5 py-3">
+              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+                {t("detail.contracts")}
+              </h3>
+              <button
+                onClick={() => setNouveauContrat(true)}
+                className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-xs font-medium hover:bg-muted"
+              >
+                <Plus className="h-3.5 w-3.5" /> {t("contrats:new")}
+              </button>
+            </div>
             {data.contrats.length === 0 ? (
               <p className="p-5 text-sm text-muted-foreground">{t("detail.noContracts")}</p>
             ) : (
               data.contrats.map((c) => (
                 <div
                   key={c.id}
-                  className="flex flex-wrap items-center justify-between gap-2 border-t border-border px-5 py-3 text-sm first:border-t-0"
+                  className="border-t border-border px-5 py-3 text-sm first:border-t-0"
                 >
-                  <div>
-                    <p className="font-medium">{c.descriptif_prestations}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {[
-                        c.chantier_id && data.chantiers.get(c.chantier_id),
-                        c.date_debut &&
-                          `${formatDateBE(c.date_debut)}${c.date_fin ? ` → ${formatDateBE(c.date_fin)}` : ""}`,
-                        t(`statuts:frequencePaiement.${c.frequence_paiement}`, {
-                          defaultValue: c.frequence_paiement,
-                        }),
-                        t("detail.paymentDelay", { count: c.delai_paiement_jours }),
-                      ]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </p>
+                  <div className="flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <p className="font-medium">{c.descriptif_prestations}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {[
+                          c.chantier_id && data.chantiers.get(c.chantier_id)?.name,
+                          c.date_debut &&
+                            `${formatDateBE(c.date_debut)}${c.date_fin ? ` → ${formatDateBE(c.date_fin)}` : ""}`,
+                          t(`statuts:frequencePaiement.${c.frequence_paiement}`, {
+                            defaultValue: c.frequence_paiement,
+                          }),
+                          t("detail.paymentDelay", { count: c.delai_paiement_jours }),
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    </div>
+                    <span className="font-semibold">
+                      {c.type_prix === "forfait"
+                        ? `${formatEURBE(c.montant_forfait_ht)} ${t("detail.exclVat")}`
+                        : `${formatEURBE(c.prix_unitaire_ht)} / ${t(`statuts:unite.${c.unite ?? "piece"}`, { defaultValue: c.unite ?? "" })}`}
+                    </span>
                   </div>
-                  <span className="font-semibold">
-                    {c.type_prix === "forfait"
-                      ? `${formatEURBE(c.montant_forfait_ht)} ${t("detail.exclVat")}`
-                      : `${formatEURBE(c.prix_unitaire_ht)} / ${t(`statuts:unite.${c.unite ?? "piece"}`, { defaultValue: c.unite ?? "" })}`}
-                  </span>
+                  <button
+                    onClick={() => setASigner(c)}
+                    className="mt-2 inline-flex items-center gap-1 rounded-lg border border-primary/40 px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/5"
+                  >
+                    <PenLine className="h-3.5 w-3.5" /> {t("contrats:sendForSignature")}
+                  </button>
+                  <SignaturesContrat
+                    signatures={data.signatures.filter((sg) => sg.contrat_id === c.id)}
+                    onChange={refresh}
+                  />
                 </div>
               ))
             )}
@@ -429,6 +465,25 @@ function SousTraitantDetail() {
             setEdit(false);
             refresh();
           }}
+        />
+      )}
+      {nouveauContrat && (
+        <ContratFormModal
+          sousTraitantId={st.id}
+          onClose={() => setNouveauContrat(false)}
+          onSaved={() => {
+            setNouveauContrat(false);
+            refresh();
+          }}
+        />
+      )}
+      {aSigner && (
+        <ContratSignatureModal
+          sousTraitant={st}
+          contrat={aSigner}
+          chantier={(aSigner.chantier_id && data.chantiers.get(aSigner.chantier_id)) || null}
+          onClose={() => setASigner(null)}
+          onCreated={refresh}
         />
       )}
       {verif && (

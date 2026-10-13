@@ -82,6 +82,15 @@ comparer avec`toCode()` (`src/lib/statuts.ts`), jamais avec un libellé.
   (`lovable` par défaut, ou `anthropic`) et `AI_MODEL`.
 - L'IA n'écrit jamais en base : elle produit un brouillon que l'utilisateur confirme.
 
+## Contrats et signature électronique
+
+- Modèles de documents versionnés dans `src/lib/contrats/` (ex. `sous_traitance_cadre_v1`) : ne
+  jamais modifier le texte d'une version publiée (l'empreinte SHA-256 est vérifiée à la signature) ;
+  créer une nouvelle version. Modèles à faire valider par un juriste.
+- Accès public uniquement par jeton et RPC `security definer` (`contrat_a_signer`,
+  `signer_contrat`) ; aucune policy `anon` sur les tables. Révoquer explicitement les droits par
+  défaut de Supabase sur toute table de preuve (`REVOKE ALL … FROM anon, authenticated`).
+
 ## Fichiers
 
 - Supabase Storage, un bucket par usage (`logos`, `sites`, `chantiers`, `documents`, `achats`),

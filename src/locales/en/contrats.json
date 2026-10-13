@@ -1,0 +1,143 @@
+{
+  "new": "New contract",
+  "sendForSignature": "Send for signature",
+  "status": {
+    "envoye": "Awaiting signature",
+    "signe": "Signed",
+    "annule": "Cancelled",
+    "expire": "Link expired"
+  },
+  "form": {
+    "title": "New subcontract",
+    "site": "Site",
+    "noSite": "— No site —",
+    "description": "Description of services *",
+    "priceType": "Price type",
+    "lumpSum": "Fixed amount excl. VAT (€)",
+    "unitPrice": "Unit price excl. VAT (€)",
+    "unit": "Unit",
+    "frequency": "Payment frequency",
+    "paymentDelay": "Payment term (days)",
+    "start": "Start date",
+    "end": "End date",
+    "orderRef": "Purchase order ref.",
+    "quoteRef": "Subcontractor quote ref.",
+    "validation": {
+      "description": "The description of services is required",
+      "amount": "Enter a positive amount",
+      "delay": "Payment term between 0 and 365 days",
+      "dates": "The end date must be after the start date"
+    }
+  },
+  "send": {
+    "title": "Send contract for signature",
+    "step": {
+      "donnees": "1. Contract details",
+      "signature": "2. Review and sign",
+      "lien": "3. Signing link"
+    },
+    "templateNotice": "Generic subcontracting framework agreement (Belgian law, in French): have it reviewed by your lawyer. Fields are pre-filled from the subcontractor record, the contract and the site; you can edit everything.",
+    "emptyHint": "A field left empty appears as a dotted line in the contract.",
+    "next": "Review and sign",
+    "rolePlaceholder": "E.g. manager, director",
+    "validity": "Link validity (days)",
+    "yourSignature": "Your signature",
+    "reviewed": "I have reviewed the contract and sign it on behalf of the company.",
+    "signAndCreate": "Sign and create link",
+    "validation": {
+      "signer": "Enter the company name, the representative and their title",
+      "signature": "Draw the signature",
+      "reviewed": "Confirm you have reviewed the contract",
+      "days": "Link validity: between 1 and 90 days"
+    },
+    "created": "Contract signed on your side. Send this link to the subcontractor:",
+    "copy": "Copy link",
+    "copied": "Link copied",
+    "byEmail": "Send by email",
+    "byWhatsapp": "Send via WhatsApp",
+    "subject": "Subcontract to sign — {{company}}",
+    "message": "Hello {{name}},\n\n{{company}} invites you to review and electronically sign the subcontract via this link (valid for {{days}} days):\n{{link}}\n\nYour details are already filled in: check them, complete them if needed and sign on screen.\n\nKind regards,\n{{company}}",
+    "linkHint": "The link is personal: anyone who has it can view and sign the contract. You can cancel it as long as it has not been signed."
+  },
+  "list": {
+    "sentOn": "Sent on {{date}}",
+    "viewed": "Viewed on {{date}}",
+    "signedBy": "Signed by {{name}} on {{date}}",
+    "cancel": "Cancel request",
+    "confirmCancel": "Cancel this signature request? The link will stop working.",
+    "pdf": "Download PDF"
+  },
+  "toasts": {
+    "contractCreated": "Contract created",
+    "cancelled": "Request cancelled"
+  },
+  "sign": {
+    "title": "Subcontract to sign",
+    "intro": "{{company}} invites you to review and sign this subcontract. The link is valid until {{date}}.",
+    "languageNotice": "The contract is drafted in French; only the French version is legally binding.",
+    "yourDetails": "Your details and signature",
+    "place": "Signed at (city)",
+    "yourSignature": "Your signature",
+    "accept": "I have read the contract proposed by {{company}} and its annexes, and I accept it on behalf of the subcontractor.",
+    "mustAccept": "Tick the acceptance box to sign",
+    "legal": "Electronic signature: the date, time, your IP address and the document fingerprint are recorded as evidence.",
+    "submit": "Sign the contract",
+    "done": "Contract signed",
+    "doneDetail": "Signed by {{name}} on {{date}}. Download your copy as a PDF.",
+    "downloadPdf": "Download the signed contract (PDF)",
+    "contactSender": "Please contact the company that sent you this link.",
+    "errors": {
+      "lien_invalide": "This signing link is not valid.",
+      "lien_annule": "This signature request has been cancelled.",
+      "lien_expire": "This signing link has expired.",
+      "deja_signe": "This contract has already been signed.",
+      "document_modifie": "The contract template has changed since it was sent: ask for a new link.",
+      "champs_requis": "Enter your name, your title and the place of signing.",
+      "signature_invalide": "The signature could not be saved. Please draw it again."
+    }
+  },
+  "fields": {
+    "entreprise": {
+      "title": "Main contractor (your company)",
+      "denomination": "Company name",
+      "formeJuridique": "Legal form",
+      "bceTva": "CBE / VAT",
+      "adresse": "Registered office (full address)",
+      "pays": "Country",
+      "representant": "Representative (full name)",
+      "qualite": "Title / capacity"
+    },
+    "sousTraitant": {
+      "title": "Subcontractor",
+      "denomination": "Company name",
+      "formeJuridique": "Legal form",
+      "bceTva": "CBE / VAT",
+      "siege": "Registered office",
+      "representant": "Representative (full name)",
+      "qualite": "Title / capacity",
+      "contact": "Phone / email for notices",
+      "iban": "Bank account IBAN"
+    },
+    "fiche": {
+      "title": "Annex 1 — Order / site sheet",
+      "reference": "Order reference",
+      "maitreOuvrage": "Project owner / end client",
+      "adresseChantier": "Full site address",
+      "natureTravaux": "Nature and exact scope of the works",
+      "documentsPlans": "Contract documents and plan versions",
+      "dates": "Start date / milestones / end date",
+      "prix": "Price excl. VAT and method",
+      "tva": "VAT and invoice wording",
+      "etatsAvancement": "Progress statements and supporting documents",
+      "delaiPaiementJours": "Payment term (days)",
+      "penaliteJour": "Late penalty (EUR/day)",
+      "penalitePlafond": "Penalty cap (EUR)",
+      "assurances": "Required insurance and amounts",
+      "securite": "Safety / coordinator / site access",
+      "dechets": "Waste, storage, protection and cleaning",
+      "reception": "Acceptance, reservations and contractual warranty",
+      "contacts": "Contact persons / emails"
+    },
+    "garanties": "Article 13 — Specific contractual warranties"
+  }
+}

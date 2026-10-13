@@ -72,7 +72,7 @@
     "block": "Bloquer",
     "unblock": "Débloquer",
     "confirmDelete": "Supprimer ce sous-traitant et ses contrats ?",
-    "deleteBlocked": "Suppression impossible : des vérifications 30bis ou des paiements sont enregistrés (preuves à conserver). Bloquez plutôt ce sous-traitant."
+    "deleteBlocked": "Suppression impossible : des vérifications 30bis, des paiements ou des contrats signés sont enregistrés (preuves à conserver). Bloquez plutôt ce sous-traitant."
   },
   "verification": {
     "title": "Dettes sociales et fiscales (30bis)",

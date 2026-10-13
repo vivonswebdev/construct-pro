@@ -103,7 +103,16 @@
     "sousTraitant": {
       "title": "Karta podwykonawcy",
       "description": "Informacje, weryfikacja zadłużenia socjalnego i podatkowego, umowy i płatności."
+    },
+    "signer": {
+      "title": "Podpis umowy",
+      "description": "Przeczytaj i podpisz elektronicznie umowę podwykonawczą."
     }
   },
-  "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny."
+  "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny.",
+  "signature": {
+    "area": "Pole podpisu",
+    "hint": "Podpisz tutaj (palcem, rysikiem lub myszą)",
+    "clear": "Wyczyść"
+  }
 }

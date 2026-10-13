@@ -80,5 +80,24 @@
     "estimatedCost": "Estimated cost",
     "hoursValue": "{{value}} h",
     "presenceFile": "attendance"
+  },
+  "contrat": {
+    "signatures": "SIGNATURES",
+    "forContractor": "For {{name}}",
+    "forSubcontractor": "For the Subcontractor",
+    "name": "Name: {{value}}",
+    "role": "Title: {{value}}",
+    "signedOn": "Electronically signed on {{date}}",
+    "notSigned": "Awaiting signature",
+    "audit": "AUDIT TRAIL — ELECTRONIC SIGNATURE",
+    "auditSent": "Sent and signed by the contractor: {{date}}",
+    "auditViewed": "Link first opened: {{date}}",
+    "auditSigned": "Signed by the subcontractor: {{date}}",
+    "auditIp": "Signer IP address: {{value}}",
+    "auditUa": "Signer browser: {{value}}",
+    "auditHashSent": "SHA-256 fingerprint of the document sent: {{value}}",
+    "auditHashSigned": "SHA-256 fingerprint of the signed document: {{value}}",
+    "auditNote": "Simple electronic signature within the meaning of Regulation (EU) No 910/2014 (eIDAS). Server timestamps (Brussels time). Document generated with ConstructFlow.",
+    "page": "Page {{page}} / {{total}}"
   }
 }
