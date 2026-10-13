@@ -13,7 +13,7 @@ export type Client = {
   ville: string | null;
   email: string | null;
   telephone: string | null;
-  langue: "FR" | "NL";
+  langue: string; // code i18n : fr | nl | en (anciennes valeurs FR/NL tolérées)
   notes: string | null;
   created_at: string;
 };

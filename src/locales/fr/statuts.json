@@ -1,0 +1,58 @@
+{
+  "chantier": {
+    "en_attente": "En attente",
+    "en_cours": "En cours",
+    "en_retard": "En retard",
+    "termine": "Terminé"
+  },
+  "devis": {
+    "brouillon": "Brouillon",
+    "envoye": "Envoyé",
+    "accepte": "Accepté",
+    "refuse": "Refusé",
+    "expire": "Expiré"
+  },
+  "presence": {
+    "present": "Présent",
+    "absent": "Absent",
+    "conge": "Congé"
+  },
+  "personnel": {
+    "actif": "Actif",
+    "inactif": "Inactif"
+  },
+  "contrat": {
+    "cdi": "CDI",
+    "cdd": "CDD",
+    "interim": "Intérim",
+    "independant": "Indépendant"
+  },
+  "vehicule": {
+    "disponible": "Disponible",
+    "affecte": "Affecté",
+    "maintenance": "En maintenance"
+  },
+  "vehiculeType": {
+    "camionnette": "Camionnette",
+    "camion": "Camion",
+    "voiture": "Voiture",
+    "engin": "Engin",
+    "remorque": "Remorque"
+  },
+  "mouvement": {
+    "achat": "Achat",
+    "sortie": "Sortie",
+    "retour": "Retour"
+  },
+  "clientType": {
+    "particulier": "Particulier",
+    "entreprise": "Entreprise"
+  },
+  "langue": {
+    "fr": "Français",
+    "nl": "Néerlandais",
+    "en": "Anglais",
+    "ro": "Roumain",
+    "pl": "Polonais"
+  }
+}

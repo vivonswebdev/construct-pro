@@ -8,17 +8,21 @@ import { initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
 import { errorMessage } from "@/lib/utils";
 import { backdropClose } from "@/lib/modal";
+import { useTranslation } from "react-i18next";
+import { CONTRATS, PERSONNEL_STATUTS, toCode } from "@/lib/statuts";
+import { LANGUES, isLangue, type Langue } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/personnel/")({
   component: PersonnelList,
 });
 
 function PersonnelList() {
+  const { t } = useTranslation(["personnel", "common", "statuts"]);
   const { profile } = useAuth();
   const qc = useQueryClient();
   const companyId = profile?.company_id;
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState("Tous");
+  const [statusFilter, setStatusFilter] = useState("");
   const [showModal, setShowModal] = useState(false);
 
   const { data, isLoading } = useQuery({
@@ -42,7 +46,7 @@ function PersonnelList() {
   const { personnel, presence, affectations } = data;
 
   const filtered = personnel.filter((p) => {
-    if (statusFilter !== "Tous" && p.status !== statusFilter) return false;
+    if (statusFilter && toCode(p.status) !== statusFilter) return false;
     if (search && !p.full_name.toLowerCase().includes(search.toLowerCase())) return false;
     return true;
   });
@@ -58,7 +62,7 @@ function PersonnelList() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold tracking-tight">Personnel</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
             {personnel.length}
           </span>
@@ -67,7 +71,7 @@ function PersonnelList() {
           onClick={() => setShowModal(true)}
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
         >
-          <Plus className="h-4 w-4" /> Ajouter un ouvrier
+          <Plus className="h-4 w-4" /> {t("add")}
         </button>
       </div>
 
@@ -77,7 +81,7 @@ function PersonnelList() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Rechercher un ouvrier..."
+            placeholder={t("searchPlaceholder")}
             className="w-full rounded-lg border border-border bg-card py-2 pl-9 pr-3 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
           />
         </div>
@@ -86,20 +90,23 @@ function PersonnelList() {
           onChange={(e) => setStatusFilter(e.target.value)}
           className="rounded-lg border border-border bg-card px-3 py-2 text-sm outline-none focus:border-primary"
         >
-          {["Tous", "Actif", "Inactif"].map((s) => (
-            <option key={s}>{s}</option>
+          <option value="">{t("common:labels.all")}</option>
+          {PERSONNEL_STATUTS.map((s) => (
+            <option key={s} value={s}>
+              {t(`statuts:personnel.${s}`)}
+            </option>
           ))}
         </select>
       </div>
 
       {filtered.length === 0 ? (
         <div className="rounded-xl border border-border bg-card py-16 text-center">
-          <p className="text-sm font-semibold">Aucun ouvrier pour le moment</p>
+          <p className="text-sm font-semibold">{t("empty")}</p>
           <button
             onClick={() => setShowModal(true)}
             className="mt-3 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
           >
-            Ajouter votre premier ouvrier
+            {t("addFirst")}
           </button>
         </div>
       ) : (
@@ -121,33 +128,47 @@ function PersonnelList() {
                   </div>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
-                      p.status === "Actif"
+                      toCode(p.status) === "actif"
                         ? "bg-emerald-100 text-emerald-700"
                         : "bg-gray-200 text-gray-600"
                     }`}
                   >
-                    {p.status}
+                    {t(`statuts:personnel.${toCode(p.status)}`, { defaultValue: p.status })}
                   </span>
                 </div>
                 <h3 className="mt-3 font-semibold">{p.full_name}</h3>
-                <p className="text-xs text-muted-foreground">{p.contract_type ?? "—"}</p>
+                <p className="text-xs text-muted-foreground">
+                  {p.contract_type
+                    ? t(`statuts:contrat.${toCode(p.contract_type)}`, {
+                        defaultValue: p.contract_type,
+                      })
+                    : "—"}
+                </p>
 
                 <div className="mt-3 grid grid-cols-2 gap-2">
                   <div className="rounded-md bg-muted/50 p-2">
-                    <p className="text-[10px] uppercase text-muted-foreground">Chantier</p>
+                    <p className="text-[10px] uppercase text-muted-foreground">{t("card.site")}</p>
                     <p className="truncate text-xs font-semibold">
-                      {aff?.chantiers?.name ?? "Non affecté"}
+                      {aff?.chantiers?.name ?? t("card.notAssigned")}
                     </p>
                   </div>
                   <div className="rounded-md bg-muted/50 p-2">
-                    <p className="text-[10px] uppercase text-muted-foreground">Contrat</p>
-                    <p className="truncate text-xs font-semibold">{p.contract_type ?? "—"}</p>
+                    <p className="text-[10px] uppercase text-muted-foreground">
+                      {t("card.contract")}
+                    </p>
+                    <p className="truncate text-xs font-semibold">
+                      {p.contract_type
+                        ? t(`statuts:contrat.${toCode(p.contract_type)}`, {
+                            defaultValue: p.contract_type,
+                          })
+                        : "—"}
+                    </p>
                   </div>
                 </div>
 
                 <div className="mt-3">
                   <p className="mb-1 text-[10px] uppercase text-muted-foreground">
-                    7 derniers jours
+                    {t("card.last7Days")}
                   </p>
                   <div className="flex gap-1">
                     {lastDays.map((d) => {
@@ -156,9 +177,9 @@ function PersonnelList() {
                       const weekend = dow === 0 || dow === 6;
                       let bg = "bg-gray-100";
                       if (weekend) bg = "bg-gray-100";
-                      else if (pr?.status === "Présent") bg = "bg-emerald-400";
-                      else if (pr?.status === "Absent") bg = "bg-red-400";
-                      else if (pr?.status === "Congé") bg = "bg-amber-400";
+                      else if (toCode(pr?.status) === "present") bg = "bg-emerald-400";
+                      else if (toCode(pr?.status) === "absent") bg = "bg-red-400";
+                      else if (toCode(pr?.status) === "conge") bg = "bg-amber-400";
                       return <div key={d} className={`h-4 flex-1 rounded ${bg}`} title={d} />;
                     })}
                   </div>
@@ -183,14 +204,16 @@ function PersonnelList() {
 }
 
 function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCreated: () => void }) {
+  const { t, i18n } = useTranslation(["personnel", "common", "statuts"]);
   const { profile } = useAuth();
   const [form, setForm] = useState({
     full_name: "",
     nrn: "",
     email: "",
     phone: "",
-    contract_type: "CDI",
+    contract_type: "cdi",
     hourly_rate: "",
+    langue: (isLangue(i18n.language) ? i18n.language : "fr") as Langue,
   });
   const [saving, setSaving] = useState(false);
 
@@ -207,10 +230,11 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
         phone: form.phone || null,
         contract_type: form.contract_type,
         hourly_rate: form.hourly_rate ? Number(form.hourly_rate) : null,
-        status: "Actif",
+        langue: form.langue,
+        status: "actif",
       });
       if (error) throw error;
-      toast.success("Ouvrier ajouté");
+      toast.success(t("toasts.added"));
       onCreated();
     } catch (err) {
       toast.error(errorMessage(err));
@@ -230,13 +254,13 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
         className="w-full max-w-lg rounded-2xl bg-card p-6 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Nouvel ouvrier</h3>
+          <h3 className="text-lg font-semibold">{t("new")}</h3>
           <button type="button" onClick={onClose} className="rounded-md p-1 hover:bg-muted">
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="grid gap-3">
-          <F label="Nom complet">
+          <F label={t("form.fullName")}>
             <input
               required
               className="mi"
@@ -245,7 +269,7 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
             />
           </F>
           <div className="grid grid-cols-2 gap-3">
-            <F label="NRN">
+            <F label={t("form.nrn")}>
               <input
                 placeholder="85.04.12-345.67"
                 className="mi"
@@ -253,7 +277,7 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
                 onChange={(e) => setForm({ ...form, nrn: e.target.value })}
               />
             </F>
-            <F label="Téléphone">
+            <F label={t("form.phone")}>
               <input
                 className="mi"
                 value={form.phone}
@@ -261,7 +285,7 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
               />
             </F>
           </div>
-          <F label="Email">
+          <F label={t("form.email")}>
             <input
               type="email"
               className="mi"
@@ -270,18 +294,20 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
             />
           </F>
           <div className="grid grid-cols-2 gap-3">
-            <F label="Type de contrat">
+            <F label={t("form.contract")}>
               <select
                 className="mi"
                 value={form.contract_type}
                 onChange={(e) => setForm({ ...form, contract_type: e.target.value })}
               >
-                {["CDI", "CDD", "Intérim", "Indépendant"].map((c) => (
-                  <option key={c}>{c}</option>
+                {CONTRATS.map((c) => (
+                  <option key={c} value={c}>
+                    {t(`statuts:contrat.${c}`)}
+                  </option>
                 ))}
               </select>
             </F>
-            <F label="Taux horaire (€/h)">
+            <F label={t("form.hourlyRate")}>
               <input
                 type="number"
                 step="0.01"
@@ -291,6 +317,21 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
               />
             </F>
           </div>
+          <F label={t("form.language")}>
+            <select
+              className="mi"
+              value={form.langue}
+              onChange={(e) => {
+                if (isLangue(e.target.value)) setForm({ ...form, langue: e.target.value });
+              }}
+            >
+              {LANGUES.map((l) => (
+                <option key={l.code} value={l.code}>
+                  {l.flag} {l.label}
+                </option>
+              ))}
+            </select>
+          </F>
         </div>
         <div className="mt-5 flex justify-end gap-2">
           <button
@@ -298,14 +339,14 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
             onClick={onClose}
             className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             type="submit"
             disabled={saving}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-60"
           >
-            {saving ? "..." : "Ajouter"}
+            {saving ? "…" : t("common:actions.add")}
           </button>
         </div>
         <style>{`.mi{width:100%;padding:.5rem .75rem;border:1px solid var(--color-border);border-radius:.5rem;font-size:.875rem;background:white;outline:none}.mi:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px color-mix(in oklab,var(--color-primary) 20%,transparent)}`}</style>

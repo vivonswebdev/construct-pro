@@ -35,38 +35,44 @@ Différenciation : obligations propres au secteur en Belgique (30bis, autoliquid
 ## 2. Existant (projet Lovable)
 
 ### 2.1 Stack
+
 - **TanStack Start** (React, SSR, routing fichiers `src/routes`, `createServerFn`), TanStack Query, TypeScript, Tailwind, shadcn/ui, lucide-react, sonner, zod, **bun**.
 - **Supabase** (Postgres + Auth + RLS + Storage). Client : `src/integrations/supabase/client.ts`, serveur : `client.server.ts`, middleware d'auth : `auth-middleware.ts`.
 - IA : gateway Lovable (`https://ai.gateway.lovable.dev/v1/chat/completions`, `LOVABLE_API_KEY`, modèle `google/gemini-2.5-flash`) dans `src/lib/assistant.functions.ts`.
   → **Décision à prendre avec Youssef** : garder le gateway Lovable (si le projet reste hébergé sur Lovable) ou passer à l'API Anthropic. Encapsule l'appel IA dans `src/lib/ai.server.ts` (fonction `chat()` et `chatWithTools()`) pour pouvoir changer de fournisseur sans toucher au reste.
 
 ### 2.2 Routes existantes (`src/routes/_app/`)
+
 `dashboard`, `chantiers.index`, `chantiers.$id`, `personnel.index`, `personnel.$id`, `vehicules.index`, `vehicules.$id`, `stock.index`, `facturation.index`, `facturation.$id`, `conformite-tva`, `precompte`, `assistant`, `profil`. Plus `login`, `index`, layout `_app.tsx`, `Sidebar.tsx`.
 
 ### 2.3 Tables existantes
+
 `companies`, `profiles`, `chantiers`, `etapes`, `personnel`, `presence`, `affectations`, `vehicules`, `vehicule_affectations`, `tva_checks`, `salary_payments`, `precompte_payments`, `onss_payments`, `factures` (type devis/facture), `facture_lignes`, `materiaux`, `stock_mouvements`.
 Fonction RLS : `get_user_company_id(uuid)`.
 
 ### 2.4 Helpers
+
 - `src/lib/belgian.ts` : `formatEURBE`, `isValidVAT`, `quarterOfMonth`, `onssDueDate`, `precompteDueDate`, `DEFAULTS` (taux).
 - `src/lib/pdf.ts`, `src/lib/invoice-pdf.ts` : génération PDF.
 - `src/lib/seed.ts` : données de démo (`seedDataIfEmpty`).
 
 ### 2.5 Bugs et dettes identifiés
-| # | Problème | Cause | Correction attendue |
-|---|---|---|---|
-| B1 | Doublons dans la démo (chantiers, personnel) | `seedDataIfEmpty` appelé dans un `useEffect` de `_app.tsx` ; deux appels concurrents passent le test « 0 chantier » | Colonne `companies.demo_seeded` + RPC `seed_lock(company_id)` atomique (`UPDATE … WHERE demo_seeded = false RETURNING id`) + `useRef` ; nettoyage des doublons |
-| B2 | « SPRL » dans la démo | Forme supprimée par le CSA (2019) | Remplacer par « SRL » partout |
-| B3 | Tous les chantiers démo en retard | Seed peu réaliste | Statuts variés |
-| B4 | Module Précompte/ONSS : calculs faux | Précompte sur brut (au lieu de brut − ONSS perso), ONSS ouvrier sans base 108 %, pas de provisions ONSS mensuelles, précompte suivi par ouvrier au lieu de par société, taux non persistés (useState) | Refonte phase 3 |
-| B5 | `as any` sur plusieurs tables | Types Supabase non régénérés | Régénérer les types |
-| B6 | Vérifier le contenu de `.env` | Présent dans l'archive | S'assurer qu'aucune clé secrète n'est commitée ; seules les clés publiques Supabase côté front |
+
+| #   | Problème                                     | Cause                                                                                                                                                                                                 | Correction attendue                                                                                                                                            |
+| --- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| B1  | Doublons dans la démo (chantiers, personnel) | `seedDataIfEmpty` appelé dans un `useEffect` de `_app.tsx` ; deux appels concurrents passent le test « 0 chantier »                                                                                   | Colonne `companies.demo_seeded` + RPC `seed_lock(company_id)` atomique (`UPDATE … WHERE demo_seeded = false RETURNING id`) + `useRef` ; nettoyage des doublons |
+| B2  | « SPRL » dans la démo                        | Forme supprimée par le CSA (2019)                                                                                                                                                                     | Remplacer par « SRL » partout                                                                                                                                  |
+| B3  | Tous les chantiers démo en retard            | Seed peu réaliste                                                                                                                                                                                     | Statuts variés                                                                                                                                                 |
+| B4  | Module Précompte/ONSS : calculs faux         | Précompte sur brut (au lieu de brut − ONSS perso), ONSS ouvrier sans base 108 %, pas de provisions ONSS mensuelles, précompte suivi par ouvrier au lieu de par société, taux non persistés (useState) | Refonte phase 3                                                                                                                                                |
+| B5  | `as any` sur plusieurs tables                | Types Supabase non régénérés                                                                                                                                                                          | Régénérer les types                                                                                                                                            |
+| B6  | Vérifier le contenu de `.env`                | Présent dans l'archive                                                                                                                                                                                | S'assurer qu'aucune clé secrète n'est commitée ; seules les clés publiques Supabase côté front                                                                 |
 
 ---
 
 ## 3. Architecture cible
 
 ### 3.1 Menu (sidebar)
+
 ```
 Dashboard
 Agenda
@@ -90,12 +96,14 @@ Belcotax
 ```
 
 ### 3.2 Routes publiques (sans auth, SSR)
+
 - `/s/$slug` : site vitrine de l'entreprise
 - `/avis/$token` : dépôt d'un avis client
 - `/devis/$token` : consultation + acceptation/signature d'un devis, avenant ou contrat
 - `/m` : application mobile ouvrier (PWA, auth requise mais interface dédiée)
 
 ### 3.3 Nouvelles tables (vue d'ensemble)
+
 `company_settings`, `clients`, `sites`, `site_realisations`, `site_demandes`, `avis`, `emails_envoyes`, `email_modeles`, `evenements`, `postes_types`, `sous_traitants`, `chantier_sous_traitants`, `verifications_30bis`, `documents_conformite`, `conditions_generales` (versionnées), `documents_signes` (devis/avenants/contrats/PV), `journal_entrees`, `travaux_supplementaires`, `fournisseurs`, `achats`, `achat_lignes`, `equipements`, `dechets`, `primes_regles` (globale, gérée par l'admin plateforme), `atn_parametres`, `traductions`, `rapports_mensuels`, `integrations`.
 Le détail des colonnes est donné dans chaque phase.
 
@@ -140,6 +148,7 @@ Le détail des colonnes est donné dans chaque phase.
 Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptation (CA)**.
 
 ### Phase 0 — Mise en place et corrections
+
 - Créer `CLAUDE.md`, `docs/JOURNAL.md`, régénérer les types, retirer les `as any`.
 - Corriger B1, B2, B3, B5, B6.
 - Créer `company_settings` (company_id unique, taux paramétrés, marge cible, coefficient coût chargé, heures/jour, marge intempéries %, seuil Checkinatwork, couleur, IBAN/BIC).
@@ -147,6 +156,7 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - **CA** : plus aucun doublon après 10 rechargements ; build et lint OK ; démo « Démo Construction SRL ».
 
 ### Phase 1 — Multilingue (i18n)
+
 - react-i18next, `src/locales/{fr,nl,en,ro,pl}.json` par module ; fr = défaut et secours.
 - Toutes les chaînes extraites (sidebar, titres, boutons, formulaires, toasts, statuts, états vides). Pluriels i18next (y compris PL/RO).
 - Terminologie métier correcte (NL : werf, bestek, onderaannemer, oplevering…).
@@ -157,21 +167,24 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - **CA** : changement de langue instantané sur tout l'écran ; test des clés vert ; aucune chaîne en dur (grep).
 
 ### Phase 2 — Clients, Devis uniquement, démo enrichie
+
 - Table `clients` (type particulier/entreprise, nom, prénom, raison_sociale, numero_bce, numero_tva, assujetti_tva, adresse, code_postal, ville, email, telephone, langue, statut client/prospect, notes).
 - `chantiers.client_id`, `factures.client_id` ; migration des `client_name` texte vers `clients`.
 - Menu **Clients** (liste + fiche : chantiers, devis, totaux).
 - « Devis & Factures » devient **Devis** : statuts brouillon/envoyé/accepté/refusé/expiré, validité 30 j, dupliquer, « Créer le chantier » depuis un devis accepté, TVA par ligne, autoliquidation automatique si client assujetti, case attestation 6 %.
-- « Facturation (Peppol) » dans *Bientôt disponible*. Dashboard : KPI factures remplacés par « Devis en attente » et « Taux d'acceptation ».
+- « Facturation (Peppol) » dans _Bientôt disponible_. Dashboard : KPI factures remplacés par « Devis en attente » et « Taux d'acceptation ».
 - Seed : 6 clients, 7 véhicules (dont voiture dirigeant hybride), 20 matériaux (3 sous le minimum) avec mouvements, 8 devis détaillés.
 - **CA** : aucun écran ne permet de créer une facture ; un devis pour client assujetti propose l'autoliquidation.
 
 ### Phase 3 — Timesheet, Précompte/ONSS, ATN
+
 - **Timesheet** (sur `presence`, adaptée) : grille semaine ouvriers × jours ; cellule = heures + chantier + code (Travail, Congé, Maladie, Intempéries, Férié, Formation, Absence) ; « Semaine type », « Copier semaine précédente », sélection multiple ; horaire type par ouvrier ; heures sup en surbrillance ; export CSV/Excel mensuel pour le secrétariat social ; heures × coût alimentent la rentabilité.
 - **Précompte & ONSS** refondu en suivi d'échéances (voir §5) : saisie ou import CSV des montants du secrétariat social ; défauts basés sur les heures réelles ; précompte = 1 versement société/mois ; provisions ONSS mensuelles + solde trimestriel ; taux persistés dans `company_settings` ; alertes à 7 jours et retards au dashboard.
 - **ATN** : champs véhicule `valeur_catalogue`, `date_premiere_immatriculation`, `carburant`, `co2_g_km`, `usage_prive`, `beneficiaire_id` ; table `atn_parametres` (annee, co2_ref_essence, co2_ref_diesel, minimum_annuel, date_verification) éditable dans Mon profil > Paramètres fiscaux ; affichage annuel/mensuel + détail + simulation.
 - **CA** : tests unitaires du calcul ATN (âge, plancher/plafond %, minimum, électrique) ; les heures saisies modifient la rentabilité du chantier.
 
 ### Phase 4 — Assistant IA avec outils
+
 - Function calling : `search_clients`, `search_chantiers`, `create_client`, `create_devis`, `create_personnel`, `create_vehicule`, `create_materiau`, `add_stock_mouvement`, `draft_email`.
 - Les outils renvoient un **brouillon** ; le chat affiche une carte de prévisualisation (Confirmer / Modifier → formulaire prérempli / Annuler) ; insertion au clic seulement, avec le client authentifié (RLS).
 - Validation zod des arguments ; l'IA demande les champs manquants au lieu d'inventer.
@@ -179,6 +192,7 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - **CA** : « Crée un devis rénovation salle de bain 8 m² pour Dupont à Namur » produit un brouillon cohérent, rien n'est écrit sans clic.
 
 ### Phase 5 — Site web généré
+
 - Tables `sites`, `site_realisations`, `site_demandes` (colonnes : voir prompt d'origine en annexe A) ; bucket public `sites` ; slugs réservés.
 - Admin « Mon site web » : slug avec vérification de disponibilité, 3 templates, génération IA des textes (FR, NL si bilingue), réalisations depuis chantiers terminés (**jamais de nom ni d'adresse exacte de particulier**), demandes reçues → « Créer le client » (prospect) / « Préparer un devis » (assistant), aperçu, publier/dépublier, QR code.
 - Public `/s/$slug` en SSR : hero, services, réalisations (lightbox), zones, à propos, formulaire de devis (3 photos max, consentement RGPD, honeypot, rate limit), contact, mentions légales auto, politique de confidentialité, SEO (meta, OG, JSON-LD LocalBusiness/GeneralContractor), sitemap, robots.
@@ -186,17 +200,20 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - **CA** : site démo publié, score Lighthouse ≥ 90 (perf/SEO), une demande crée une ligne visible dans l'admin.
 
 ### Phase 6 — Avis clients
+
 - Table `avis` (token unique à usage unique, note 1-5, commentaire, prénom affiché, ville, type travaux, statut, réponse). RPC `submit_avis`.
 - Chantier « Terminé » → proposition de demande d'avis (email + 1 relance à J+7). Page `/avis/$token` avec consentement de publication.
 - Publication uniquement après validation ; l'entrepreneur ne peut pas modifier un avis. Section avis + note agrégée JSON-LD sur le site.
 - **CA** : un token utilisé ne fonctionne plus ; un avis non validé n'apparaît jamais publiquement.
 
 ### Phase 7 — Emails et agenda
+
 - **Emails sortants** via Resend (secret serveur) ; expéditeur `Nom société <noreply@…>`, reply-to société ; modèles éditables FR/NL/EN avec variables ; `emails_envoyes` + historique dans fiches client/chantier ; relances automatiques de devis paramétrables.
 - **Agenda** : table `evenements` (types, début/fin, chantier, client, personnel_ids, vehicule_id, lieu, rappel) ; vues jour/semaine/mois/ressources ; glisser-déposer ; affichage en lecture des échéances (chantiers, précompte/ONSS, véhicules, documents, validité devis, locations) ; détection de conflits ; flux iCal privé par utilisateur.
 - **CA** : conflit détecté si un ouvrier est planifié deux fois ; le flux .ics s'importe dans Google Calendar.
 
 ### Phase 8 — Estimation, planning, rentabilité
+
 - `postes_types` (catégorie, libellé, unité, prix vente, coût matériaux, heures/unité, nb ouvriers recommandé, matériaux liés) préremplie (~40 postes) ; lignes de devis depuis la bibliothèque.
 - `personnel.cout_horaire_charge` (défaut = taux × coefficient `company_settings`).
 - Estimation : heures totales ; nb ouvriers → durée en jours ouvrables ; date de fin → nb ouvriers ; week-ends, **jours fériés belges** (Pâques calculé), marge intempéries ; disponibilité réelle ; Gantt simple.
@@ -204,14 +221,19 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - **CA** : tests unitaires du calcul de jours ouvrables (fériés inclus) ; la marge réelle change quand on ajoute des heures ou une sortie de stock.
 
 ### Phase 9 — Sous-traitants et conformité
+
 - `sous_traitants`, `chantier_sous_traitants`, `verifications_30bis` (date, résultat, preuve), `documents_conformite` (entite_type personnel/sous_traitant/dirigeant/societe, type, fichier, dates, statut calculé).
 - Paiement d'un sous-traitant : bouton « Vérifier les dettes » (lien vers le service officiel, BCE prérempli, enregistrement manuel du résultat daté + capture) ; si dette : calcul de la retenue et blocage du paiement complet.
 - Checklists paramétrables par statut (indépendant, associé actif, dirigeant, salarié, sous-traitant, société) : BCE, caisse d'assurances sociales, accès à la profession selon la région, RC, décennale, VCA, Limosa, Dimona, permis, examen médical, formations, ConstruBadge…
 - Tableau de bord feu tricolore ; alertes à 30 jours ; blocage optionnel d'affectation ; rappel Checkinatwork ; avertissement faux indépendant.
+- _(Ajouts des 29/09 et 06/10/2026, voir §10 et annexe A)_ `sous_traitant_contrats` (chantier, descriptif des prestations, type de prix forfait/horaire/unitaire, prix, fréquence et délai de paiement, bon de commande, devis, planning) et `sous_traitant_prestations` (journal daté : description, heures, ouvriers présents, feuille de chantier, photos, bon de travail, validation) — preuves de la réalité des prestations. Les **factures** des sous-traitants sont des achats : elles passent par la phase 12 (pas de table dédiée) et se rattachent au contrat et aux prestations facturées.
+- La vérification 30bis est **datée et liée à chaque paiement** (`verifications_30bis`), jamais un simple « fait / pas fait » sur la fiche du sous-traitant.
+- `sous_traitants.forme_juridique` : SRL, SA, SC, SComm, indépendant (personne physique), autre — jamais « SPRL » (supprimée par le CSA en 2019).
 - Démo : 5 sous-traitants (1 document expiré, 1 dette constatée).
 - **CA** : impossible d'enregistrer un paiement complet à un sous-traitant avec dette sans calcul de retenue.
 
 ### Phase 10 — Devis pro, CG, contrats, signature
+
 - Mon profil > Société : logo, couleur, IBAN/BIC, mentions légales (réutilisés partout).
 - PDF devis refait : logo, couleur, lignes par catégorie, récap TVA par taux, autoliquidation/6 %, échéancier d'acomptes, CG en annexe, 3 mises en page, FR/NL/EN.
 - Signature en ligne `/devis/$token` : acceptation des CG, signature dessinée, horodatage, IP, **hash SHA-256 du PDF accepté** ; table `documents_signes`.
@@ -220,30 +242,39 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - **CA** : modifier les CG après signature ne modifie pas la version liée au devis signé.
 
 ### Phase 11 — Journal de chantier mobile et travaux supplémentaires
+
 - PWA `/m` (manifest, service worker, hors ligne avec file de synchronisation) : chantiers du jour, pointage arrivée/départ → timesheet, consignes dans la langue de l'ouvrier.
 - `journal_entrees` (type note/photo/problème/livraison/visite/sécurité/intempérie, texte, langue originale, photos compressées, audio transcrit, géoloc, météo Open-Meteo) ; traduction via `translateText()` ; bouton « Journée d'intempéries » ; export PDF du journal.
 - `travaux_supplementaires` (origine, photos, lignes, montant, impact délai, statuts) : création mobile, chiffrage gérant, signature client en ligne, bandeau « NE PAS EXÉCUTER avant signature », intégration budget/planning.
 - **CA** : une note saisie hors ligne est synchronisée au retour du réseau ; une note en polonais est lisible en français par le gérant.
 
 ### Phase 12 — Achats fournisseurs
+
 - `fournisseurs`, `achats`, `achat_lignes`.
 - Entrées : email dédié (`achats+{slug}@…`, webhook Resend inbound) ; upload ; **UBL Peppol BIS Billing 3.0 parsé de façon déterministe** (sans IA, contrôle des totaux) ; PDF/photo extraits par IA (statut « à valider », champs incertains surlignés) ; endpoint `/api/hooks/achats` signé HMAC préparé pour un futur connecteur Peppol (inactif).
 - Écran de validation document | données ; affectation des lignes aux chantiers et matériaux (suggestion) ; à la validation : entrée de stock + coût chantier + fournisseur créé.
 - Doublons, alerte hausse de prix > 10 %, échéances fournisseurs dans l'agenda, export CSV/UBL pour le comptable.
-- **CA** : un fichier UBL d'exemple est importé sans IA avec des totaux exacts ; un doublon est bloqué.
+- _(Ajout du 29/09/2026, voir §10)_ **Catégorie « Frais de restaurant »** : photo du ticket, participants (nom, société, fonction — au moins un), motif professionnel obligatoire, chantier/client lié, validation (brouillon → validé / rejeté avec motif). Déductibilité fiscale et TVA déductible lues dans une table de paramètres datée (valeurs indicatives de départ : 69 % à l'impôt, TVA 0 % déductible), jamais en dur ; bandeau « indicatif ».
+- _(Ajout du 06/10/2026, voir §10.6)_ **Lien achats ↔ sous-traitance** : `achats.sous_traitant_id`, `contrat_id`, table de liaison `achat_prestations` (une facture peut couvrir plusieurs prestations) ; **paiements** dans `achat_paiements` (date, montant, référence du virement, preuve, mode — pour la sous-traitance : vérification 30bis du jour et retenue éventuelle). Le chantier est porté par chaque ligne d'achat ; il est **obligatoire pour une facture de sous-traitance**, facultatif pour les frais généraux.
+- _(Ajout du 06/10/2026)_ **Livre de caisse** (`livre_caisse`) : entrées/sorties d'espèces avec pièce justificative ; **solde calculé** (jamais stocké) ; écritures non modifiables après validation (correction par écriture inverse) ; alerte si un paiement en espèces dépasse le plafond légal (paramètre, valeur indicative 3 000 €).
+- **CA** : un fichier UBL d'exemple est importé sans IA avec des totaux exacts ; un doublon est bloqué ; un frais de restaurant sans participant ni motif ne peut pas être validé ; le solde de caisse reste exact après une correction ; un paiement de sous-traitance sans vérification 30bis du jour est refusé.
 
 ### Phase 13 — Matériel/location et déchets
+
 - `equipements` (propre/loué, loueur, tarifs jour/semaine, caution, dates, chantier, contrôles périodiques) ; coût calculé et imputé ; alertes retour et contrôle ; visible agenda et mobile.
 - `dechets` (type, volume/poids, conteneur, collecteur, enlèvement, bordereau, coût, destination) ; checklist par région (Flandre : sloopopvolgingsplan/Tracimat, asbestattest) ; amiante → avertissement « entreprise agréée requise » ; rapport PDF par chantier ; obligations dans une table paramétrable.
-- **CA** : le coût de location suit le tarif le plus avantageux ; le coût des déchets apparaît dans la rentabilité.
+- _(Ajout du 29/09/2026, voir §10)_ **Export « Inventaire à date »** (PDF/CSV pour le comptable) regroupant véhicules, équipements propres et stock à une date donnée : catégorie, description, n° de série, date d'achat, montant HT, localisation, statut. Champs manquants ajoutés aux tables existantes (`equipements.numero_serie`, `date_achat`, `montant_achat_ht`, `fournisseur`, `localisation`, `photos`, `date_sortie`, `motif_sortie`…). Les biens qui ne sont ni véhicules, ni matériel de chantier, ni stock (mobilier, informatique) sont des `equipements` de catégorie `mobilier` / `informatique` : **pas de tables `inventaire_*` séparées** (double saisie). **Pas de calcul d'amortissement** (tenu dans le logiciel comptable).
+- **CA** : le coût de location suit le tarif le plus avantageux ; le coût des déchets apparaît dans la rentabilité ; l'inventaire au 31/12 n'inclut ni les biens achetés après cette date ni ceux sortis avant.
 
 ### Phase 14 — Primes rénovation (3 régions)
+
 - `primes_regles` globale (région, programme, type de travaux, conditions, montants par catégorie de revenus jsonb, documents requis, lien officiel, date de vérification), éditable par un rôle **admin plateforme**.
 - Région auto depuis le code postal ; sur le devis : « Primes possibles » + annexe PDF optionnelle FR/NL/EN ; checklist de documents ; attestation entrepreneur préremplie si nécessaire ; rappel TVA 6 %.
 - Bandeau « montants indicatifs » avec la date de vérification.
 - **CA** : un devis à Gand propose les règles flamandes, à Ixelles les règles bruxelloises, à Namur les règles wallonnes.
 
 ### Phase 15 — Rapport mensuel automatique
+
 - PDF aux couleurs de la société (FR/NL/EN) : activité commerciale, chantiers (marges, dépassements, projections), main-d'œuvre, achats, matériel/déchets, conformité, échéances du mois suivant, 3 à 5 suggestions IA marquées comme telles.
 - `pg_cron` le 3 du mois → fonction serveur ; bouton « Générer maintenant » ; table `rapports_mensuels` + historique ; destinataires : gérant + option copie comptable/fiduciaire ; annexe Excel optionnelle.
 - **CA** : génération manuelle fonctionnelle sur la démo ; le cron est planifié et documenté.
@@ -272,6 +303,7 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 6. Relecture des fichiers de langue NL/RO/PL par un locuteur natif du secteur.
 7. Relecture juridique des modèles de CG et contrats.
 8. Modèle économique (plans, modules payants, option domaine personnalisé) : impacte la gestion des droits par module.
+9. Source officielle de la « loi 2027 » sur les feuilles de temps des associés actifs (voir §10).
 
 ---
 
@@ -285,6 +317,84 @@ Chaque phase liste : objectif, tables, écrans, règles, **critères d'acceptati
 - [ ] `bun run build` et `bun run lint` OK
 - [ ] `docs/JOURNAL.md` mis à jour (fait, décidé, reste à faire)
 - [ ] Captures ou description des écrans ajoutées au résumé de la PR
+
+---
+
+## 10. Mise à jour du périmètre — 29/09/2026
+
+Décisions prises après examen d'une proposition externe (modules sous-traitants, associés actifs,
+frais de restaurant, inventaire). Les ajouts sont intégrés dans les phases 9, 12 et 13 ci-dessus.
+
+### 10.1 Règles confirmées
+
+- **Nommage** : tables et colonnes en français ; réutilisation de l'existant (`chantiers`, `profiles`,
+  `clients`, `companies`). Pas de tables `projects`, `users` ni `user_companies`.
+- **RLS** : policies sur `company_id = public.get_user_company_id(auth.uid())`, comme toutes les
+  tables existantes.
+- **Formes juridiques** (CSA 2019) : SRL, SA, SC, SComm, indépendant, autre — plus de « SPRL ».
+  La forme juridique de la société utilisatrice est une donnée d'identité (`companies`), pas un
+  paramètre de `company_settings` ; la liste des valeurs est une constante traduite (i18n).
+- **Restaurant** : TVA 0 % déductible (sauf exceptions légales), déduction fiscale 69 % — valeurs
+  indicatives dans une table de paramètres datée, jamais en dur.
+
+### 10.2 Ajouts au périmètre
+
+| Phase | Ajout                                                                             |
+| ----- | --------------------------------------------------------------------------------- |
+| 9     | Contrats de sous-traitance + journal des prestations (factures via la phase 12)   |
+| 12    | Catégorie « Frais de restaurant » (participants, motif, ticket, validation)       |
+| 13    | Export « Inventaire à date » (véhicules, équipements, stock), sans amortissements |
+
+### 10.3 En attente
+
+- **Feuilles de temps des associés actifs (« loi 2027 »)** : non développé tant qu'aucune source
+  officielle (Moniteur belge, SPF, ONSS) n'est fournie. Si elle est confirmée : extension de la
+  feuille de temps de la phase 3 aux dirigeants/associés, sans tables supplémentaires.
+  **NISS** : non stocké, sauf obligation légale explicite (donnée sensible RGPD).
+
+### 10.4 Ordre des phases
+
+Ordre de la passation maintenu (1 → 2 → 3 → …). Les phases 9 et 12 peuvent être avancées juste
+après la phase 3 en cas de priorité commerciale.
+
+### 10.5 Pratiques de travail
+
+- Jamais de modification directe sur `main` ; une branche par phase (`phase-09-sous-traitants`…).
+- Avant fusion : `bun run build`, `bun run lint`, `bunx tsc --noEmit`, `bun run i18n:check`
+  (dès la phase 1) et tests Vitest (dès la phase 3).
+- **Retour arrière des migrations** : Supabase et Lovable exécutent le fichier SQL **en entier**. Une
+  section `-- migrate:down` suivie d'instructions non commentées serait donc exécutée
+  immédiatement (suppression de ce qui vient d'être créé). Le SQL de retour arrière est écrit à la
+  fin de chaque migration dans un bloc **entièrement commenté** (`-- ROLLBACK : …`, chaque ligne
+  préfixée par `--`), à exécuter manuellement si besoin.
+- `PASSATION.md` et `docs/JOURNAL.md` mis à jour avant chaque phase.
+
+### 10.6 Compléments du 06/10/2026
+
+Schémas détaillés reçus pour la sous-traitance, les factures d'achat, le livre de caisse et
+l'inventaire. Intégrés aux phases 9, 12, 13 et à l'annexe A, avec ces corrections :
+
+- **30bis** : pas de champs `verification_30bis_fait/date` sur `sous_traitants`. L'obligation porte
+  sur **chaque paiement** : vérification datée dans `verifications_30bis`, rattachée au paiement
+  (`achat_paiements`).
+- **Chantier sur les achats** : obligatoire pour la sous-traitance, pas pour les frais généraux
+  (bureau, carburant, assurances). Porté par ligne pour répartir une facture sur plusieurs chantiers.
+- **Facture ↔ prestations** : table de liaison plutôt qu'un seul `prestation_id` (une facture
+  mensuelle couvre plusieurs prestations).
+- **Factures de vente** : hors périmètre (facturation Peppol « Bientôt »). Aucun champ ajouté à
+  `factures` ; pas de JSON de prestations côté vente (le lien passe par le chantier).
+- **Prix « % du CA »** : remplacé par `unitaire` (prix au m², m³, pièce…), usuel en construction.
+- **E-mails stockés en JSON dans le contrat** : non retenu ; les échanges passeront par
+  `emails_envoyes` (phase 7) et les pièces par Storage (bucket `documents`).
+- **Livre de caisse** : solde **calculé**, jamais stocké (sinon faux après toute correction) ;
+  écritures figées après validation ; plafond des paiements en espèces en paramètre.
+- **Inventaire** : pas de tables `inventaire_*` séparées ; enrichissement de `equipements`
+  (catégories `mobilier`, `informatique`) et de `vehicules`, export « inventaire à date ».
+- **Conventions** : `company_id` NOT NULL + FK + RLS (pas de `DEFAULT get_user_company_id()`, dont
+  la signature attend `auth.uid()`) ; horodatage `created_at` / `created_by` comme les tables
+  existantes ; fichiers en chemins Storage préfixés par `company_id`.
+- **Données personnelles** : noms des ouvriers des sous-traitants conservés uniquement comme preuve
+  de prestation (RGPD : durée de conservation à définir avec le comptable).
 
 ---
 
@@ -303,7 +413,11 @@ Slugs réservés : `www, app, api, admin, s, m, login, dashboard, mail, support,
 
 **postes_types** : id, company_id, categorie, libelle, unite (`m2|m3|m|piece|forfait`), prix_vente_ht, cout_materiaux_unitaire, heures_par_unite, nb_ouvriers_recommande, materiaux jsonb `[{materiau_id, quantite_par_unite}]`.
 
-**sous_traitants** : id, company_id, raison_sociale, forme_juridique, numero_bce, numero_tva, contact, email, telephone, adresse, metiers text[], conditions, note_interne, statut (`actif|bloque`), commentaire.
+**sous_traitants** : id, company_id, raison_sociale, forme_juridique, numero_bce, numero_tva, adresse, email, telephone, contact_nom, contact_email, contact_telephone, iban, metiers text[], conditions, note_interne, statut (`actif|bloque`), created_by, created_at. (La conformité 30bis est dans `verifications_30bis`, pas ici.)
+
+**sous_traitant_contrats** : id, company_id, sous_traitant_id, chantier_id, descriptif_prestations (requis), type_prix (`forfait|horaire|unitaire`), prix_unitaire_ht, unite (`heure|jour|m2|m3|m|piece|forfait`), montant_forfait_ht, frequence_paiement (`a_la_facture|hebdomadaire|mensuelle|avancement`), delai_paiement_jours (30), date_debut, date_fin, bon_commande_ref, bon_commande_fichier, devis_ref, devis_fichier, planning_fichier, created_by, created_at.
+
+**sous_traitant_prestations** : id, company_id, contrat_id, chantier_id, date_prestation (requis), description, heures, ouvriers jsonb `[{nom, fonction, heures}]`, feuille_chantier_fichier, photos text[], bon_travail_ref, presence_enregistree (Checkinatwork), presence_fichier, valide_par, valide_le, created_by, created_at.
 
 **documents_conformite** : id, company_id, entite_type, entite_id, type_document, fichier_url, date_emission, date_expiration, statut (calculé : `valide|expire_bientot|expire|manquant`).
 
@@ -311,9 +425,15 @@ Slugs réservés : `www, app, api, admin, s, m, login, dashboard, mail, support,
 
 **travaux_supplementaires** : id, company_id, chantier_id, origine, description, photos, lignes jsonb, montant_ht, tva, impact_delai_jours, statut (`signale|chiffre|envoye|accepte|refuse|execute`), signe_le, document_signe_id.
 
-**achats** : id, company_id, fournisseur_id, numero, date, echeance, montant_ht, tva, montant_ttc, source (`email|upload|ubl|peppol_connecteur|manuel`), fichier_url, xml_url, statut (`a_valider|valide|paye|conteste`), chantier_id.
+**achats** : id, company_id, fournisseur_id, sous_traitant_id, contrat_id, categorie (`materiaux|sous_traitance|location|restaurant|frais_generaux|autre`), numero, date, echeance, montant_ht, tva, montant_ttc, source (`email|upload|ubl|peppol_connecteur|manuel`), fichier_url, xml_url, statut (`a_valider|valide|paye|conteste`), chantier_id (chantier principal ; détail par ligne).
 
-**equipements** : id, company_id, nom, categorie, propriete (`propre|loue`), loueur_id, reference_contrat, tarif_jour, tarif_semaine, caution, date_debut, date_retour_prevue, date_retour_reelle, chantier_id, statut, date_controle, documents.
+**achat_prestations** : achat_id, prestation_id (clé primaire composée).
+
+**achat_paiements** : id, company_id, achat_id, date, montant, mode (`virement|especes|domiciliation|carte`), reference, preuve_fichier, verification_30bis_id, retenue_onss, retenue_spf, created_by, created_at.
+
+**livre_caisse** : id, company_id, date_operation, sens (`entree|sortie`), montant (> 0), description (requis), piece_fichier, achat_id, valide (bool), valide_le, annule_ecriture_id (écriture inverse), created_by, created_at. Solde : vue ou fonction calculée, jamais stocké.
+
+**equipements** : id, company_id, nom, categorie (`engin|outillage|echafaudage|conteneur|mobilier|informatique|autre`), propriete (`propre|loue`), loueur_id, reference_contrat, tarif_jour, tarif_semaine, caution, date_debut, date_retour_prevue, date_retour_reelle, chantier_id, statut (`en_service|hors_service|vendu|perdu`), date_controle, documents, numero_serie, date_achat, montant_achat_ht, fournisseur, localisation, photos text[], date_sortie, motif_sortie.
 
 **dechets** : id, company_id, chantier_id, type, volume, poids, equipement_id, collecteur_id, date_enlevement, bordereau_url, cout, destination.
 

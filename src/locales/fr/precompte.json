@@ -1,0 +1,66 @@
+{
+  "title": "Précompte & ONSS",
+  "subtitle": "Suivi des obligations sociales et fiscales par ouvrier",
+  "ratesSettings": "Paramètres des taux",
+  "ratesTitle": "Paramètres des taux (CP 124 construction par défaut)",
+  "rates": {
+    "precompte": "Précompte professionnel",
+    "onssEmployee": "ONSS travailleur",
+    "onssEmployer": "ONSS employeur"
+  },
+  "kpi": {
+    "salariesPaid": "Salaires payés",
+    "precomptePaid": "Précompte payé",
+    "onss": "ONSS T{{quarter}}/{{year}}",
+    "paid": "Payé",
+    "totalObligations": "Total obligations"
+  },
+  "alerts": {
+    "precompteUnpaid_one": "Précompte {{period}} non payé pour {{count}} ouvrier — échéance : {{date}}",
+    "precompteUnpaid_other": "Précompte {{period}} non payé pour {{count}} ouvriers — échéance : {{date}}",
+    "onssUnpaid": "ONSS T{{quarter}} {{year}} non payé — échéance : {{date}}"
+  },
+  "table": {
+    "title": "Ouvriers actifs — {{period}}",
+    "worker": "Ouvrier",
+    "site": "Chantier",
+    "netSalary": "Salaire net",
+    "salaryStatus": "Statut salaire",
+    "precompte": "Précompte",
+    "precompteStatus": "Statut précompte",
+    "onss": "ONSS T{{quarter}}",
+    "onssStatus": "Statut ONSS",
+    "empty": "Aucun ouvrier actif (CDI / CDD / intérim)."
+  },
+  "exports": {
+    "pdf": "Exporter PDF — récapitulatif",
+    "csv": "Exporter CSV",
+    "belcotax": "Fiche Belcotax (bientôt)",
+    "pdfSoon": "Export PDF bientôt disponible",
+    "csvSoon": "Export CSV bientôt disponible"
+  },
+  "status": {
+    "paidOn": "✓ Payé le {{date}}",
+    "pay": "Payer",
+    "cancel": "Annuler"
+  },
+  "modal": {
+    "salary": "Paiement du salaire",
+    "precompte": "Paiement du précompte",
+    "onss": "Paiement ONSS",
+    "worker": "Ouvrier :",
+    "notePrecompte": "À verser au SPF Finances avant le 15 du mois suivant.",
+    "noteOnss": "À verser à l'ONSS avant le dernier jour du mois suivant le trimestre.",
+    "amount": "Montant (€)",
+    "date": "Date de paiement",
+    "reference": "Référence virement",
+    "referencePlaceholder": "Ex : VIR-2026-06-001",
+    "confirm": "Confirmer le paiement"
+  },
+  "toasts": {
+    "ratesSaved": "Taux enregistrés",
+    "ratesError": "Impossible d'enregistrer les taux",
+    "paymentSaved": "Paiement enregistré",
+    "paymentCancelled": "Paiement annulé"
+  }
+}

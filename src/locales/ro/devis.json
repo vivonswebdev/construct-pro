@@ -1,0 +1,91 @@
+{
+  "title": "Devize",
+  "subtitle": "TVA belgian pe linie (21 % / 6 % / 0 %) și taxare inversă",
+  "exportCsv": "Export CSV",
+  "csvFileName": "devize",
+  "new": "Deviz nou",
+  "count_one": "{{count}} deviz",
+  "count_few": "{{count}} devize",
+  "count_other": "{{count}} de devize",
+  "kpi": {
+    "totalQuoted": "Total devize (fără TVA)",
+    "accepted": "Acceptat (fără TVA)",
+    "pending": "Devize în așteptare",
+    "acceptRate": "Rată de acceptare"
+  },
+  "searchPlaceholder": "Căutați un număr sau un client…",
+  "allStatuses": "Toate stările",
+  "empty": "Niciun deviz deocamdată.",
+  "columns": {
+    "number": "Număr",
+    "client": "Client",
+    "date": "Dată",
+    "validity": "Valabil până la",
+    "totalIncl": "Total cu TVA",
+    "status": "Stare",
+    "excl": "Fără TVA (€)",
+    "vat": "TVA (€)",
+    "incl": "Cu TVA (€)"
+  },
+  "form": {
+    "client": "Client *",
+    "number": "Număr",
+    "issueDate": "Data emiterii",
+    "validUntil": "Valabil până la",
+    "createAndEdit": "Creează și editează",
+    "creating": "Se creează…"
+  },
+  "validation": {
+    "selectClient": "Selectați un client"
+  },
+  "toasts": {
+    "created": "Deviz creat",
+    "saved": "Salvat",
+    "statusChanged": "Stare: {{status}}",
+    "duplicated": "Deviz duplicat",
+    "siteCreated": "Șantier creat",
+    "deleted": "Șters"
+  },
+  "detail": {
+    "title": "Deviz {{number}}",
+    "issued": "Emis la {{issue}} · valabil până la {{until}}",
+    "pdf": "PDF",
+    "pdfLanguage": "PDF în {{language}} (limba clientului)",
+    "duplicate": "Duplică",
+    "markSent": "Marchează ca trimis",
+    "accepted": "Acceptat",
+    "refused": "Refuzat",
+    "viewSite": "Vezi șantierul",
+    "createSite": "Creează șantierul",
+    "save": "Salvează",
+    "client": "Client",
+    "clientVat": "TVA: {{value}}",
+    "vatLiable": "Plătitor de TVA",
+    "reverseCharge": "Taxare inversă",
+    "reverseChargeHelp": "TVA 0 %, mențiunea „{{mention}}” pe PDF.",
+    "details": "Detalii",
+    "lines": "Poziții",
+    "addLine": "Adaugă",
+    "noLines": "Nicio poziție. Faceți clic pe „Adaugă”.",
+    "linePlaceholder": "Ex.: săpături, structură, acoperiș…",
+    "subtotalExcl": "Subtotal fără TVA",
+    "vatOn": "TVA {{rate}} % (la {{base}})",
+    "totalIncl": "Total cu TVA",
+    "notes": "Note",
+    "notesPlaceholder": "Mesaj pentru client",
+    "conditions": "Condiții",
+    "conditionsPlaceholder": "Valabilitate, avans, termene…",
+    "siteNamePrompt": "Numele șantierului",
+    "siteNameDefault": "Șantier {{client}}",
+    "siteDescription": "Creat din devizul {{number}}",
+    "confirmDelete": "Ștergeți definitiv acest deviz?",
+    "defaultCompany": "Firma mea"
+  },
+  "columnsLines": {
+    "description": "Descriere",
+    "qty": "Cant.",
+    "unitPrice": "Preț unitar",
+    "vat": "TVA",
+    "totalExcl": "Total fără TVA"
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "title": "Clienți",
+  "count_one": "{{count}} client — persoane fizice și firme",
+  "count_few": "{{count}} clienți — persoane fizice și firme",
+  "count_other": "{{count}} de clienți — persoane fizice și firme",
+  "new": "Client nou",
+  "edit": "Modifică clientul",
+  "searchPlaceholder": "Căutați un client, o localitate, un nr. de TVA…",
+  "allTypes": "Toate tipurile",
+  "particuliers": "Persoane fizice",
+  "entreprises": "Firme",
+  "empty": "Niciun client găsit.",
+  "notFound": "Clientul nu a fost găsit.",
+  "select": "— Selectați un client —",
+  "companySuffix": "(firmă)",
+  "columns": {
+    "client": "Client",
+    "type": "Tip",
+    "vat": "Nr. TVA",
+    "city": "Localitate",
+    "contact": "Contact",
+    "language": "Limbă"
+  },
+  "vatLiable": "Plătitor de TVA",
+  "vatLiableLong": "Plătitor de TVA",
+  "form": {
+    "companyName": "Denumirea firmei *",
+    "companyNamePlaceholder": "Ex.: Dumont Immo SRL",
+    "bce": "Nr. întreprindere",
+    "contactName": "Persoană de contact (nume)",
+    "firstName": "Prenume",
+    "lastName": "Nume *",
+    "vat": "Nr. TVA",
+    "vatInvalid": "Format invalid",
+    "vatLiable": "Plătitor de TVA",
+    "address": "Adresă",
+    "postalCode": "Cod poștal",
+    "city": "Localitate",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "language": "Limba documentelor",
+    "notes": "Note"
+  },
+  "validation": {
+    "companyNameRequired": "Denumirea firmei este obligatorie",
+    "lastNameRequired": "Numele este obligatoriu",
+    "vatInvalid": "Număr de TVA belgian invalid (format BE0123456789)",
+    "vatRequiredIfLiable": "Un client plătitor de TVA trebuie să aibă un număr de TVA"
+  },
+  "toasts": {
+    "created": "Client creat",
+    "updated": "Client actualizat"
+  },
+  "detail": {
+    "totalQuoted": "Total devize (fără TVA)",
+    "totalAccepted": "Total acceptat (fără TVA)",
+    "sites": "Șantiere",
+    "info": "Informații",
+    "linkedSites": "Șantiere asociate",
+    "noSites": "Niciun șantier.",
+    "linkedQuotes": "Devize asociate",
+    "noQuotes": "Niciun deviz.",
+    "confirmDelete": "Ștergeți acest client? Șantierele și devizele asociate vor fi păstrate."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "title": "Mój profil",
+  "subtitle": "Zarządzaj swoimi danymi osobowymi i danymi firmy.",
+  "personal": "Dane osobowe",
+  "role": "Rola: {{role}}",
+  "fullName": "Imię i nazwisko",
+  "avatarUrl": "URL awatara (opcjonalnie)",
+  "language": "Język interfejsu",
+  "languageHelp": "Zapisany w profilu: działa na wszystkich Twoich urządzeniach.",
+  "company": "Moja firma",
+  "companyName": "Nazwa firmy",
+  "address": "Adres",
+  "bce": "Numer przedsiębiorstwa",
+  "logoUrl": "URL logo (opcjonalnie)",
+  "avatarAlt": "Awatar",
+  "toasts": {
+    "profileUpdated": "Profil zaktualizowany",
+    "companyUpdated": "Firma zaktualizowana"
+  }
+}

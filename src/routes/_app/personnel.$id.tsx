@@ -17,14 +17,16 @@ import { useAuth } from "@/lib/auth";
 import { initials, avatarColor, formatDateBE } from "@/lib/format";
 import { exportPresencePDF } from "@/lib/pdf";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { LANGUES, intlLocale, isLangue, joursSemaineCourts } from "@/lib/i18n";
+import { toCode, type PresenceStatut } from "@/lib/statuts";
 
 export const Route = createFileRoute("/_app/personnel/$id")({
   component: PersonnelDetail,
 });
 
-const STATUS_OPTIONS = ["Présent", "Absent", "Congé"] as const;
-
 function PersonnelDetail() {
+  const { t } = useTranslation(["personnel", "common", "statuts"]);
   const { id } = Route.useParams();
   const { company } = useAuth();
   const qc = useQueryClient();
@@ -56,19 +58,30 @@ function PersonnelDetail() {
   const { person, presence, affectations } = data;
 
   const togglePresence = async (date: string, currentStatus: string | null) => {
-    const next =
-      currentStatus === "Présent" ? "Absent" : currentStatus === "Absent" ? "Congé" : "Présent";
+    const current = toCode(currentStatus);
+    const next: PresenceStatut =
+      current === "present" ? "absent" : current === "absent" ? "conge" : "present";
     const { error } = await supabase
       .from("presence")
       .upsert(
-        { personnel_id: id, date, status: next, hours: next === "Présent" ? 8 : 0 },
+        { personnel_id: id, date, status: next, hours: next === "present" ? 8 : 0 },
         { onConflict: "personnel_id,date" },
       );
     if (error) toast.error(error.message);
     else qc.invalidateQueries({ queryKey: ["personnel-detail"] });
   };
 
-  const monthName = new Date(viewMonth.year, viewMonth.month, 1).toLocaleDateString("fr-BE", {
+  const changeLangue = async (langue: string) => {
+    if (!isLangue(langue)) return;
+    const { error } = await supabase.from("personnel").update({ langue }).eq("id", id);
+    if (error) toast.error(error.message);
+    else {
+      toast.success(t("toasts.languageSaved"));
+      qc.invalidateQueries({ queryKey: ["personnel-detail"] });
+    }
+  };
+
+  const monthName = new Date(viewMonth.year, viewMonth.month, 1).toLocaleDateString(intlLocale(), {
     month: "long",
     year: "numeric",
   });
@@ -99,9 +112,9 @@ function PersonnelDetail() {
     });
   }
 
-  const presents = presence.filter((p) => p.status === "Présent").length;
-  const absents = presence.filter((p) => p.status === "Absent").length;
-  const conges = presence.filter((p) => p.status === "Congé").length;
+  const presents = presence.filter((p) => toCode(p.status) === "present").length;
+  const absents = presence.filter((p) => toCode(p.status) === "absent").length;
+  const conges = presence.filter((p) => toCode(p.status) === "conge").length;
   const hours = presence.reduce((s, p) => s + Number(p.hours ?? 0), 0);
 
   return (
@@ -110,7 +123,7 @@ function PersonnelDetail() {
         to="/personnel"
         className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground"
       >
-        <ArrowLeft className="h-4 w-4" /> Retour au personnel
+        <ArrowLeft className="h-4 w-4" /> {t("backToList")}
       </Link>
 
       {/* Header */}
@@ -124,23 +137,44 @@ function PersonnelDetail() {
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-bold tracking-tight">{person.full_name}</h1>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-              <span>{person.contract_type ?? "—"}</span>
-              <span
-                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${person.status === "Actif" ? "bg-emerald-100 text-emerald-700" : "bg-gray-200 text-gray-600"}`}
-              >
-                {person.status}
+              <span>
+                {person.contract_type
+                  ? t(`statuts:contrat.${toCode(person.contract_type)}`, {
+                      defaultValue: person.contract_type,
+                    })
+                  : "—"}
               </span>
+              <span
+                className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${toCode(person.status) === "actif" ? "bg-emerald-100 text-emerald-700" : "bg-gray-200 text-gray-600"}`}
+              >
+                {t(`statuts:personnel.${toCode(person.status)}`, { defaultValue: person.status })}
+              </span>
+              <select
+                aria-label={t("form.language")}
+                title={t("form.language")}
+                value={person.langue ?? "fr"}
+                onChange={(e) => changeLangue(e.target.value)}
+                className="rounded-md border border-border bg-card px-2 py-0.5 text-xs"
+              >
+                {LANGUES.map((l) => (
+                  <option key={l.code} value={l.code}>
+                    {l.flag} {l.label}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
         </div>
         <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <InfoItem icon={IdCard} label="NRN" value={person.nrn ?? "—"} />
-          <InfoItem icon={Mail} label="Email" value={person.email ?? "—"} />
-          <InfoItem icon={Phone} label="Téléphone" value={person.phone ?? "—"} />
+          <InfoItem icon={IdCard} label={t("form.nrn")} value={person.nrn ?? "—"} />
+          <InfoItem icon={Mail} label={t("form.email")} value={person.email ?? "—"} />
+          <InfoItem icon={Phone} label={t("form.phone")} value={person.phone ?? "—"} />
           <InfoItem
             icon={Euro}
-            label="Taux horaire"
-            value={person.hourly_rate ? `${person.hourly_rate} €/h` : "—"}
+            label={t("detail.hourlyRate")}
+            value={
+              person.hourly_rate ? t("detail.hourlyRateValue", { value: person.hourly_rate }) : "—"
+            }
           />
         </div>
       </div>
@@ -148,7 +182,11 @@ function PersonnelDetail() {
       {/* Presence calendar */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold capitalize">Présences — {monthName}</h2>
+          <h2 className="text-lg font-semibold">
+            {t("detail.presenceTitle", {
+              month: monthName.charAt(0).toUpperCase() + monthName.slice(1),
+            })}
+          </h2>
           <div className="flex items-center gap-2">
             <button
               onClick={() =>
@@ -162,9 +200,9 @@ function PersonnelDetail() {
                 })
               }
               className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
-              title="Exporter le rapport mensuel en PDF"
+              title={t("detail.reportPdfTitle")}
             >
-              <FileDown className="h-3.5 w-3.5" /> Rapport PDF
+              <FileDown className="h-3.5 w-3.5" /> {t("detail.reportPdf")}
             </button>
             <button
               onClick={() =>
@@ -192,7 +230,7 @@ function PersonnelDetail() {
         </div>
 
         <div className="grid grid-cols-7 gap-1.5 text-center text-xs">
-          {["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"].map((d) => (
+          {joursSemaineCourts().map((d) => (
             <div key={d} className="py-1 font-semibold text-muted-foreground">
               {d}
             </div>
@@ -205,13 +243,13 @@ function PersonnelDetail() {
             let label = String(c.day);
             if (weekend) style = "bg-gray-100 text-gray-300";
             else if (c.future) style = "bg-gray-50 text-gray-300";
-            else if (pr?.status === "Présent") {
+            else if (toCode(pr?.status) === "present") {
               style = "bg-emerald-100 text-emerald-700";
               label += " ✓";
-            } else if (pr?.status === "Absent") {
+            } else if (toCode(pr?.status) === "absent") {
               style = "bg-red-100 text-red-600";
               label += " ✗";
-            } else if (pr?.status === "Congé") {
+            } else if (toCode(pr?.status) === "conge") {
               style = "bg-amber-100 text-amber-600";
               label += " ~";
             } else style = "bg-card border border-dashed border-border text-foreground";
@@ -221,7 +259,7 @@ function PersonnelDetail() {
                 key={i}
                 disabled={!clickable}
                 onClick={() => clickable && togglePresence(c.date!, pr?.status ?? null)}
-                title={clickable ? "Cliquer pour changer" : ""}
+                title={clickable ? t("detail.clickToChange") : ""}
                 className={`relative aspect-square rounded-md text-xs font-medium ${style} ${clickable ? "cursor-pointer hover:opacity-80" : "cursor-default"} ${c.isToday ? "ring-2 ring-primary" : ""}`}
               >
                 {label}
@@ -231,18 +269,18 @@ function PersonnelDetail() {
         </div>
 
         <div className="mt-5 flex flex-wrap gap-3 text-sm">
-          <Stat label="jours présents" value={presents} tone="text-success" />
-          <Stat label="absents" value={absents} tone="text-danger" />
-          <Stat label="congés" value={conges} tone="text-warning" />
-          <Stat label="heures travaillées" value={hours} suffix="h" tone="text-foreground" />
+          <Stat label={t("detail.statPresent")} value={presents} tone="text-success" />
+          <Stat label={t("detail.statAbsent")} value={absents} tone="text-danger" />
+          <Stat label={t("detail.statLeave")} value={conges} tone="text-warning" />
+          <Stat label={t("detail.statHours")} value={hours} suffix=" h" tone="text-foreground" />
         </div>
       </div>
 
       {/* Affectations */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold">Chantiers affectés</h2>
+        <h2 className="mb-4 text-lg font-semibold">{t("detail.sites")}</h2>
         {affectations.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Aucune affectation en cours.</p>
+          <p className="text-sm text-muted-foreground">{t("detail.noAssignment")}</p>
         ) : (
           <div className="space-y-2">
             {affectations.map((a) => (
@@ -253,7 +291,7 @@ function PersonnelDetail() {
                 <div>
                   <p className="font-semibold">{a.chantiers?.name ?? "—"}</p>
                   <p className="text-xs text-muted-foreground">
-                    {a.role ?? "—"} · depuis le {formatDateBE(a.start_date)}
+                    {a.role ?? "—"} · {t("detail.since", { date: formatDateBE(a.start_date) })}
                   </p>
                 </div>
               </div>

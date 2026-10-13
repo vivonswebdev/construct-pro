@@ -1,0 +1,64 @@
+{
+  "title": "Clients",
+  "count_one": "{{count}} client — particuliers et entreprises",
+  "count_other": "{{count}} clients — particuliers et entreprises",
+  "new": "Nouveau client",
+  "edit": "Modifier le client",
+  "searchPlaceholder": "Rechercher un client, une ville, un n° TVA…",
+  "allTypes": "Tous les types",
+  "particuliers": "Particuliers",
+  "entreprises": "Entreprises",
+  "empty": "Aucun client trouvé.",
+  "notFound": "Client introuvable.",
+  "select": "— Sélectionner un client —",
+  "companySuffix": "(entreprise)",
+  "columns": {
+    "client": "Client",
+    "type": "Type",
+    "vat": "N° TVA",
+    "city": "Ville",
+    "contact": "Contact",
+    "language": "Langue"
+  },
+  "vatLiable": "Assujetti",
+  "vatLiableLong": "Assujetti TVA",
+  "form": {
+    "companyName": "Raison sociale *",
+    "companyNamePlaceholder": "Ex : Dumont Immo SRL",
+    "bce": "N° BCE",
+    "contactName": "Contact (nom)",
+    "firstName": "Prénom",
+    "lastName": "Nom *",
+    "vat": "N° TVA",
+    "vatInvalid": "Format invalide",
+    "vatLiable": "Assujetti à la TVA",
+    "address": "Adresse",
+    "postalCode": "Code postal",
+    "city": "Ville",
+    "email": "Email",
+    "phone": "Téléphone",
+    "language": "Langue des documents",
+    "notes": "Notes"
+  },
+  "validation": {
+    "companyNameRequired": "La raison sociale est requise",
+    "lastNameRequired": "Le nom est requis",
+    "vatInvalid": "Numéro de TVA belge invalide (format BE0123456789)",
+    "vatRequiredIfLiable": "Un client assujetti doit avoir un numéro de TVA"
+  },
+  "toasts": {
+    "created": "Client créé",
+    "updated": "Client mis à jour"
+  },
+  "detail": {
+    "totalQuoted": "Total devisé (HT)",
+    "totalAccepted": "Total accepté (HT)",
+    "sites": "Chantiers",
+    "info": "Informations",
+    "linkedSites": "Chantiers liés",
+    "noSites": "Aucun chantier.",
+    "linkedQuotes": "Devis liés",
+    "noQuotes": "Aucun devis.",
+    "confirmDelete": "Supprimer ce client ? Les chantiers et devis liés seront conservés."
+  }
+}

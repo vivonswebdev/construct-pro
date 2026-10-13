@@ -1,0 +1,78 @@
+{
+  "title": "Vehicle fleet",
+  "count_one": "{{count}} registered vehicle",
+  "count_other": "{{count}} registered vehicles",
+  "add": "Add a vehicle",
+  "new": "New vehicle",
+  "empty": "No vehicles. Add your first vehicle to get started.",
+  "notFound": "Vehicle not found.",
+  "backToList": "Back to the fleet",
+  "available": "● Available",
+  "assigned": "Assigned",
+  "perKm": "{{amount}} / km",
+  "badges": {
+    "ct": "Inspection",
+    "insurance": "Insurance",
+    "maintenance": "Service"
+  },
+  "form": {
+    "type": "Type",
+    "plate": "Registration *",
+    "brand": "Make",
+    "model": "Model",
+    "year": "Year",
+    "km": "Mileage",
+    "costPerKm": "Cost/km (€)",
+    "ctDate": "Inspection date",
+    "insuranceDate": "Insurance date",
+    "lastMaintenance": "Last service"
+  },
+  "validation": {
+    "plateRequired": "The registration is required",
+    "invalidKm": "Invalid mileage",
+    "selectSite": "Select a site"
+  },
+  "toasts": {
+    "added": "Vehicle added",
+    "updated": "Updated",
+    "assignmentClosed": "Assignment closed",
+    "deleted": "Vehicle deleted",
+    "assigned": "Vehicle assigned"
+  },
+  "detail": {
+    "alertsTitle": "Alerts & servicing",
+    "ct": "Roadworthiness inspection",
+    "insurance": "Insurance",
+    "lastMaintenance": "Last service",
+    "notSet": "Not set",
+    "maintenanceDone": "Done on {{date}} · {{count}} d ago",
+    "maintenancePlanned": "Planned for {{date}} (in {{count}} d)",
+    "expiredSince": "Expired {{count}} d ago ({{date}})",
+    "expiresOn": "Expires on {{date}} ({{count}} d)",
+    "badgeMaintenance": "Service",
+    "badgeExpired": "Expired",
+    "badgeSoon": "Soon",
+    "badgeOk": "OK",
+    "renew": "Renew",
+    "historyTitle": "Assignment history",
+    "assignToSite": "Assign to a site",
+    "noAssignment": "No assignments.",
+    "inProgress": "In progress",
+    "close": "Close",
+    "endKmPrompt": "End mileage (current: {{km}} km):",
+    "confirmDelete": "Delete this vehicle and its history?",
+    "columns": {
+      "site": "Site",
+      "period": "Period",
+      "km": "Km driven",
+      "cost": "Vehicle cost"
+    }
+  },
+  "assignModal": {
+    "title": "Assign to a site",
+    "site": "Site",
+    "startDate": "Start date",
+    "startKm": "Start mileage",
+    "submit": "Assign"
+  }
+}

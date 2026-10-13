@@ -1,0 +1,24 @@
+{
+  "title": "Asystent AI",
+  "subtitle": "Analizuje budowy, oferty i belgijskie obowiązki na bieżąco.",
+  "intro": "Zadaj pytanie o swoje dane. Asystent zna Twoje budowy, pracowników, flotę, oferty i magazyn.",
+  "suggestions": {
+    "budget": "Które budowy mogą przekroczyć budżet?",
+    "quotes": "Które oferty czekają na decyzję i które trzeba ponowić?",
+    "fleet": "Podsumuj stan floty i nadchodzące przeglądy.",
+    "deadlines": "Jakie mam terminy zaliczki na podatek i ONSS w tym miesiącu?"
+  },
+  "thinking": "Analiza Twoich danych…",
+  "placeholder": "Zadaj pytanie…",
+  "send": "Wyślij",
+  "disclaimer": "Odpowiedzi orientacyjne — każdy obowiązek podatkowy potwierdź z księgowym.",
+  "emptyAnswer": "(pusta odpowiedź)",
+  "errors": {
+    "trop_de_requetes": "Zbyt wiele zapytań, spróbuj ponownie za chwilę.",
+    "credits_epuises": "Wyczerpano kredyty AI.",
+    "erreur_ia": "Błąd usługi AI (kod {{status}}).",
+    "cle_manquante": "Asystent niedostępny (brak klucza AI).",
+    "injoignable": "Asystent jest nieosiągalny. Spróbuj później.",
+    "generic": "Wystąpił błąd. Spróbuj ponownie."
+  }
+}

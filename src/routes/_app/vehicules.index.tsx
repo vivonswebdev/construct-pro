@@ -8,14 +8,16 @@ import { useAuth } from "@/lib/auth";
 import { daysUntil, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
 import { backdropClose } from "@/lib/modal";
+import { useTranslation } from "react-i18next";
+import { intlLocale } from "@/lib/i18n";
+import { VEHICULE_TYPES, toCode } from "@/lib/statuts";
 
 export const Route = createFileRoute("/_app/vehicules/")({
   component: VehiculesPage,
 });
 
-const TYPES = ["Camionnette", "Camion", "Voiture", "Engin", "Remorque"] as const;
-
 function VehiculesPage() {
+  const { t } = useTranslation("vehicules");
   const { profile } = useAuth();
   const companyId = profile?.company_id;
   const qc = useQueryClient();
@@ -50,17 +52,16 @@ function VehiculesPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Flotte véhicules</h1>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
           <p className="text-sm text-muted-foreground">
-            {data?.vehicules.length ?? 0} véhicule{(data?.vehicules.length ?? 0) > 1 ? "s" : ""}{" "}
-            enregistré{(data?.vehicules.length ?? 0) > 1 ? "s" : ""}
+            {t("count", { count: data?.vehicules.length ?? 0 })}
           </p>
         </div>
         <button
           onClick={() => setOpen(true)}
           className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90"
         >
-          <Plus className="h-4 w-4" /> Ajouter un véhicule
+          <Plus className="h-4 w-4" /> {t("add")}
         </button>
       </div>
 
@@ -73,9 +74,7 @@ function VehiculesPage() {
       ) : (data?.vehicules.length ?? 0) === 0 ? (
         <div className="rounded-xl border border-dashed border-border bg-card p-12 text-center">
           <Truck className="mx-auto h-10 w-10 text-muted-foreground" />
-          <p className="mt-3 text-sm text-muted-foreground">
-            Aucun véhicule. Ajoutez votre premier véhicule pour commencer.
-          </p>
+          <p className="mt-3 text-sm text-muted-foreground">{t("empty")}</p>
         </div>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -104,7 +103,8 @@ type Affectation = Tables<"vehicule_affectations"> & {
 };
 
 function VehiculeCard({ v, affectation }: { v: Tables<"vehicules">; affectation?: Affectation }) {
-  const Icon = v.type === "Voiture" ? Car : Truck;
+  const { t } = useTranslation(["vehicules", "statuts", "common"]);
+  const Icon = toCode(v.type) === "voiture" ? Car : Truck;
   return (
     <Link
       to="/vehicules/$id"
@@ -124,24 +124,25 @@ function VehiculeCard({ v, affectation }: { v: Tables<"vehicules">; affectation?
           {v.brand} {v.model}
         </p>
         <p className="text-xs text-muted-foreground">
-          {v.type} · {v.year ?? "—"} · {v.current_km.toLocaleString("fr-BE")} km
+          {t(`statuts:vehiculeType.${toCode(v.type)}`, { defaultValue: v.type })} · {v.year ?? "—"}{" "}
+          · {t("common:units.km", { value: v.current_km.toLocaleString(intlLocale()) })}
         </p>
       </div>
       <div className="mt-3">
         {affectation ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-info/10 px-2 py-0.5 text-xs font-medium text-info">
-            🏗 {affectation.chantier?.name ?? "Affecté"}
+            🏗 {affectation.chantier?.name ?? t("assigned")}
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-medium text-emerald-700">
-            ● Disponible
+            {t("available")}
           </span>
         )}
       </div>
       <div className="mt-3 flex flex-wrap gap-1.5">
-        <DateBadge label="CT" date={v.ct_date} />
-        <DateBadge label="Assurance" date={v.insurance_date} />
-        <DateBadge label="Entretien" date={v.maintenance_date} reverse />
+        <DateBadge label={t("badges.ct")} date={v.ct_date} />
+        <DateBadge label={t("badges.insurance")} date={v.insurance_date} />
+        <DateBadge label={t("badges.maintenance")} date={v.maintenance_date} reverse />
       </div>
     </Link>
   );
@@ -187,8 +188,9 @@ function AddVehiculeModal({
   onClose: () => void;
   onSaved: () => void;
 }) {
+  const { t } = useTranslation(["vehicules", "statuts", "common"]);
   const [form, setForm] = useState({
-    type: "Camionnette",
+    type: "camionnette",
     brand: "",
     model: "",
     year: new Date().getFullYear(),
@@ -203,7 +205,7 @@ function AddVehiculeModal({
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!form.plate.trim()) return toast.error("La plaque est requise");
+    if (!form.plate.trim()) return toast.error(t("validation.plateRequired"));
     setSaving(true);
     const { error } = await supabase.from("vehicules").insert({
       company_id: companyId,
@@ -220,7 +222,7 @@ function AddVehiculeModal({
     });
     setSaving(false);
     if (error) return toast.error(error.message);
-    toast.success("Véhicule ajouté");
+    toast.success(t("toasts.added"));
     onSaved();
   };
 
@@ -235,24 +237,26 @@ function AddVehiculeModal({
         className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-card p-6 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">Nouveau véhicule</h3>
+          <h3 className="text-lg font-semibold">{t("new")}</h3>
           <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted">
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="grid grid-cols-2 gap-3">
-          <Field label="Type">
+          <Field label={t("form.type")}>
             <select
               className={inputCls}
               value={form.type}
               onChange={(e) => setForm({ ...form, type: e.target.value })}
             >
-              {TYPES.map((t) => (
-                <option key={t}>{t}</option>
+              {VEHICULE_TYPES.map((ty) => (
+                <option key={ty} value={ty}>
+                  {t(`statuts:vehiculeType.${ty}`)}
+                </option>
               ))}
             </select>
           </Field>
-          <Field label="Plaque *">
+          <Field label={t("form.plate")}>
             <input
               className={inputCls}
               value={form.plate}
@@ -260,21 +264,21 @@ function AddVehiculeModal({
               placeholder="1-ABC-123"
             />
           </Field>
-          <Field label="Marque">
+          <Field label={t("form.brand")}>
             <input
               className={inputCls}
               value={form.brand}
               onChange={(e) => setForm({ ...form, brand: e.target.value })}
             />
           </Field>
-          <Field label="Modèle">
+          <Field label={t("form.model")}>
             <input
               className={inputCls}
               value={form.model}
               onChange={(e) => setForm({ ...form, model: e.target.value })}
             />
           </Field>
-          <Field label="Année">
+          <Field label={t("form.year")}>
             <input
               type="number"
               className={inputCls}
@@ -282,7 +286,7 @@ function AddVehiculeModal({
               onChange={(e) => setForm({ ...form, year: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Kilométrage">
+          <Field label={t("form.km")}>
             <input
               type="number"
               className={inputCls}
@@ -290,7 +294,7 @@ function AddVehiculeModal({
               onChange={(e) => setForm({ ...form, current_km: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Coût/km (€)">
+          <Field label={t("form.costPerKm")}>
             <input
               type="number"
               step="0.01"
@@ -299,7 +303,7 @@ function AddVehiculeModal({
               onChange={(e) => setForm({ ...form, cost_per_km: Number(e.target.value) })}
             />
           </Field>
-          <Field label="Date CT">
+          <Field label={t("form.ctDate")}>
             <input
               type="date"
               className={inputCls}
@@ -307,7 +311,7 @@ function AddVehiculeModal({
               onChange={(e) => setForm({ ...form, ct_date: e.target.value })}
             />
           </Field>
-          <Field label="Date assurance">
+          <Field label={t("form.insuranceDate")}>
             <input
               type="date"
               className={inputCls}
@@ -315,7 +319,7 @@ function AddVehiculeModal({
               onChange={(e) => setForm({ ...form, insurance_date: e.target.value })}
             />
           </Field>
-          <Field label="Dernier entretien">
+          <Field label={t("form.lastMaintenance")}>
             <input
               type="date"
               className={inputCls}
@@ -330,13 +334,13 @@ function AddVehiculeModal({
             onClick={onClose}
             className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
           >
-            Annuler
+            {t("common:actions.cancel")}
           </button>
           <button
             disabled={saving}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
           >
-            {saving ? "Enregistrement…" : "Ajouter"}
+            {saving ? t("common:actions.saving") : t("common:actions.add")}
           </button>
         </div>
       </form>

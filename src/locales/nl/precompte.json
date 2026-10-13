@@ -1,0 +1,66 @@
+{
+  "title": "Bedrijfsvoorheffing & RSZ",
+  "subtitle": "Opvolging van de sociale en fiscale verplichtingen per arbeider",
+  "ratesSettings": "Instellingen van de percentages",
+  "ratesTitle": "Instellingen van de percentages (standaard PC 124 bouw)",
+  "rates": {
+    "precompte": "Bedrijfsvoorheffing",
+    "onssEmployee": "RSZ werknemer",
+    "onssEmployer": "RSZ werkgever"
+  },
+  "kpi": {
+    "salariesPaid": "Betaalde lonen",
+    "precomptePaid": "Betaalde voorheffing",
+    "onss": "RSZ K{{quarter}}/{{year}}",
+    "paid": "Betaald",
+    "totalObligations": "Totaal verplichtingen"
+  },
+  "alerts": {
+    "precompteUnpaid_one": "Bedrijfsvoorheffing {{period}} niet betaald voor {{count}} arbeider — vervaldatum: {{date}}",
+    "precompteUnpaid_other": "Bedrijfsvoorheffing {{period}} niet betaald voor {{count}} arbeiders — vervaldatum: {{date}}",
+    "onssUnpaid": "RSZ K{{quarter}} {{year}} niet betaald — vervaldatum: {{date}}"
+  },
+  "table": {
+    "title": "Actieve arbeiders — {{period}}",
+    "worker": "Arbeider",
+    "site": "Werf",
+    "netSalary": "Nettoloon",
+    "salaryStatus": "Status loon",
+    "precompte": "Voorheffing",
+    "precompteStatus": "Status voorheffing",
+    "onss": "RSZ K{{quarter}}",
+    "onssStatus": "Status RSZ",
+    "empty": "Geen actieve arbeiders (onbepaalde/bepaalde duur, uitzendarbeid)."
+  },
+  "exports": {
+    "pdf": "Pdf exporteren — overzicht",
+    "csv": "CSV exporteren",
+    "belcotax": "Belcotax-fiche (binnenkort)",
+    "pdfSoon": "Pdf-export binnenkort beschikbaar",
+    "csvSoon": "CSV-export binnenkort beschikbaar"
+  },
+  "status": {
+    "paidOn": "✓ Betaald op {{date}}",
+    "pay": "Betalen",
+    "cancel": "Annuleren"
+  },
+  "modal": {
+    "salary": "Betaling van het loon",
+    "precompte": "Betaling van de bedrijfsvoorheffing",
+    "onss": "RSZ-betaling",
+    "worker": "Arbeider:",
+    "notePrecompte": "Te storten aan de FOD Financiën vóór de 15de van de volgende maand.",
+    "noteOnss": "Te storten aan de RSZ vóór de laatste dag van de maand na het kwartaal.",
+    "amount": "Bedrag (€)",
+    "date": "Betaaldatum",
+    "reference": "Referentie overschrijving",
+    "referencePlaceholder": "Bv. OVS-2026-06-001",
+    "confirm": "Betaling bevestigen"
+  },
+  "toasts": {
+    "ratesSaved": "Percentages opgeslagen",
+    "ratesError": "Percentages konden niet worden opgeslagen",
+    "paymentSaved": "Betaling geregistreerd",
+    "paymentCancelled": "Betaling geannuleerd"
+  }
+}

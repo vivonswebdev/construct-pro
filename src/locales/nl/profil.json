@@ -1,0 +1,20 @@
+{
+  "title": "Mijn profiel",
+  "subtitle": "Beheer uw persoonlijke gegevens en die van uw onderneming.",
+  "personal": "Persoonlijke gegevens",
+  "role": "Rol: {{role}}",
+  "fullName": "Volledige naam",
+  "avatarUrl": "URL van de avatar (optioneel)",
+  "language": "Taal van de interface",
+  "languageHelp": "Opgeslagen in uw profiel: ze volgt u op al uw toestellen.",
+  "company": "Mijn onderneming",
+  "companyName": "Naam van de onderneming",
+  "address": "Adres",
+  "bce": "Ondernemingsnummer",
+  "logoUrl": "URL van het logo (optioneel)",
+  "avatarAlt": "Avatar",
+  "toasts": {
+    "profileUpdated": "Profiel bijgewerkt",
+    "companyUpdated": "Onderneming bijgewerkt"
+  }
+}

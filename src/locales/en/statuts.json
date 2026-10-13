@@ -1,0 +1,58 @@
+{
+  "chantier": {
+    "en_attente": "Pending",
+    "en_cours": "In progress",
+    "en_retard": "Delayed",
+    "termine": "Completed"
+  },
+  "devis": {
+    "brouillon": "Draft",
+    "envoye": "Sent",
+    "accepte": "Accepted",
+    "refuse": "Declined",
+    "expire": "Expired"
+  },
+  "presence": {
+    "present": "Present",
+    "absent": "Absent",
+    "conge": "Leave"
+  },
+  "personnel": {
+    "actif": "Active",
+    "inactif": "Inactive"
+  },
+  "contrat": {
+    "cdi": "Permanent",
+    "cdd": "Fixed-term",
+    "interim": "Agency worker",
+    "independant": "Self-employed"
+  },
+  "vehicule": {
+    "disponible": "Available",
+    "affecte": "Assigned",
+    "maintenance": "In maintenance"
+  },
+  "vehiculeType": {
+    "camionnette": "Van",
+    "camion": "Truck",
+    "voiture": "Car",
+    "engin": "Site machine",
+    "remorque": "Trailer"
+  },
+  "mouvement": {
+    "achat": "Purchase",
+    "sortie": "Issue",
+    "retour": "Return"
+  },
+  "clientType": {
+    "particulier": "Private",
+    "entreprise": "Business"
+  },
+  "langue": {
+    "fr": "French",
+    "nl": "Dutch",
+    "en": "English",
+    "ro": "Romanian",
+    "pl": "Polish"
+  }
+}

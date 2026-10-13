@@ -1,0 +1,101 @@
+{
+  "appName": "ConstructFlow",
+  "meta": {
+    "title": "ConstructFlow — Zarządzanie budowami",
+    "description": "Platforma do zarządzania budowami dla belgijskich firm budowlanych."
+  },
+  "actions": {
+    "add": "Dodaj",
+    "cancel": "Anuluj",
+    "close": "Zamknij",
+    "confirm": "Potwierdź",
+    "create": "Utwórz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "save": "Zapisz",
+    "saving": "Zapisywanie…",
+    "search": "Szukaj",
+    "back": "Wstecz",
+    "see": "Zobacz",
+    "export": "Eksportuj",
+    "understood": "Rozumiem",
+    "translate": "Przetłumacz",
+    "showOriginal": "Pokaż oryginał",
+    "translating": "Tłumaczenie…"
+  },
+  "labels": {
+    "all": "Wszystkie",
+    "none": "Brak",
+    "unknown": "—",
+    "notes": "Notatki",
+    "status": "Status",
+    "date": "Data",
+    "total": "Suma",
+    "language": "Język",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "address": "Adres",
+    "postalCode": "Kod pocztowy",
+    "city": "Miejscowość",
+    "vat": "VAT",
+    "bce": "Numer przedsiębiorstwa",
+    "name": "Nazwisko",
+    "firstName": "Imię",
+    "description": "Opis",
+    "quantity": "Ilość",
+    "type": "Typ",
+    "user": "Użytkownik"
+  },
+  "units": {
+    "days_one": "{{count}} dzień",
+    "days_few": "{{count}} dni",
+    "days_many": "{{count}} dni",
+    "days_other": "{{count}} dnia",
+    "daysShort": "{{count}} d",
+    "hoursShort": "{{count}} h",
+    "km": "{{value}} km"
+  },
+  "time": {
+    "daysLeft": "pozostało {{count}} d",
+    "daysLate": "{{count}} d opóźnienia"
+  },
+  "errors": {
+    "generic": "Wystąpił błąd",
+    "notFound": "Nie znaleziono strony",
+    "backHome": "Powrót do strony głównej",
+    "loading": "Ładowanie…"
+  },
+  "toasts": {
+    "saved": "Zapisano",
+    "updated": "Zaktualizowano",
+    "deleted": "Usunięto",
+    "created": "Utworzono"
+  },
+  "translation": {
+    "translatedFrom": "Przetłumaczono automatycznie",
+    "failed": "Tłumaczenie nie powiodło się"
+  },
+  "pages": {
+    "clients": {
+      "title": "Klienci",
+      "description": "Zarządzaj klientami prywatnymi i firmami, ich numerami VAT i budowami."
+    },
+    "client": {
+      "title": "Karta klienta",
+      "description": "Dane klienta, powiązane budowy i oferty."
+    },
+    "devis": {
+      "title": "Oferty",
+      "description": "Oferty z belgijskim VAT, odwrotnym obciążeniem i VAT 6 %."
+    },
+    "devisDetail": {
+      "title": "Oferta",
+      "description": "Edycja oferty z pozycjami, belgijskim VAT i eksportem PDF."
+    },
+    "assistant": {
+      "title": "Asystent AI",
+      "description": "Zadawaj pytania o budowy, oferty i belgijskie obowiązki: asystent odpowiada na podstawie Twoich danych."
+    }
+  },
+  "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny."
+}

@@ -1,0 +1,68 @@
+{
+  "title": "Zaliczka na podatek & ONSS",
+  "subtitle": "Kontrola obowiązków socjalnych i podatkowych dla każdego pracownika",
+  "ratesSettings": "Ustawienia stawek",
+  "ratesTitle": "Ustawienia stawek (domyślnie komisja wspólna 124 — budownictwo)",
+  "rates": {
+    "precompte": "Zaliczka na podatek od wynagrodzeń",
+    "onssEmployee": "ONSS pracownik",
+    "onssEmployer": "ONSS pracodawca"
+  },
+  "kpi": {
+    "salariesPaid": "Wypłacone wynagrodzenia",
+    "precomptePaid": "Zapłacona zaliczka",
+    "onss": "ONSS kw. {{quarter}}/{{year}}",
+    "paid": "Zapłacono",
+    "totalObligations": "Suma zobowiązań"
+  },
+  "alerts": {
+    "precompteUnpaid_one": "Zaliczka na podatek {{period}} niezapłacona za {{count}} pracownika — termin: {{date}}",
+    "precompteUnpaid_few": "Zaliczka na podatek {{period}} niezapłacona za {{count}} pracowników — termin: {{date}}",
+    "precompteUnpaid_many": "Zaliczka na podatek {{period}} niezapłacona za {{count}} pracowników — termin: {{date}}",
+    "precompteUnpaid_other": "Zaliczka na podatek {{period}} niezapłacona za {{count}} pracownika — termin: {{date}}",
+    "onssUnpaid": "ONSS kw. {{quarter}} {{year}} niezapłacone — termin: {{date}}"
+  },
+  "table": {
+    "title": "Aktywni pracownicy — {{period}}",
+    "worker": "Pracownik",
+    "site": "Budowa",
+    "netSalary": "Wynagrodzenie netto",
+    "salaryStatus": "Status wynagrodzenia",
+    "precompte": "Zaliczka",
+    "precompteStatus": "Status zaliczki",
+    "onss": "ONSS kw. {{quarter}}",
+    "onssStatus": "Status ONSS",
+    "empty": "Brak aktywnych pracowników (umowa na czas nieokreślony / określony / praca tymczasowa)."
+  },
+  "exports": {
+    "pdf": "Eksport PDF — podsumowanie",
+    "csv": "Eksport CSV",
+    "belcotax": "Formularz Belcotax (wkrótce)",
+    "pdfSoon": "Eksport PDF wkrótce dostępny",
+    "csvSoon": "Eksport CSV wkrótce dostępny"
+  },
+  "status": {
+    "paidOn": "✓ Zapłacono {{date}}",
+    "pay": "Zapłać",
+    "cancel": "Anuluj"
+  },
+  "modal": {
+    "salary": "Wypłata wynagrodzenia",
+    "precompte": "Wpłata zaliczki na podatek",
+    "onss": "Wpłata ONSS",
+    "worker": "Pracownik:",
+    "notePrecompte": "Do wpłaty na rzecz SPF Finances przed 15. dniem następnego miesiąca.",
+    "noteOnss": "Do wpłaty na rzecz ONSS przed ostatnim dniem miesiąca następującego po kwartale.",
+    "amount": "Kwota (€)",
+    "date": "Data płatności",
+    "reference": "Tytuł przelewu",
+    "referencePlaceholder": "Np. PRZ-2026-06-001",
+    "confirm": "Potwierdź płatność"
+  },
+  "toasts": {
+    "ratesSaved": "Stawki zapisane",
+    "ratesError": "Nie można zapisać stawek",
+    "paymentSaved": "Płatność zarejestrowana",
+    "paymentCancelled": "Płatność anulowana"
+  }
+}

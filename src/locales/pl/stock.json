@@ -1,0 +1,81 @@
+{
+  "title": "Magazyn i materiały",
+  "subtitle": "Katalog, zakupy, wydania i wpływ na zysk budów",
+  "exportCsv": "Eksport CSV",
+  "purchase": "Zakup",
+  "issueSlip": "Dowód wydania",
+  "return": "Zwrot",
+  "newMaterial": "Nowy materiał",
+  "csvFileName": "ruchy_magazynowe",
+  "kpi": {
+    "references": "Pozycje",
+    "stockValue": "Wartość magazynu",
+    "recentPurchases": "Zakupy (ostatnie)",
+    "siteIssues": "Wydania na budowy"
+  },
+  "lowStock_one": "{{count}} produkt poniżej stanu minimalnego",
+  "lowStock_few": "{{count}} produkty poniżej stanu minimalnego",
+  "lowStock_many": "{{count}} produktów poniżej stanu minimalnego",
+  "lowStock_other": "{{count}} produktu poniżej stanu minimalnego",
+  "tabs": {
+    "catalog": "Katalog",
+    "movements": "Ruchy"
+  },
+  "searchPlaceholder": "Szukaj materiału lub SKU…",
+  "noMaterial": "Brak materiałów.",
+  "noMovement": "Brak ruchów.",
+  "columns": {
+    "name": "Nazwa",
+    "sku": "SKU",
+    "stock": "Stan",
+    "unitPrice": "Cena jedn.",
+    "value": "Wartość",
+    "supplier": "Dostawca",
+    "date": "Data",
+    "type": "Typ",
+    "material": "Materiał",
+    "qty": "Ilość",
+    "unit": "Jednostka",
+    "total": "Suma",
+    "site": "Budowa",
+    "supplierRef": "Dostawca / nr",
+    "reference": "Numer"
+  },
+  "confirmDeleteMovement": "Usunąć ten ruch? Stan magazynu zostanie skorygowany.",
+  "materialForm": {
+    "name": "Nazwa *",
+    "sku": "SKU",
+    "unit": "Jednostka",
+    "defaultUnit": "sztuka",
+    "unitPrice": "Cena jedn. (€)",
+    "initialStock": "Stan początkowy",
+    "minStock": "Stan minimalny",
+    "supplier": "Dostawca",
+    "category": "Kategoria"
+  },
+  "movementForm": {
+    "material": "Materiał *",
+    "choose": "— Wybierz —",
+    "materialOption": "{{name}} (dostępne: {{qty}} {{unit}})",
+    "siteRequired": "Budowa *",
+    "siteOptional": "Budowa (opcjonalnie)",
+    "none": "— Brak —",
+    "quantity": "Ilość ({{unit}})",
+    "unitPrice": "Cena jedn. (€)",
+    "date": "Data",
+    "supplier": "Dostawca",
+    "invoiceRef": "Numer faktury",
+    "notes": "Notatki",
+    "total": "Suma"
+  },
+  "validation": {
+    "nameRequired": "Nazwa jest wymagana",
+    "materialRequired": "Materiał jest wymagany",
+    "siteRequiredForIssue": "Budowa jest wymagana przy wydaniu",
+    "insufficientStock": "Niewystarczający stan (dostępne: {{qty}} {{unit}}). Kontynuować?"
+  },
+  "toasts": {
+    "materialCreated": "Materiał utworzony",
+    "movementSaved": "Zarejestrowano: {{label}}"
+  }
+}

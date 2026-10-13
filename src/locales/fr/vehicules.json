@@ -1,0 +1,78 @@
+{
+  "title": "Flotte véhicules",
+  "count_one": "{{count}} véhicule enregistré",
+  "count_other": "{{count}} véhicules enregistrés",
+  "add": "Ajouter un véhicule",
+  "new": "Nouveau véhicule",
+  "empty": "Aucun véhicule. Ajoutez votre premier véhicule pour commencer.",
+  "notFound": "Véhicule introuvable.",
+  "backToList": "Retour à la flotte",
+  "available": "● Disponible",
+  "assigned": "Affecté",
+  "perKm": "{{amount}} / km",
+  "badges": {
+    "ct": "CT",
+    "insurance": "Assurance",
+    "maintenance": "Entretien"
+  },
+  "form": {
+    "type": "Type",
+    "plate": "Plaque *",
+    "brand": "Marque",
+    "model": "Modèle",
+    "year": "Année",
+    "km": "Kilométrage",
+    "costPerKm": "Coût/km (€)",
+    "ctDate": "Date CT",
+    "insuranceDate": "Date assurance",
+    "lastMaintenance": "Dernier entretien"
+  },
+  "validation": {
+    "plateRequired": "La plaque est requise",
+    "invalidKm": "Kilométrage invalide",
+    "selectSite": "Sélectionnez un chantier"
+  },
+  "toasts": {
+    "added": "Véhicule ajouté",
+    "updated": "Mis à jour",
+    "assignmentClosed": "Affectation clôturée",
+    "deleted": "Véhicule supprimé",
+    "assigned": "Véhicule affecté"
+  },
+  "detail": {
+    "alertsTitle": "Alertes & entretiens",
+    "ct": "Contrôle technique",
+    "insurance": "Assurance",
+    "lastMaintenance": "Dernier entretien",
+    "notSet": "Non renseigné",
+    "maintenanceDone": "Effectué le {{date}} · il y a {{count}} j",
+    "maintenancePlanned": "Prévu le {{date}} (dans {{count}} j)",
+    "expiredSince": "Expiré depuis {{count}} j ({{date}})",
+    "expiresOn": "Expire le {{date}} ({{count}} j)",
+    "badgeMaintenance": "Entretien",
+    "badgeExpired": "Expiré",
+    "badgeSoon": "Bientôt",
+    "badgeOk": "OK",
+    "renew": "Renouveler",
+    "historyTitle": "Historique d'affectations",
+    "assignToSite": "Affecter à un chantier",
+    "noAssignment": "Aucune affectation.",
+    "inProgress": "En cours",
+    "close": "Clôturer",
+    "endKmPrompt": "Kilométrage de fin (km actuel : {{km}}) :",
+    "confirmDelete": "Supprimer ce véhicule et son historique ?",
+    "columns": {
+      "site": "Chantier",
+      "period": "Période",
+      "km": "Km parcourus",
+      "cost": "Coût véhicule"
+    }
+  },
+  "assignModal": {
+    "title": "Affecter à un chantier",
+    "site": "Chantier",
+    "startDate": "Date de début",
+    "startKm": "Kilométrage de départ",
+    "submit": "Affecter"
+  }
+}

@@ -3,38 +3,21 @@ import { useServerFn } from "@tanstack/react-start";
 import { useState, useRef, useEffect } from "react";
 import { Bot, Send, User2, Sparkles, Loader2 } from "lucide-react";
 import { askAssistant } from "@/lib/assistant.functions";
+import { useTranslation } from "react-i18next";
+import { isLangue } from "@/lib/i18n";
+import { pageHead } from "@/lib/head";
 
 export const Route = createFileRoute("/_app/assistant")({
   component: AssistantPage,
-  head: () => ({
-    meta: [
-      { title: "Assistant IA — ConstructFlow" },
-      {
-        name: "description",
-        content:
-          "Posez vos questions sur vos chantiers, votre trésorerie et la conformité belge — l'assistant IA de ConstructFlow répond à partir de vos données.",
-      },
-      { property: "og:title", content: "Assistant IA — ConstructFlow" },
-      {
-        property: "og:description",
-        content: "Analyse instantanée de vos chantiers, devis et obligations belges.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  head: () => pageHead("assistant"),
 });
 
 type Msg = { role: "user" | "assistant"; content: string };
 
-const SUGGESTIONS = [
-  "Quels chantiers risquent de dépasser leur budget ?",
-  "Quel est mon montant total impayé et qui dois-je relancer ?",
-  "Résume l'état de ma flotte et les contrôles techniques à venir.",
-  "Quelles sont mes obligations TVA et ONSS ce trimestre ?",
-];
+const SUGGESTIONS = ["budget", "quotes", "fleet", "deadlines"] as const;
 
 function AssistantPage() {
+  const { t, i18n } = useTranslation("assistant");
   const ask = useServerFn(askAssistant);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
@@ -53,19 +36,19 @@ function AssistantPage() {
     setInput("");
     setLoading(true);
     try {
-      const res = await ask({ data: { messages: next } });
+      const langue = isLangue(i18n.language) ? i18n.language : "fr";
+      const res = await ask({ data: { messages: next, langue } });
       setMessages([
         ...next,
         {
           role: "assistant",
-          content: res.ok ? res.content || "(réponse vide)" : `⚠️ ${res.error}`,
+          content: res.ok
+            ? res.content || t("emptyAnswer")
+            : `⚠️ ${t(`errors.${res.error}`, { status: res.status ?? "" })}`,
         },
       ]);
     } catch {
-      setMessages([
-        ...next,
-        { role: "assistant", content: "⚠️ Une erreur est survenue. Réessayez." },
-      ]);
+      setMessages([...next, { role: "assistant", content: `⚠️ ${t("errors.generic")}` }]);
     } finally {
       setLoading(false);
     }
@@ -76,11 +59,9 @@ function AssistantPage() {
       <div className="mb-4">
         <h1 className="flex items-center gap-2 text-2xl font-bold">
           <Sparkles className="h-6 w-6 text-primary" />
-          Assistant IA
+          {t("title")}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Analyse vos chantiers, votre facturation et vos obligations belges en temps réel.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
       </div>
 
       <div className="flex-1 overflow-y-auto rounded-2xl bg-card p-5 shadow-sm">
@@ -89,18 +70,15 @@ function AssistantPage() {
             <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-accent">
               <Bot className="h-7 w-7 text-primary" />
             </div>
-            <p className="mb-5 max-w-md text-sm text-muted-foreground">
-              Posez une question sur vos données. L'assistant connaît vos chantiers, votre
-              personnel, votre flotte, vos devis et votre stock.
-            </p>
+            <p className="mb-5 max-w-md text-sm text-muted-foreground">{t("intro")}</p>
             <div className="grid w-full max-w-2xl gap-2 sm:grid-cols-2">
               {SUGGESTIONS.map((s) => (
                 <button
                   key={s}
-                  onClick={() => send(s)}
+                  onClick={() => send(t(`suggestions.${s}`))}
                   className="rounded-xl border border-border px-4 py-3 text-left text-sm transition hover:border-primary hover:bg-accent"
                 >
-                  {s}
+                  {t(`suggestions.${s}`)}
                 </button>
               ))}
             </div>
@@ -137,7 +115,7 @@ function AssistantPage() {
                 <Bot className="h-4 w-4 text-primary" />
               </div>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Analyse de vos données…
+              {t("thinking")}
             </div>
           )}
           <div ref={endRef} />
@@ -161,7 +139,7 @@ function AssistantPage() {
             }
           }}
           rows={1}
-          placeholder="Posez votre question…"
+          placeholder={t("placeholder")}
           className="min-h-[46px] flex-1 resize-none rounded-xl border border-border bg-card px-4 py-3 text-sm outline-none focus:border-primary"
         />
         <button
@@ -170,12 +148,10 @@ function AssistantPage() {
           className="flex h-[46px] items-center gap-2 rounded-xl bg-primary px-4 text-sm font-semibold text-white transition hover:bg-primary/90 disabled:opacity-50"
         >
           <Send className="h-4 w-4" />
-          Envoyer
+          {t("send")}
         </button>
       </form>
-      <p className="mt-2 text-center text-[11px] text-muted-foreground">
-        Réponses indicatives — à valider avec votre comptable pour toute obligation fiscale.
-      </p>
+      <p className="mt-2 text-center text-[11px] text-muted-foreground">{t("disclaimer")}</p>
     </div>
   );
 }

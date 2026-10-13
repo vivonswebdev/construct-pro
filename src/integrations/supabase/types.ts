@@ -544,6 +544,7 @@ export type Database = {
           full_name: string
           hourly_rate: number | null
           id: string
+          langue: string
           nrn: string | null
           phone: string | null
           photo_url: string | null
@@ -557,6 +558,7 @@ export type Database = {
           full_name: string
           hourly_rate?: number | null
           id?: string
+          langue?: string
           nrn?: string | null
           phone?: string | null
           photo_url?: string | null
@@ -570,6 +572,7 @@ export type Database = {
           full_name?: string
           hourly_rate?: number | null
           id?: string
+          langue?: string
           nrn?: string | null
           phone?: string | null
           photo_url?: string | null
@@ -676,6 +679,7 @@ export type Database = {
           created_at: string
           full_name: string | null
           id: string
+          langue: string
           role: string
         }
         Insert: {
@@ -684,6 +688,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id: string
+          langue?: string
           role?: string
         }
         Update: {
@@ -692,6 +697,7 @@ export type Database = {
           created_at?: string
           full_name?: string | null
           id?: string
+          langue?: string
           role?: string
         }
         Relationships: [
@@ -797,8 +803,45 @@ export type Database = {
         }
         Relationships: []
       }
-      tva_checks: {
+      traductions: {
         Row: {
+          company_id: string
+          created_at: string
+          id: string
+          langue_cible: string
+          langue_source: string | null
+          source_hash: string
+          texte_traduit: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          id?: string
+          langue_cible: string
+          langue_source?: string | null
+          source_hash: string
+          texte_traduit: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          id?: string
+          langue_cible?: string
+          langue_source?: string | null
+          source_hash?: string
+          texte_traduit?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "traductions_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tva_checks: {        Row: {
           check_date: string
           checked_by: string | null
           client_name: string
@@ -928,6 +971,7 @@ export type Database = {
       dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       seed_lock: { Args: { _company_id: string }; Returns: string }
+      to_code: { Args: { _v: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never

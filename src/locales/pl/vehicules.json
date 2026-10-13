@@ -1,0 +1,80 @@
+{
+  "title": "Flota pojazdów",
+  "count_one": "{{count}} zarejestrowany pojazd",
+  "count_few": "{{count}} zarejestrowane pojazdy",
+  "count_many": "{{count}} zarejestrowanych pojazdów",
+  "count_other": "{{count}} zarejestrowanego pojazdu",
+  "add": "Dodaj pojazd",
+  "new": "Nowy pojazd",
+  "empty": "Brak pojazdów. Dodaj pierwszy pojazd, aby zacząć.",
+  "notFound": "Nie znaleziono pojazdu.",
+  "backToList": "Powrót do floty",
+  "available": "● Dostępny",
+  "assigned": "Przydzielony",
+  "perKm": "{{amount}} / km",
+  "badges": {
+    "ct": "Przegląd",
+    "insurance": "Ubezpieczenie",
+    "maintenance": "Serwis"
+  },
+  "form": {
+    "type": "Typ",
+    "plate": "Nr rejestracyjny *",
+    "brand": "Marka",
+    "model": "Model",
+    "year": "Rok",
+    "km": "Przebieg",
+    "costPerKm": "Koszt/km (€)",
+    "ctDate": "Data przeglądu",
+    "insuranceDate": "Data ubezpieczenia",
+    "lastMaintenance": "Ostatni serwis"
+  },
+  "validation": {
+    "plateRequired": "Numer rejestracyjny jest wymagany",
+    "invalidKm": "Nieprawidłowy przebieg",
+    "selectSite": "Wybierz budowę"
+  },
+  "toasts": {
+    "added": "Pojazd dodany",
+    "updated": "Zaktualizowano",
+    "assignmentClosed": "Przydział zamknięty",
+    "deleted": "Pojazd usunięty",
+    "assigned": "Pojazd przydzielony"
+  },
+  "detail": {
+    "alertsTitle": "Alerty i serwis",
+    "ct": "Przegląd techniczny",
+    "insurance": "Ubezpieczenie",
+    "lastMaintenance": "Ostatni serwis",
+    "notSet": "Nie podano",
+    "maintenanceDone": "Wykonany {{date}} · {{count}} d temu",
+    "maintenancePlanned": "Zaplanowany na {{date}} (za {{count}} d)",
+    "expiredSince": "Nieważny od {{count}} d ({{date}})",
+    "expiresOn": "Wygasa {{date}} ({{count}} d)",
+    "badgeMaintenance": "Serwis",
+    "badgeExpired": "Nieważny",
+    "badgeSoon": "Wkrótce",
+    "badgeOk": "OK",
+    "renew": "Odnów",
+    "historyTitle": "Historia przydziałów",
+    "assignToSite": "Przydziel do budowy",
+    "noAssignment": "Brak przydziałów.",
+    "inProgress": "W toku",
+    "close": "Zamknij",
+    "endKmPrompt": "Przebieg końcowy (obecny: {{km}} km):",
+    "confirmDelete": "Usunąć ten pojazd i jego historię?",
+    "columns": {
+      "site": "Budowa",
+      "period": "Okres",
+      "km": "Przejechane km",
+      "cost": "Koszt pojazdu"
+    }
+  },
+  "assignModal": {
+    "title": "Przydziel do budowy",
+    "site": "Budowa",
+    "startDate": "Data rozpoczęcia",
+    "startKm": "Przebieg początkowy",
+    "submit": "Przydziel"
+  }
+}

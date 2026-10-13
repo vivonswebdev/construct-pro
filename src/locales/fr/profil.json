@@ -1,0 +1,20 @@
+{
+  "title": "Mon profil",
+  "subtitle": "Gérez vos informations personnelles et celles de votre entreprise.",
+  "personal": "Informations personnelles",
+  "role": "Rôle : {{role}}",
+  "fullName": "Nom complet",
+  "avatarUrl": "URL de l'avatar (optionnel)",
+  "language": "Langue de l'interface",
+  "languageHelp": "Enregistrée sur votre profil : elle vous suit sur tous vos appareils.",
+  "company": "Mon entreprise",
+  "companyName": "Nom de l'entreprise",
+  "address": "Adresse",
+  "bce": "Numéro BCE",
+  "logoUrl": "URL du logo (optionnel)",
+  "avatarAlt": "Avatar",
+  "toasts": {
+    "profileUpdated": "Profil mis à jour",
+    "companyUpdated": "Entreprise mise à jour"
+  }
+}

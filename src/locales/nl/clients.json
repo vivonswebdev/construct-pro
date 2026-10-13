@@ -1,0 +1,64 @@
+{
+  "title": "Klanten",
+  "count_one": "{{count}} klant — particulieren en ondernemingen",
+  "count_other": "{{count}} klanten — particulieren en ondernemingen",
+  "new": "Nieuwe klant",
+  "edit": "Klant wijzigen",
+  "searchPlaceholder": "Een klant, gemeente of btw-nummer zoeken…",
+  "allTypes": "Alle types",
+  "particuliers": "Particulieren",
+  "entreprises": "Ondernemingen",
+  "empty": "Geen klanten gevonden.",
+  "notFound": "Klant niet gevonden.",
+  "select": "— Een klant kiezen —",
+  "companySuffix": "(onderneming)",
+  "columns": {
+    "client": "Klant",
+    "type": "Type",
+    "vat": "Btw-nr.",
+    "city": "Gemeente",
+    "contact": "Contact",
+    "language": "Taal"
+  },
+  "vatLiable": "Btw-plichtig",
+  "vatLiableLong": "Btw-plichtig",
+  "form": {
+    "companyName": "Maatschappelijke naam *",
+    "companyNamePlaceholder": "Bv. Janssens Vastgoed BV",
+    "bce": "Ondernemingsnr.",
+    "contactName": "Contactpersoon (naam)",
+    "firstName": "Voornaam",
+    "lastName": "Naam *",
+    "vat": "Btw-nr.",
+    "vatInvalid": "Ongeldig formaat",
+    "vatLiable": "Btw-plichtig",
+    "address": "Adres",
+    "postalCode": "Postcode",
+    "city": "Gemeente",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "language": "Taal van de documenten",
+    "notes": "Notities"
+  },
+  "validation": {
+    "companyNameRequired": "De maatschappelijke naam is verplicht",
+    "lastNameRequired": "De naam is verplicht",
+    "vatInvalid": "Ongeldig Belgisch btw-nummer (formaat BE0123456789)",
+    "vatRequiredIfLiable": "Een btw-plichtige klant moet een btw-nummer hebben"
+  },
+  "toasts": {
+    "created": "Klant aangemaakt",
+    "updated": "Klant bijgewerkt"
+  },
+  "detail": {
+    "totalQuoted": "Totaal in offertes (excl. btw)",
+    "totalAccepted": "Totaal aanvaard (excl. btw)",
+    "sites": "Werven",
+    "info": "Gegevens",
+    "linkedSites": "Gekoppelde werven",
+    "noSites": "Geen werven.",
+    "linkedQuotes": "Gekoppelde offertes",
+    "noQuotes": "Geen offertes.",
+    "confirmDelete": "Deze klant verwijderen? De gekoppelde werven en offertes blijven bewaard."
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "title": "Șantiere",
+  "new": "Șantier nou",
+  "create": "Creează un șantier",
+  "searchPlaceholder": "Căutați un șantier…",
+  "notFound": "Șantierul nu a fost găsit.",
+  "backToList": "Înapoi la șantiere",
+  "exportCsv": "Export CSV",
+  "exportPdf": "Export PDF",
+  "columns": {
+    "site": "Șantier",
+    "client": "Client",
+    "budget": "Buget",
+    "progress": "Progres",
+    "status": "Stare",
+    "handover": "Predare",
+    "actions": "Acțiuni"
+  },
+  "empty": {
+    "title": "Niciun șantier deocamdată",
+    "text": "Începeți prin a crea primul șantier."
+  },
+  "form": {
+    "name": "Numele șantierului",
+    "client": "Client",
+    "address": "Adresă",
+    "budget": "Buget (€)",
+    "start": "Început",
+    "handover": "Predare",
+    "description": "Descriere"
+  },
+  "toasts": {
+    "created": "Șantier creat",
+    "stepUpdated": "Etapă actualizată"
+  },
+  "phases": {
+    "preparation": "Pregătirea șantierului",
+    "fondations": "Fundații",
+    "grosOeuvre": "Structură (gros œuvre)",
+    "charpente": "Șarpantă & acoperiș",
+    "secondOeuvre": "Instalații (electrice, sanitare)",
+    "finitions": "Finisaje & zugrăveli",
+    "reception": "Curățenie & recepție"
+  },
+  "detail": {
+    "budget": "Buget",
+    "totalCosts": "Cheltuieli totale",
+    "realtime": "în timp real",
+    "ofWhichMaterials": "din care materiale",
+    "profit": "Profit",
+    "overallProgress": "Progres general",
+    "phasesTitle": "Etapele șantierului",
+    "stepsCompleted": "{{done}}/{{total}} etape finalizate",
+    "team": "Echipa de pe acest șantier",
+    "noTeam": "Niciun muncitor alocat.",
+    "vehicles": "Vehicule alocate",
+    "noVehicles": "Niciun vehicul alocat.",
+    "inProgress": "În curs",
+    "materials": "Materiale consumate",
+    "manageStock": "Gestionați stocul →",
+    "noMaterials": "Nicio mișcare de stoc pentru acest șantier.",
+    "materialsTotal": "Total materiale",
+    "materialColumns": {
+      "date": "Dată",
+      "type": "Tip",
+      "material": "Material",
+      "qty": "Cant.",
+      "total": "Total"
+    }
+  },
+  "phase": {
+    "progress": "Progres: {{value}} %",
+    "startDate": "Data de început",
+    "endDate": "Data de sfârșit",
+    "notes": "Note",
+    "markDone": "Marchează ca finalizat",
+    "start": "Începe"
+  }
+}

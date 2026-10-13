@@ -18,25 +18,22 @@ import type { Tables } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { formatEUR, formatDateBE } from "@/lib/format";
 import { toast } from "sonner";
-import { exportFacturePDF, AUTOLIQ_MENTION, ATTEST6_MENTION } from "@/lib/invoice-pdf";
+import {
+  exportFacturePDF,
+  langueDocument,
+  mentionAttestation6,
+  mentionAutoliquidation,
+} from "@/lib/invoice-pdf";
+import { useTranslation } from "react-i18next";
+import { pageHead } from "@/lib/head";
+import { nomsPhasesParDefaut } from "@/lib/chantiers";
+import { toCode } from "@/lib/statuts";
 import { StatusBadge, effectiveStatus, nextDevisNumber, plusDays } from "./facturation.index";
 import { ClientSelect } from "@/components/ClientSelect";
 import { clientLabel, clientAddress, type Client } from "@/lib/clients";
 
 export const Route = createFileRoute("/_app/facturation/$id")({
-  head: () => ({
-    meta: [
-      { title: "Devis — ConstructFlow" },
-      { name: "description", content: "Édition d'un devis avec lignes, TVA belge et export PDF." },
-      { property: "og:title", content: "Devis — ConstructFlow" },
-      {
-        property: "og:description",
-        content: "Édition d'un devis avec lignes, TVA belge et export PDF.",
-      },
-      { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-    ],
-  }),
+  head: () => pageHead("devisDetail"),
   component: DevisDetail,
 });
 
@@ -49,17 +46,9 @@ type Ligne = {
   order_index: number;
 };
 
-const DEFAULT_PHASES = [
-  "Préparation du site",
-  "Fondations",
-  "Gros œuvre",
-  "Charpente & Toiture",
-  "Second œuvre (électricité, plomberie)",
-  "Finitions & Peinture",
-  "Nettoyage & Réception",
-];
-
 function DevisDetail() {
+  const { t } = useTranslation(["devis", "statuts", "common"]);
+  const { t: tChantiers } = useTranslation("chantiers");
   const { id } = Route.useParams();
   const { profile, company } = useAuth();
   const qc = useQueryClient();
@@ -112,6 +101,8 @@ function DevisDetail() {
 
   const status = effectiveStatus(f);
   const has6 = !f.autoliquidation && lignes.some((l) => Number(l.vat_rate) === 6);
+  // Les documents officiels sortent dans la langue du client (fr / nl / en).
+  const docLang = langueDocument(client?.langue);
   const canAutoliq = !!client?.assujetti_tva;
 
   const updateLigne = (idx: number, patch: Partial<Ligne>) => {
@@ -165,7 +156,7 @@ function DevisDetail() {
         return false;
       }
     }
-    if (!quiet) toast.success("Enregistré");
+    if (!quiet) toast.success(t("toasts.saved"));
     qc.invalidateQueries({ queryKey: ["facture", id] });
     qc.invalidateQueries({ queryKey: ["factures"] });
     return true;
@@ -176,7 +167,9 @@ function DevisDetail() {
     if (error) return toast.error(error.message);
     setF({ ...f, status: s });
     qc.invalidateQueries({ queryKey: ["factures"] });
-    toast.success(`Statut : ${s}`);
+    toast.success(
+      t("toasts.statusChanged", { status: t(`statuts:devis.${toCode(s)}`, { defaultValue: s }) }),
+    );
   };
 
   const duplicate = async () => {
@@ -186,7 +179,7 @@ function DevisDetail() {
       .insert({
         ...rest,
         number: nextDevisNumber(),
-        status: "Brouillon",
+        status: "brouillon",
         chantier_id: null,
         issue_date: plusDays(0),
         valid_until: plusDays(30),
@@ -197,7 +190,7 @@ function DevisDetail() {
       })
       .select()
       .single();
-    if (error || !copy) return toast.error(error?.message ?? "Erreur");
+    if (error || !copy) return toast.error(error?.message ?? t("common:errors.generic"));
     if (lignes.length)
       await supabase.from("facture_lignes").insert(
         lignes.map((l, i) => ({
@@ -211,17 +204,17 @@ function DevisDetail() {
         })),
       );
     qc.invalidateQueries({ queryKey: ["factures"] });
-    toast.success("Devis dupliqué");
+    toast.success(t("toasts.duplicated"));
     navigate({ to: "/facturation/$id", params: { id: copy.id } });
   };
 
   const createChantier = async () => {
     if (!profile?.company_id) return;
     const name = prompt(
-      "Nom du chantier",
+      t("detail.siteNamePrompt"),
       lignes[0]?.description
         ? `${f.client_name} — ${lignes[0].description}`
-        : `Chantier ${f.client_name}`,
+        : t("detail.siteNameDefault", { client: f.client_name }),
     );
     if (!name) return;
     const { data: ch, error } = await supabase
@@ -234,35 +227,35 @@ function DevisDetail() {
         address: f.client_address,
         budget: totals.subtotal,
         actual_costs: 0,
-        status: "En attente",
+        status: "en_attente",
         progress: 0,
         start_date: plusDays(14),
-        description: `Créé depuis le devis ${f.number}`,
+        description: t("detail.siteDescription", { number: f.number }),
       })
       .select()
       .single();
-    if (error || !ch) return toast.error(error?.message ?? "Erreur");
+    if (error || !ch) return toast.error(error?.message ?? t("common:errors.generic"));
     await supabase.from("etapes").insert(
-      DEFAULT_PHASES.map((n, i) => ({
+      nomsPhasesParDefaut(tChantiers).map((n, i) => ({
         chantier_id: ch.id,
         name: n,
         order_index: i,
-        status: "En attente",
+        status: "en_attente",
         progress: 0,
       })),
     );
     await supabase.from("factures").update({ chantier_id: ch.id }).eq("id", id);
     qc.invalidateQueries();
-    toast.success("Chantier créé");
+    toast.success(t("toasts.siteCreated"));
     navigate({ to: "/chantiers/$id", params: { id: ch.id } });
   };
 
   const remove = async () => {
-    if (!confirm("Supprimer définitivement ce devis ?")) return;
+    if (!confirm(t("detail.confirmDelete"))) return;
     await supabase.from("facture_lignes").delete().eq("facture_id", id);
     const { error } = await supabase.from("factures").delete().eq("id", id);
     if (error) return toast.error(error.message);
-    toast.success("Supprimé");
+    toast.success(t("toasts.deleted"));
     navigate({ to: "/facturation" });
   };
 
@@ -285,11 +278,12 @@ function DevisDetail() {
         total_ht: Number(l.quantity) * Number(l.unit_price),
       })),
       {
-        name: company?.name ?? "Mon entreprise",
+        name: company?.name ?? t("detail.defaultCompany"),
         bce_number: company?.bce_number,
         address: company?.address,
       },
       totals.byRate,
+      docLang,
     );
   };
 
@@ -301,67 +295,75 @@ function DevisDetail() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Devis {f.number}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">
+              {t("detail.title", { number: f.number })}
+            </h1>
             <div className="mt-1 flex items-center gap-2">
               <StatusBadge status={status} />
               <span className="text-sm text-muted-foreground">
-                Émis le {formatDateBE(f.issue_date)} · valable jusqu'au{" "}
-                {formatDateBE(f.valid_until ?? f.due_date)}
+                {t("detail.issued", {
+                  issue: formatDateBE(f.issue_date),
+                  until: formatDateBE(f.valid_until ?? f.due_date),
+                })}
               </span>
             </div>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
-          <button onClick={downloadPDF} className={btnGhost}>
-            <Download className="h-4 w-4" /> PDF
+          <button
+            onClick={downloadPDF}
+            className={btnGhost}
+            title={t("detail.pdfLanguage", { language: t(`statuts:langue.${docLang}`) })}
+          >
+            <Download className="h-4 w-4" /> {t("detail.pdf")} ({docLang.toUpperCase()})
           </button>
           <button onClick={duplicate} className={btnGhost}>
-            <Copy className="h-4 w-4" /> Dupliquer
+            <Copy className="h-4 w-4" /> {t("detail.duplicate")}
           </button>
-          {status === "Brouillon" && (
+          {status === "brouillon" && (
             <button
               onClick={async () => {
-                if (await persist(true)) setStatus("Envoyé");
+                if (await persist(true)) setStatus("envoye");
               }}
               className="inline-flex items-center gap-2 rounded-lg bg-info px-3 py-2 text-sm font-semibold text-white hover:bg-info/90"
             >
-              <Send className="h-4 w-4" /> Marquer envoyé
+              <Send className="h-4 w-4" /> {t("detail.markSent")}
             </button>
           )}
-          {status === "Envoyé" && (
+          {status === "envoye" && (
             <>
               <button
-                onClick={() => setStatus("Accepté")}
+                onClick={() => setStatus("accepte")}
                 className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
               >
-                <CheckCircle2 className="h-4 w-4" /> Accepté
+                <CheckCircle2 className="h-4 w-4" /> {t("detail.accepted")}
               </button>
               <button
-                onClick={() => setStatus("Refusé")}
+                onClick={() => setStatus("refuse")}
                 className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-3 py-2 text-sm font-semibold text-white hover:bg-red-700"
               >
-                <X className="h-4 w-4" /> Refusé
+                <X className="h-4 w-4" /> {t("detail.refused")}
               </button>
             </>
           )}
-          {status === "Accepté" &&
+          {status === "accepte" &&
             (f.chantier_id ? (
               <Link to="/chantiers/$id" params={{ id: f.chantier_id }} className={btnGhost}>
-                <HardHat className="h-4 w-4" /> Voir le chantier
+                <HardHat className="h-4 w-4" /> {t("detail.viewSite")}
               </Link>
             ) : (
               <button
                 onClick={createChantier}
                 className="inline-flex items-center gap-2 rounded-lg bg-emerald-600 px-3 py-2 text-sm font-semibold text-white hover:bg-emerald-700"
               >
-                <HardHat className="h-4 w-4" /> Créer le chantier
+                <HardHat className="h-4 w-4" /> {t("detail.createSite")}
               </button>
             ))}
           <button
             onClick={() => persist()}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-semibold text-white hover:bg-primary/90"
           >
-            <Save className="h-4 w-4" /> Enregistrer
+            <Save className="h-4 w-4" /> {t("detail.save")}
           </button>
           <button
             onClick={remove}
@@ -375,7 +377,7 @@ function DevisDetail() {
       <div className="grid gap-4 lg:grid-cols-3">
         <div className="rounded-xl border border-border bg-card p-5 lg:col-span-2">
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Client
+            {t("detail.client")}
           </h3>
           <ClientSelect
             value={f.client_id ?? ""}
@@ -396,10 +398,10 @@ function DevisDetail() {
               <p>{clientAddress(client)}</p>
               {client.numero_tva && (
                 <p>
-                  TVA : {client.numero_tva}{" "}
+                  {t("detail.clientVat", { value: client.numero_tva })}{" "}
                   {client.assujetti_tva && (
                     <span className="ml-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
-                      Assujetti
+                      {t("detail.vatLiable")}
                     </span>
                   )}
                 </p>
@@ -415,8 +417,8 @@ function DevisDetail() {
                 onChange={(e) => setF({ ...f, autoliquidation: e.target.checked })}
               />
               <span>
-                <span className="font-semibold">Autoliquidation</span> — TVA 0 %, mention «{" "}
-                {AUTOLIQ_MENTION} » sur le PDF.
+                <span className="font-semibold">{t("detail.reverseCharge")}</span> —{" "}
+                {t("detail.reverseChargeHelp", { mention: mentionAutoliquidation(docLang) })}
               </span>
             </label>
           )}
@@ -428,24 +430,24 @@ function DevisDetail() {
                 checked={!!f.attestation_6}
                 onChange={(e) => setF({ ...f, attestation_6: e.target.checked })}
               />
-              <span>{ATTEST6_MENTION}</span>
+              <span>{mentionAttestation6(docLang)}</span>
             </label>
           )}
         </div>
 
         <div className="rounded-xl border border-border bg-card p-5">
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Détails
+            {t("detail.details")}
           </h3>
           <div className="space-y-3">
-            <Field label="Numéro">
+            <Field label={t("form.number")}>
               <input
                 className={inputCls}
                 value={f.number ?? ""}
                 onChange={(e) => setF({ ...f, number: e.target.value })}
               />
             </Field>
-            <Field label="Date d'émission">
+            <Field label={t("form.issueDate")}>
               <input
                 type="date"
                 className={inputCls}
@@ -453,7 +455,7 @@ function DevisDetail() {
                 onChange={(e) => setF({ ...f, issue_date: e.target.value })}
               />
             </Field>
-            <Field label="Valable jusqu'au">
+            <Field label={t("form.validUntil")}>
               <input
                 type="date"
                 className={inputCls}
@@ -468,7 +470,7 @@ function DevisDetail() {
       <div className="rounded-xl border border-border bg-card">
         <div className="flex items-center justify-between border-b border-border px-5 py-3">
           <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Postes
+            {t("detail.lines")}
           </h3>
           <button
             onClick={() =>
@@ -486,18 +488,24 @@ function DevisDetail() {
             }
             className="inline-flex items-center gap-1 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
           >
-            <Plus className="h-3.5 w-3.5" /> Ajouter
+            <Plus className="h-3.5 w-3.5" /> {t("detail.addLine")}
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-muted/50 text-xs uppercase text-muted-foreground">
               <tr>
-                <th className="px-3 py-2 text-left font-semibold">Description</th>
-                <th className="w-24 px-3 py-2 text-right font-semibold">Qté</th>
-                <th className="w-32 px-3 py-2 text-right font-semibold">Prix unit.</th>
-                <th className="w-28 px-3 py-2 text-right font-semibold">TVA</th>
-                <th className="w-32 px-3 py-2 text-right font-semibold">Total HT</th>
+                <th className="px-3 py-2 text-left font-semibold">
+                  {t("columnsLines.description")}
+                </th>
+                <th className="w-24 px-3 py-2 text-right font-semibold">{t("columnsLines.qty")}</th>
+                <th className="w-32 px-3 py-2 text-right font-semibold">
+                  {t("columnsLines.unitPrice")}
+                </th>
+                <th className="w-28 px-3 py-2 text-right font-semibold">{t("columnsLines.vat")}</th>
+                <th className="w-32 px-3 py-2 text-right font-semibold">
+                  {t("columnsLines.totalExcl")}
+                </th>
                 <th className="w-10" />
               </tr>
             </thead>
@@ -505,7 +513,7 @@ function DevisDetail() {
               {lignes.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-3 py-8 text-center text-sm text-muted-foreground">
-                    Aucun poste. Cliquez sur « Ajouter ».
+                    {t("detail.noLines")}
                   </td>
                 </tr>
               ) : (
@@ -516,7 +524,7 @@ function DevisDetail() {
                         className={inputCls}
                         value={l.description}
                         onChange={(e) => updateLigne(i, { description: e.target.value })}
-                        placeholder="Ex : Terrassement, gros œuvre, toiture…"
+                        placeholder={t("detail.linePlaceholder")}
                       />
                     </td>
                     <td className="px-3 py-2">
@@ -569,7 +577,7 @@ function DevisDetail() {
         <div className="border-t border-border p-5">
           <div className="ml-auto max-w-xs space-y-1.5 text-sm">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Sous-total HT</span>
+              <span className="text-muted-foreground">{t("detail.subtotalExcl")}</span>
               <span className="font-medium">{formatEUR(totals.subtotal)}</span>
             </div>
             {Object.entries(totals.byRate)
@@ -577,16 +585,18 @@ function DevisDetail() {
               .map(([rate, r]) => (
                 <div key={rate} className="flex justify-between">
                   <span className="text-muted-foreground">
-                    TVA {rate} % (sur {formatEUR(r.base)})
+                    {t("detail.vatOn", { rate, base: formatEUR(r.base) })}
                   </span>
                   <span className="font-medium">{formatEUR(r.vat)}</span>
                 </div>
               ))}
             {f.autoliquidation && (
-              <p className="text-xs italic text-muted-foreground">{AUTOLIQ_MENTION}</p>
+              <p className="text-xs italic text-muted-foreground">
+                {mentionAutoliquidation(docLang)}
+              </p>
             )}
             <div className="flex justify-between border-t border-border pt-2 text-base font-bold">
-              <span>Total TTC</span>
+              <span>{t("detail.totalIncl")}</span>
               <span className="text-primary">{formatEUR(totals.total)}</span>
             </div>
           </div>
@@ -596,26 +606,26 @@ function DevisDetail() {
       <div className="grid gap-4 md:grid-cols-2">
         <div className="rounded-xl border border-border bg-card p-5">
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Notes
+            {t("detail.notes")}
           </h3>
           <textarea
             rows={4}
             className={inputCls}
             value={f.notes ?? ""}
             onChange={(e) => setF({ ...f, notes: e.target.value })}
-            placeholder="Message au client"
+            placeholder={t("detail.notesPlaceholder")}
           />
         </div>
         <div className="rounded-xl border border-border bg-card p-5">
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-            Conditions
+            {t("detail.conditions")}
           </h3>
           <textarea
             rows={4}
             className={inputCls}
             value={f.conditions ?? ""}
             onChange={(e) => setF({ ...f, conditions: e.target.value })}
-            placeholder="Validité, acompte, délais…"
+            placeholder={t("detail.conditionsPlaceholder")}
           />
         </div>
       </div>

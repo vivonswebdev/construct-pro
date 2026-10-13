@@ -19,6 +19,8 @@ import { cleanVAT, formatVATDisplay, isValidVAT, formatEURBE } from "@/lib/belgi
 import { formatDateBE } from "@/lib/format";
 import { checkTva } from "@/lib/tva.functions";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
+import { intlLocale } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/conformite-tva")({
   component: ConformiteTvaPage,
@@ -33,7 +35,11 @@ type LastCheckResult = {
   date: string;
 };
 
+/** Taux de retenue SPF affiché par le calculateur (paramétré en base à partir de la phase 9). */
+const TAUX_RETENUE_SPF = 0.15;
+
 function ConformiteTvaPage() {
+  const { t } = useTranslation(["tva", "common"]);
   const { profile } = useAuth();
   const qc = useQueryClient();
   const runCheckTva = useServerFn(checkTva);
@@ -87,11 +93,11 @@ function ConformiteTvaPage() {
     const name = (overrideName ?? clientName).trim();
     const vatRaw = overrideVat ?? vatInput;
     if (!name) {
-      toast.error("Indiquez le nom du client");
+      toast.error(t("validation.clientNameRequired"));
       return;
     }
     if (!isValidVAT(vatRaw)) {
-      toast.error("Numéro de TVA invalide (BE + 10 chiffres)");
+      toast.error(t("validation.vatInvalid"));
       return;
     }
 
@@ -100,27 +106,37 @@ function ConformiteTvaPage() {
     try {
       const res = await runCheckTva({ data: { vat_number: vat } });
       if (!res.ok) {
-        toast.error(res.error);
+        const errMsg = t(`errors.${res.error}`, { status: "status" in res ? res.status : "" });
+        toast.error(errMsg);
         setLastResult({
           client_name: name,
           vat,
           eligible: null,
-          message: res.error + " — vous pouvez consulter le site officiel et logger manuellement.",
-          source_url: `https://www.checkobligationderetenue.be/result/?vat=${vat}`,
+          message: `${errMsg} ${t("errors.manualHint")}`,
+          source_url:
+            "source_url" in res
+              ? res.source_url
+              : `https://www.checkobligationderetenue.be/result/?vat=${vat}`,
           date: new Date().toISOString(),
         });
       } else {
+        const message =
+          res.eligible === true
+            ? t("result.msgNoWithholding")
+            : res.eligible === false
+              ? t("result.msgWithholding")
+              : t("result.msgAmbiguous");
         setLastResult({
           client_name: name,
           vat,
           eligible: res.eligible,
-          message: res.message,
+          message,
           source_url: res.source_url,
           date: new Date().toISOString(),
         });
-        // Save automatically if we have a definitive result
+        // Enregistrement automatique si le résultat est définitif
         if (res.eligible !== null) {
-          await saveResult(name, vat, res.eligible, res.message);
+          await saveResult(name, vat, res.eligible, "auto");
         }
       }
     } finally {
@@ -128,43 +144,53 @@ function ConformiteTvaPage() {
     }
   };
 
-  const saveResult = async (name: string, vat: string, eligible: boolean, message: string) => {
+  // Le détail est stocké en codes (resultat, source), traduits à l'affichage.
+  const saveResult = async (
+    name: string,
+    vat: string,
+    eligible: boolean,
+    source: "auto" | "manuel",
+  ) => {
     if (!profile?.company_id) return;
     const { error } = await supabase.from("tva_checks").insert({
       company_id: profile.company_id,
       client_name: name,
       client_vat_number: vat,
       is_eligible: eligible,
-      raw_response: { message },
+      raw_response: { resultat: eligible ? "conforme" : "retenue", source },
       checked_by: profile.id,
     });
     if (error) toast.error(error.message);
     else {
-      toast.success("Vérification enregistrée");
+      toast.success(t("toasts.saved"));
       qc.invalidateQueries({ queryKey: ["tva-checks"] });
     }
   };
 
   const logManual = async (eligible: boolean) => {
     if (!lastResult) return;
-    await saveResult(
-      lastResult.client_name,
-      lastResult.vat,
-      eligible,
-      eligible ? "Saisie manuelle — Conforme" : "Saisie manuelle — Retenue obligatoire",
-    );
+    await saveResult(lastResult.client_name, lastResult.vat, eligible, "manuel");
     setLastResult({
       ...lastResult,
       eligible,
-      message: eligible ? "Saisie manuelle — Conforme" : "Saisie manuelle — Retenue obligatoire",
+      message: eligible ? t("result.msgManualOk") : t("result.msgManualWithholding"),
     });
   };
 
   const exportCSV = () => {
     const rows = [
-      ["Statut", "Client", "N° TVA", "Vérifié le"],
+      [
+        t("history.columns.status"),
+        t("history.columns.client"),
+        t("history.columns.vat"),
+        t("history.columns.checkedOn"),
+      ],
       ...latestByVat.map((r) => [
-        r.is_eligible ? "Conforme" : r.is_eligible === false ? "Retenue" : "Inconnu",
+        r.is_eligible
+          ? t("result.compliant")
+          : r.is_eligible === false
+            ? t("result.withholdingShort")
+            : t("history.unknown"),
         r.client_name,
         r.client_vat_number,
         formatDateBE(r.check_date),
@@ -177,13 +203,13 @@ function ConformiteTvaPage() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `verifications-tva-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.download = `${t("history.csvFileName")}-${new Date().toISOString().slice(0, 10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
   };
 
   const amount = parseFloat(invoiceAmount.replace(",", ".")) || 0;
-  const retenue = amount * 0.15;
+  const retenue = amount * TAUX_RETENUE_SPF;
   const net = amount - retenue;
 
   return (
@@ -193,31 +219,31 @@ function ConformiteTvaPage() {
           <ShieldCheck className="h-5 w-5" />
         </div>
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Conformité TVA & Retenue</h1>
-          <p className="text-sm text-muted-foreground">
-            Vérifiez l'éligibilité de vos clients et sous-traitants (Art. 402 CIR)
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">{t("title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
         </div>
       </div>
 
       {/* Check form */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
-        <h2 className="mb-4 text-base font-semibold">Vérifier un numéro de TVA</h2>
+        <h2 className="mb-4 text-base font-semibold">{t("form.title")}</h2>
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label className="mb-1 block text-xs font-semibold text-muted-foreground">
-              Nom du client
+              {t("form.clientName")}
             </label>
             <input
               type="text"
               value={clientName}
               onChange={(e) => setClientName(e.target.value)}
-              placeholder="Ex: Immobilière Dumont SA"
+              placeholder={t("form.clientNamePlaceholder")}
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-semibold text-muted-foreground">N° TVA</label>
+            <label className="mb-1 block text-xs font-semibold text-muted-foreground">
+              {t("form.vat")}
+            </label>
             <input
               type="text"
               value={vatInput}
@@ -225,7 +251,7 @@ function ConformiteTvaPage() {
               placeholder="BE0123456789"
               className="w-full rounded-lg border border-border bg-background px-3 py-2 font-mono text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
-            <p className="mt-1 text-[11px] text-muted-foreground">Format: BE + 10 chiffres</p>
+            <p className="mt-1 text-[11px] text-muted-foreground">{t("form.vatHint")}</p>
           </div>
         </div>
         <button
@@ -238,11 +264,9 @@ function ConformiteTvaPage() {
           ) : (
             <ShieldCheck className="h-4 w-4" />
           )}
-          {checking ? "Vérification en cours..." : "Vérifier maintenant"}
+          {checking ? t("form.checking") : t("form.checkNow")}
         </button>
-        <p className="mt-3 text-[11px] text-muted-foreground">
-          ⓘ Données issues de checkobligationderetenue.be — Résultat SPF Finances (Art. 402 CIR92)
-        </p>
+        <p className="mt-3 text-[11px] text-muted-foreground">{t("form.source")}</p>
       </div>
 
       {/* Result */}
@@ -275,20 +299,22 @@ function ConformiteTvaPage() {
                 }`}
               >
                 {lastResult.eligible === true
-                  ? "✓ Aucune retenue obligatoire"
+                  ? t("result.noWithholding")
                   : lastResult.eligible === false
-                    ? "⚠ Retenue obligatoire !"
-                    : "Résultat à confirmer manuellement"}
+                    ? t("result.withholding")
+                    : t("result.toConfirm")}
               </h3>
               <p className="mt-1 text-sm font-medium">
                 {lastResult.client_name} ·{" "}
                 <span className="font-mono">{formatVATDisplay(lastResult.vat)}</span>
               </p>
               <p className="mt-0.5 text-xs text-muted-foreground">
-                Vérifié le {formatDateBE(lastResult.date)} à{" "}
-                {new Date(lastResult.date).toLocaleTimeString("fr-BE", {
-                  hour: "2-digit",
-                  minute: "2-digit",
+                {t("result.checkedAt", {
+                  date: formatDateBE(lastResult.date),
+                  time: new Date(lastResult.date).toLocaleTimeString(intlLocale(), {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }),
                 })}
               </p>
               <p className="mt-2 text-sm">{lastResult.message}</p>
@@ -302,21 +328,21 @@ function ConformiteTvaPage() {
                       rel="noreferrer"
                       className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
                     >
-                      <ExternalLink className="h-3 w-3" /> Voir sur le site officiel
+                      <ExternalLink className="h-3 w-3" /> {t("result.officialSite")}
                     </a>
                   )}
-                  <span className="text-xs text-muted-foreground">Saisie manuelle :</span>
+                  <span className="text-xs text-muted-foreground">{t("result.manualEntry")}</span>
                   <button
                     onClick={() => logManual(true)}
                     className="rounded-md bg-emerald-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-emerald-700"
                   >
-                    ✓ Conforme
+                    {t("result.compliant")}
                   </button>
                   <button
                     onClick={() => logManual(false)}
                     className="rounded-md bg-red-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-red-700"
                   >
-                    ⚠ Retenue
+                    {t("result.withholdingShort")}
                   </button>
                 </div>
               )}
@@ -326,11 +352,11 @@ function ConformiteTvaPage() {
           {/* Withholding calculator when ROUGE */}
           {lastResult.eligible === false && (
             <div className="mt-5 rounded-lg border border-red-200 bg-white p-4">
-              <h4 className="mb-3 text-sm font-semibold">Calcul de la retenue</h4>
+              <h4 className="mb-3 text-sm font-semibold">{t("calc.title")}</h4>
               <div className="flex flex-wrap items-end gap-3">
                 <div>
                   <label className="mb-1 block text-[11px] font-semibold text-muted-foreground">
-                    Montant de la facture
+                    {t("calc.invoiceAmount")}
                   </label>
                   <input
                     type="text"
@@ -345,27 +371,29 @@ function ConformiteTvaPage() {
               {amount > 0 && (
                 <div className="mt-3 grid gap-2 text-sm md:grid-cols-3">
                   <div className="rounded-md bg-red-50 p-3">
-                    <p className="text-[11px] font-semibold uppercase text-red-700">Retenue 15%</p>
+                    <p className="text-[11px] font-semibold uppercase text-red-700">
+                      {t("calc.withholding", { rate: TAUX_RETENUE_SPF * 100 })}
+                    </p>
                     <p className="mt-0.5 text-base font-bold text-red-700">
                       {formatEURBE(retenue)}
                     </p>
-                    <p className="text-[11px] text-muted-foreground">À verser au SPF</p>
+                    <p className="text-[11px] text-muted-foreground">{t("calc.toSpf")}</p>
                   </div>
                   <div className="rounded-md bg-amber-50 p-3">
                     <p className="text-[11px] font-semibold uppercase text-amber-700">
-                      Net au client
+                      {t("calc.netToClient")}
                     </p>
                     <p className="mt-0.5 text-base font-bold text-amber-700">{formatEURBE(net)}</p>
-                    <p className="text-[11px] text-muted-foreground">Solde à verser</p>
+                    <p className="text-[11px] text-muted-foreground">{t("calc.balance")}</p>
                   </div>
                   <div className="rounded-md bg-emerald-50 p-3">
                     <p className="text-[11px] font-semibold uppercase text-emerald-700">
-                      Montant brut
+                      {t("calc.gross")}
                     </p>
                     <p className="mt-0.5 text-base font-bold text-emerald-700">
                       {formatEURBE(amount)}
                     </p>
-                    <p className="text-[11px] text-muted-foreground">Total facturé</p>
+                    <p className="text-[11px] text-muted-foreground">{t("calc.invoiced")}</p>
                   </div>
                 </div>
               )}
@@ -377,14 +405,14 @@ function ConformiteTvaPage() {
       {/* History */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-base font-semibold">Historique des vérifications</h2>
+          <h2 className="text-base font-semibold">{t("history.title")}</h2>
           <div className="flex flex-wrap items-center gap-2">
             <div className="relative">
               <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <input
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                placeholder="Rechercher client ou N° TVA"
+                placeholder={t("history.searchPlaceholder")}
                 className="w-64 rounded-lg border border-border bg-background py-1.5 pl-8 pr-3 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
             </div>
@@ -392,7 +420,7 @@ function ConformiteTvaPage() {
               onClick={exportCSV}
               className="inline-flex items-center gap-1.5 rounded-md border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted"
             >
-              <FileDown className="h-3.5 w-3.5" /> Export CSV
+              <FileDown className="h-3.5 w-3.5" /> {t("history.exportCsv")}
             </button>
           </div>
         </div>
@@ -400,7 +428,7 @@ function ConformiteTvaPage() {
           <div className="rounded-lg border border-dashed border-border bg-muted/30 p-8 text-center text-sm text-muted-foreground">
             {filter ? (
               <>
-                Aucun résultat —{" "}
+                {t("history.noResult")}{" "}
                 <button
                   onClick={() => {
                     setClientName(filter);
@@ -408,11 +436,11 @@ function ConformiteTvaPage() {
                   }}
                   className="font-semibold text-primary hover:underline"
                 >
-                  Lancer une vérification ?
+                  {t("history.launchCheck")}
                 </button>
               </>
             ) : (
-              "Aucune vérification enregistrée. Utilisez le formulaire ci-dessus."
+              t("history.empty")
             )}
           </div>
         ) : (
@@ -420,11 +448,11 @@ function ConformiteTvaPage() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-border text-left text-xs uppercase tracking-wider text-muted-foreground">
-                  <th className="py-2 pr-3">Statut</th>
-                  <th className="py-2 pr-3">Client</th>
-                  <th className="py-2 pr-3">N° TVA</th>
-                  <th className="py-2 pr-3">Vérifié le</th>
-                  <th className="py-2 pr-3">Actions</th>
+                  <th className="py-2 pr-3">{t("history.columns.status")}</th>
+                  <th className="py-2 pr-3">{t("history.columns.client")}</th>
+                  <th className="py-2 pr-3">{t("history.columns.vat")}</th>
+                  <th className="py-2 pr-3">{t("history.columns.checkedOn")}</th>
+                  <th className="py-2 pr-3">{t("history.columns.actions")}</th>
                 </tr>
               </thead>
               <tbody>
@@ -442,15 +470,15 @@ function ConformiteTvaPage() {
                     <td className="py-3 pr-3">
                       {r.is_eligible === true ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-xs font-semibold text-emerald-700">
-                          ✓ Conforme
+                          {t("result.compliant")}
                         </span>
                       ) : r.is_eligible === false ? (
                         <span className="inline-flex items-center gap-1 rounded-full bg-red-100 px-2 py-0.5 text-xs font-semibold text-red-700">
-                          ⚠ Retenue
+                          {t("result.withholdingShort")}
                         </span>
                       ) : (
                         <span className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 text-xs font-semibold text-gray-600">
-                          Inconnu
+                          {t("history.unknown")}
                         </span>
                       )}
                     </td>
@@ -466,7 +494,7 @@ function ConformiteTvaPage() {
                         onClick={() => runCheck(r.client_name, r.client_vat_number)}
                         className="inline-flex items-center gap-1 rounded-md border border-border bg-card px-2 py-1 text-xs font-semibold hover:bg-muted"
                       >
-                        <RefreshCw className="h-3 w-3" /> Re-vérifier
+                        <RefreshCw className="h-3 w-3" /> {t("history.recheck")}
                       </button>
                     </td>
                   </tr>
