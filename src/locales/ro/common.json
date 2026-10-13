@@ -94,6 +94,14 @@
     "assistant": {
       "title": "Asistent AI",
       "description": "Puneți întrebări despre șantiere, devize și obligațiile din Belgia: asistentul răspunde pe baza datelor dumneavoastră."
+    },
+    "sousTraitants": {
+      "title": "Subcontractori",
+      "description": "Fișe subcontractori, verificări 30bis datate, contracte și plăți."
+    },
+    "sousTraitant": {
+      "title": "Fișă subcontractor",
+      "description": "Informații, verificări ale datoriilor sociale și fiscale, contracte și plăți."
     }
   },
   "indicatif": "Orientativ — de confirmat cu contabilul / secretariatul social."

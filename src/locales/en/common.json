@@ -93,6 +93,14 @@
     "assistant": {
       "title": "AI assistant",
       "description": "Ask questions about your sites, quotes and Belgian compliance: the assistant answers from your data."
+    },
+    "sousTraitants": {
+      "title": "Subcontractors",
+      "description": "Subcontractor records, dated 30bis checks, contracts and payments."
+    },
+    "sousTraitant": {
+      "title": "Subcontractor",
+      "description": "Details, social and tax debt checks, contracts and payments."
     }
   },
   "indicatif": "Indicative — to be confirmed by your accountant / social secretariat."

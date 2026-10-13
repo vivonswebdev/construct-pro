@@ -19,11 +19,13 @@ import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-t
 import { Route as AppAssistantRouteImport } from './routes/_app/assistant'
 import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
 import { Route as AppStockIndexRouteImport } from './routes/_app/stock.index'
+import { Route as AppSousTraitantsIndexRouteImport } from './routes/_app/sous-traitants.index'
 import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.index'
 import { Route as AppFacturationIndexRouteImport } from './routes/_app/facturation.index'
 import { Route as AppClientsIndexRouteImport } from './routes/_app/clients.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
 import { Route as AppVehiculesIdRouteImport } from './routes/_app/vehicules.$id'
+import { Route as AppSousTraitantsIdRouteImport } from './routes/_app/sous-traitants.$id'
 import { Route as AppPersonnelIdRouteImport } from './routes/_app/personnel.$id'
 import { Route as AppFacturationIdRouteImport } from './routes/_app/facturation.$id'
 import { Route as AppClientsIdRouteImport } from './routes/_app/clients.$id'
@@ -78,6 +80,11 @@ const AppStockIndexRoute = AppStockIndexRouteImport.update({
   path: '/stock/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSousTraitantsIndexRoute = AppSousTraitantsIndexRouteImport.update({
+  id: '/sous-traitants/',
+  path: '/sous-traitants/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPersonnelIndexRoute = AppPersonnelIndexRouteImport.update({
   id: '/personnel/',
   path: '/personnel/',
@@ -101,6 +108,11 @@ const AppChantiersIndexRoute = AppChantiersIndexRouteImport.update({
 const AppVehiculesIdRoute = AppVehiculesIdRouteImport.update({
   id: '/vehicules/$id',
   path: '/vehicules/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSousTraitantsIdRoute = AppSousTraitantsIdRouteImport.update({
+  id: '/sous-traitants/$id',
+  path: '/sous-traitants/$id',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPersonnelIdRoute = AppPersonnelIdRouteImport.update({
@@ -136,11 +148,13 @@ export interface FileRoutesByFullPath {
   '/clients/$id': typeof AppClientsIdRoute
   '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
+  '/sous-traitants/$id': typeof AppSousTraitantsIdRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers/': typeof AppChantiersIndexRoute
   '/clients/': typeof AppClientsIndexRoute
   '/facturation/': typeof AppFacturationIndexRoute
   '/personnel/': typeof AppPersonnelIndexRoute
+  '/sous-traitants/': typeof AppSousTraitantsIndexRoute
   '/stock/': typeof AppStockIndexRoute
   '/vehicules/': typeof AppVehiculesIndexRoute
 }
@@ -156,11 +170,13 @@ export interface FileRoutesByTo {
   '/clients/$id': typeof AppClientsIdRoute
   '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
+  '/sous-traitants/$id': typeof AppSousTraitantsIdRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
   '/chantiers': typeof AppChantiersIndexRoute
   '/clients': typeof AppClientsIndexRoute
   '/facturation': typeof AppFacturationIndexRoute
   '/personnel': typeof AppPersonnelIndexRoute
+  '/sous-traitants': typeof AppSousTraitantsIndexRoute
   '/stock': typeof AppStockIndexRoute
   '/vehicules': typeof AppVehiculesIndexRoute
 }
@@ -178,11 +194,13 @@ export interface FileRoutesById {
   '/_app/clients/$id': typeof AppClientsIdRoute
   '/_app/facturation/$id': typeof AppFacturationIdRoute
   '/_app/personnel/$id': typeof AppPersonnelIdRoute
+  '/_app/sous-traitants/$id': typeof AppSousTraitantsIdRoute
   '/_app/vehicules/$id': typeof AppVehiculesIdRoute
   '/_app/chantiers/': typeof AppChantiersIndexRoute
   '/_app/clients/': typeof AppClientsIndexRoute
   '/_app/facturation/': typeof AppFacturationIndexRoute
   '/_app/personnel/': typeof AppPersonnelIndexRoute
+  '/_app/sous-traitants/': typeof AppSousTraitantsIndexRoute
   '/_app/stock/': typeof AppStockIndexRoute
   '/_app/vehicules/': typeof AppVehiculesIndexRoute
 }
@@ -200,11 +218,13 @@ export interface FileRouteTypes {
     | '/clients/$id'
     | '/facturation/$id'
     | '/personnel/$id'
+    | '/sous-traitants/$id'
     | '/vehicules/$id'
     | '/chantiers/'
     | '/clients/'
     | '/facturation/'
     | '/personnel/'
+    | '/sous-traitants/'
     | '/stock/'
     | '/vehicules/'
   fileRoutesByTo: FileRoutesByTo
@@ -220,11 +240,13 @@ export interface FileRouteTypes {
     | '/clients/$id'
     | '/facturation/$id'
     | '/personnel/$id'
+    | '/sous-traitants/$id'
     | '/vehicules/$id'
     | '/chantiers'
     | '/clients'
     | '/facturation'
     | '/personnel'
+    | '/sous-traitants'
     | '/stock'
     | '/vehicules'
   id:
@@ -241,11 +263,13 @@ export interface FileRouteTypes {
     | '/_app/clients/$id'
     | '/_app/facturation/$id'
     | '/_app/personnel/$id'
+    | '/_app/sous-traitants/$id'
     | '/_app/vehicules/$id'
     | '/_app/chantiers/'
     | '/_app/clients/'
     | '/_app/facturation/'
     | '/_app/personnel/'
+    | '/_app/sous-traitants/'
     | '/_app/stock/'
     | '/_app/vehicules/'
   fileRoutesById: FileRoutesById
@@ -328,6 +352,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppStockIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/sous-traitants/': {
+      id: '/_app/sous-traitants/'
+      path: '/sous-traitants'
+      fullPath: '/sous-traitants/'
+      preLoaderRoute: typeof AppSousTraitantsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/personnel/': {
       id: '/_app/personnel/'
       path: '/personnel'
@@ -361,6 +392,13 @@ declare module '@tanstack/react-router' {
       path: '/vehicules/$id'
       fullPath: '/vehicules/$id'
       preLoaderRoute: typeof AppVehiculesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sous-traitants/$id': {
+      id: '/_app/sous-traitants/$id'
+      path: '/sous-traitants/$id'
+      fullPath: '/sous-traitants/$id'
+      preLoaderRoute: typeof AppSousTraitantsIdRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/personnel/$id': {
@@ -404,11 +442,13 @@ interface AppRouteChildren {
   AppClientsIdRoute: typeof AppClientsIdRoute
   AppFacturationIdRoute: typeof AppFacturationIdRoute
   AppPersonnelIdRoute: typeof AppPersonnelIdRoute
+  AppSousTraitantsIdRoute: typeof AppSousTraitantsIdRoute
   AppVehiculesIdRoute: typeof AppVehiculesIdRoute
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
   AppClientsIndexRoute: typeof AppClientsIndexRoute
   AppFacturationIndexRoute: typeof AppFacturationIndexRoute
   AppPersonnelIndexRoute: typeof AppPersonnelIndexRoute
+  AppSousTraitantsIndexRoute: typeof AppSousTraitantsIndexRoute
   AppStockIndexRoute: typeof AppStockIndexRoute
   AppVehiculesIndexRoute: typeof AppVehiculesIndexRoute
 }
@@ -423,11 +463,13 @@ const AppRouteChildren: AppRouteChildren = {
   AppClientsIdRoute: AppClientsIdRoute,
   AppFacturationIdRoute: AppFacturationIdRoute,
   AppPersonnelIdRoute: AppPersonnelIdRoute,
+  AppSousTraitantsIdRoute: AppSousTraitantsIdRoute,
   AppVehiculesIdRoute: AppVehiculesIdRoute,
   AppChantiersIndexRoute: AppChantiersIndexRoute,
   AppClientsIndexRoute: AppClientsIndexRoute,
   AppFacturationIndexRoute: AppFacturationIndexRoute,
   AppPersonnelIndexRoute: AppPersonnelIndexRoute,
+  AppSousTraitantsIndexRoute: AppSousTraitantsIndexRoute,
   AppStockIndexRoute: AppStockIndexRoute,
   AppVehiculesIndexRoute: AppVehiculesIndexRoute,
 }

@@ -14,6 +14,89 @@ export type Database = {
   }
   public: {
     Tables: {
+      achat_paiements: {
+        Row: {
+          company_id: string
+          contrat_id: string
+          created_at: string
+          created_by: string | null
+          date_paiement: string
+          id: string
+          mode: string
+          montant_ht: number
+          montant_tva: number
+          montant_verse: number | null
+          preuve_fichier: string | null
+          reference: string | null
+          retenue_onss: number
+          retenue_spf: number
+          verification_30bis_id: string | null
+        }
+        Insert: {
+          company_id: string
+          contrat_id: string
+          created_at?: string
+          created_by?: string | null
+          date_paiement: string
+          id?: string
+          mode?: string
+          montant_ht: number
+          montant_tva?: number
+          montant_verse?: never
+          preuve_fichier?: string | null
+          reference?: string | null
+          retenue_onss?: number
+          retenue_spf?: number
+          verification_30bis_id?: string | null
+        }
+        Update: {
+          company_id?: string
+          contrat_id?: string
+          created_at?: string
+          created_by?: string | null
+          date_paiement?: string
+          id?: string
+          mode?: string
+          montant_ht?: number
+          montant_tva?: number
+          montant_verse?: never
+          preuve_fichier?: string | null
+          reference?: string | null
+          retenue_onss?: number
+          retenue_spf?: number
+          verification_30bis_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "achat_paiements_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achat_paiements_contrat_fk"
+            columns: ["contrat_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitant_contrats"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "achat_paiements_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achat_paiements_verif_fk"
+            columns: ["verification_30bis_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "verifications_30bis"
+            referencedColumns: ["id", "company_id"]
+          },
+        ]
+      }
       affectations: {
         Row: {
           chantier_id: string
@@ -227,6 +310,7 @@ export type Database = {
           coefficient_cout_charge: number
           company_id: string
           couleur: string
+          duree_conservation_ouvriers_ans: number
           heures_par_jour: number
           iban: string | null
           id: string
@@ -245,6 +329,7 @@ export type Database = {
           coefficient_cout_charge?: number
           company_id: string
           couleur?: string
+          duree_conservation_ouvriers_ans?: number
           heures_par_jour?: number
           iban?: string | null
           id?: string
@@ -263,6 +348,7 @@ export type Database = {
           coefficient_cout_charge?: number
           company_id?: string
           couleur?: string
+          duree_conservation_ouvriers_ans?: number
           heures_par_jour?: number
           iban?: string | null
           id?: string
@@ -535,6 +621,30 @@ export type Database = {
         }
         Relationships: []
       }
+      parametres_30bis: {
+        Row: {
+          date_debut: string
+          date_verification: string | null
+          source: string | null
+          taux_retenue_onss: number
+          taux_retenue_spf: number
+        }
+        Insert: {
+          date_debut: string
+          date_verification?: string | null
+          source?: string | null
+          taux_retenue_onss: number
+          taux_retenue_spf: number
+        }
+        Update: {
+          date_debut?: string
+          date_verification?: string | null
+          source?: string | null
+          taux_retenue_onss?: number
+          taux_retenue_spf?: number
+        }
+        Relationships: []
+      }
       personnel: {
         Row: {
           company_id: string
@@ -755,6 +865,287 @@ export type Database = {
         }
         Relationships: []
       }
+      sous_traitant_contrats: {
+        Row: {
+          bon_commande_fichier: string | null
+          bon_commande_ref: string | null
+          chantier_id: string | null
+          company_id: string
+          created_at: string
+          created_by: string | null
+          date_debut: string | null
+          date_fin: string | null
+          delai_paiement_jours: number
+          descriptif_prestations: string
+          devis_fichier: string | null
+          devis_ref: string | null
+          frequence_paiement: string
+          id: string
+          montant_forfait_ht: number | null
+          planning_fichier: string | null
+          prix_unitaire_ht: number | null
+          sous_traitant_id: string
+          type_prix: string
+          unite: string | null
+        }
+        Insert: {
+          bon_commande_fichier?: string | null
+          bon_commande_ref?: string | null
+          chantier_id?: string | null
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          date_debut?: string | null
+          date_fin?: string | null
+          delai_paiement_jours?: number
+          descriptif_prestations: string
+          devis_fichier?: string | null
+          devis_ref?: string | null
+          frequence_paiement?: string
+          id?: string
+          montant_forfait_ht?: number | null
+          planning_fichier?: string | null
+          prix_unitaire_ht?: number | null
+          sous_traitant_id: string
+          type_prix?: string
+          unite?: string | null
+        }
+        Update: {
+          bon_commande_fichier?: string | null
+          bon_commande_ref?: string | null
+          chantier_id?: string | null
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          date_debut?: string | null
+          date_fin?: string | null
+          delai_paiement_jours?: number
+          descriptif_prestations?: string
+          devis_fichier?: string | null
+          devis_ref?: string | null
+          frequence_paiement?: string
+          id?: string
+          montant_forfait_ht?: number | null
+          planning_fichier?: string | null
+          prix_unitaire_ht?: number | null
+          sous_traitant_id?: string
+          type_prix?: string
+          unite?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sous_traitant_contrats_chantier_fk"
+            columns: ["chantier_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "chantiers"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "sous_traitant_contrats_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sous_traitant_contrats_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sous_traitant_contrats_st_fk"
+            columns: ["sous_traitant_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitants"
+            referencedColumns: ["id", "company_id"]
+          },
+        ]
+      }
+      sous_traitant_prestations: {
+        Row: {
+          bon_travail_ref: string | null
+          chantier_id: string | null
+          company_id: string
+          contrat_id: string
+          created_at: string
+          created_by: string | null
+          date_prestation: string
+          description: string | null
+          feuille_chantier_fichier: string | null
+          heures: number | null
+          id: string
+          ouvriers: Json
+          photos: string[]
+          presence_enregistree: boolean
+          presence_fichier: string | null
+          valide_le: string | null
+          valide_par: string | null
+        }
+        Insert: {
+          bon_travail_ref?: string | null
+          chantier_id?: string | null
+          company_id: string
+          contrat_id: string
+          created_at?: string
+          created_by?: string | null
+          date_prestation: string
+          description?: string | null
+          feuille_chantier_fichier?: string | null
+          heures?: number | null
+          id?: string
+          ouvriers?: Json
+          photos?: string[]
+          presence_enregistree?: boolean
+          presence_fichier?: string | null
+          valide_le?: string | null
+          valide_par?: string | null
+        }
+        Update: {
+          bon_travail_ref?: string | null
+          chantier_id?: string | null
+          company_id?: string
+          contrat_id?: string
+          created_at?: string
+          created_by?: string | null
+          date_prestation?: string
+          description?: string | null
+          feuille_chantier_fichier?: string | null
+          heures?: number | null
+          id?: string
+          ouvriers?: Json
+          photos?: string[]
+          presence_enregistree?: boolean
+          presence_fichier?: string | null
+          valide_le?: string | null
+          valide_par?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sous_traitant_prestations_chantier_fk"
+            columns: ["chantier_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "chantiers"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "sous_traitant_prestations_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sous_traitant_prestations_contrat_fk"
+            columns: ["contrat_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitant_contrats"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "sous_traitant_prestations_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sous_traitant_prestations_valide_par_fkey"
+            columns: ["valide_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      sous_traitants: {
+        Row: {
+          adresse: string | null
+          code_postal: string | null
+          company_id: string
+          conditions: string | null
+          contact_email: string | null
+          contact_nom: string | null
+          contact_telephone: string | null
+          created_at: string
+          created_by: string | null
+          email: string | null
+          forme_juridique: string | null
+          iban: string | null
+          id: string
+          metiers: string[]
+          note_interne: string | null
+          numero_bce: string | null
+          numero_tva: string | null
+          raison_sociale: string
+          statut: string
+          telephone: string | null
+          ville: string | null
+        }
+        Insert: {
+          adresse?: string | null
+          code_postal?: string | null
+          company_id: string
+          conditions?: string | null
+          contact_email?: string | null
+          contact_nom?: string | null
+          contact_telephone?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          forme_juridique?: string | null
+          iban?: string | null
+          id?: string
+          metiers?: string[]
+          note_interne?: string | null
+          numero_bce?: string | null
+          numero_tva?: string | null
+          raison_sociale: string
+          statut?: string
+          telephone?: string | null
+          ville?: string | null
+        }
+        Update: {
+          adresse?: string | null
+          code_postal?: string | null
+          company_id?: string
+          conditions?: string | null
+          contact_email?: string | null
+          contact_nom?: string | null
+          contact_telephone?: string | null
+          created_at?: string
+          created_by?: string | null
+          email?: string | null
+          forme_juridique?: string | null
+          iban?: string | null
+          id?: string
+          metiers?: string[]
+          note_interne?: string | null
+          numero_bce?: string | null
+          numero_tva?: string | null
+          raison_sociale?: string
+          statut?: string
+          telephone?: string | null
+          ville?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sous_traitants_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "sous_traitants_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       stock_mouvements: {
         Row: {
           chantier_id: string | null
@@ -962,6 +1353,70 @@ export type Database = {
           year?: number | null
         }
         Relationships: []
+      }
+      verifications_30bis: {
+        Row: {
+          company_id: string
+          created_at: string
+          dette_fiscale: boolean
+          dette_sociale: boolean
+          id: string
+          notes: string | null
+          preuve_fichier: string | null
+          source_url: string | null
+          sous_traitant_id: string
+          verifie_le: string
+          verifie_par: string | null
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          dette_fiscale: boolean
+          dette_sociale: boolean
+          id?: string
+          notes?: string | null
+          preuve_fichier?: string | null
+          source_url?: string | null
+          sous_traitant_id: string
+          verifie_le?: string
+          verifie_par?: string | null
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          dette_fiscale?: boolean
+          dette_sociale?: boolean
+          id?: string
+          notes?: string | null
+          preuve_fichier?: string | null
+          source_url?: string | null
+          sous_traitant_id?: string
+          verifie_le?: string
+          verifie_par?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "verifications_30bis_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "verifications_30bis_st_fk"
+            columns: ["sous_traitant_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitants"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "verifications_30bis_verifie_par_fkey"
+            columns: ["verifie_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

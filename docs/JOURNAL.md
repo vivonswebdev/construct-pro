@@ -4,6 +4,56 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-13 — Migrations appliquées ; phase 9 : écrans sous-traitants (1re partie)
+
+Branche : `phase-09-sous-traitants-ui`.
+
+### État de la base (vérifié le 13/10)
+
+- Migrations **phase 1 et phase 9 appliquées** par Youssef (éditeur SQL Supabase, pas via Lovable :
+  aucune copie Lovable à supprimer). L'erreur `chantiers_id_company_uniq already exists` vient de la
+  **phase 9** (et non de la phase 1) : elle avait déjà été exécutée. L'éditeur SQL exécute un
+  fichier en une transaction : l'existence des tables prouve que le fichier est passé en entier.
+- Contrôle en lecture via l'API REST (clé publique) : colonnes `langue` (profiles, personnel,
+  clients), table `traductions`, fonction `to_code`, les 6 tables de la phase 9 et **toutes** leurs
+  colonnes, `company_settings.duree_conservation_ouvriers_ans` : présents. Pas de migration corrective.
+- Contraintes, triggers et policies non visibles avec la clé publique : requête de contrôle à
+  exécuter dans l'éditeur SQL fournie dans le résumé de PR.
+
+### Fait
+
+- `types.ts` : 6 tables de la phase 9 + `company_settings.duree_conservation_ouvriers_ans`
+  (format `supabase gen types`, FK composites comprises).
+- `/sous-traitants` : liste (recherche, filtres métier/statut, feu tricolore 30bis, compteur « à
+  vérifier avant paiement »), bouton « Charger des sous-traitants de démonstration » si la liste est vide.
+- `/sous-traitants/$id` : fiche (coordonnées, contact, métiers, IBAN, conditions et note interne
+  traduisibles), KPI (contrats, total versé, retenues 30bis), bloquer/débloquer, suppression refusée
+  avec message clair si des preuves 30bis existent (FK RESTRICT).
+- **Vérification 30bis** : lien vers le service officiel (n° prérempli) + enregistrement manuel
+  daté du résultat (dette sociale / fiscale), historique immuable. État : « vérifié aujourd'hui »,
+  « à vérifier », « dette constatée » (date de Bruxelles, comme le trigger).
+- Formulaire (zod) : n° BCE contrôlé (modulo 97), TVA belge, emails, unicité BCE (erreur 23505
+  traduite), formes juridiques en codes (jamais « SPRL »), métiers multiples.
+- Contrats et paiements affichés en lecture sur la fiche.
+- i18n : namespace `sousTraitants` + statuts (`sousTraitant`, `formeJuridique`, `metier`,
+  `typePrix`, `unite`, `frequencePaiement`, `modePaiement`) en FR/NL/EN/RO/PL ; `i18n:check` ✓.
+- Démo (`seedSousTraitants`) : 5 sous-traitants (1 dette sociale constatée avec retenue appliquée,
+  1 bloqué, 1 jamais vérifié), 5 contrats, 3 prestations, 6 vérifications, 5 paiements cohérents
+  avec le trigger (retenue = HTVA × taux lu dans `parametres_30bis`, TVA 0 : autoliquidation).
+  Appelée à la création d'une société de démo et depuis la liste vide.
+- Tests PGlite : 20 OK (+ paiement de démo daté du passé, création client FR/NL, ouvrier RO/CDI,
+  refus des anciens libellés).
+
+### Reste à faire (phase 9)
+
+- Saisie des contrats, du journal des prestations et des paiements (avec calcul de la retenue).
+- Dépôt de la capture d'écran de la vérification (bucket `documents`).
+- `documents_conformite`, checklists par statut, alertes à 30 jours, tableau de bord tricolore.
+- « 1 document expiré » de la démo : dépend de `documents_conformite`.
+- Relecture native NL/RO/PL des nouveaux libellés.
+
+---
+
 ## 2026-10-06 — Phase 9 : migration préparée (non appliquée)
 
 Branche : `phase-09-sous-traitants` (préparée pendant que la phase 1 est terminée par Youssef).

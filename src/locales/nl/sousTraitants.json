@@ -1,0 +1,105 @@
+{
+  "title": "Onderaannemers",
+  "count_one": "{{count}} onderaannemer",
+  "count_other": "{{count}} onderaannemers",
+  "toCheck_one": "{{count}} te controleren vóór betaling",
+  "toCheck_other": "{{count}} te controleren vóór betaling",
+  "new": "Nieuwe onderaannemer",
+  "edit": "Onderaannemer bewerken",
+  "searchPlaceholder": "Zoek op naam, gemeente, btw- of ondernemingsnummer…",
+  "allTrades": "Alle vakgebieden",
+  "allStatuses": "Alle statussen",
+  "empty": "Geen onderaannemers gevonden.",
+  "loadDemo": "Demo-onderaannemers laden",
+  "notFound": "Onderaannemer niet gevonden.",
+  "columns": {
+    "name": "Onderaannemer",
+    "trades": "Vakgebieden",
+    "vat": "Btw-nr.",
+    "contact": "Contact",
+    "check30bis": "Controle 30bis",
+    "status": "Status"
+  },
+  "conformity": {
+    "a_jour": "Vandaag gecontroleerd",
+    "a_verifier": "Te controleren",
+    "dette": "Schuld vastgesteld"
+  },
+  "form": {
+    "name": "Firmanaam *",
+    "namePlaceholder": "Bv.: Elektriciteit Lambert BV",
+    "legalForm": "Rechtsvorm",
+    "status": "Status",
+    "bce": "Ondernemingsnummer (KBO)",
+    "vat": "Btw-nr.",
+    "address": "Adres",
+    "postalCode": "Postcode",
+    "city": "Gemeente",
+    "email": "E-mail",
+    "phone": "Telefoon",
+    "contactSection": "Contactpersoon",
+    "contactName": "Naam",
+    "trades": "Vakgebieden",
+    "iban": "IBAN",
+    "conditions": "Afgesproken voorwaarden",
+    "conditionsPlaceholder": "Bv.: betaling binnen 30 dagen, materiaal geleverd door de aannemer…",
+    "internalNote": "Interne notitie"
+  },
+  "validation": {
+    "nameRequired": "De firmanaam is verplicht",
+    "bceInvalid": "Ongeldig ondernemingsnummer (10 cijfers, bv. 0123.456.749)",
+    "vatInvalid": "Ongeldig Belgisch btw-nummer (formaat BE0123456789)",
+    "emailInvalid": "Ongeldig e-mailadres",
+    "bceDuplicate": "Er bestaat al een onderaannemer met dit ondernemingsnummer"
+  },
+  "toasts": {
+    "created": "Onderaannemer aangemaakt",
+    "updated": "Onderaannemer bijgewerkt",
+    "verificationSaved": "Controle geregistreerd",
+    "demoLoaded": "Demo-onderaannemers toegevoegd"
+  },
+  "detail": {
+    "info": "Gegevens",
+    "contracts": "Contracten",
+    "noContracts": "Geen contracten.",
+    "payments": "Betalingen",
+    "noPayments": "Geen betalingen.",
+    "totalPaid": "Totaal betaald",
+    "totalWithheld": "Inhoudingen 30bis",
+    "paymentDelay_one": "betaling binnen {{count}} dag",
+    "paymentDelay_other": "betaling binnen {{count}} dagen",
+    "exclVat": "excl. btw",
+    "block": "Blokkeren",
+    "unblock": "Deblokkeren",
+    "confirmDelete": "Deze onderaannemer en zijn contracten verwijderen?",
+    "deleteBlocked": "Verwijderen niet mogelijk: er zijn 30bis-controles of betalingen geregistreerd (te bewaren bewijzen). Blokkeer deze onderaannemer in de plaats."
+  },
+  "verification": {
+    "title": "Sociale en fiscale schulden (30bis)",
+    "hint": {
+      "a_jour": "Vandaag zonder schulden gecontroleerd: er kan vandaag een betaling worden geregistreerd.",
+      "a_verifier": "Controleer de schulden op de dag van elke betaling en registreer daarna het resultaat.",
+      "dette": "Schuld vastgesteld: op elke betaling moet een inhouding worden toegepast en doorgestort aan de RSZ / FOD Financiën."
+    },
+    "openOfficial": "Controleren via de officiële dienst",
+    "record": "Resultaat registreren",
+    "empty": "Nog geen controles geregistreerd.",
+    "socialDebt": "Sociale schuld",
+    "taxDebt": "Fiscale schuld",
+    "noDebt": "Geen schulden",
+    "immutable": "Elke controle is een gedateerd bewijs: ze kan niet worden gewijzigd of verwijderd.",
+    "confirm": "Dit resultaat registreren? Het kan daarna niet meer worden gewijzigd.",
+    "modalHint": "Neem het resultaat over dat de officiële dienst voor {{name}} toont. Datum en uur worden automatisch geregistreerd.",
+    "socialDebtFound": "Sociale schuld vastgesteld (RSZ)",
+    "taxDebtFound": "Fiscale schuld vastgesteld (FOD Financiën)",
+    "notes": "Notities",
+    "proofLater": "Het opladen van een schermafdruk van het resultaat volgt binnenkort."
+  },
+  "payments": {
+    "date": "Datum",
+    "contract": "Contract",
+    "net": "Bedrag excl. btw",
+    "withheld": "Inhoudingen",
+    "paid": "Betaald"
+  }
+}

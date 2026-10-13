@@ -93,6 +93,14 @@
     "assistant": {
       "title": "AI-assistent",
       "description": "Stel uw vragen over uw werven, offertes en Belgische verplichtingen: de assistent antwoordt op basis van uw gegevens."
+    },
+    "sousTraitants": {
+      "title": "Onderaannemers",
+      "description": "Fiches van onderaannemers, gedateerde 30bis-controles, contracten en betalingen."
+    },
+    "sousTraitant": {
+      "title": "Fiche onderaannemer",
+      "description": "Gegevens, controles van sociale en fiscale schulden, contracten en betalingen."
     }
   },
   "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat."

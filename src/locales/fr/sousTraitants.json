@@ -1,0 +1,105 @@
+{
+  "title": "Sous-traitants",
+  "count_one": "{{count}} sous-traitant",
+  "count_other": "{{count}} sous-traitants",
+  "toCheck_one": "{{count}} à vérifier avant paiement",
+  "toCheck_other": "{{count}} à vérifier avant paiement",
+  "new": "Nouveau sous-traitant",
+  "edit": "Modifier le sous-traitant",
+  "searchPlaceholder": "Rechercher un nom, une ville, un n° TVA ou BCE…",
+  "allTrades": "Tous les métiers",
+  "allStatuses": "Tous les statuts",
+  "empty": "Aucun sous-traitant trouvé.",
+  "loadDemo": "Charger des sous-traitants de démonstration",
+  "notFound": "Sous-traitant introuvable.",
+  "columns": {
+    "name": "Sous-traitant",
+    "trades": "Métiers",
+    "vat": "N° TVA",
+    "contact": "Contact",
+    "check30bis": "Vérification 30bis",
+    "status": "Statut"
+  },
+  "conformity": {
+    "a_jour": "Vérifié aujourd'hui",
+    "a_verifier": "À vérifier",
+    "dette": "Dette constatée"
+  },
+  "form": {
+    "name": "Raison sociale *",
+    "namePlaceholder": "Ex : Électricité Lambert SRL",
+    "legalForm": "Forme juridique",
+    "status": "Statut",
+    "bce": "N° d'entreprise (BCE)",
+    "vat": "N° TVA",
+    "address": "Adresse",
+    "postalCode": "Code postal",
+    "city": "Ville",
+    "email": "Email",
+    "phone": "Téléphone",
+    "contactSection": "Personne de contact",
+    "contactName": "Nom",
+    "trades": "Métiers",
+    "iban": "IBAN",
+    "conditions": "Conditions convenues",
+    "conditionsPlaceholder": "Ex : paiement à 30 jours, matériaux fournis par l'entrepreneur…",
+    "internalNote": "Note interne"
+  },
+  "validation": {
+    "nameRequired": "La raison sociale est requise",
+    "bceInvalid": "Numéro d'entreprise invalide (10 chiffres, ex : 0123.456.749)",
+    "vatInvalid": "Numéro de TVA belge invalide (format BE0123456789)",
+    "emailInvalid": "Adresse email invalide",
+    "bceDuplicate": "Un sous-traitant avec ce numéro d'entreprise existe déjà"
+  },
+  "toasts": {
+    "created": "Sous-traitant créé",
+    "updated": "Sous-traitant mis à jour",
+    "verificationSaved": "Vérification enregistrée",
+    "demoLoaded": "Sous-traitants de démonstration ajoutés"
+  },
+  "detail": {
+    "info": "Informations",
+    "contracts": "Contrats",
+    "noContracts": "Aucun contrat.",
+    "payments": "Paiements",
+    "noPayments": "Aucun paiement.",
+    "totalPaid": "Total versé",
+    "totalWithheld": "Retenues 30bis",
+    "paymentDelay_one": "paiement à {{count}} jour",
+    "paymentDelay_other": "paiement à {{count}} jours",
+    "exclVat": "HTVA",
+    "block": "Bloquer",
+    "unblock": "Débloquer",
+    "confirmDelete": "Supprimer ce sous-traitant et ses contrats ?",
+    "deleteBlocked": "Suppression impossible : des vérifications 30bis ou des paiements sont enregistrés (preuves à conserver). Bloquez plutôt ce sous-traitant."
+  },
+  "verification": {
+    "title": "Dettes sociales et fiscales (30bis)",
+    "hint": {
+      "a_jour": "Vérifié aujourd'hui sans dette : un paiement peut être enregistré aujourd'hui.",
+      "a_verifier": "Vérifiez les dettes le jour de chaque paiement, puis enregistrez le résultat.",
+      "dette": "Dette constatée : une retenue doit être appliquée sur chaque paiement et versée à l'ONSS / au SPF Finances."
+    },
+    "openOfficial": "Vérifier sur le service officiel",
+    "record": "Enregistrer le résultat",
+    "empty": "Aucune vérification enregistrée.",
+    "socialDebt": "Dette sociale",
+    "taxDebt": "Dette fiscale",
+    "noDebt": "Aucune dette",
+    "immutable": "Chaque vérification est une preuve datée : elle ne peut être ni modifiée ni supprimée.",
+    "confirm": "Enregistrer ce résultat ? Il ne pourra plus être modifié.",
+    "modalHint": "Reportez le résultat affiché par le service officiel pour {{name}}. La date et l'heure sont enregistrées automatiquement.",
+    "socialDebtFound": "Dette sociale constatée (ONSS)",
+    "taxDebtFound": "Dette fiscale constatée (SPF Finances)",
+    "notes": "Notes",
+    "proofLater": "Le dépôt de la capture d'écran du résultat sera ajouté prochainement."
+  },
+  "payments": {
+    "date": "Date",
+    "contract": "Contrat",
+    "net": "Montant HTVA",
+    "withheld": "Retenues",
+    "paid": "Versé"
+  }
+}

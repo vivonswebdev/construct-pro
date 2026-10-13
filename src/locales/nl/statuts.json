@@ -54,5 +54,59 @@
     "en": "Engels",
     "ro": "Roemeens",
     "pl": "Pools"
+  },
+  "sousTraitant": {
+    "actif": "Actief",
+    "bloque": "Geblokkeerd"
+  },
+  "formeJuridique": {
+    "srl": "BV",
+    "sa": "NV",
+    "sc": "CV",
+    "scomm": "CommV",
+    "independant": "Zelfstandige (natuurlijk persoon)",
+    "autre": "Andere"
+  },
+  "metier": {
+    "gros_oeuvre": "Ruwbouw",
+    "terrassement": "Grondwerken",
+    "charpente": "Dakgebinte",
+    "toiture": "Dakwerken",
+    "menuiserie": "Schrijnwerk",
+    "electricite": "Elektriciteit",
+    "plomberie": "Sanitair",
+    "chauffage": "Verwarming",
+    "isolation": "Isolatie",
+    "platrerie": "Pleisterwerk",
+    "carrelage": "Tegelwerk",
+    "peinture": "Schilderwerk",
+    "facade": "Gevelwerken",
+    "autre": "Andere"
+  },
+  "typePrix": {
+    "forfait": "Forfait",
+    "horaire": "Per uur",
+    "unitaire": "Eenheidsprijs"
+  },
+  "unite": {
+    "heure": "uur",
+    "jour": "dag",
+    "m2": "m²",
+    "m3": "m³",
+    "m": "m",
+    "piece": "stuk",
+    "forfait": "forfait"
+  },
+  "frequencePaiement": {
+    "a_la_facture": "Per factuur",
+    "hebdomadaire": "Wekelijks",
+    "mensuelle": "Maandelijks",
+    "avancement": "Volgens vordering"
+  },
+  "modePaiement": {
+    "virement": "Overschrijving",
+    "especes": "Contant",
+    "domiciliation": "Domiciliëring",
+    "carte": "Kaart"
   }
 }

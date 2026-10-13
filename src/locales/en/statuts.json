@@ -54,5 +54,59 @@
     "en": "English",
     "ro": "Romanian",
     "pl": "Polish"
+  },
+  "sousTraitant": {
+    "actif": "Active",
+    "bloque": "Blocked"
+  },
+  "formeJuridique": {
+    "srl": "SRL (private limited company)",
+    "sa": "SA (public limited company)",
+    "sc": "SC (cooperative)",
+    "scomm": "SComm (limited partnership)",
+    "independant": "Self-employed (natural person)",
+    "autre": "Other"
+  },
+  "metier": {
+    "gros_oeuvre": "Structural work",
+    "terrassement": "Earthworks",
+    "charpente": "Carpentry (roof frame)",
+    "toiture": "Roofing",
+    "menuiserie": "Joinery",
+    "electricite": "Electrical",
+    "plomberie": "Plumbing",
+    "chauffage": "Heating",
+    "isolation": "Insulation",
+    "platrerie": "Plastering",
+    "carrelage": "Tiling",
+    "peinture": "Painting",
+    "facade": "Façade",
+    "autre": "Other"
+  },
+  "typePrix": {
+    "forfait": "Fixed price",
+    "horaire": "Hourly",
+    "unitaire": "Unit price"
+  },
+  "unite": {
+    "heure": "hour",
+    "jour": "day",
+    "m2": "m²",
+    "m3": "m³",
+    "m": "m",
+    "piece": "piece",
+    "forfait": "lump sum"
+  },
+  "frequencePaiement": {
+    "a_la_facture": "Per invoice",
+    "hebdomadaire": "Weekly",
+    "mensuelle": "Monthly",
+    "avancement": "By progress"
+  },
+  "modePaiement": {
+    "virement": "Bank transfer",
+    "especes": "Cash",
+    "domiciliation": "Direct debit",
+    "carte": "Card"
   }
 }

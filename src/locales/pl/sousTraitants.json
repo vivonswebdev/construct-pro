@@ -1,0 +1,111 @@
+{
+  "title": "Podwykonawcy",
+  "count_one": "{{count}} podwykonawca",
+  "count_few": "{{count}} podwykonawców",
+  "count_many": "{{count}} podwykonawców",
+  "count_other": "{{count}} podwykonawcy",
+  "toCheck_one": "{{count}} do sprawdzenia przed płatnością",
+  "toCheck_few": "{{count}} do sprawdzenia przed płatnością",
+  "toCheck_many": "{{count}} do sprawdzenia przed płatnością",
+  "toCheck_other": "{{count}} do sprawdzenia przed płatnością",
+  "new": "Nowy podwykonawca",
+  "edit": "Edytuj podwykonawcę",
+  "searchPlaceholder": "Szukaj po nazwie, mieście, nr VAT lub nr przedsiębiorstwa…",
+  "allTrades": "Wszystkie branże",
+  "allStatuses": "Wszystkie statusy",
+  "empty": "Nie znaleziono podwykonawców.",
+  "loadDemo": "Wczytaj przykładowych podwykonawców",
+  "notFound": "Nie znaleziono podwykonawcy.",
+  "columns": {
+    "name": "Podwykonawca",
+    "trades": "Branże",
+    "vat": "Nr VAT",
+    "contact": "Kontakt",
+    "check30bis": "Weryfikacja 30bis",
+    "status": "Status"
+  },
+  "conformity": {
+    "a_jour": "Sprawdzono dziś",
+    "a_verifier": "Do sprawdzenia",
+    "dette": "Stwierdzono zadłużenie"
+  },
+  "form": {
+    "name": "Nazwa firmy *",
+    "namePlaceholder": "Np.: Électricité Lambert SRL",
+    "legalForm": "Forma prawna",
+    "status": "Status",
+    "bce": "Nr przedsiębiorstwa (BCE)",
+    "vat": "Nr VAT",
+    "address": "Adres",
+    "postalCode": "Kod pocztowy",
+    "city": "Miasto",
+    "email": "E-mail",
+    "phone": "Telefon",
+    "contactSection": "Osoba kontaktowa",
+    "contactName": "Imię i nazwisko",
+    "trades": "Branże",
+    "iban": "IBAN",
+    "conditions": "Uzgodnione warunki",
+    "conditionsPlaceholder": "Np.: płatność w ciągu 30 dni, materiały dostarcza wykonawca…",
+    "internalNote": "Notatka wewnętrzna"
+  },
+  "validation": {
+    "nameRequired": "Nazwa firmy jest wymagana",
+    "bceInvalid": "Nieprawidłowy numer przedsiębiorstwa (10 cyfr, np. 0123.456.749)",
+    "vatInvalid": "Nieprawidłowy belgijski numer VAT (format BE0123456789)",
+    "emailInvalid": "Nieprawidłowy adres e-mail",
+    "bceDuplicate": "Podwykonawca z tym numerem przedsiębiorstwa już istnieje"
+  },
+  "toasts": {
+    "created": "Utworzono podwykonawcę",
+    "updated": "Zaktualizowano podwykonawcę",
+    "verificationSaved": "Zapisano weryfikację",
+    "demoLoaded": "Dodano przykładowych podwykonawców"
+  },
+  "detail": {
+    "info": "Informacje",
+    "contracts": "Umowy",
+    "noContracts": "Brak umów.",
+    "payments": "Płatności",
+    "noPayments": "Brak płatności.",
+    "totalPaid": "Łącznie wypłacono",
+    "totalWithheld": "Potrącenia 30bis",
+    "paymentDelay_one": "płatność w ciągu {{count}} dnia",
+    "paymentDelay_few": "płatność w ciągu {{count}} dni",
+    "paymentDelay_many": "płatność w ciągu {{count}} dni",
+    "paymentDelay_other": "płatność w ciągu {{count}} dnia",
+    "exclVat": "netto",
+    "block": "Zablokuj",
+    "unblock": "Odblokuj",
+    "confirmDelete": "Usunąć tego podwykonawcę i jego umowy?",
+    "deleteBlocked": "Nie można usunąć: zapisano weryfikacje 30bis lub płatności (dowody do zachowania). Zamiast tego zablokuj podwykonawcę."
+  },
+  "verification": {
+    "title": "Zadłużenie socjalne i podatkowe (30bis)",
+    "hint": {
+      "a_jour": "Sprawdzono dziś, brak zadłużenia: można dziś zarejestrować płatność.",
+      "a_verifier": "Sprawdzaj zadłużenie w dniu każdej płatności, a następnie zapisz wynik.",
+      "dette": "Stwierdzono zadłużenie: od każdej płatności należy dokonać potrącenia i wpłacić je do ONSS / SPF Finances."
+    },
+    "openOfficial": "Sprawdź w oficjalnym serwisie",
+    "record": "Zapisz wynik",
+    "empty": "Brak zapisanych weryfikacji.",
+    "socialDebt": "Zadłużenie socjalne",
+    "taxDebt": "Zadłużenie podatkowe",
+    "noDebt": "Brak zadłużenia",
+    "immutable": "Każda weryfikacja jest datowanym dowodem: nie można jej zmienić ani usunąć.",
+    "confirm": "Zapisać ten wynik? Nie będzie można go później zmienić.",
+    "modalHint": "Wprowadź wynik wyświetlony przez oficjalny serwis dla {{name}}. Data i godzina są zapisywane automatycznie.",
+    "socialDebtFound": "Stwierdzono zadłużenie socjalne (ONSS)",
+    "taxDebtFound": "Stwierdzono zadłużenie podatkowe (SPF Finances)",
+    "notes": "Uwagi",
+    "proofLater": "Przesyłanie zrzutu ekranu z wynikiem zostanie wkrótce dodane."
+  },
+  "payments": {
+    "date": "Data",
+    "contract": "Umowa",
+    "net": "Kwota netto",
+    "withheld": "Potrącenia",
+    "paid": "Wypłacono"
+  }
+}
