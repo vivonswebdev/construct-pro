@@ -1,0 +1,143 @@
+{
+  "new": "Nouveau contrat",
+  "sendForSignature": "Contrat à signer",
+  "status": {
+    "envoye": "En attente de signature",
+    "signe": "Signé",
+    "annule": "Annulé",
+    "expire": "Lien expiré"
+  },
+  "form": {
+    "title": "Nouveau contrat de sous-traitance",
+    "site": "Chantier",
+    "noSite": "— Aucun chantier —",
+    "description": "Descriptif des prestations *",
+    "priceType": "Type de prix",
+    "lumpSum": "Montant forfaitaire HTVA (€)",
+    "unitPrice": "Prix unitaire HTVA (€)",
+    "unit": "Unité",
+    "frequency": "Fréquence de paiement",
+    "paymentDelay": "Délai de paiement (jours)",
+    "start": "Date de début",
+    "end": "Date de fin",
+    "orderRef": "Réf. bon de commande",
+    "quoteRef": "Réf. devis du sous-traitant",
+    "validation": {
+      "description": "Le descriptif des prestations est requis",
+      "amount": "Indiquez un montant positif",
+      "delay": "Délai de paiement entre 0 et 365 jours",
+      "dates": "La date de fin doit suivre la date de début"
+    }
+  },
+  "send": {
+    "title": "Envoyer le contrat à signer",
+    "step": {
+      "donnees": "1. Données du contrat",
+      "signature": "2. Relecture et signature",
+      "lien": "3. Lien de signature"
+    },
+    "templateNotice": "Modèle générique de contrat-cadre de sous-traitance (droit belge, en français) : à faire valider par votre juriste. Les champs sont pré-remplis depuis la fiche du sous-traitant, le contrat et le chantier ; vous pouvez tout corriger.",
+    "emptyHint": "Un champ laissé vide apparaît en pointillés dans le contrat.",
+    "next": "Relire et signer",
+    "rolePlaceholder": "Ex : gérant, administratrice",
+    "validity": "Validité du lien (jours)",
+    "yourSignature": "Votre signature",
+    "reviewed": "J'ai relu le contrat et je le signe au nom de la société.",
+    "signAndCreate": "Signer et créer le lien",
+    "validation": {
+      "signer": "Indiquez la dénomination, le représentant et sa qualité",
+      "signature": "Tracez la signature",
+      "reviewed": "Confirmez la relecture du contrat",
+      "days": "Validité du lien : entre 1 et 90 jours"
+    },
+    "created": "Contrat signé de votre côté. Envoyez ce lien au sous-traitant :",
+    "copy": "Copier le lien",
+    "copied": "Lien copié",
+    "byEmail": "Envoyer par e-mail",
+    "byWhatsapp": "Envoyer par WhatsApp",
+    "subject": "Contrat de sous-traitance à signer — {{company}}",
+    "message": "Bonjour {{name}},\n\n{{company}} vous invite à relire et signer électroniquement le contrat de sous-traitance via ce lien (valable {{days}} jours) :\n{{link}}\n\nVos coordonnées sont déjà remplies : vérifiez-les, complétez-les si besoin et signez à l'écran.\n\nCordialement,\n{{company}}",
+    "linkHint": "Le lien est personnel : toute personne qui le possède peut consulter et signer le contrat. Vous pouvez l'annuler tant qu'il n'est pas signé."
+  },
+  "list": {
+    "sentOn": "Envoyé le {{date}}",
+    "viewed": "Consulté le {{date}}",
+    "signedBy": "Signé par {{name}} le {{date}}",
+    "cancel": "Annuler la demande",
+    "confirmCancel": "Annuler cette demande de signature ? Le lien ne fonctionnera plus.",
+    "pdf": "Télécharger le PDF"
+  },
+  "toasts": {
+    "contractCreated": "Contrat créé",
+    "cancelled": "Demande annulée"
+  },
+  "sign": {
+    "title": "Contrat de sous-traitance à signer",
+    "intro": "{{company}} vous invite à relire et signer ce contrat de sous-traitance. Le lien est valable jusqu'au {{date}}.",
+    "languageNotice": "Le contrat est rédigé en français ; seule cette version fait foi.",
+    "yourDetails": "Vos coordonnées et votre signature",
+    "place": "Fait à (ville)",
+    "yourSignature": "Votre signature",
+    "accept": "J'ai lu le contrat proposé par {{company}} et ses annexes, et je l'accepte au nom du sous-traitant.",
+    "mustAccept": "Cochez la case d'acceptation pour signer",
+    "legal": "Signature électronique : la date, l'heure, votre adresse IP et l'empreinte du document sont enregistrées comme preuve.",
+    "submit": "Signer le contrat",
+    "done": "Contrat signé",
+    "doneDetail": "Signé par {{name}} le {{date}}. Téléchargez votre exemplaire en PDF.",
+    "downloadPdf": "Télécharger le contrat signé (PDF)",
+    "contactSender": "Contactez l'entreprise qui vous a envoyé ce lien.",
+    "errors": {
+      "lien_invalide": "Ce lien de signature n'est pas valide.",
+      "lien_annule": "Cette demande de signature a été annulée.",
+      "lien_expire": "Ce lien de signature a expiré.",
+      "deja_signe": "Ce contrat a déjà été signé.",
+      "document_modifie": "Le modèle de contrat a changé depuis l'envoi : demandez un nouveau lien.",
+      "champs_requis": "Indiquez votre nom, votre qualité et le lieu de signature.",
+      "signature_invalide": "La signature n'a pas pu être enregistrée. Tracez-la à nouveau."
+    }
+  },
+  "fields": {
+    "entreprise": {
+      "title": "Entrepreneur principal (votre société)",
+      "denomination": "Dénomination",
+      "formeJuridique": "Forme juridique",
+      "bceTva": "BCE / TVA",
+      "adresse": "Siège (adresse complète)",
+      "pays": "Pays",
+      "representant": "Représentant (nom et prénom)",
+      "qualite": "Qualité"
+    },
+    "sousTraitant": {
+      "title": "Sous-traitant",
+      "denomination": "Dénomination",
+      "formeJuridique": "Forme juridique",
+      "bceTva": "BCE / TVA",
+      "siege": "Siège",
+      "representant": "Représentant (nom et prénom)",
+      "qualite": "Qualité",
+      "contact": "Téléphone / e-mail pour notifications",
+      "iban": "Compte bancaire IBAN"
+    },
+    "fiche": {
+      "title": "Annexe 1 — Fiche de commande / chantier",
+      "reference": "Référence de commande",
+      "maitreOuvrage": "Maître d’ouvrage / client final",
+      "adresseChantier": "Adresse complète du chantier",
+      "natureTravaux": "Nature et limites exactes des travaux",
+      "documentsPlans": "Documents contractuels et versions des plans",
+      "dates": "Date de début / jalons / date de fin",
+      "prix": "Prix HTVA et méthode",
+      "tva": "TVA et mention de facturation",
+      "etatsAvancement": "États d’avancement et pièces à joindre",
+      "delaiPaiementJours": "Délai de paiement (jours)",
+      "penaliteJour": "Pénalité de retard (EUR/jour)",
+      "penalitePlafond": "Plafond de la pénalité (EUR)",
+      "assurances": "Assurances requises et montants",
+      "securite": "Consignes sécurité / coordinateur / accès",
+      "dechets": "Déchets, stockage, protections et nettoyage",
+      "reception": "Réception, réserves et garantie contractuelle",
+      "contacts": "Personnes de contact / e-mails"
+    },
+    "garanties": "Article 13 — Garanties contractuelles particulières"
+  }
+}

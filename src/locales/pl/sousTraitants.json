@@ -78,7 +78,7 @@
     "block": "Zablokuj",
     "unblock": "Odblokuj",
     "confirmDelete": "Usunąć tego podwykonawcę i jego umowy?",
-    "deleteBlocked": "Nie można usunąć: zapisano weryfikacje 30bis lub płatności (dowody do zachowania). Zamiast tego zablokuj podwykonawcę."
+    "deleteBlocked": "Nie można usunąć: zapisano weryfikacje 30bis, płatności lub podpisane umowy (dowody do zachowania). Zamiast tego zablokuj podwykonawcę."
   },
   "verification": {
     "title": "Zadłużenie socjalne i podatkowe (30bis)",

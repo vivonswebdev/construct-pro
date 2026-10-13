@@ -101,7 +101,16 @@
     "sousTraitant": {
       "title": "Fiche sous-traitant",
       "description": "Informations, vérifications des dettes sociales et fiscales, contrats et paiements."
+    },
+    "signer": {
+      "title": "Signature du contrat",
+      "description": "Relisez et signez électroniquement votre contrat de sous-traitance."
     }
   },
-  "indicatif": "Indicatif — à valider par votre comptable / secrétariat social."
+  "indicatif": "Indicatif — à valider par votre comptable / secrétariat social.",
+  "signature": {
+    "area": "Zone de signature",
+    "hint": "Signez ici (doigt, stylet ou souris)",
+    "clear": "Effacer"
+  }
 }

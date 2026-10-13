@@ -80,5 +80,24 @@
     "estimatedCost": "Szacowany koszt",
     "hoursValue": "{{value}} h",
     "presenceFile": "obecnosci"
+  },
+  "contrat": {
+    "signatures": "PODPISY",
+    "forContractor": "W imieniu {{name}}",
+    "forSubcontractor": "W imieniu Podwykonawcy",
+    "name": "Imię i nazwisko: {{value}}",
+    "role": "Stanowisko: {{value}}",
+    "signedOn": "Podpisano elektronicznie {{date}}",
+    "notSigned": "Oczekuje na podpis",
+    "audit": "ŚCIEŻKA AUDYTU — PODPIS ELEKTRONICZNY",
+    "auditSent": "Wysłanie i podpis wykonawcy: {{date}}",
+    "auditViewed": "Pierwsze otwarcie linku: {{date}}",
+    "auditSigned": "Podpis podwykonawcy: {{date}}",
+    "auditIp": "Adres IP podpisującego: {{value}}",
+    "auditUa": "Przeglądarka podpisującego: {{value}}",
+    "auditHashSent": "Odcisk SHA-256 wysłanego dokumentu: {{value}}",
+    "auditHashSigned": "Odcisk SHA-256 podpisanego dokumentu: {{value}}",
+    "auditNote": "Zwykły podpis elektroniczny w rozumieniu rozporządzenia (UE) nr 910/2014 (eIDAS). Czas serwera (czas brukselski). Dokument wygenerowany w ConstructFlow.",
+    "page": "Strona {{page}} / {{total}}"
   }
 }

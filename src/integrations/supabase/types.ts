@@ -371,6 +371,118 @@ export type Database = {
           },
         ]
       }
+      contrat_signatures: {
+        Row: {
+          annule_le: string | null
+          company_id: string
+          consulte_le: string | null
+          contrat_id: string
+          created_at: string
+          document_hash: string
+          donnees: Json
+          entreprise_signataire_nom: string
+          entreprise_signataire_qualite: string
+          entreprise_signature: string
+          entreprise_signe_le: string
+          entreprise_signe_par: string | null
+          expire_le: string
+          id: string
+          langue: string
+          modele: string
+          signataire_champs: Json | null
+          signataire_nom: string | null
+          signataire_qualite: string | null
+          signature: string | null
+          signe_hash: string | null
+          signe_ip: string | null
+          signe_le: string | null
+          signe_lieu: string | null
+          signe_user_agent: string | null
+          statut: string
+          token: string
+        }
+        Insert: {
+          annule_le?: string | null
+          company_id: string
+          consulte_le?: string | null
+          contrat_id: string
+          created_at?: string
+          document_hash: string
+          donnees: Json
+          entreprise_signataire_nom: string
+          entreprise_signataire_qualite: string
+          entreprise_signature: string
+          entreprise_signe_le?: string
+          entreprise_signe_par?: string | null
+          expire_le?: string
+          id?: string
+          langue?: string
+          modele?: string
+          signataire_champs?: Json | null
+          signataire_nom?: string | null
+          signataire_qualite?: string | null
+          signature?: string | null
+          signe_hash?: string | null
+          signe_ip?: string | null
+          signe_le?: string | null
+          signe_lieu?: string | null
+          signe_user_agent?: string | null
+          statut?: string
+          token?: string
+        }
+        Update: {
+          annule_le?: string | null
+          company_id?: string
+          consulte_le?: string | null
+          contrat_id?: string
+          created_at?: string
+          document_hash?: string
+          donnees?: Json
+          entreprise_signataire_nom?: string
+          entreprise_signataire_qualite?: string
+          entreprise_signature?: string
+          entreprise_signe_le?: string
+          entreprise_signe_par?: string | null
+          expire_le?: string
+          id?: string
+          langue?: string
+          modele?: string
+          signataire_champs?: Json | null
+          signataire_nom?: string | null
+          signataire_qualite?: string | null
+          signature?: string | null
+          signe_hash?: string | null
+          signe_ip?: string | null
+          signe_le?: string | null
+          signe_lieu?: string | null
+          signe_user_agent?: string | null
+          statut?: string
+          token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contrat_signatures_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contrat_signatures_contrat_fk"
+            columns: ["contrat_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitant_contrats"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "contrat_signatures_entreprise_signe_par_fkey"
+            columns: ["entreprise_signe_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       etapes: {
         Row: {
           chantier_id: string
@@ -1423,9 +1535,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      contrat_a_signer: { Args: { _token: string }; Returns: Json }
       dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       seed_lock: { Args: { _company_id: string }; Returns: string }
+      signer_contrat: {
+        Args: {
+          _champs: Json
+          _document_hash: string
+          _lieu: string
+          _nom: string
+          _qualite: string
+          _signature: string
+          _signe_hash: string
+          _token: string
+        }
+        Returns: Json
+      }
       to_code: { Args: { _v: string }; Returns: string }
     }
     Enums: {

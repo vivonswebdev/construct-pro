@@ -75,7 +75,7 @@
     "block": "Blochează",
     "unblock": "Deblochează",
     "confirmDelete": "Ștergeți acest subcontractor și contractele sale?",
-    "deleteBlocked": "Ștergere imposibilă: există verificări 30bis sau plăți înregistrate (dovezi de păstrat). Blocați mai degrabă acest subcontractor."
+    "deleteBlocked": "Ștergere imposibilă: există verificări 30bis, plăți sau contracte semnate înregistrate (dovezi de păstrat). Blocați mai degrabă acest subcontractor."
   },
   "verification": {
     "title": "Datorii sociale și fiscale (30bis)",

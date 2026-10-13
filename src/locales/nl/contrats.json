@@ -1,0 +1,143 @@
+{
+  "new": "Nieuw contract",
+  "sendForSignature": "Contract laten ondertekenen",
+  "status": {
+    "envoye": "Wacht op handtekening",
+    "signe": "Ondertekend",
+    "annule": "Geannuleerd",
+    "expire": "Link verlopen"
+  },
+  "form": {
+    "title": "Nieuw onderaannemingscontract",
+    "site": "Werf",
+    "noSite": "— Geen werf —",
+    "description": "Omschrijving van de prestaties *",
+    "priceType": "Prijstype",
+    "lumpSum": "Forfaitair bedrag excl. btw (€)",
+    "unitPrice": "Eenheidsprijs excl. btw (€)",
+    "unit": "Eenheid",
+    "frequency": "Betalingsfrequentie",
+    "paymentDelay": "Betalingstermijn (dagen)",
+    "start": "Begindatum",
+    "end": "Einddatum",
+    "orderRef": "Ref. bestelbon",
+    "quoteRef": "Ref. offerte onderaannemer",
+    "validation": {
+      "description": "De omschrijving van de prestaties is verplicht",
+      "amount": "Geef een positief bedrag op",
+      "delay": "Betalingstermijn tussen 0 en 365 dagen",
+      "dates": "De einddatum moet na de begindatum liggen"
+    }
+  },
+  "send": {
+    "title": "Contract ter ondertekening versturen",
+    "step": {
+      "donnees": "1. Contractgegevens",
+      "signature": "2. Nalezen en ondertekenen",
+      "lien": "3. Ondertekeningslink"
+    },
+    "templateNotice": "Generiek model van raamovereenkomst voor onderaanneming (Belgisch recht, in het Frans): laat het nakijken door uw jurist. De velden zijn vooraf ingevuld vanuit de fiche van de onderaannemer, het contract en de werf; u kunt alles aanpassen.",
+    "emptyHint": "Een leeg veld verschijnt als stippellijn in het contract.",
+    "next": "Nalezen en ondertekenen",
+    "rolePlaceholder": "Bv.: zaakvoerder, bestuurder",
+    "validity": "Geldigheid van de link (dagen)",
+    "yourSignature": "Uw handtekening",
+    "reviewed": "Ik heb het contract nagelezen en onderteken het namens de onderneming.",
+    "signAndCreate": "Ondertekenen en link aanmaken",
+    "validation": {
+      "signer": "Vul de benaming, de vertegenwoordiger en zijn hoedanigheid in",
+      "signature": "Zet uw handtekening",
+      "reviewed": "Bevestig dat u het contract hebt nagelezen",
+      "days": "Geldigheid van de link: tussen 1 en 90 dagen"
+    },
+    "created": "Contract aan uw kant ondertekend. Stuur deze link naar de onderaannemer:",
+    "copy": "Link kopiëren",
+    "copied": "Link gekopieerd",
+    "byEmail": "Versturen per e-mail",
+    "byWhatsapp": "Versturen via WhatsApp",
+    "subject": "Onderaannemingscontract te ondertekenen — {{company}}",
+    "message": "Beste {{name}},\n\n{{company}} nodigt u uit om het onderaannemingscontract na te lezen en elektronisch te ondertekenen via deze link ({{days}} dagen geldig):\n{{link}}\n\nUw gegevens zijn al ingevuld: controleer ze, vul ze zo nodig aan en onderteken op het scherm.\n\nMet vriendelijke groeten,\n{{company}}",
+    "linkHint": "De link is persoonlijk: iedereen die hem heeft, kan het contract inzien en ondertekenen. U kunt hem annuleren zolang hij niet ondertekend is."
+  },
+  "list": {
+    "sentOn": "Verstuurd op {{date}}",
+    "viewed": "Geopend op {{date}}",
+    "signedBy": "Ondertekend door {{name}} op {{date}}",
+    "cancel": "Aanvraag annuleren",
+    "confirmCancel": "Deze ondertekeningsaanvraag annuleren? De link werkt dan niet meer.",
+    "pdf": "PDF downloaden"
+  },
+  "toasts": {
+    "contractCreated": "Contract aangemaakt",
+    "cancelled": "Aanvraag geannuleerd"
+  },
+  "sign": {
+    "title": "Onderaannemingscontract te ondertekenen",
+    "intro": "{{company}} nodigt u uit om dit onderaannemingscontract na te lezen en te ondertekenen. De link is geldig tot {{date}}.",
+    "languageNotice": "Het contract is opgesteld in het Frans; enkel die versie is rechtsgeldig.",
+    "yourDetails": "Uw gegevens en handtekening",
+    "place": "Opgemaakt te (gemeente)",
+    "yourSignature": "Uw handtekening",
+    "accept": "Ik heb het door {{company}} voorgestelde contract en de bijlagen gelezen en aanvaard het namens de onderaannemer.",
+    "mustAccept": "Vink het aanvaardingsvakje aan om te ondertekenen",
+    "legal": "Elektronische handtekening: datum, uur, uw IP-adres en de vingerafdruk van het document worden als bewijs bewaard.",
+    "submit": "Contract ondertekenen",
+    "done": "Contract ondertekend",
+    "doneDetail": "Ondertekend door {{name}} op {{date}}. Download uw exemplaar als PDF.",
+    "downloadPdf": "Ondertekend contract downloaden (PDF)",
+    "contactSender": "Neem contact op met de onderneming die u deze link stuurde.",
+    "errors": {
+      "lien_invalide": "Deze ondertekeningslink is niet geldig.",
+      "lien_annule": "Deze ondertekeningsaanvraag werd geannuleerd.",
+      "lien_expire": "Deze ondertekeningslink is verlopen.",
+      "deja_signe": "Dit contract werd al ondertekend.",
+      "document_modifie": "Het contractmodel is gewijzigd sinds de verzending: vraag een nieuwe link.",
+      "champs_requis": "Vul uw naam, uw hoedanigheid en de plaats van ondertekening in.",
+      "signature_invalide": "De handtekening kon niet worden opgeslagen. Zet ze opnieuw."
+    }
+  },
+  "fields": {
+    "entreprise": {
+      "title": "Hoofdaannemer (uw onderneming)",
+      "denomination": "Benaming",
+      "formeJuridique": "Rechtsvorm",
+      "bceTva": "KBO / btw",
+      "adresse": "Zetel (volledig adres)",
+      "pays": "Land",
+      "representant": "Vertegenwoordiger (naam en voornaam)",
+      "qualite": "Hoedanigheid"
+    },
+    "sousTraitant": {
+      "title": "Onderaannemer",
+      "denomination": "Benaming",
+      "formeJuridique": "Rechtsvorm",
+      "bceTva": "KBO / btw",
+      "siege": "Zetel",
+      "representant": "Vertegenwoordiger (naam en voornaam)",
+      "qualite": "Hoedanigheid",
+      "contact": "Telefoon / e-mail voor kennisgevingen",
+      "iban": "Bankrekening IBAN"
+    },
+    "fiche": {
+      "title": "Bijlage 1 — Bestel- / werffiche",
+      "reference": "Bestelreferentie",
+      "maitreOuvrage": "Bouwheer / eindklant",
+      "adresseChantier": "Volledig adres van de werf",
+      "natureTravaux": "Aard en precieze grenzen van de werken",
+      "documentsPlans": "Contractdocumenten en planversies",
+      "dates": "Begindatum / mijlpalen / einddatum",
+      "prix": "Prijs excl. btw en methode",
+      "tva": "Btw en factuurvermelding",
+      "etatsAvancement": "Vorderingsstaten en bij te voegen stukken",
+      "delaiPaiementJours": "Betalingstermijn (dagen)",
+      "penaliteJour": "Vertragingsboete (EUR/dag)",
+      "penalitePlafond": "Plafond van de boete (EUR)",
+      "assurances": "Vereiste verzekeringen en bedragen",
+      "securite": "Veiligheid / coördinator / toegang",
+      "dechets": "Afval, opslag, beschermingen en schoonmaak",
+      "reception": "Oplevering, voorbehouden en contractuele waarborg",
+      "contacts": "Contactpersonen / e-mails"
+    },
+    "garanties": "Artikel 13 — Bijzondere contractuele waarborgen"
+  }
+}

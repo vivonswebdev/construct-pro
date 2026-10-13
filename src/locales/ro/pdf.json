@@ -80,5 +80,24 @@
     "estimatedCost": "Cost estimat",
     "hoursValue": "{{value}} h",
     "presenceFile": "prezente"
+  },
+  "contrat": {
+    "signatures": "SEMNĂTURI",
+    "forContractor": "Pentru {{name}}",
+    "forSubcontractor": "Pentru Subcontractor",
+    "name": "Nume: {{value}}",
+    "role": "Calitate: {{value}}",
+    "signedOn": "Semnat electronic pe {{date}}",
+    "notSigned": "În așteptarea semnăturii",
+    "audit": "PISTĂ DE AUDIT — SEMNĂTURĂ ELECTRONICĂ",
+    "auditSent": "Trimitere și semnare de către antreprenor: {{date}}",
+    "auditViewed": "Prima deschidere a linkului: {{date}}",
+    "auditSigned": "Semnare de către subcontractor: {{date}}",
+    "auditIp": "Adresa IP a semnatarului: {{value}}",
+    "auditUa": "Browserul semnatarului: {{value}}",
+    "auditHashSent": "Amprenta SHA-256 a documentului trimis: {{value}}",
+    "auditHashSigned": "Amprenta SHA-256 a documentului semnat: {{value}}",
+    "auditNote": "Semnătură electronică simplă în sensul Regulamentului (UE) nr. 910/2014 (eIDAS). Ora serverului (ora Bruxelles). Document generat cu ConstructFlow.",
+    "page": "Pagina {{page}} / {{total}}"
   }
 }

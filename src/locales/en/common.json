@@ -101,7 +101,16 @@
     "sousTraitant": {
       "title": "Subcontractor",
       "description": "Details, social and tax debt checks, contracts and payments."
+    },
+    "signer": {
+      "title": "Contract signature",
+      "description": "Review and electronically sign your subcontract."
     }
   },
-  "indicatif": "Indicative — to be confirmed by your accountant / social secretariat."
+  "indicatif": "Indicative — to be confirmed by your accountant / social secretariat.",
+  "signature": {
+    "area": "Signature area",
+    "hint": "Sign here (finger, stylus or mouse)",
+    "clear": "Clear"
+  }
 }
