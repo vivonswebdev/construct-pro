@@ -1,78 +1,119 @@
-# Phase 9 — suite : plan (13/10/2026)
+# Phase 9 — suite : plan (mis à jour le 14/10/2026)
 
 Déjà en place : fiches sous-traitants, vérifications 30bis datées, contrats (création simple),
-signature par lien. Tables `sous_traitant_prestations` et `achat_paiements` (avec le trigger
-`check_paiement_30bis`) existent en base mais n'ont pas encore d'écran.
+signature par lien. `sous_traitant_prestations` et `achat_paiements` (trigger
+`check_paiement_30bis`) existent en base sans écran.
 
-Découpage proposé : **4 PR**, dans cet ordre. Chacune est testable seule.
+Ordre : **A → B → C → D**, une PR chacune, testable seule.
 
----
+## Règles métier provisoires (Youssef, 14/10/2026)
 
-## PR A — Taux 30bis paramétrés (petite, sans migration)
-
-- `conformite-tva.tsx` : supprimer `TAUX_RETENUE_SPF = 0.15` ; lire le taux en vigueur dans
-  `parametres_30bis` (ligne la plus récente avec `date_debut <= aujourd'hui`).
-- Hook partagé `useParametres30bis(date)` dans `src/lib/sous-traitants.ts` (réutilisé par la PR B).
-- Affichage « Taux indicatif — à valider par votre comptable », avec la source et la date de
-  vérification (`parametres_30bis.source`, `date_verification`).
-- Prompt de l'assistant IA : remplacer « 15 % » écrit en dur par les taux lus en base.
-- Tests : calcul identique au trigger (arrondi au cent).
-
-## PR B — Saisie des contrats, prestations et paiements + calcul de la retenue
-
-- **Contrats** : modification d'un contrat non signé ; un contrat avec une signature signée
-  n'est plus modifiable (avenant = nouveau contrat).
-- **Journal des prestations** (fiche sous-traitant et fiche chantier) : date, description,
-  heures, ouvriers présents (nom, fonction, heures), Checkinatwork enregistré, validation par
-  un gérant (`valide_par` / `valide_le`).
-- **Paiement** (formulaire sur la fiche) :
-  1. contrat, date (aujourd'hui par défaut), montant HTVA, TVA (0 si autoliquidation) ;
-  2. **vérification 30bis du jour** : si absente, le bouton « Vérifier maintenant » ouvre le
-     service officiel et l'enregistrement du résultat, sans quitter le formulaire ;
-  3. **retenues calculées automatiquement** (ONSS 35 %, SPF 15 %, taux lus dans
-     `parametres_30bis`) et affichées : « Montant HTVA − retenues = à verser au sous-traitant » ;
-     « à verser à l'ONSS / au SPF Finances » ;
-  4. le trigger en base refuse toute incohérence (déjà en place) : codes d'erreur traduits.
-- KPI de la fiche : total facturé, retenu, versé ; reste à payer par contrat.
-- **Pas de migration** (tables existantes), sauf si la question 1 ci-dessous change le calcul.
-
-## PR C — Capture de la vérification 30bis (migration Storage)
-
-- Migration : bucket privé `documents` + 4 policies `storage.objects` limitées au dossier
-  `<company_id>/…` (`(storage.foldername(name))[1] = get_user_company_id(auth.uid())::text`).
-  Premier bucket du projet : il servira aussi aux documents de conformité.
-- Formulaire de vérification : dépôt d'une capture (image ou PDF, 5 Mo max) → chemin dans
-  `verifications_30bis.preuve_fichier`. La preuve reste immuable (pas de remplacement).
-- Affichage par URL signée temporaire (bucket privé).
-- Rétention : `company_settings.duree_conservation_ouvriers_ans` (déjà en base).
-
-## PR D — Documents de conformité et alertes (migration)
-
-- Table `documents_conformite` (annexe A de PASSATION) : `entite_type` (personnel /
-  sous_traitant / dirigeant / societe), `entite_id`, `type_document`, fichier, `date_emission`,
-  `date_expiration`. Le statut (`valide`, `expire_bientot` à 30 jours, `expire`, `manquant`) est
-  **calculé**, pas stocké.
-- Table `checklists_conformite` : documents attendus par statut (indépendant, associé actif,
-  dirigeant, salarié, sous-traitant, société), pré-remplie avec une liste par défaut,
-  modifiable par la société.
-- Écrans : onglet « Documents » sur la fiche sous-traitant et la fiche personnel ; tableau de
-  bord tricolore (vert / orange / rouge) ; alertes à 30 jours sur le dashboard.
-- Options : blocage d'affectation à un chantier si un document obligatoire est expiré ;
-  rappel Checkinatwork (seuil `company_settings.seuil_checkinatwork`) ; avertissement « faux
-  indépendant » (critères à définir).
-- Démo : 1 document expiré, comme prévu par PASSATION.
+1. **Retenue 30bis** : base = montant HTVA du paiement ; ONSS 35 %, SPF 15 % (taux lus dans
+   `parametres_30bis`). Total retenu **plafonné au montant restant dû** :
+   `min(total_retenue, montant_restant_du)`. L'excédent de dette reste dû et sera retenu sur un
+   paiement suivant.
+2. **Paiement fractionné** : chaque versement est un paiement distinct et exige une vérification
+   30bis **datée du jour**.
+3. **Documents obligatoires par défaut** (sous-traitant) : attestation de conformité sociale /
+   30bis valide ; attestation ou preuve de régularité TVA ; coordonnées bancaires validées ;
+   contrat de sous-traitance signé, ou au moins envoyé en signature.
+4. **Blocage d'affectation sur chantier** : activé par défaut si l'attestation 30bis est absente,
+   expirée ou invalide. Message clair ; levée uniquement par un utilisateur autorisé, avec
+   justification.
+5. **Captures** : 5 Mo maximum ; JPG, PNG, PDF ; stockage privé cloisonné par société.
 
 ---
 
-## Questions à trancher avant de coder
+## PR A — Taux 30bis paramétrés — **faite** (PR #11, sans migration)
 
-1. **Plafond de la retenue** : la retenue (35 % ONSS / 15 % SPF du montant HTVA) doit-elle être
-   plafonnée au montant de la dette communiqué par le service officiel ? Aujourd'hui : non
-   plafonnée (le trigger exige le montant plein).
-2. **Paiement partiel d'une facture** : un paiement fractionné nécessite-t-il une vérification
-   à chaque versement ? (Proposé : oui, c'est la règle « vérification du jour du paiement ».)
-3. **Documents obligatoires par défaut** (PR D) : valider la liste de départ — BCE, caisse
-   d'assurances sociales, accès à la profession, RC, décennale, VCA, Limosa, Dimona, permis,
-   examen médical, ConstruBadge — et lesquels sont **bloquants**.
-4. **Blocage d'affectation** (PR D) : activé par défaut ou option désactivée par défaut ?
-5. **Taille et formats des captures** (PR C) : 5 Mo, images + PDF, d'accord ?
+---
+
+## PR B — Contrats, prestations, paiements + calcul de la retenue
+
+**Migration** `…_phase9_retenue_plafond.sql` (nécessaire pour la règle 1) :
+- `verifications_30bis` + `montant_dette_sociale`, `montant_dette_fiscale` (numeric, facultatifs) :
+  montants lus sur le service officiel et saisis avec le résultat. Vide = non communiqué → pas de
+  plafond (retenue pleine).
+- `check_paiement_30bis` remplacé : retenue attendue par type =
+  `min(montant HTVA × taux, dette du type − retenues de ce type déjà appliquées sur les paiements
+  liés à la même vérification)`. Les autres contrôles (vérification du jour, même
+  sous-traitant) sont inchangés.
+- Rollback commenté (rétablit l'ancienne fonction).
+
+**Écrans** (fiche sous-traitant) :
+1. **Contrats** : modification tant qu'aucune demande de signature n'est signée ; ensuite,
+   lecture seule (un changement = nouveau contrat / avenant).
+2. **Journal des prestations** : date, description, heures, ouvriers présents (nom, fonction,
+   heures), Checkinatwork enregistré ; validation par un gérant (`valide_par`, `valide_le`).
+   Aussi visible sur la fiche chantier.
+3. **Paiement** (formulaire) :
+   - contrat, date (aujourd'hui), montant HTVA, TVA (0 par défaut : autoliquidation), mode,
+     référence ;
+   - **vérification du jour** : si absente → bouton « Vérifier maintenant » (service officiel +
+     saisie du résultat et des montants de dette) sans quitter le formulaire ;
+   - **calcul automatique** affiché : retenue ONSS, retenue SPF, plafond appliqué (« dette
+     restante : X € ») , « à verser au sous-traitant », « à verser à l'ONSS / au SPF » ;
+   - les erreurs du trigger sont traduites (`verification_30bis_pas_du_jour`, etc.).
+4. KPI : facturé, retenu, versé, reste à payer par contrat.
+5. Démo : un paiement plafonné (dette sociale inférieure à 35 % du montant).
+
+**Tests** : PGlite (plafond, dette non communiquée, deux paiements le même jour sur la même
+vérification, parité JS / SQL du calcul plafonné).
+
+## PR C — Captures de vérification (Storage)
+
+**Migration** `…_storage_documents.sql` :
+- bucket **privé** `documents` : `file_size_limit` 5 Mo, `allowed_mime_types` JPEG, PNG, PDF ;
+- policies `storage.objects` : chemin `<company_id>/…` obligatoire
+  (`(storage.foldername(name))[1] = get_user_company_id(auth.uid())::text`) ; dossier
+  `<company_id>/30bis/` en **lecture et ajout seulement** (preuve immuable) ; autres dossiers
+  (documents de conformité, PR D) en lecture / ajout / suppression.
+
+**Écrans** : dépôt de la capture dans la fenêtre « Enregistrer le résultat » (vérification) et,
+facultatif, de la preuve de paiement ; contrôle taille / format côté navigateur ; ouverture par
+URL signée temporaire. Fichier déposé **avant** l'enregistrement (la vérification est immuable) ;
+en cas d'échec, le fichier orphelin est supprimé.
+
+**Tests** : policies Storage simulées sur PGlite (autre société refusée, suppression d'une
+preuve 30bis refusée).
+
+## PR D — Documents de conformité, alertes, blocage
+
+**Migration** `…_phase9_conformite.sql` :
+- `documents_conformite` (générique : `entite_type` sous_traitant / personnel / dirigeant /
+  société, `entite_id`, `type_document`, fichier, `date_emission`, `date_expiration`,
+  `valide_par`, `valide_le`). Statut **calculé** : valide / expire bientôt (≤ 30 jours) / expiré /
+  manquant / invalide.
+- `sous_traitants` + `iban_valide_par`, `iban_valide_le` ; trigger : toute modification de
+  l'IBAN annule la validation (protection contre la fraude au changement d'IBAN).
+- `derogations_conformite` : levée du blocage (sous-traitant, motif obligatoire, accordée par,
+  date, échéance facultative) ; insertion réservée aux rôles autorisés (RLS sur
+  `profiles.role`).
+- Blocage en base : trigger sur `sous_traitant_contrats` et `sous_traitant_prestations`
+  (rattachement à un chantier) refusant si l'attestation 30bis n'est pas valide et qu'aucune
+  dérogation n'est active ; erreur `conformite_30bis_bloquante` traduite.
+
+**Documents obligatoires par défaut** (règle 3) : attestation 30bis, attestation TVA
+(documents déposés), IBAN validé (champ), contrat envoyé ou signé (déduit de
+`contrat_signatures`).
+
+**Écrans** : onglet « Conformité » de la fiche (liste, dépôt, validation, statut) ; colonne
+tricolore dans la liste ; tableau de bord : alertes à 30 jours et sous-traitants bloqués ;
+message de blocage avec bouton « Lever le blocage » (rôles autorisés, motif).
+
+**Démo** : 1 document expiré (blocage visible), 1 dérogation.
+
+---
+
+## Questions encore ouvertes
+
+1. **Montant restant dû** : le saisir lors de chaque vérification (montant affiché par le
+   service officiel), **par type** (ONSS / SPF), et plafonner chaque retenue à sa propre dette ?
+   (Proposé : oui.)
+2. **« Attestation 30bis valide »** (blocage) : document déposé avec date d'expiration, ou
+   déduit de la dernière vérification sans dette datant de moins de N jours ? (Proposé :
+   document déposé ; la vérification du jour reste exigée pour payer.)
+3. **Utilisateurs autorisés** à lever un blocage et à valider un IBAN : rôles `admin` et
+   `gerant` ? (Proposé : oui.)
+4. **Paiement saisi par erreur** : suppression permise (admin / gérant, avec confirmation) ou
+   jamais (écriture de correction) ? (Proposé : suppression le jour même uniquement.)
