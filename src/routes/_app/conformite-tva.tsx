@@ -21,6 +21,8 @@ import { checkTva } from "@/lib/tva.functions";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { intlLocale } from "@/lib/i18n";
+import { useParametres30bis } from "@/hooks/useParametres30bis";
+import { calculerRetenues, enPourcent } from "@/lib/retenue-30bis";
 
 export const Route = createFileRoute("/_app/conformite-tva")({
   component: ConformiteTvaPage,
@@ -35,14 +37,13 @@ type LastCheckResult = {
   date: string;
 };
 
-/** Taux de retenue SPF affiché par le calculateur (paramétré en base à partir de la phase 9). */
-const TAUX_RETENUE_SPF = 0.15;
-
 function ConformiteTvaPage() {
   const { t } = useTranslation(["tva", "common"]);
   const { profile } = useAuth();
   const qc = useQueryClient();
   const runCheckTva = useServerFn(checkTva);
+  // Taux SPF (art. 402 CIR) lu dans parametres_30bis : jamais écrit en dur.
+  const { taux, isLoading: tauxLoading } = useParametres30bis();
 
   const [clientName, setClientName] = useState("");
   const [vatInput, setVatInput] = useState("BE");
@@ -209,8 +210,11 @@ function ConformiteTvaPage() {
   };
 
   const amount = parseFloat(invoiceAmount.replace(",", ".")) || 0;
-  const retenue = amount * TAUX_RETENUE_SPF;
+  const retenue = taux ? calculerRetenues(amount, { sociale: false, fiscale: true }, taux).spf : 0;
   const net = amount - retenue;
+  const tauxSpf = taux
+    ? enPourcent(taux.taux_retenue_spf).toLocaleString(intlLocale(), { maximumFractionDigits: 2 })
+    : "";
 
   return (
     <div className="space-y-6">
@@ -368,11 +372,14 @@ function ConformiteTvaPage() {
                   <span className="ml-1 text-sm">€</span>
                 </div>
               </div>
-              {amount > 0 && (
+              {!taux && !tauxLoading && (
+                <p className="mt-3 text-sm text-red-700">{t("calc.rateUnavailable")}</p>
+              )}
+              {taux && amount > 0 && (
                 <div className="mt-3 grid gap-2 text-sm md:grid-cols-3">
                   <div className="rounded-md bg-red-50 p-3">
                     <p className="text-[11px] font-semibold uppercase text-red-700">
-                      {t("calc.withholding", { rate: TAUX_RETENUE_SPF * 100 })}
+                      {t("calc.withholding", { rate: tauxSpf })}
                     </p>
                     <p className="mt-0.5 text-base font-bold text-red-700">
                       {formatEURBE(retenue)}
@@ -396,6 +403,19 @@ function ConformiteTvaPage() {
                     <p className="text-[11px] text-muted-foreground">{t("calc.invoiced")}</p>
                   </div>
                 </div>
+              )}
+              {taux && (
+                <p className="mt-3 text-[11px] text-muted-foreground">
+                  {t("calc.rateInfo", {
+                    rate: tauxSpf,
+                    since: formatDateBE(taux.date_debut),
+                    source: taux.source ?? "—",
+                  })}{" "}
+                  {taux.date_verification
+                    ? t("calc.verifiedOn", { date: formatDateBE(taux.date_verification) })
+                    : t("calc.notVerified")}{" "}
+                  {t("common:indicatif")}
+                </p>
               )}
             </div>
           )}

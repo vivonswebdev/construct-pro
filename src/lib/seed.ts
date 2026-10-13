@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { CONTRATS_SALARIES } from "@/lib/statuts";
+import { calculerRetenues, tauxEnVigueur } from "@/lib/retenue-30bis";
 
 const DEFAULT_PHASES = [
   "Préparation du site",
@@ -1014,7 +1015,7 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
     .from("parametres_30bis")
     .select("*")
     .order("date_debut", { ascending: false });
-  const tauxAu = (date: string) => taux?.find((r) => r.date_debut <= date);
+  const tauxAu = (date: string) => tauxEnVigueur(taux, date);
 
   const stSeed: TablesInsert<"sous_traitants">[] = [
     {
@@ -1237,7 +1238,6 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
     )!;
 
   // Paiements : retenues calculées comme le trigger (montant HTVA × taux en vigueur).
-  const arrondi = (x: number) => Math.round(x * 100) / 100;
   const paiement = (
     stId: string,
     date: string,
@@ -1246,14 +1246,17 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
   ): TablesInsert<"achat_paiements"> => {
     const v = verifDu(stId, date);
     const t = tauxAu(date);
+    const r = t
+      ? calculerRetenues(montantHt, { sociale: v.dette_sociale, fiscale: v.dette_fiscale }, t)
+      : { onss: 0, spf: 0 };
     return {
       company_id: companyId,
       contrat_id: contrat(stId),
       date_paiement: date,
       montant_ht: montantHt,
       montant_tva: 0, // autoliquidation (cocontractant)
-      retenue_onss: v.dette_sociale && t ? arrondi(montantHt * Number(t.taux_retenue_onss)) : 0,
-      retenue_spf: v.dette_fiscale && t ? arrondi(montantHt * Number(t.taux_retenue_spf)) : 0,
+      retenue_onss: r.onss,
+      retenue_spf: r.spf,
       reference,
       verification_30bis_id: v.id,
     };
