@@ -27,7 +27,8 @@
       "amount": "Enter a positive amount",
       "delay": "Payment term between 0 and 365 days",
       "dates": "The end date must be after the start date"
-    }
+    },
+    "editTitle": "Edit contract"
   },
   "send": {
     "title": "Send contract for signature",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contract created",
-    "cancelled": "Request cancelled"
+    "cancelled": "Request cancelled",
+    "contractUpdated": "Contract updated"
   },
   "sign": {
     "title": "Subcontract to sign",

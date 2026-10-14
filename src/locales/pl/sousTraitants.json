@@ -60,7 +60,12 @@
     "created": "Utworzono podwykonawcę",
     "updated": "Zaktualizowano podwykonawcę",
     "verificationSaved": "Zapisano weryfikację",
-    "demoLoaded": "Dodano przykładowych podwykonawców"
+    "demoLoaded": "Dodano przykładowych podwykonawców",
+    "paymentSaved": "Zapisano płatność",
+    "paymentDeleted": "Usunięto płatność",
+    "paymentCancelled": "Anulowano płatność",
+    "prestationValidated": "Zatwierdzono wpis",
+    "prestationSaved": "Zapisano wpis"
   },
   "detail": {
     "info": "Informacje",
@@ -78,7 +83,8 @@
     "block": "Zablokuj",
     "unblock": "Odblokuj",
     "confirmDelete": "Usunąć tego podwykonawcę i jego umowy?",
-    "deleteBlocked": "Nie można usunąć: zapisano weryfikacje 30bis, płatności lub podpisane umowy (dowody do zachowania). Zamiast tego zablokuj podwykonawcę."
+    "deleteBlocked": "Nie można usunąć: zapisano weryfikacje 30bis, płatności lub podpisane umowy (dowody do zachowania). Zamiast tego zablokuj podwykonawcę.",
+    "paidOnContract": "Zapłacono (netto): {{paid}} · pozostało: {{remaining}}"
   },
   "verification": {
     "title": "Zadłużenie socjalne i podatkowe (30bis)",
@@ -99,13 +105,92 @@
     "socialDebtFound": "Stwierdzono zadłużenie socjalne (ONSS)",
     "taxDebtFound": "Stwierdzono zadłużenie podatkowe (SPF Finances)",
     "notes": "Uwagi",
-    "proofLater": "Przesyłanie zrzutu ekranu z wynikiem zostanie wkrótce dodane."
+    "proofLater": "Przesyłanie zrzutu ekranu z wynikiem zostanie wkrótce dodane.",
+    "socialDebtAmount": "Zadłużenie ONSS wskazane przez oficjalny serwis (€)",
+    "taxDebtAmount": "Zadłużenie SPF Finances wskazane przez oficjalny serwis (€)",
+    "socialDebtShown": "Zadłużenie ONSS: {{amount}}",
+    "taxDebtShown": "Zadłużenie SPF: {{amount}}",
+    "validation": {
+      "debtAmount": "Podaj kwotę każdego stwierdzonego zadłużenia (0 lub więcej)."
+    }
   },
   "payments": {
     "date": "Data",
     "contract": "Umowa",
     "net": "Kwota netto",
     "withheld": "Potrącenia",
-    "paid": "Wypłacono"
+    "paid": "Wypłacono",
+    "new": "Nowa płatność",
+    "save": "Zapisz płatność",
+    "mode": "Sposób płatności",
+    "amountExclVat": "Kwota netto",
+    "vat": "VAT",
+    "vatHint": "0 przy odwrotnym obciążeniu.",
+    "reference": "Odnośnik (faktura, tytuł)",
+    "verifOk": "Dzisiejsza weryfikacja 30bis: brak zadłużenia. Bez potrąceń.",
+    "verifDebt": "Dzisiejsza weryfikacja 30bis: stwierdzono zadłużenie. Potrącenie obliczone poniżej.",
+    "verifMissing": "Brak dzisiejszej weryfikacji 30bis: jest obowiązkowa przed każdą płatnością.",
+    "verifMissingPast": "Brak weryfikacji 30bis w tym dniu: płatności nie można zapisać.",
+    "verifyNow": "Sprawdź teraz",
+    "withheldOnss": "Potrącenie ONSS (30bis)",
+    "withheldSpf": "Potrącenie SPF Finances (402 CIR)",
+    "capped": "Ograniczone do pozostałego zadłużenia: {{amount}}",
+    "toSubcontractor": "Do wypłaty podwykonawcy",
+    "toOnss": "{{amount}} do wpłaty do ONSS.",
+    "toSpf": "{{amount}} do wpłaty do SPF Finances.",
+    "blockedWarning": "Ten podwykonawca jest zablokowany. Sprawdź sytuację przed płatnością.",
+    "needContract": "Najpierw utwórz umowę.",
+    "confirmDelete": "Usunąć tę płatność wprowadzoną dzisiaj?",
+    "delete": "Usuń (tego samego dnia)",
+    "cancel": "Anuluj płatność",
+    "cancelReason": "Powód anulowania (zachowany w ścieżce audytu):",
+    "cancelledOn": "Anulowano {{date}} — {{reason}}",
+    "auditHint": "Płatność można usunąć tego samego dnia; później anuluje się ją z podaniem powodu i pozostaje widoczna.",
+    "validation": {
+      "contract": "Wybierz umowę.",
+      "futureDate": "Data płatności nie może być w przyszłości.",
+      "amount": "Podaj dodatnią kwotę netto.",
+      "vat": "VAT nie może być ujemny."
+    },
+    "errors": {
+      "verification_30bis_requise": "Do zarejestrowania płatności wymagana jest weryfikacja 30bis.",
+      "verification_30bis_autre_sous_traitant": "Wybrana weryfikacja dotyczy innego podwykonawcy.",
+      "verification_30bis_pas_du_jour": "Brak weryfikacji 30bis z dnia płatności: najpierw sprawdź zadłużenie.",
+      "parametres_30bis_absents": "Stawki potrąceń niedostępne dla tej daty.",
+      "retenue_30bis_incorrecte": "Potrącenia nie odpowiadają oczekiwanemu wyliczeniu: odśwież stronę i spróbuj ponownie.",
+      "suppression_paiement_jour_meme": "Płatność można usunąć tylko w dniu jej wprowadzenia. Zamiast tego ją anuluj.",
+      "modification_paiement_interdite": "Po dniu wprowadzenia płatności nie można już zmienić. Anuluj ją i wprowadź ponownie.",
+      "paiement_annule_fige": "Ta płatność jest anulowana: nie można jej już zmienić.",
+      "annulation_seulement": "Podczas anulowania nie można zmieniać innych danych płatności.",
+      "motif_annulation_requis": "Podaj powód anulowania.",
+      "contrat_signe_non_modifiable": "Ta umowa jest podpisana: nie można jej już zmienić. Utwórz nową umowę (aneks).",
+      "validation_reservee_gestionnaire": "Tylko administrator lub kierownik może zatwierdzić wpis prac."
+    }
+  },
+  "prestations": {
+    "title": "Dziennik prac",
+    "new": "Nowy wpis",
+    "empty": "Brak zapisanych prac.",
+    "hours_one": "{{count}} godzina",
+    "hours_few": "{{count}} godziny",
+    "hours_many": "{{count}} godzin",
+    "hours_other": "{{count}} godziny",
+    "checkinRecorded": "Zarejestrowano w Checkinatwork",
+    "validatedOn": "Zatwierdzono {{date}}",
+    "validate": "Zatwierdź",
+    "confirmDelete": "Usunąć ten wpis?",
+    "totalHours": "Godziny (łącznie)",
+    "description": "Opis prac",
+    "workers": "Obecni pracownicy",
+    "workerName": "Imię i nazwisko",
+    "workerRole": "Funkcja",
+    "workerHours": "Godziny",
+    "addWorker": "Dodaj pracownika",
+    "gdprHint": "Nazwiska przechowywane wyłącznie jako dowód wykonania prac (RODO).",
+    "checkin": "Obecność zarejestrowana w Checkinatwork",
+    "validation": {
+      "workerName": "Podaj imię i nazwisko każdego pracownika.",
+      "hours": "Nieprawidłowa liczba godzin."
+    }
   }
 }

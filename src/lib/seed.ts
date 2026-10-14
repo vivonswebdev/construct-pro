@@ -1,7 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { CONTRATS_SALARIES } from "@/lib/statuts";
-import { calculerRetenues, tauxEnVigueur } from "@/lib/retenue-30bis";
+import { calculerRetenuesPlafonnees, tauxEnVigueur } from "@/lib/retenue-30bis";
 
 const DEFAULT_PHASES = [
   "Préparation du site",
@@ -1201,17 +1201,19 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
   ]);
 
   // Vérifications 30bis : une au jour de chaque paiement, plus celle d'aujourd'hui pour Lambert.
+  // Nowak (il y a 15 jours) : dette ONSS de 3 000 € → retenue plafonnée (35 % = 4 900 €).
   const verifs = [
-    { st: lambert, date: ilYa(40), sociale: false, notes: null },
-    { st: lambert, date: ilYa(10), sociale: false, notes: null },
-    { st: lambert, date: ilYa(0), sociale: false, notes: null },
-    { st: peeters, date: ilYa(5), sociale: false, notes: null },
-    { st: nowak, date: ilYa(55), sociale: false, notes: null },
+    { st: lambert, date: ilYa(40), sociale: false, detteOnss: null, notes: null },
+    { st: lambert, date: ilYa(10), sociale: false, detteOnss: null, notes: null },
+    { st: lambert, date: ilYa(0), sociale: false, detteOnss: null, notes: null },
+    { st: peeters, date: ilYa(5), sociale: false, detteOnss: null, notes: null },
+    { st: nowak, date: ilYa(55), sociale: false, detteOnss: null, notes: null },
     {
       st: nowak,
       date: ilYa(15),
       sociale: true,
-      notes: "Dette ONSS constatée : retenue appliquée sur le paiement.",
+      detteOnss: 3000,
+      notes: "Dette ONSS constatée : retenue plafonnée à la dette restante.",
     },
   ];
   const { data: vfs, error: vfErr } = await supabase
@@ -1223,11 +1225,14 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
         verifie_le: verifieLe(v.date),
         dette_sociale: v.sociale,
         dette_fiscale: false,
+        montant_dette_onss: v.detteOnss,
         source_url: "https://www.checkobligationderetenue.be/",
         notes: v.notes,
       })),
     )
-    .select("id, sous_traitant_id, verifie_le, dette_sociale, dette_fiscale");
+    .select(
+      "id, sous_traitant_id, verifie_le, dette_sociale, dette_fiscale, montant_dette_onss, montant_dette_spf",
+    );
   if (vfErr) throw vfErr;
   const verifDu = (stId: string, date: string) =>
     vfs.find(
@@ -1237,7 +1242,8 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
           date,
     )!;
 
-  // Paiements : retenues calculées comme le trigger (montant HTVA × taux en vigueur).
+  // Paiements : retenues calculées comme le trigger (HTVA × taux en vigueur, plafonnées à la
+  // dette saisie ; un seul paiement par vérification dans la démo).
   const paiement = (
     stId: string,
     date: string,
@@ -1247,7 +1253,12 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
     const v = verifDu(stId, date);
     const t = tauxAu(date);
     const r = t
-      ? calculerRetenues(montantHt, { sociale: v.dette_sociale, fiscale: v.dette_fiscale }, t)
+      ? calculerRetenuesPlafonnees({
+          montantHt,
+          verification: v,
+          dejaRetenu: { onss: 0, spf: 0 },
+          taux: t,
+        })
       : { onss: 0, spf: 0 };
     return {
       company_id: companyId,

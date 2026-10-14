@@ -7,42 +7,55 @@ import { supabase } from "@/integrations/supabase/client";
 import type { TablesInsert } from "@/integrations/supabase/types";
 import { useAuth } from "@/lib/auth";
 import { backdropClose } from "@/lib/modal";
-import { FREQUENCES_PAIEMENT, TYPES_PRIX, UNITES } from "@/lib/sous-traitants";
+import { codeErreurPaiement } from "@/lib/paiements";
+import {
+  FREQUENCES_PAIEMENT,
+  TYPES_PRIX,
+  UNITES,
+  type ContratSousTraitance,
+} from "@/lib/sous-traitants";
 import { useTranslation } from "react-i18next";
 
 const inputCls =
   "w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary";
 
-/** Nouveau contrat (mission) avec un sous-traitant. */
+/**
+ * Nouveau contrat (mission) avec un sous-traitant, ou modification tant qu'aucune demande de
+ * signature n'est signée (contrôlé aussi en base : contrat_signe_non_modifiable).
+ */
 export function ContratFormModal({
   sousTraitantId,
+  contrat,
   onClose,
   onSaved,
 }: {
   sousTraitantId: string;
+  contrat?: ContratSousTraitance;
   onClose: () => void;
   onSaved: () => void;
 }) {
-  const { t } = useTranslation(["contrats", "common", "statuts"]);
+  const { t } = useTranslation(["contrats", "common", "statuts", "sousTraitants"]);
   const { profile } = useAuth();
   const { data: chantiers } = useQuery({
     queryKey: ["chantiers-select"],
     queryFn: async () =>
       (await supabase.from("chantiers").select("id, name").order("name")).data ?? [],
   });
+  const c = contrat;
   const [f, setF] = useState({
-    chantier_id: "",
-    descriptif_prestations: "",
-    type_prix: "forfait" as (typeof TYPES_PRIX)[number],
-    montant_forfait_ht: "",
-    prix_unitaire_ht: "",
-    unite: "heure" as (typeof UNITES)[number],
-    frequence_paiement: "a_la_facture" as (typeof FREQUENCES_PAIEMENT)[number],
-    delai_paiement_jours: "30",
-    date_debut: "",
-    date_fin: "",
-    bon_commande_ref: "",
-    devis_ref: "",
+    chantier_id: c?.chantier_id ?? "",
+    descriptif_prestations: c?.descriptif_prestations ?? "",
+    type_prix: (c?.type_prix ?? "forfait") as (typeof TYPES_PRIX)[number],
+    montant_forfait_ht: c?.montant_forfait_ht != null ? String(c.montant_forfait_ht) : "",
+    prix_unitaire_ht: c?.prix_unitaire_ht != null ? String(c.prix_unitaire_ht) : "",
+    unite: (c?.unite ?? "heure") as (typeof UNITES)[number],
+    frequence_paiement: (c?.frequence_paiement ??
+      "a_la_facture") as (typeof FREQUENCES_PAIEMENT)[number],
+    delai_paiement_jours: String(c?.delai_paiement_jours ?? 30),
+    date_debut: c?.date_debut ?? "",
+    date_fin: c?.date_fin ?? "",
+    bon_commande_ref: c?.bon_commande_ref ?? "",
+    devis_ref: c?.devis_ref ?? "",
   });
   const [saving, setSaving] = useState(false);
   const set = (p: Partial<typeof f>) => setF({ ...f, ...p });
@@ -85,12 +98,18 @@ export function ContratFormModal({
       date_fin: f.date_fin || null,
       bon_commande_ref: f.bon_commande_ref.trim() || null,
       devis_ref: f.devis_ref.trim() || null,
-      created_by: profile.id,
     };
-    const { error } = await supabase.from("sous_traitant_contrats").insert(payload);
+    const { error } = c
+      ? await supabase.from("sous_traitant_contrats").update(payload).eq("id", c.id)
+      : await supabase
+          .from("sous_traitant_contrats")
+          .insert({ ...payload, created_by: profile.id });
     setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success(t("toasts.contractCreated"));
+    if (error) {
+      const code = codeErreurPaiement(error);
+      return toast.error(code ? t(`sousTraitants:payments.errors.${code}`) : error.message);
+    }
+    toast.success(c ? t("toasts.contractUpdated") : t("toasts.contractCreated"));
     onSaved();
   };
 
@@ -105,7 +124,7 @@ export function ContratFormModal({
         className="max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-2xl bg-card p-6 shadow-xl"
       >
         <div className="mb-4 flex items-center justify-between">
-          <h3 className="text-lg font-semibold">{t("form.title")}</h3>
+          <h3 className="text-lg font-semibold">{c ? t("form.editTitle") : t("form.title")}</h3>
           <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted">
             <X className="h-4 w-4" />
           </button>

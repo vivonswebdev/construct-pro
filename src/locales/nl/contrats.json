@@ -27,7 +27,8 @@
       "amount": "Geef een positief bedrag op",
       "delay": "Betalingstermijn tussen 0 en 365 dagen",
       "dates": "De einddatum moet na de begindatum liggen"
-    }
+    },
+    "editTitle": "Contract bewerken"
   },
   "send": {
     "title": "Contract ter ondertekening versturen",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contract aangemaakt",
-    "cancelled": "Aanvraag geannuleerd"
+    "cancelled": "Aanvraag geannuleerd",
+    "contractUpdated": "Contract bijgewerkt"
   },
   "sign": {
     "title": "Onderaannemingscontract te ondertekenen",

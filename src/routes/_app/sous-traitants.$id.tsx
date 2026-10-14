@@ -12,9 +12,9 @@ import {
   ShieldCheck,
   Lock,
   Unlock,
-  X,
   Plus,
   PenLine,
+  Pencil,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,19 +23,19 @@ import { TranslatableText } from "@/components/TranslatableText";
 import { ContratFormModal } from "@/components/sous-traitants/ContratFormModal";
 import { ContratSignatureModal } from "@/components/sous-traitants/ContratSignatureModal";
 import { SignaturesContrat } from "@/components/sous-traitants/SignaturesContrat";
-import { useAuth } from "@/lib/auth";
+import { PaiementsSection } from "@/components/sous-traitants/PaiementsSection";
+import { PrestationsSection } from "@/components/sous-traitants/PrestationsSection";
+import { VerificationModal } from "@/components/sous-traitants/VerificationModal";
 import { formatEURBE, formatVATDisplay } from "@/lib/belgian";
 import { formatDateBE } from "@/lib/format";
 import { pageHead } from "@/lib/head";
 import { intlLocale } from "@/lib/i18n";
-import { backdropClose } from "@/lib/modal";
 import {
   ETAT_CONFORMITE_STYLES,
   etatConformite,
   formatBCE,
   urlVerification30bis,
   type ContratSousTraitance,
-  type SousTraitant,
 } from "@/lib/sous-traitants";
 import { useTranslation } from "react-i18next";
 
@@ -53,6 +53,7 @@ function SousTraitantDetail() {
   const [verif, setVerif] = useState(false);
   const [nouveauContrat, setNouveauContrat] = useState(false);
   const [aSigner, setASigner] = useState<ContratSousTraitance | null>(null);
+  const [aModifier, setAModifier] = useState<ContratSousTraitance | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["sous_traitant", id],
@@ -73,7 +74,7 @@ function SousTraitantDetail() {
       const contrats = ct.data ?? [];
       const contratIds = contrats.map((c) => c.id);
       const chantierIds = [...new Set(contrats.map((c) => c.chantier_id).filter(Boolean))];
-      const [pm, ch, sg] = await Promise.all([
+      const [pm, ch, sg, ps] = await Promise.all([
         contratIds.length
           ? supabase
               .from("achat_paiements")
@@ -94,6 +95,13 @@ function SousTraitantDetail() {
               .in("contrat_id", contratIds)
               .order("created_at", { ascending: false })
           : Promise.resolve({ data: [] }),
+        contratIds.length
+          ? supabase
+              .from("sous_traitant_prestations")
+              .select("*")
+              .in("contrat_id", contratIds)
+              .order("date_prestation", { ascending: false })
+          : Promise.resolve({ data: [] }),
       ]);
       return {
         st: st.data,
@@ -102,6 +110,7 @@ function SousTraitantDetail() {
         paiements: pm.data ?? [],
         chantiers: new Map((ch.data ?? []).map((c) => [c.id, c])),
         signatures: sg.data ?? [],
+        prestations: ps.data ?? [],
       };
     },
   });
@@ -117,12 +126,17 @@ function SousTraitantDetail() {
 
   const derniere = data.verifications[0] ?? null;
   const etat = etatConformite(derniere);
-  const totalVerse = data.paiements.reduce((s, p) => s + Number(p.montant_verse ?? 0), 0);
-  const totalRetenues = data.paiements.reduce(
+  // Les paiements annulés restent affichés (piste d'audit) mais ne comptent plus.
+  const valides = data.paiements.filter((p) => !p.annule_le);
+  const totalVerse = valides.reduce((s, p) => s + Number(p.montant_verse ?? 0), 0);
+  const totalRetenues = valides.reduce(
     (s, p) => s + Number(p.retenue_onss) + Number(p.retenue_spf),
     0,
   );
-  const contratLabel = new Map(data.contrats.map((c) => [c.id, c.descriptif_prestations] as const));
+  const payeHt = (contratId: string) =>
+    valides.filter((p) => p.contrat_id === contratId).reduce((s, p) => s + Number(p.montant_ht), 0);
+  const estSigne = (contratId: string) =>
+    data.signatures.some((sg) => sg.contrat_id === contratId && sg.statut === "signe");
 
   const toggleStatut = async () => {
     const statut = st.statut === "bloque" ? "actif" : "bloque";
@@ -335,6 +349,22 @@ function SousTraitantDetail() {
                             .join(" + ")
                         : t("verification.noDebt")}
                     </span>
+                    {(v.montant_dette_onss != null || v.montant_dette_spf != null) && (
+                      <span className="w-full text-xs text-muted-foreground">
+                        {[
+                          v.montant_dette_onss != null &&
+                            t("verification.socialDebtShown", {
+                              amount: formatEURBE(v.montant_dette_onss),
+                            }),
+                          v.montant_dette_spf != null &&
+                            t("verification.taxDebtShown", {
+                              amount: formatEURBE(v.montant_dette_spf),
+                            }),
+                        ]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </span>
+                    )}
                     {v.notes && (
                       <span className="w-full text-xs text-muted-foreground">{v.notes}</span>
                     )}
@@ -391,12 +421,30 @@ function SousTraitantDetail() {
                         : `${formatEURBE(c.prix_unitaire_ht)} / ${t(`statuts:unite.${c.unite ?? "piece"}`, { defaultValue: c.unite ?? "" })}`}
                     </span>
                   </div>
-                  <button
-                    onClick={() => setASigner(c)}
-                    className="mt-2 inline-flex items-center gap-1 rounded-lg border border-primary/40 px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/5"
-                  >
-                    <PenLine className="h-3.5 w-3.5" /> {t("contrats:sendForSignature")}
-                  </button>
+                  {c.type_prix === "forfait" && c.montant_forfait_ht != null && (
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      {t("detail.paidOnContract", {
+                        paid: formatEURBE(payeHt(c.id)),
+                        remaining: formatEURBE(Number(c.montant_forfait_ht) - payeHt(c.id)),
+                      })}
+                    </p>
+                  )}
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => setASigner(c)}
+                      className="inline-flex items-center gap-1 rounded-lg border border-primary/40 px-2.5 py-1 text-xs font-medium text-primary hover:bg-primary/5"
+                    >
+                      <PenLine className="h-3.5 w-3.5" /> {t("contrats:sendForSignature")}
+                    </button>
+                    {!estSigne(c.id) && (
+                      <button
+                        onClick={() => setAModifier(c)}
+                        className="inline-flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-xs font-medium hover:bg-muted"
+                      >
+                        <Pencil className="h-3.5 w-3.5" /> {t("common:actions.edit")}
+                      </button>
+                    )}
+                  </div>
                   <SignaturesContrat
                     signatures={data.signatures.filter((sg) => sg.contrat_id === c.id)}
                     onChange={refresh}
@@ -406,54 +454,19 @@ function SousTraitantDetail() {
             )}
           </div>
 
-          {/* Paiements */}
-          <div className="rounded-xl border border-border bg-card">
-            <h3 className="border-b border-border px-5 py-3 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
-              {t("detail.payments")}
-            </h3>
-            {data.paiements.length === 0 ? (
-              <p className="p-5 text-sm text-muted-foreground">{t("detail.noPayments")}</p>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead className="text-xs uppercase text-muted-foreground">
-                    <tr>
-                      <th className="px-5 py-2 text-left font-semibold">{t("payments.date")}</th>
-                      <th className="px-5 py-2 text-left font-semibold">
-                        {t("payments.contract")}
-                      </th>
-                      <th className="px-5 py-2 text-right font-semibold">{t("payments.net")}</th>
-                      <th className="px-5 py-2 text-right font-semibold">
-                        {t("payments.withheld")}
-                      </th>
-                      <th className="px-5 py-2 text-right font-semibold">{t("payments.paid")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.paiements.map((p) => (
-                      <tr key={p.id} className="border-t border-border">
-                        <td className="px-5 py-2">{formatDateBE(p.date_paiement)}</td>
-                        <td className="max-w-[220px] truncate px-5 py-2 text-muted-foreground">
-                          {contratLabel.get(p.contrat_id) ?? "—"}
-                        </td>
-                        <td className="px-5 py-2 text-right">{formatEURBE(p.montant_ht)}</td>
-                        <td
-                          className={`px-5 py-2 text-right ${
-                            Number(p.retenue_onss) + Number(p.retenue_spf) > 0 ? "text-red-600" : ""
-                          }`}
-                        >
-                          {formatEURBE(Number(p.retenue_onss) + Number(p.retenue_spf))}
-                        </td>
-                        <td className="px-5 py-2 text-right font-semibold">
-                          {formatEURBE(p.montant_verse)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
+          <PrestationsSection
+            contrats={data.contrats}
+            prestations={data.prestations}
+            onChange={refresh}
+          />
+
+          <PaiementsSection
+            sousTraitant={st}
+            contrats={data.contrats}
+            verifications={data.verifications}
+            paiements={data.paiements}
+            onChange={refresh}
+          />
         </div>
       </div>
 
@@ -477,6 +490,17 @@ function SousTraitantDetail() {
           }}
         />
       )}
+      {aModifier && (
+        <ContratFormModal
+          sousTraitantId={st.id}
+          contrat={aModifier}
+          onClose={() => setAModifier(null)}
+          onSaved={() => {
+            setAModifier(null);
+            refresh();
+          }}
+        />
+      )}
       {aSigner && (
         <ContratSignatureModal
           sousTraitant={st}
@@ -496,108 +520,6 @@ function SousTraitantDetail() {
           }}
         />
       )}
-    </div>
-  );
-}
-
-/** Enregistrement manuel, daté et immuable, du résultat consulté sur le service officiel. */
-function VerificationModal({
-  sousTraitant,
-  onClose,
-  onSaved,
-}: {
-  sousTraitant: SousTraitant;
-  onClose: () => void;
-  onSaved: () => void;
-}) {
-  const { t } = useTranslation(["sousTraitants", "common"]);
-  const { profile } = useAuth();
-  const [detteSociale, setDetteSociale] = useState(false);
-  const [detteFiscale, setDetteFiscale] = useState(false);
-  const [notes, setNotes] = useState("");
-  const [saving, setSaving] = useState(false);
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!profile?.company_id) return;
-    if (!confirm(t("verification.confirm"))) return;
-    setSaving(true);
-    const { error } = await supabase.from("verifications_30bis").insert({
-      company_id: profile.company_id,
-      sous_traitant_id: sousTraitant.id,
-      dette_sociale: detteSociale,
-      dette_fiscale: detteFiscale,
-      source_url: urlVerification30bis(sousTraitant),
-      notes: notes.trim() || null,
-      verifie_par: profile.id,
-    });
-    setSaving(false);
-    if (error) return toast.error(error.message);
-    toast.success(t("toasts.verificationSaved"));
-    onSaved();
-  };
-
-  return (
-    <div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4"
-      {...backdropClose(onClose)}
-    >
-      <form
-        onSubmit={submit}
-        onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md space-y-4 rounded-2xl bg-card p-6 shadow-xl"
-      >
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">{t("verification.record")}</h3>
-          <button type="button" onClick={onClose} className="rounded p-1 hover:bg-muted">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-        <p className="text-sm text-muted-foreground">
-          {t("verification.modalHint", { name: sousTraitant.raison_sociale })}
-        </p>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={detteSociale}
-            onChange={(e) => setDetteSociale(e.target.checked)}
-          />
-          {t("verification.socialDebtFound")}
-        </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            type="checkbox"
-            checked={detteFiscale}
-            onChange={(e) => setDetteFiscale(e.target.checked)}
-          />
-          {t("verification.taxDebtFound")}
-        </label>
-        <label className="block">
-          <span className="mb-1 block text-xs font-medium">{t("verification.notes")}</span>
-          <textarea
-            rows={2}
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
-          />
-        </label>
-        <p className="text-xs text-muted-foreground">{t("verification.proofLater")}</p>
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg border border-border px-4 py-2 text-sm font-medium hover:bg-muted"
-          >
-            {t("common:actions.cancel")}
-          </button>
-          <button
-            disabled={saving}
-            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
-          >
-            {saving ? "…" : t("common:actions.save")}
-          </button>
-        </div>
-      </form>
     </div>
   );
 }
