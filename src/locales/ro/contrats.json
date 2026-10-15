@@ -95,7 +95,8 @@
       "deja_signe": "Acest contract a fost deja semnat.",
       "document_modifie": "Modelul de contract s-a schimbat de la trimitere: cereți un link nou.",
       "champs_requis": "Introduceți numele, calitatea și locul semnării.",
-      "signature_invalide": "Semnătura nu a putut fi salvată. Desenați-o din nou."
+      "signature_invalide": "Semnătura nu a putut fi salvată. Desenați-o din nou.",
+      "modele_inconnu": "Acest contract folosește o versiune de model pe care această pagină nu o poate afișa. Cereți expeditorului un link nou."
     }
   },
   "fields": {

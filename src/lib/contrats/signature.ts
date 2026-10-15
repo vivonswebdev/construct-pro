@@ -1,12 +1,7 @@
 import type { Json } from "@/integrations/supabase/types";
+import { documentDemande } from "./modeles";
 import { exportContratPDF } from "./pdf";
-import {
-  appliquerChamps,
-  faitA,
-  rendreContrat,
-  type ChampsSousTraitant,
-  type DonneesContrat,
-} from "./sous-traitance";
+import type { ChampsSousTraitant, DonneesContrat } from "./sous-traitance";
 import { langueDocument } from "@/lib/invoice-pdf";
 
 /** Lien public de signature (page /signer/$token). */
@@ -14,6 +9,8 @@ export const lienSignature = (token: string) => `${window.location.origin}/signe
 
 /** Demande de signature telle que renvoyée par contrat_a_signer (et sous-ensemble de la table). */
 export type SignatureContrat = {
+  /** Code du modèle utilisé à l'envoi : le contrat est toujours rendu dans ce modèle. */
+  modele: string;
   langue: string;
   donnees: Json;
   document_hash: string;
@@ -47,10 +44,10 @@ export function etatSignature(s: Pick<SignatureContrat, "statut" | "expire_le">)
 }
 
 export function telechargerContratPDF(s: SignatureContrat): Promise<void> {
-  const d = appliquerChamps(donneesDe(s), champsDe(s));
+  const { donnees: d, blocs, faitA } = documentDemande(s);
   return exportContratPDF({
-    blocs: rendreContrat(d),
-    faitA: faitA(s.signe_lieu, s.signe_le),
+    blocs,
+    faitA,
     entrepriseNom: d.entreprise.denomination,
     entreprise: {
       nom: s.entreprise_signataire_nom,
