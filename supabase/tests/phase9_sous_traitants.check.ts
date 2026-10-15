@@ -6,20 +6,12 @@
 import { PGlite } from "@electric-sql/pglite";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { initSupabaseSimule } from "./supabase_simule";
 
 const MIG = process.argv[2] ?? join(import.meta.dir, "..", "migrations");
 const db = new PGlite();
 
-await db.exec(`
-  CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN; CREATE ROLE service_role NOLOGIN;
-  CREATE SCHEMA auth;
-  CREATE TABLE auth.users (id uuid PRIMARY KEY, email text, raw_user_meta_data jsonb);
-  CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS
-    $$ SELECT nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-  GRANT USAGE ON SCHEMA auth TO authenticated, anon;
-  GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated, anon;
-  GRANT USAGE ON SCHEMA public TO authenticated, anon, service_role;
-`);
+await initSupabaseSimule(db);
 
 for (const f of readdirSync(MIG)
   .filter((f) => f.endsWith(".sql"))

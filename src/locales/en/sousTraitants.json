@@ -93,19 +93,29 @@
     "socialDebt": "Social debt",
     "taxDebt": "Tax debt",
     "noDebt": "No debt",
-    "immutable": "Each check is dated evidence: it can be neither edited nor deleted.",
+    "immutable": "Each check and its screenshot are dated evidence: they can be neither edited nor deleted.",
     "confirm": "Record this result? It cannot be changed afterwards.",
     "modalHint": "Enter the result shown by the official service for {{name}}. The date and time are recorded automatically.",
     "socialDebtFound": "Social debt found (NSSO)",
     "taxDebtFound": "Tax debt found (FPS Finance)",
     "notes": "Notes",
-    "proofLater": "Uploading a screenshot of the result will be added soon.",
     "socialDebtAmount": "NSSO debt shown by the official service (€)",
     "taxDebtAmount": "FPS Finance debt shown by the official service (€)",
     "socialDebtShown": "NSSO debt: {{amount}}",
     "taxDebtShown": "Tax debt: {{amount}}",
     "validation": {
       "debtAmount": "Enter the amount of each debt found (0 or more)."
+    },
+    "capture": {
+      "label": "Screenshot of the result (optional)",
+      "choose": "Choose a JPG, PNG or PDF file",
+      "hint": "5 MB maximum. Private storage; once the check is recorded, the screenshot can no longer be deleted.",
+      "view": "View screenshot",
+      "uploadFailed": "Screenshot upload failed: {{error}}",
+      "errors": {
+        "taille": "File too large (5 MB maximum).",
+        "format": "Format rejected: JPG, PNG or PDF only."
+      }
     }
   },
   "payments": {
