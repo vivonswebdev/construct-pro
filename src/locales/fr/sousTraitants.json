@@ -203,7 +203,8 @@
     "validation": {
       "workerName": "Indiquez le nom de chaque ouvrier.",
       "hours": "Nombre d'heures invalide."
-    }
+    },
+    "openCompliance": "Ouvrir la fiche conformité du sous-traitant"
   },
   "compliance": {
     "title": "Conformité",
@@ -288,7 +289,36 @@
     "subcontractor": "Sous-traitant",
     "validated": "Validée",
     "totalHours_one": "{{count}} heure prestée",
-    "totalHours_other": "{{count}} heures prestées"
+    "totalHours_other": "{{count}} heures prestées",
+    "exportCsv": "Journal CSV",
+    "exportPdf": "Journal PDF",
+    "totalsTitle": "Totaux par sous-traitant",
+    "journalTitle": "Journal des prestations",
+    "journalFile": "journal_chantier",
+    "pdfTitle": "Journal du chantier {{site}}",
+    "client": "Client : {{client}}",
+    "total": "Total chantier",
+    "hourlyHint": "Valeur horaire : heures saisies × prix horaire du contrat (estimation, hors TVA). Payé, retenues et versé : paiements non annulés.",
+    "yes": "Oui",
+    "no": "Non",
+    "cols": {
+      "date": "Date",
+      "subcontractor": "Sous-traitant",
+      "description": "Description",
+      "hours": "Heures",
+      "workers": "Ouvriers",
+      "checkin": "Checkinatwork",
+      "validatedOn": "Validée le",
+      "entries": "Prestations",
+      "lumpSum": "Forfait HTVA",
+      "hourlyValue": "Valeur horaire HTVA",
+      "paidExclVat": "Payé HTVA",
+      "withheld": "Retenues 30bis",
+      "paid": "Versé",
+      "remaining": "Reste forfait"
+    },
+    "validatedCount_one": "{{count}} validée",
+    "validatedCount_other": "{{count}} validées"
   },
   "exportsButton": "Exports",
   "dossierButton": "Dossier de conformité (PDF)"

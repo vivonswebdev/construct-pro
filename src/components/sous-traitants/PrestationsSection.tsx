@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { CheckCircle2, Plus, Trash2, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { AlertTriangle, CheckCircle2, Info, Plus, Trash2, X } from "lucide-react";
 import { toast } from "sonner";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import type { Json, Tables } from "@/integrations/supabase/types";
+import { useConformite } from "@/hooks/useConformite";
 import { useAuth } from "@/lib/auth";
+import type { StatutConformite } from "@/lib/conformite";
 import { formatDateBE } from "@/lib/format";
 import { backdropClose } from "@/lib/modal";
 import { codeErreurPaiement } from "@/lib/paiements";
@@ -153,17 +157,26 @@ export function PrestationsSection({
   );
 }
 
-function PrestationFormModal({
+/**
+ * Saisie d'une prestation. `noms` (sous-traitant par id) : utilisé depuis la fiche chantier, où les
+ * contrats de plusieurs sous-traitants sont proposés. Le blocage de conformité (attestation 30bis)
+ * est affiché avant l'enregistrement ; la base le contrôle de toute façon.
+ */
+export function PrestationFormModal({
   contrats,
+  noms,
   onClose,
   onSaved,
 }: {
   contrats: ContratSousTraitance[];
+  noms?: Map<string, string>;
   onClose: () => void;
   onSaved: () => void;
 }) {
   const { t } = useTranslation(["sousTraitants", "common"]);
   const { profile } = useAuth();
+  const queryClient = useQueryClient();
+  const { data: conformite } = useConformite();
   const [f, setF] = useState({
     contrat_id: contrats[0]?.id ?? "",
     date_prestation: aujourdhuiBruxelles(),
@@ -199,7 +212,6 @@ function PrestationFormModal({
         ouvriers: ouvriers.map((o) => ({ nom: o.nom, heures: nombre(o.heures) })),
       });
     if (!parsed.success) return toast.error(parsed.error.issues[0].message);
-    const contrat = contrats.find((c) => c.id === f.contrat_id);
     setSaving(true);
     const { error } = await supabase.from("sous_traitant_prestations").insert({
       company_id: profile.company_id,
@@ -217,10 +229,20 @@ function PrestationFormModal({
       created_by: profile.id,
     });
     setSaving(false);
-    if (error) return toast.error(errorMessage(error));
+    if (error) {
+      const code = codeErreurPaiement(error);
+      void queryClient.invalidateQueries({ queryKey: ["conformite"] });
+      return toast.error(code ? t(`payments.errors.${code}`) : errorMessage(error));
+    }
     toast.success(t("toasts.prestationSaved"));
     onSaved();
   };
+
+  const contrat = contrats.find((c) => c.id === f.contrat_id);
+  const ligne = contrat ? conformite?.get(contrat.sous_traitant_id) : undefined;
+  // Le blocage ne vise que les prestations rattachées à un chantier.
+  const bloque = !!contrat?.chantier_id && !!ligne?.bloque;
+  const derogation = !!contrat?.chantier_id && !ligne?.bloque && ligne?.derogation_jusqua;
 
   const majOuvrier = (i: number, p: Partial<Ouvrier>) =>
     setOuvriers(ouvriers.map((o, k) => (k === i ? { ...o, ...p } : o)));
@@ -250,11 +272,39 @@ function PrestationFormModal({
           >
             {contrats.map((c) => (
               <option key={c.id} value={c.id}>
-                {c.descriptif_prestations}
+                {[noms?.get(c.sous_traitant_id), c.descriptif_prestations]
+                  .filter(Boolean)
+                  .join(" — ")}
               </option>
             ))}
           </select>
         </label>
+        {bloque && contrat && ligne && (
+          <div className="flex gap-2 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-800">
+            <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+            <div>
+              <p className="font-semibold">{t("compliance.blocked")}</p>
+              <p className="text-xs">
+                {t("compliance.blockedDetail", {
+                  status: t(`compliance.status.${ligne.attestation_30bis as StatutConformite}`),
+                })}
+              </p>
+              <Link
+                to="/sous-traitants/$id"
+                params={{ id: contrat.sous_traitant_id }}
+                className="mt-1 inline-block text-xs font-semibold underline"
+              >
+                {t("prestations.openCompliance")}
+              </Link>
+            </div>
+          </div>
+        )}
+        {derogation && (
+          <div className="flex gap-2 rounded-lg border border-amber-200 bg-amber-50 p-3 text-xs text-amber-800">
+            <Info className="mt-0.5 h-4 w-4 shrink-0" />
+            {t("compliance.derogationActive", { date: formatDateBE(derogation) })}
+          </div>
+        )}
         <div className="grid grid-cols-2 gap-3">
           <label className="block">
             <span className="mb-1 block text-xs font-medium">{t("payments.date")}</span>
@@ -343,7 +393,7 @@ function PrestationFormModal({
             {t("common:actions.cancel")}
           </button>
           <button
-            disabled={saving}
+            disabled={saving || bloque}
             className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-white hover:bg-primary/90 disabled:opacity-50"
           >
             {saving ? "…" : t("common:actions.save")}

@@ -207,7 +207,8 @@
     "validation": {
       "workerName": "Introduceți numele fiecărui muncitor.",
       "hours": "Număr de ore invalid."
-    }
+    },
+    "openCompliance": "Deschide fișa de conformitate a subcontractantului"
   },
   "compliance": {
     "title": "Conformitate",
@@ -296,7 +297,37 @@
     "validated": "Validată",
     "totalHours_one": "{{count}} oră prestată",
     "totalHours_other": "{{count}} de ore prestate",
-    "totalHours_few": "{{count}} ore prestate"
+    "totalHours_few": "{{count}} ore prestate",
+    "exportCsv": "Jurnal CSV",
+    "exportPdf": "Jurnal PDF",
+    "totalsTitle": "Totaluri pe subcontractant",
+    "journalTitle": "Jurnalul prestațiilor",
+    "journalFile": "jurnal_santier",
+    "pdfTitle": "Jurnalul șantierului {{site}}",
+    "client": "Client: {{client}}",
+    "total": "Total șantier",
+    "hourlyHint": "Valoare orară: ore introduse × prețul orar din contract (estimare, fără TVA). Plătit, rețineri și virat: plăți neanulate.",
+    "yes": "Da",
+    "no": "Nu",
+    "cols": {
+      "date": "Data",
+      "subcontractor": "Subcontractant",
+      "description": "Descriere",
+      "hours": "Ore",
+      "workers": "Muncitori",
+      "checkin": "Checkinatwork",
+      "validatedOn": "Validată la",
+      "entries": "Prestații",
+      "lumpSum": "Preț forfetar fără TVA",
+      "hourlyValue": "Valoare orară fără TVA",
+      "paidExclVat": "Plătit fără TVA",
+      "withheld": "Rețineri 30bis",
+      "paid": "Virat",
+      "remaining": "Rest forfetar"
+    },
+    "validatedCount_one": "{{count}} validată",
+    "validatedCount_few": "{{count}} validate",
+    "validatedCount_other": "{{count}} de validate"
   },
   "exportsButton": "Exporturi",
   "dossierButton": "Dosar de conformitate (PDF)"

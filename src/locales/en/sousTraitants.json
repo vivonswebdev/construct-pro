@@ -203,7 +203,8 @@
     "validation": {
       "workerName": "Enter each worker's name.",
       "hours": "Invalid number of hours."
-    }
+    },
+    "openCompliance": "Open the subcontractor's compliance record"
   },
   "compliance": {
     "title": "Compliance",
@@ -288,7 +289,36 @@
     "subcontractor": "Subcontractor",
     "validated": "Validated",
     "totalHours_one": "{{count}} hour worked",
-    "totalHours_other": "{{count}} hours worked"
+    "totalHours_other": "{{count}} hours worked",
+    "exportCsv": "Log CSV",
+    "exportPdf": "Log PDF",
+    "totalsTitle": "Totals per subcontractor",
+    "journalTitle": "Work log",
+    "journalFile": "site_log",
+    "pdfTitle": "Site log {{site}}",
+    "client": "Client: {{client}}",
+    "total": "Site total",
+    "hourlyHint": "Hourly value: hours entered × contract hourly rate (estimate, excl. VAT). Paid, withholdings and disbursed: non-cancelled payments.",
+    "yes": "Yes",
+    "no": "No",
+    "cols": {
+      "date": "Date",
+      "subcontractor": "Subcontractor",
+      "description": "Description",
+      "hours": "Hours",
+      "workers": "Workers",
+      "checkin": "Checkinatwork",
+      "validatedOn": "Validated on",
+      "entries": "Entries",
+      "lumpSum": "Lump sum excl. VAT",
+      "hourlyValue": "Hourly value excl. VAT",
+      "paidExclVat": "Paid excl. VAT",
+      "withheld": "30bis withholdings",
+      "paid": "Disbursed",
+      "remaining": "Lump sum remaining"
+    },
+    "validatedCount_one": "{{count}} validated",
+    "validatedCount_other": "{{count}} validated"
   },
   "exportsButton": "Exports",
   "dossierButton": "Compliance file (PDF)"

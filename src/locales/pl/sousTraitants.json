@@ -211,7 +211,8 @@
     "validation": {
       "workerName": "Podaj imię i nazwisko każdego pracownika.",
       "hours": "Nieprawidłowa liczba godzin."
-    }
+    },
+    "openCompliance": "Otwórz kartę zgodności podwykonawcy"
   },
   "compliance": {
     "title": "Zgodność",
@@ -304,7 +305,38 @@
     "totalHours_one": "{{count}} przepracowana godzina",
     "totalHours_other": "{{count}} przepracowanej godziny",
     "totalHours_few": "{{count}} przepracowane godziny",
-    "totalHours_many": "{{count}} przepracowanych godzin"
+    "totalHours_many": "{{count}} przepracowanych godzin",
+    "exportCsv": "Dziennik CSV",
+    "exportPdf": "Dziennik PDF",
+    "totalsTitle": "Sumy według podwykonawcy",
+    "journalTitle": "Dziennik prac",
+    "journalFile": "dziennik_budowy",
+    "pdfTitle": "Dziennik budowy {{site}}",
+    "client": "Klient: {{client}}",
+    "total": "Suma budowy",
+    "hourlyHint": "Wartość godzinowa: wprowadzone godziny × stawka godzinowa z umowy (szacunek, bez VAT). Zapłacono, potrącenia i przelano: płatności nieanulowane.",
+    "yes": "Tak",
+    "no": "Nie",
+    "cols": {
+      "date": "Data",
+      "subcontractor": "Podwykonawca",
+      "description": "Opis",
+      "hours": "Godziny",
+      "workers": "Pracownicy",
+      "checkin": "Checkinatwork",
+      "validatedOn": "Zatwierdzono",
+      "entries": "Wpisy",
+      "lumpSum": "Ryczałt netto",
+      "hourlyValue": "Wartość godzinowa netto",
+      "paidExclVat": "Zapłacono netto",
+      "withheld": "Potrącenia 30bis",
+      "paid": "Przelano",
+      "remaining": "Pozostały ryczałt"
+    },
+    "validatedCount_one": "{{count}} zatwierdzona",
+    "validatedCount_few": "{{count}} zatwierdzone",
+    "validatedCount_many": "{{count}} zatwierdzonych",
+    "validatedCount_other": "{{count}} zatwierdzonej"
   },
   "exportsButton": "Eksporty",
   "dossierButton": "Dokumentacja zgodności (PDF)"

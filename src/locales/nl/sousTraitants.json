@@ -203,7 +203,8 @@
     "validation": {
       "workerName": "Geef de naam van elke arbeider op.",
       "hours": "Ongeldig aantal uren."
-    }
+    },
+    "openCompliance": "Conformiteitsfiche van de onderaannemer openen"
   },
   "compliance": {
     "title": "Conformiteit",
@@ -288,7 +289,36 @@
     "subcontractor": "Onderaannemer",
     "validated": "Gevalideerd",
     "totalHours_one": "{{count}} gepresteerd uur",
-    "totalHours_other": "{{count}} gepresteerde uren"
+    "totalHours_other": "{{count}} gepresteerde uren",
+    "exportCsv": "Dagboek CSV",
+    "exportPdf": "Dagboek PDF",
+    "totalsTitle": "Totalen per onderaannemer",
+    "journalTitle": "Dagboek van de prestaties",
+    "journalFile": "werfdagboek",
+    "pdfTitle": "Werfdagboek {{site}}",
+    "client": "Klant: {{client}}",
+    "total": "Totaal werf",
+    "hourlyHint": "Uurwaarde: ingevoerde uren × uurprijs van het contract (raming, excl. btw). Betaald, inhoudingen en gestort: niet-geannuleerde betalingen.",
+    "yes": "Ja",
+    "no": "Nee",
+    "cols": {
+      "date": "Datum",
+      "subcontractor": "Onderaannemer",
+      "description": "Omschrijving",
+      "hours": "Uren",
+      "workers": "Arbeiders",
+      "checkin": "Checkinatwork",
+      "validatedOn": "Gevalideerd op",
+      "entries": "Prestaties",
+      "lumpSum": "Forfait excl. btw",
+      "hourlyValue": "Uurwaarde excl. btw",
+      "paidExclVat": "Betaald excl. btw",
+      "withheld": "Inhoudingen 30bis",
+      "paid": "Gestort",
+      "remaining": "Saldo forfait"
+    },
+    "validatedCount_one": "{{count}} gevalideerd",
+    "validatedCount_other": "{{count}} gevalideerd"
   },
   "exportsButton": "Exports",
   "dossierButton": "Conformiteitsdossier (PDF)"

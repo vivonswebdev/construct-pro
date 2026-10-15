@@ -4,6 +4,33 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-15 — Phase 9 : journal de chantier (saisie, blocage, totaux, exports)
+
+Branche : `phase-09-journal-chantier`. **Aucune migration, aucune écriture en base hors saisie
+normale** (la prestation passe par les mêmes contrôles RLS et triggers qu'avant).
+
+- **Saisie depuis la fiche chantier** : bouton « Nouvelle prestation » dans la section
+  « Sous-traitants et prestations » ; le formulaire (`PrestationFormModal`, désormais exporté)
+  propose les contrats du chantier préfixés par le nom du sous-traitant.
+- **Blocage de conformité affiché à la saisie** : si l'attestation 30bis du sous-traitant bloque
+  l'affectation (et sans dérogation active), bandeau rouge avec le statut, lien vers la fiche
+  conformité, bouton Enregistrer désactivé ; dérogation active → bandeau d'information. La base
+  reste le contrôle de référence (`conformite_30bis_bloquante`, message traduit au lieu du texte
+  brut de l'erreur).
+- **Totaux par sous-traitant** (`src/lib/exports/journal.ts`, fonctions pures) : prestations
+  (dont validées), heures, forfait HTVA, valeur horaire estimée (heures × prix horaire du contrat),
+  payé HTVA, retenues 30bis, versé, reste du forfait ; paiements annulés exclus ; total chantier.
+- **Journal complet** : plus de limite à 100 lignes (lecture paginée `toutLire`).
+- **Exports** (`src/lib/exports/journal-rendu.ts`, langue de l'interface) : CSV (date,
+  sous-traitant, description, heures, ouvriers, Checkinatwork, validée le) et PDF paysage
+  (totaux + journal, pied de page commun).
+- `pdfSafe` : translittération des lettres sans décomposition Unicode (Ł, đ, ı…) — « Ł. Kowalski »
+  sortait « ?. Kowalski » ; sans effet sur l'empreinte des contrats (calculée sur le texte).
+- **Tests** : `bun scripts/tests/journal.check.ts` (9 tests) ; rendu PDF vérifié dans le navigateur
+  avec des données fictives (aucune donnée de production).
+
+---
+
 ## 2026-10-15 — Dossier de relecture NL / RO / PL et note pour le juriste
 
 Branche : `docs-relecture-juridique`. Documentation uniquement : aucun code applicatif, aucune
