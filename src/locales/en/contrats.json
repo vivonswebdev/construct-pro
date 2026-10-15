@@ -95,7 +95,8 @@
       "deja_signe": "This contract has already been signed.",
       "document_modifie": "The contract template has changed since it was sent: ask for a new link.",
       "champs_requis": "Enter your name, your title and the place of signing.",
-      "signature_invalide": "The signature could not be saved. Please draw it again."
+      "signature_invalide": "The signature could not be saved. Please draw it again.",
+      "modele_inconnu": "This contract uses a template version this page cannot display. Ask the sender for a new link."
     }
   },
   "fields": {
