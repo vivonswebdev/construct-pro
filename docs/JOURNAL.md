@@ -4,6 +4,28 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-15 — Contrats : rendu dans la version de modèle de l'envoi
+
+Branche : `contrat-rendu-par-modele`. Plan : `docs/plans/contrat-rendu-par-modele.md`. **Aucune
+migration, texte v1 inchangé** (`src/lib/contrats/sous-traitance.ts` identique octet pour octet),
+aucune écriture en base.
+
+- `src/lib/contrats/modeles.ts` : registre `code → rendu + « Fait à … »` (v1 seul aujourd'hui),
+  `MODELE_COURANT` pour les nouveaux envois uniquement, erreur `modele_inconnu` sans repli,
+  empreintes et document calculés avec le `modele` de la demande.
+- Branché partout où le contrat était rendu en v1 en dur : envoi (`ContratSignatureModal`), page
+  `/signer/$token` (formulaire et contrat signé), PDF des deux côtés, export pour le juriste
+  (`exporter_contrat.ts [code]`, sortie v1 identique).
+- Page de signature : modèle inconnu → message traduit (5 langues) au lieu d'une erreur.
+- **Tests** (données fictives) : `bun scripts/tests/modeles-contrat.check.ts` (20 tests :
+  instantané du texte v1 et empreintes de référence capturés sur `main` avant la refonte, lien v1
+  ouvert avec une fausse v2 courante, contrat v2, PDF v1 signé, modèles inconnus). Contre-épreuve :
+  un caractère modifié dans le texte v1 fait échouer 7 tests. PGlite : `contrat_a_signer` renvoie
+  le `modele`. Navigateur (sans base) : le PDF d'un contrat v1 signé fictif contient les 102 blocs
+  du texte v1 et aucun texte v2.
+
+---
+
 ## 2026-10-15 — Phase 9 : journal de chantier (saisie, blocage, totaux, exports)
 
 Branche : `phase-09-journal-chantier`. **Aucune migration, aucune écriture en base hors saisie

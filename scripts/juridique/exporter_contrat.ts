@@ -1,13 +1,12 @@
 // Exporte le texte du modèle de contrat de sous-traitance (version publiée) en Markdown, tel
 // qu'il est présenté au sous-traitant : les champs vides apparaissent en pointillés.
-// Lancer : bun scripts/juridique/exporter_contrat.ts > docs/juridique/contrat-sous-traitance-v1.md
+// Lancer : bun scripts/juridique/exporter_contrat.ts [code du modèle, défaut : modèle courant]
+//   > docs/juridique/contrat-sous-traitance-v1.md
 
-import {
-  MODELE_SOUS_TRAITANCE_V1,
-  faitA,
-  rendreContrat,
-  type DonneesContrat,
-} from "../../src/lib/contrats/sous-traitance";
+import { MODELE_COURANT, modeleContrat } from "../../src/lib/contrats/modeles";
+import type { DonneesContrat } from "../../src/lib/contrats/sous-traitance";
+
+const modele = modeleContrat(process.argv[2] ?? MODELE_COURANT);
 
 const vide = <T extends Record<string, string>>(o: T) =>
   Object.fromEntries(Object.keys(o).map((k) => [k, ""])) as T;
@@ -55,10 +54,10 @@ const d: DonneesContrat = {
 };
 
 const lignes: string[] = [
-  `<!-- Modèle ${MODELE_SOUS_TRAITANCE_V1} — généré par scripts/juridique/exporter_contrat.ts -->`,
+  `<!-- Modèle ${modele.code} — généré par scripts/juridique/exporter_contrat.ts -->`,
   "",
 ];
-for (const b of rendreContrat(d)) {
+for (const b of modele.rendre(d)) {
   switch (b.k) {
     case "titre":
       lignes.push(`### ${b.t}`, "");
@@ -83,7 +82,7 @@ for (const b of rendreContrat(d)) {
       break;
   }
 }
-lignes.push("", "#### SIGNATURES", "", faitA(null, null), "");
+lignes.push("", "#### SIGNATURES", "", modele.faitA(null, null), "");
 lignes.push(
   "Pour l'entrepreneur principal : nom, qualité, signature électronique manuscrite (image), date et heure.",
   "",

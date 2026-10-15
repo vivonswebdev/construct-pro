@@ -119,10 +119,14 @@ await expectError(
   "lien_invalide",
   "jeton inconnu refusé",
 );
-const lu = await db.query<{ j: { statut: string; donnees: { x: number } } }>(
+const lu = await db.query<{ j: { statut: string; modele: string; donnees: { x: number } } }>(
   `SELECT public.contrat_a_signer('${T}') AS j`,
 );
 ok(lu.rows[0].j.statut === "envoye" && lu.rows[0].j.donnees.x === 1, "lecture par jeton");
+ok(
+  lu.rows[0].j.modele === "sous_traitance_cadre_v1",
+  "le lien renvoie le code du modèle de l'envoi (rendu dans ce modèle)",
+);
 await expectError(
   `SELECT public.signer_contrat('${T}', 'Piotr Nowak', 'Gérant', 'Bruxelles', '{}', '${PNG}', '${H2}', '${H2}')`,
   "document_modifie",

@@ -7,12 +7,8 @@ import { SignaturePad } from "@/components/SignaturePad";
 import { useAuth } from "@/lib/auth";
 import { preremplirContrat } from "@/lib/contrats/donnees";
 import { lienSignature } from "@/lib/contrats/signature";
-import {
-  MODELE_SOUS_TRAITANCE_V1,
-  empreinteEnvoi,
-  rendreContrat,
-  type DonneesContrat,
-} from "@/lib/contrats/sous-traitance";
+import { MODELE_COURANT, empreinteEnvoi, modeleContrat } from "@/lib/contrats/modeles";
+import type { DonneesContrat } from "@/lib/contrats/sous-traitance";
 import { backdropClose } from "@/lib/modal";
 import type { ContratSousTraitance, SousTraitant } from "@/lib/sous-traitants";
 import { useTranslation } from "react-i18next";
@@ -97,7 +93,8 @@ export function ContratSignatureModal({
   const [relu, setRelu] = useState(false);
   const [saving, setSaving] = useState(false);
   const [token, setToken] = useState<string | null>(null);
-  const blocs = useMemo(() => rendreContrat(d), [d]);
+  // Nouvel envoi : modèle courant, le même pour l'aperçu, l'empreinte et la colonne `modele`.
+  const blocs = useMemo(() => modeleContrat(MODELE_COURANT).rendre(d), [d]);
 
   const setChamp = (section: Section, cle: string, val: string) =>
     setD((prev) => ({ ...prev, [section]: { ...prev[section], [cle]: val } }));
@@ -117,10 +114,10 @@ export function ContratSignatureModal({
       .insert({
         company_id: profile.company_id,
         contrat_id: contrat.id,
-        modele: MODELE_SOUS_TRAITANCE_V1,
+        modele: MODELE_COURANT,
         langue: "fr",
         donnees: d,
-        document_hash: await empreinteEnvoi(d),
+        document_hash: await empreinteEnvoi(MODELE_COURANT, d),
         expire_le: new Date(Date.now() + n * 86_400_000).toISOString(),
         entreprise_signataire_nom: e.representant.trim(),
         entreprise_signataire_qualite: e.qualite.trim(),
