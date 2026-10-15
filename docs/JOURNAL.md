@@ -26,6 +26,21 @@ aucune écriture en base.
 
 ---
 
+## 2026-10-15 — Contrat v2 : suivi des retours attendus
+
+Branche : `docs-suivi-contrat-v2`. Documentation uniquement : aucun code, aucune migration.
+
+- `docs/juridique/suivi-retours-contrat-v2.md` : état des 4 retours (relecture NL / RO / PL, note
+  juridique, réponses aux 23 points, corrections v2), impact possible de chaque point (texte,
+  logiciel, migration), décisions revenant à Youssef, procédure de rédaction de la v2.
+- **Constat** : `rendreContrat` ignore la colonne `modele` et rend toujours la v1. Avant toute v2,
+  il faut un rendu par code de modèle, sinon les liens v1 ouverts seraient refusés à la signature
+  (empreinte différente) et les PDF v1 régénérés avec le mauvais texte. Prévu en PR distincte,
+  sans changement de texte.
+- La v2 elle-même attend les réponses du juriste.
+
+---
+
 ## 2026-10-15 — Phase 9 : journal de chantier (saisie, blocage, totaux, exports)
 
 Branche : `phase-09-journal-chantier`. **Aucune migration, aucune écriture en base hors saisie
