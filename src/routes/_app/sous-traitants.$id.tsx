@@ -27,6 +27,8 @@ import { SignaturesContrat } from "@/components/sous-traitants/SignaturesContrat
 import { PaiementsSection } from "@/components/sous-traitants/PaiementsSection";
 import { PrestationsSection } from "@/components/sous-traitants/PrestationsSection";
 import { VerificationModal } from "@/components/sous-traitants/VerificationModal";
+import { ConformiteSection } from "@/components/sous-traitants/ConformiteSection";
+import { useConformite } from "@/hooks/useConformite";
 import { formatEURBE, formatVATDisplay } from "@/lib/belgian";
 import { formatDateBE } from "@/lib/format";
 import { pageHead } from "@/lib/head";
@@ -58,10 +60,11 @@ function SousTraitantDetail() {
   const [aSigner, setASigner] = useState<ContratSousTraitance | null>(null);
   const [aModifier, setAModifier] = useState<ContratSousTraitance | null>(null);
 
+  const { data: conformite } = useConformite();
   const { data, isLoading } = useQuery({
     queryKey: ["sous_traitant", id],
     queryFn: async () => {
-      const [st, vf, ct] = await Promise.all([
+      const [st, vf, ct, dc, dg] = await Promise.all([
         supabase.from("sous_traitants").select("*").eq("id", id).maybeSingle(),
         supabase
           .from("verifications_30bis")
@@ -73,6 +76,16 @@ function SousTraitantDetail() {
           .select("*")
           .eq("sous_traitant_id", id)
           .order("date_debut", { ascending: false }),
+        supabase
+          .from("documents_conformite")
+          .select("*")
+          .eq("sous_traitant_id", id)
+          .order("created_at", { ascending: false }),
+        supabase
+          .from("derogations_conformite")
+          .select("*")
+          .eq("sous_traitant_id", id)
+          .order("accordee_le", { ascending: false }),
       ]);
       const contrats = ct.data ?? [];
       const contratIds = contrats.map((c) => c.id);
@@ -114,6 +127,8 @@ function SousTraitantDetail() {
         chantiers: new Map((ch.data ?? []).map((c) => [c.id, c])),
         signatures: sg.data ?? [],
         prestations: ps.data ?? [],
+        documents: dc.data ?? [],
+        derogations: dg.data ?? [],
       };
     },
   });
@@ -125,6 +140,7 @@ function SousTraitantDetail() {
   const refresh = () => {
     qc.invalidateQueries({ queryKey: ["sous_traitant", id] });
     qc.invalidateQueries({ queryKey: ["sous_traitants"] });
+    qc.invalidateQueries({ queryKey: ["conformite"] });
   };
 
   const derniere = data.verifications[0] ?? null;
@@ -289,6 +305,14 @@ function SousTraitantDetail() {
         </div>
 
         <div className="space-y-4 lg:col-span-2">
+          <ConformiteSection
+            sousTraitant={st}
+            ligne={conformite?.get(st.id)}
+            documents={data.documents}
+            derogations={data.derogations}
+            onChange={refresh}
+          />
+
           {/* Vérification 30bis */}
           <div className="rounded-xl border border-border bg-card">
             <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-5 py-3">

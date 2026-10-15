@@ -1094,6 +1094,39 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
   const nowak = st("0654321913");
   const ionescu = st("0987612329");
 
+  // Conformité (PR D) — AVANT les contrats : sans attestation 30bis valide, un contrat ne peut
+  // pas être rattaché à un chantier. Ionescu : attestation expirée + dérogation (démo du blocage).
+  const doc = (stId: string, type: string, expiration: string | null) => ({
+    company_id: companyId,
+    sous_traitant_id: stId,
+    type_document: type,
+    date_emission: ilYa(150),
+    date_expiration: expiration,
+  });
+  const { error: dcErr } = await supabase.from("documents_conformite").insert([
+    doc(lambert, "attestation_30bis", ilYa(-180)),
+    doc(lambert, "attestation_tva", null),
+    doc(peeters, "attestation_30bis", ilYa(-18)), // expire dans 18 jours : alerte
+    doc(peeters, "attestation_tva", null),
+    doc(costa, "attestation_30bis", ilYa(-120)),
+    doc(nowak, "attestation_30bis", ilYa(-90)),
+    doc(nowak, "attestation_tva", null),
+    doc(ionescu, "attestation_30bis", ilYa(10)), // expirée depuis 10 jours
+  ]);
+  if (dcErr) throw dcErr;
+  const { error: dgErr } = await supabase.from("derogations_conformite").insert({
+    company_id: companyId,
+    sous_traitant_id: ionescu,
+    motif: "Fin de chantier en cours ; nouvelle attestation demandée au sous-traitant.",
+    expire_le: new Date(Date.now() + 14 * 86_400_000).toISOString(),
+  });
+  if (dgErr) throw dgErr;
+  // IBAN validé (Lambert) : validation par l'utilisateur connecté (admin à la création).
+  await supabase
+    .from("sous_traitants")
+    .update({ iban_valide_le: new Date().toISOString() })
+    .eq("id", lambert);
+
   // Contrats
   const contratsSeed: TablesInsert<"sous_traitant_contrats">[] = [
     {

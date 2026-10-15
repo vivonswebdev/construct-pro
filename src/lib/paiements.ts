@@ -1,6 +1,6 @@
 import { errorMessage } from "@/lib/utils";
 
-/** Codes d'erreur levés par les triggers des paiements / contrats (traduits côté interface). */
+/** Codes d'erreur métier levés par les triggers (paiements, contrats, conformité), traduits. */
 export const ERREURS_PAIEMENT = [
   "verification_30bis_requise",
   "verification_30bis_autre_sous_traitant",
@@ -14,6 +14,16 @@ export const ERREURS_PAIEMENT = [
   "motif_annulation_requis",
   "contrat_signe_non_modifiable",
   "validation_reservee_gestionnaire",
+  // Conformité (PR D)
+  "conformite_30bis_bloquante",
+  "action_reservee_gestionnaire",
+  "document_fige",
+  "document_non_modifiable",
+  "motif_invalidation_requis",
+  "derogation_duree_invalide",
+  "derogation_figee",
+  "derogation_revocation_seulement",
+  "iban_absent",
 ] as const;
 
 /** Code d'erreur métier contenu dans une erreur Supabase, ou null. */

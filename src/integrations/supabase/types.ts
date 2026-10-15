@@ -499,6 +499,145 @@ export type Database = {
           },
         ]
       }
+      derogations_conformite: {
+        Row: {
+          accordee_le: string
+          accordee_par: string | null
+          company_id: string
+          expire_le: string
+          id: string
+          motif: string
+          revoquee_le: string | null
+          revoquee_par: string | null
+          sous_traitant_id: string
+        }
+        Insert: {
+          accordee_le?: string
+          accordee_par?: string | null
+          company_id: string
+          expire_le: string
+          id?: string
+          motif: string
+          revoquee_le?: string | null
+          revoquee_par?: string | null
+          sous_traitant_id: string
+        }
+        Update: {
+          accordee_le?: string
+          accordee_par?: string | null
+          company_id?: string
+          expire_le?: string
+          id?: string
+          motif?: string
+          revoquee_le?: string | null
+          revoquee_par?: string | null
+          sous_traitant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "derogations_conformite_accordee_par_fkey"
+            columns: ["accordee_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "derogations_conformite_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "derogations_conformite_revoquee_par_fkey"
+            columns: ["revoquee_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "derogations_conformite_st_fk"
+            columns: ["sous_traitant_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitants"
+            referencedColumns: ["id", "company_id"]
+          },
+        ]
+      }
+      documents_conformite: {
+        Row: {
+          company_id: string
+          created_at: string
+          date_emission: string | null
+          date_expiration: string | null
+          depose_par: string | null
+          fichier: string | null
+          id: string
+          invalide_le: string | null
+          invalide_par: string | null
+          motif_invalidation: string | null
+          sous_traitant_id: string
+          type_document: string
+        }
+        Insert: {
+          company_id: string
+          created_at?: string
+          date_emission?: string | null
+          date_expiration?: string | null
+          depose_par?: string | null
+          fichier?: string | null
+          id?: string
+          invalide_le?: string | null
+          invalide_par?: string | null
+          motif_invalidation?: string | null
+          sous_traitant_id: string
+          type_document: string
+        }
+        Update: {
+          company_id?: string
+          created_at?: string
+          date_emission?: string | null
+          date_expiration?: string | null
+          depose_par?: string | null
+          fichier?: string | null
+          id?: string
+          invalide_le?: string | null
+          invalide_par?: string | null
+          motif_invalidation?: string | null
+          sous_traitant_id?: string
+          type_document?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_conformite_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_conformite_depose_par_fkey"
+            columns: ["depose_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_conformite_invalide_par_fkey"
+            columns: ["invalide_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_conformite_st_fk"
+            columns: ["sous_traitant_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitants"
+            referencedColumns: ["id", "company_id"]
+          },
+        ]
+      }
       etapes: {
         Row: {
           chantier_id: string
@@ -1201,6 +1340,8 @@ export type Database = {
           email: string | null
           forme_juridique: string | null
           iban: string | null
+          iban_valide_le: string | null
+          iban_valide_par: string | null
           id: string
           metiers: string[]
           note_interne: string | null
@@ -1224,6 +1365,8 @@ export type Database = {
           email?: string | null
           forme_juridique?: string | null
           iban?: string | null
+          iban_valide_le?: string | null
+          iban_valide_par?: string | null
           id?: string
           metiers?: string[]
           note_interne?: string | null
@@ -1247,6 +1390,8 @@ export type Database = {
           email?: string | null
           forme_juridique?: string | null
           iban?: string | null
+          iban_valide_le?: string | null
+          iban_valide_par?: string | null
           id?: string
           metiers?: string[]
           note_interne?: string | null
@@ -1258,6 +1403,13 @@ export type Database = {
           ville?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "sous_traitants_iban_valide_par_fkey"
+            columns: ["iban_valide_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "sous_traitants_company_id_fkey"
             columns: ["company_id"]
@@ -1558,10 +1710,32 @@ export type Database = {
     }
     Functions: {
       contrat_a_signer: { Args: { _token: string }; Returns: Json }
+      aujourdhui_bruxelles: { Args: never; Returns: string }
+      conformite_sous_traitants: {
+        Args: never
+        Returns: {
+          attestation_30bis: string
+          attestation_tva: string
+          bloque: boolean
+          contrat: string
+          derogation_jusqua: string | null
+          iban: string
+          sous_traitant_id: string
+        }[]
+      }
       dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined }
+      derogation_active: { Args: { _sous_traitant_id: string }; Returns: boolean }
       est_gestionnaire: { Args: never; Returns: boolean }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       seed_lock: { Args: { _company_id: string }; Returns: string }
+      statut_attestation: {
+        Args: { _sous_traitant_id: string; _type: string }
+        Returns: string
+      }
+      statut_document_conformite: {
+        Args: { _date_expiration: string; _invalide_le: string; _jour: string }
+        Returns: string
+      }
       signer_contrat: {
         Args: {
           _champs: Json

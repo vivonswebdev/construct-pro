@@ -22,15 +22,22 @@ export function controlerFichier(f: File): ErreurFichier | null {
   return null;
 }
 
-/** Dépose une capture 30bis : `<company_id>/30bis/<uuid>.<ext>`. Renvoie le chemin. */
-export async function deposerCapture30bis(companyId: string, f: File): Promise<string> {
-  const chemin = `${companyId}/30bis/${crypto.randomUUID()}.${TYPES[f.type]}`;
+/** Dépose un fichier dans `<company_id>/<dossier>/<uuid>.<ext>`. Renvoie le chemin. */
+async function deposer(companyId: string, dossier: "30bis" | "conformite", f: File) {
+  const chemin = `${companyId}/${dossier}/${crypto.randomUUID()}.${TYPES[f.type]}`;
   const { error } = await supabase.storage
     .from(BUCKET_DOCUMENTS)
     .upload(chemin, f, { contentType: f.type, upsert: false });
   if (error) throw error;
   return chemin;
 }
+
+/** Capture d'une vérification 30bis. */
+export const deposerCapture30bis = (companyId: string, f: File) => deposer(companyId, "30bis", f);
+
+/** Document de conformité (attestation 30bis, attestation TVA). */
+export const deposerDocumentConformite = (companyId: string, f: File) =>
+  deposer(companyId, "conformite", f);
 
 /** Supprime un fichier déposé mais jamais rattaché (permis tant qu'aucune vérification ne le cite). */
 export async function supprimerOrphelin(chemin: string) {

@@ -20,6 +20,7 @@ import { intlLocale } from "@/lib/i18n";
 import { toCode } from "@/lib/statuts";
 import { statutChantierStyle } from "@/lib/chantiers";
 import { TranslatableText } from "@/components/TranslatableText";
+import { ChantierSousTraitants } from "@/components/sous-traitants/ChantierSousTraitants";
 
 export const Route = createFileRoute("/_app/chantiers/$id")({
   component: ChantierDetail,
@@ -409,6 +410,9 @@ function ChantierDetail() {
           </div>
         )}
       </div>
+
+      {/* Sous-traitants et prestations */}
+      <ChantierSousTraitants chantierId={id} />
     </div>
   );
 }

@@ -72,7 +72,7 @@ export const enPourcent = (taux: number) => Number((Number(taux) * 100).toFixed(
  * Retenues d'un paiement avec plafonds (règles du 14/10/2026), identique au trigger SQL
  * check_paiement_30bis : par type, min(HTVA × taux, dette saisie à la vérification − retenues de
  * ce type déjà appliquées sur les paiements non annulés liés à la même vérification). Dette non
- * saisie = pas de plafond.
+ * saisie = pas de plafond. Enfin, total ≤ HTVA (SPF réduit d'abord, puis ONSS).
  */
 export function calculerRetenuesPlafonnees(o: {
   montantHt: number;
@@ -95,14 +95,21 @@ export function calculerRetenuesPlafonnees(o: {
     dette == null ? null : Math.max(produitArrondiCent(Number(dette) - deja, 1), 0);
   const resteOnss = reste(v.montant_dette_onss, o.dejaRetenu.onss);
   const resteSpf = reste(v.montant_dette_spf, o.dejaRetenu.spf);
-  const onss = resteOnss == null ? plein.onss : Math.min(plein.onss, resteOnss);
-  const spf = resteSpf == null ? plein.spf : Math.min(plein.spf, resteSpf);
+  let onss = resteOnss == null ? plein.onss : Math.min(plein.onss, resteOnss);
+  let spf = resteSpf == null ? plein.spf : Math.min(plein.spf, resteSpf);
+  // Total retenu ≤ HTVA du paiement : réduire d'abord le SPF, puis l'ONSS (règle du 15/10/2026).
+  const plafondTotal = produitArrondiCent(onss + spf, 1) > o.montantHt;
+  if (plafondTotal) {
+    spf = Math.max(produitArrondiCent(o.montantHt - onss, 1), 0);
+    onss = Math.min(onss, o.montantHt);
+  }
   return {
     onss,
     spf,
     total: produitArrondiCent(onss + spf, 1),
     plafondOnss: onss < plein.onss,
     plafondSpf: spf < plein.spf,
+    plafondTotal,
     resteOnss,
     resteSpf,
   };

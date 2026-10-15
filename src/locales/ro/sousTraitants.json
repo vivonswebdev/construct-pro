@@ -20,7 +20,8 @@
     "vat": "Nr. TVA",
     "contact": "Contact",
     "check30bis": "Verificare 30bis",
-    "status": "Status"
+    "status": "Status",
+    "compliance": "Conformitate"
   },
   "conformity": {
     "a_jour": "Verificat astăzi",
@@ -171,7 +172,16 @@
       "annulation_seulement": "La anulare, nicio altă dată a plății nu poate fi modificată.",
       "motif_annulation_requis": "Indicați motivul anulării.",
       "contrat_signe_non_modifiable": "Acest contract este semnat: nu mai poate fi modificat. Creați un contract nou (act adițional).",
-      "validation_reservee_gestionnaire": "Doar un administrator sau un manager poate valida o prestație."
+      "validation_reservee_gestionnaire": "Doar un administrator sau un manager poate valida o prestație.",
+      "conformite_30bis_bloquante": "Alocare blocată: atestatul 30bis al subcontractorului lipsește, a expirat sau este invalid. Încărcați un atestat valabil sau cereți o derogare unui manager.",
+      "action_reservee_gestionnaire": "Acțiune rezervată unui administrator sau manager.",
+      "document_fige": "Acest document este invalidat: nu mai poate fi modificat.",
+      "document_non_modifiable": "Un document de conformitate nu poate fi modificat: încărcați unul nou.",
+      "motif_invalidation_requis": "Indicați motivul invalidării.",
+      "derogation_duree_invalide": "Derogarea trebuie să expire în 1 până la 30 de zile.",
+      "derogation_figee": "Această derogare s-a încheiat sau a fost revocată.",
+      "derogation_revocation_seulement": "O derogare poate fi doar revocată.",
+      "iban_absent": "Niciun IBAN de validat."
     }
   },
   "prestations": {
@@ -198,5 +208,94 @@
       "workerName": "Introduceți numele fiecărui muncitor.",
       "hours": "Număr de ore invalid."
     }
+  },
+  "compliance": {
+    "title": "Conformitate",
+    "blocked": "Alocare pe șantier blocată",
+    "blockedDetail": "Atestat 30bis: {{status}}. Niciun contract sau prestație nu poate fi legat(ă) de un șantier până la încărcarea unui atestat valabil.",
+    "liftBlock": "Ridică blocarea",
+    "managersOnly": "Doar un administrator sau un manager poate ridica blocarea.",
+    "derogationActive": "Derogare activă până la {{date}}",
+    "revoke": "Revocă derogarea",
+    "upload": "Încarcă",
+    "expiresOn": "Expiră pe {{date}}",
+    "noExpiry": "Fără dată de expirare",
+    "issuedOn": "emis pe {{date}}",
+    "invalidatedOn": "Invalidat pe {{date}} — {{reason}}",
+    "view": "Vezi",
+    "invalidate": "Invalidează",
+    "invalidateReason": "Motivul invalidării (păstrat ca dovadă):",
+    "noIban": "niciun IBAN",
+    "ibanValidatedOn": "IBAN validat pe {{date}}",
+    "validateIban": "Validează IBAN-ul",
+    "ibanConfirm": "Confirmați că ați verificat IBAN-ul {{iban}} (document bancar, apel la subcontractor)?",
+    "revokeConfirm": "Revocați această derogare? Blocarea se va aplica din nou.",
+    "contractHint": "semnat sau trimis spre semnare (link activ)",
+    "derogationHistory": "Istoricul derogărilor",
+    "derogationLine": "De la {{from}} la {{to}} — {{reason}}",
+    "revokedOn": "revocată pe {{date}}",
+    "footer": "Statusuri calculate automat. Documentele și derogările sunt dovezi: nu se șterg niciodată.",
+    "issueDate": "Data emiterii",
+    "expiryDate": "Data expirării (opțional)",
+    "expiryDateRequired": "Data expirării *",
+    "hint30bis": "Atestatul 30bis condiționează alocarea pe șantier. Verificarea din ziua respectivă rămâne obligatorie înainte de fiecare plată.",
+    "hintTva": "Fără dată de expirare, atestatul rămâne valabil până la invalidare.",
+    "derogationHint": "Derogare doar pentru acest subcontractor, maximum 30 de zile, revocabilă. Justificarea este înregistrată.",
+    "reason": "Justificare *",
+    "durationDays": "Durată (zile, maximum 30)",
+    "grant": "Acordă derogarea",
+    "filterBlocked": "Alocare blocată",
+    "blockedShort": "Blocat",
+    "ibanChangeWarning": "Modificarea IBAN-ului anulează validarea: va trebui validat din nou.",
+    "status": {
+      "valide": "Valabil",
+      "expire_bientot": "Expiră curând",
+      "expire": "Expirat",
+      "manquant": "Lipsă",
+      "invalide": "Invalid"
+    },
+    "requirement": {
+      "attestation_30bis": "Atestat 30bis",
+      "attestation_tva": "Atestat TVA / regularitate TVA",
+      "iban": "IBAN validat",
+      "contrat": "Contract de subcontractare"
+    },
+    "validation": {
+      "file": "Atașați documentul (JPG, PNG sau PDF).",
+      "expiry": "Data expirării este obligatorie pentru atestatul 30bis.",
+      "dates": "Data expirării trebuie să fie după data emiterii.",
+      "reason": "Justificați derogarea (minimum 10 caractere).",
+      "duration": "Durată între 1 și 30 de zile."
+    },
+    "toasts": {
+      "invalidated": "Document invalidat",
+      "ibanValidated": "IBAN validat",
+      "revoked": "Derogare revocată",
+      "uploaded": "Document încărcat",
+      "derogationGranted": "Derogare acordată"
+    },
+    "alerts": {
+      "title": "Conformitatea subcontractorilor",
+      "none": "Nimic de semnalat.",
+      "expiringItem": "{{name}} — {{document}}: {{date}}",
+      "blocked_one": "{{count}} subcontractor blocat",
+      "blocked_other": "{{count}} de subcontractori blocați",
+      "blocked_few": "{{count}} subcontractori blocați",
+      "expired_one": "{{count}} atestat expirat sau invalid",
+      "expired_other": "{{count}} de atestate expirate sau invalide",
+      "expired_few": "{{count}} atestate expirate sau invalide",
+      "expiringSoon_one": "{{count}} atestat expiră în {{days}} zile",
+      "expiringSoon_other": "{{count}} de atestate expiră în {{days}} zile",
+      "expiringSoon_few": "{{count}} atestate expiră în {{days}} zile"
+    }
+  },
+  "site": {
+    "title": "Subcontractori și prestații",
+    "noContracts": "Niciun contract de subcontractare pe acest șantier.",
+    "subcontractor": "Subcontractor",
+    "validated": "Validată",
+    "totalHours_one": "{{count}} oră prestată",
+    "totalHours_other": "{{count}} de ore prestate",
+    "totalHours_few": "{{count}} ore prestate"
   }
 }

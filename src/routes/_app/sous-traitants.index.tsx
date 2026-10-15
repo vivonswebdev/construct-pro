@@ -17,6 +17,8 @@ import {
   type Verification30bis,
 } from "@/lib/sous-traitants";
 import { errorMessage } from "@/lib/utils";
+import { useConformite } from "@/hooks/useConformite";
+import { STYLES_CONFORMITE, pireStatut, statutsDe } from "@/lib/conformite";
 import { useTranslation } from "react-i18next";
 
 export const Route = createFileRoute("/_app/sous-traitants/")({
@@ -47,6 +49,7 @@ function SousTraitantsPage() {
   const { t } = useTranslation(["sousTraitants", "common", "statuts"]);
   const { profile } = useAuth();
   const { data, isLoading } = useSousTraitants();
+  const { data: conformite } = useConformite();
   const qc = useQueryClient();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
@@ -59,7 +62,9 @@ function SousTraitantsPage() {
     () =>
       (data ?? []).filter((s) => {
         if (metier && !s.metiers.includes(metier)) return false;
-        if (statut && s.statut !== statut) return false;
+        if (statut === "affectation_bloquee") {
+          if (!conformite?.get(s.id)?.bloque) return false;
+        } else if (statut && s.statut !== statut) return false;
         if (search) {
           const txt =
             `${s.raison_sociale} ${s.ville ?? ""} ${s.numero_tva ?? ""} ${s.numero_bce ?? ""} ${s.contact_nom ?? ""}`.toLowerCase();
@@ -67,7 +72,7 @@ function SousTraitantsPage() {
         }
         return true;
       }),
-    [data, search, metier, statut],
+    [data, search, metier, statut, conformite],
   );
 
   const aVerifier = (data ?? []).filter(
@@ -140,6 +145,7 @@ function SousTraitantsPage() {
           <option value="">{t("allStatuses")}</option>
           <option value="actif">{t("statuts:sousTraitant.actif")}</option>
           <option value="bloque">{t("statuts:sousTraitant.bloque")}</option>
+          <option value="affectation_bloquee">{t("compliance.filterBlocked")}</option>
         </select>
       </div>
 
@@ -169,6 +175,7 @@ function SousTraitantsPage() {
                 <th className="px-4 py-3 text-left font-semibold">{t("columns.vat")}</th>
                 <th className="px-4 py-3 text-left font-semibold">{t("columns.contact")}</th>
                 <th className="px-4 py-3 text-left font-semibold">{t("columns.check30bis")}</th>
+                <th className="px-4 py-3 text-left font-semibold">{t("columns.compliance")}</th>
                 <th className="px-4 py-3 text-left font-semibold">{t("columns.status")}</th>
               </tr>
             </thead>
@@ -219,6 +226,27 @@ function SousTraitantsPage() {
                           {formatDateBE(s.derniere.verifie_le)}
                         </span>
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {(() => {
+                        const l = conformite?.get(s.id);
+                        if (!l) return "—";
+                        const pire = pireStatut(statutsDe(l));
+                        return (
+                          <span className="flex flex-wrap gap-1">
+                            <span
+                              className={`rounded-full px-2 py-0.5 text-xs font-semibold ${STYLES_CONFORMITE[pire]}`}
+                            >
+                              {t(`compliance.status.${pire}`)}
+                            </span>
+                            {l.bloque && (
+                              <span className="rounded-full bg-red-600 px-2 py-0.5 text-xs font-semibold text-white">
+                                {t("compliance.blockedShort")}
+                              </span>
+                            )}
+                          </span>
+                        );
+                      })()}
                     </td>
                     <td className="px-4 py-3">
                       <span
