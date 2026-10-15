@@ -106,6 +106,10 @@
     "signer": {
       "title": "Semnarea contractului",
       "description": "Citiți și semnați electronic contractul de subcontractare."
+    },
+    "exportsSousTraitants": {
+      "title": "Exporturi subcontractare",
+      "description": "Registrul reținerilor 30bis și export pentru contabil."
     }
   },
   "indicatif": "Orientativ — de confirmat cu contabilul / secretariatul social.",

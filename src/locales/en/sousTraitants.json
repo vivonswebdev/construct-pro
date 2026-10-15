@@ -289,5 +289,7 @@
     "validated": "Validated",
     "totalHours_one": "{{count}} hour worked",
     "totalHours_other": "{{count}} hours worked"
-  }
+  },
+  "exportsButton": "Exports",
+  "dossierButton": "Compliance file (PDF)"
 }

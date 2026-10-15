@@ -4,6 +4,32 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-15 — Phase 9 : exports de conformité (registre 30bis, dossier PDF, export comptable)
+
+Branche : `phase-09-exports`. Plan : `docs/plans/phase-09-exports.md`. **Aucune migration, aucune
+écriture en base** : tout est calculé dans le navigateur (RLS de la société).
+
+- Page `/sous-traitants/exports` (bouton « Exports » de la liste) :
+  - **Registre des retenues 30bis** : période, filtres sous-traitant / chantier / statut 30bis,
+    paiements annulés sur demande (hors totaux) ; une ligne par paiement (date, sous-traitant, BCE,
+    n° de facture = référence du paiement, HTVA, ONSS, SPF, total retenu, versé, vérification
+    30bis date et heure de Bruxelles, statut, chantier, client final) ; totaux ; CSV et PDF paysage.
+  - **Export comptable** (CSV) : une ligne par sous-traitant actif sur la période (prestations,
+    heures, HTVA, retenues, versé, nombre de paiements, synthèse de conformité, documents manquants).
+- Fiche sous-traitant : **« Dossier de conformité (PDF) »** — synthèse conforme / à vérifier /
+  bloqué, exigences, coordonnées, attestations, vérifications (captures JPG / PNG en annexe, 20
+  maximum ; PDF signalés), contrats (lien vers le contrat **signé** uniquement : le lien d'un
+  contrat seulement envoyé permettrait de le signer), paiements et retenues, dérogations.
+- CSV pour Excel belge (`;`, BOM UTF-8, virgule décimale, JJ/MM/AAAA) ; lecture des données par
+  paquets de 1 000 lignes (limite Supabase).
+- Tests : `scripts/tests/exports.check.ts` 21 OK (registre, filtres, totaux, synthèse, comptable,
+  CSV). PDF du registre et du dossier générés dans l'aperçu avec des données fictives et contrôlés
+  visuellement.
+- Hors périmètre : formats de déclaration officiels ONSS / SPF (aucun fourni) ; n° de facture
+  d'achat dédié (phase 12).
+
+---
+
 ## 2026-10-15 — Durcissement : exécution des fonctions retirée à anon
 
 Branche : `phase-09-droits-fonctions`.

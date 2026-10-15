@@ -289,5 +289,7 @@
     "validated": "Gevalideerd",
     "totalHours_one": "{{count}} gepresteerd uur",
     "totalHours_other": "{{count}} gepresteerde uren"
-  }
+  },
+  "exportsButton": "Exports",
+  "dossierButton": "Conformiteitsdossier (PDF)"
 }

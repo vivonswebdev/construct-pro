@@ -23,7 +23,7 @@ export type AuditPDF = {
 // on garde Latin-1 + les signes WinAnsi usuels, et on retire les accents des autres lettres
 // (ex. « Wiśniewski » -> « Wisniewski ») plutôt que d'imprimer des caractères illisibles.
 const WINANSI = new Set("€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ");
-function pdfSafe(s: string): string {
+export function pdfSafe(s: string): string {
   let out = "";
   for (const ch of s.replace(/[\u202f\u00a0]/g, " ")) {
     const c = ch.codePointAt(0) ?? 0;

@@ -10,6 +10,7 @@ import type chantiers from "./locales/fr/chantiers.json";
 import type clients from "./locales/fr/clients.json";
 import type sousTraitants from "./locales/fr/sousTraitants.json";
 import type contrats from "./locales/fr/contrats.json";
+import type exportsNs from "./locales/fr/exports.json";
 import type devis from "./locales/fr/devis.json";
 import type personnel from "./locales/fr/personnel.json";
 import type vehicules from "./locales/fr/vehicules.json";
@@ -33,6 +34,7 @@ declare module "i18next" {
       clients: typeof clients;
       sousTraitants: typeof sousTraitants;
       contrats: typeof contrats;
+      exports: typeof exportsNs;
       devis: typeof devis;
       personnel: typeof personnel;
       vehicules: typeof vehicules;

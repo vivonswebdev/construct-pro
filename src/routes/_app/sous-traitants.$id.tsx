@@ -16,6 +16,7 @@ import {
   PenLine,
   Pencil,
   Paperclip,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -32,6 +33,7 @@ import { useConformite } from "@/hooks/useConformite";
 import { formatEURBE, formatVATDisplay } from "@/lib/belgian";
 import { formatDateBE } from "@/lib/format";
 import { pageHead } from "@/lib/head";
+import { useAuth } from "@/lib/auth";
 import { ouvrirDocument } from "@/lib/stockage";
 import { errorMessage } from "@/lib/utils";
 import { intlLocale } from "@/lib/i18n";
@@ -59,6 +61,8 @@ function SousTraitantDetail() {
   const [nouveauContrat, setNouveauContrat] = useState(false);
   const [aSigner, setASigner] = useState<ContratSousTraitance | null>(null);
   const [aModifier, setAModifier] = useState<ContratSousTraitance | null>(null);
+  const [dossierEnCours, setDossierEnCours] = useState(false);
+  const { company } = useAuth();
 
   const { data: conformite } = useConformite();
   const { data, isLoading } = useQuery({
@@ -198,6 +202,23 @@ function SousTraitantDetail() {
           </div>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={async () => {
+              setDossierEnCours(true);
+              try {
+                const { dossierConformitePdf } = await import("@/lib/exports/dossier");
+                await dossierConformitePdf(st.id, company?.name ?? "");
+              } catch (err) {
+                toast.error(errorMessage(err));
+              } finally {
+                setDossierEnCours(false);
+              }
+            }}
+            disabled={dossierEnCours}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium hover:bg-muted disabled:opacity-50"
+          >
+            <FileText className="h-4 w-4" /> {dossierEnCours ? "…" : t("dossierButton")}
+          </button>
           <button
             onClick={() => setEdit(true)}
             className="inline-flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2 text-sm font-medium hover:bg-muted"
