@@ -4,6 +4,28 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-15 — Durcissement : exécution des fonctions retirée à anon
+
+Branche : `phase-09-droits-fonctions`.
+
+- Constat après la PR D : `anon` pouvait appeler `conformite_sous_traitants()` et
+  `est_gestionnaire()` (aucune donnée obtenue, mais surface inutile). Cause : EXECUTE accordé par
+  défaut à `anon` (Supabase) et à `PUBLIC` (PostgreSQL) ; le `REVOKE … FROM PUBLIC` de la PR D ne
+  retirait pas l'octroi direct à `anon`.
+- Migration `20261015140000_droits_fonctions_anon.sql` (idempotente, rollback commenté) : pour
+  chaque fonction de `public` (hors extensions), `REVOKE EXECUTE FROM PUBLIC, anon` et
+  `GRANT EXECUTE TO authenticated, service_role` ; `contrat_a_signer` et `signer_contrat` restent
+  accordées à `anon` (signature publique). Droits par défaut futurs retirés (si le rôle le permet).
+- Tests : environnement simulé enrichi (EXECUTE par défaut sur les fonctions, comme Supabase) ;
+  `supabase/tests/droits_fonctions.check.ts` 9 OK (22 fonctions exécutables par anon avant, 2
+  après ; signature publique, RLS et RPC des utilisateurs connectés intacts) ; toutes les autres
+  suites OK. Contrôle : `supabase/tests/controle_droits_fonctions.sql` (7 lignes).
+- Règle ajoutée dans CLAUDE.md.
+- Vérifications du 15/10 : aucune copie Lovable des migrations sur `main` ; types à jour
+  (`documents_conformite`, `derogations_conformite`, champs IBAN).
+
+---
+
 ## 2026-10-15 — Phase 9, PR D : conformité des sous-traitants, alertes, blocage d'affectation
 
 Branche : `phase-09-conformite` (depuis `main`, après les PR #12 et #13). Règles validées par
