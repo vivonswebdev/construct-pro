@@ -289,5 +289,7 @@
     "validated": "Validée",
     "totalHours_one": "{{count}} heure prestée",
     "totalHours_other": "{{count}} heures prestées"
-  }
+  },
+  "exportsButton": "Exports",
+  "dossierButton": "Dossier de conformité (PDF)"
 }

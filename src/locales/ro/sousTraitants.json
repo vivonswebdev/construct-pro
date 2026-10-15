@@ -297,5 +297,7 @@
     "totalHours_one": "{{count}} oră prestată",
     "totalHours_other": "{{count}} de ore prestate",
     "totalHours_few": "{{count}} ore prestate"
-  }
+  },
+  "exportsButton": "Exporturi",
+  "dossierButton": "Dosar de conformitate (PDF)"
 }

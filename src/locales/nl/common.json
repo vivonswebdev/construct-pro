@@ -105,6 +105,10 @@
     "signer": {
       "title": "Contract ondertekenen",
       "description": "Lees en onderteken uw onderaannemingscontract elektronisch."
+    },
+    "exportsSousTraitants": {
+      "title": "Exports onderaanneming",
+      "description": "Register van de 30bis-inhoudingen en export voor de boekhouder."
     }
   },
   "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat.",

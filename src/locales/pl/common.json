@@ -107,6 +107,10 @@
     "signer": {
       "title": "Podpis umowy",
       "description": "Przeczytaj i podpisz elektronicznie umowę podwykonawczą."
+    },
+    "exportsSousTraitants": {
+      "title": "Eksporty podwykonawstwa",
+      "description": "Rejestr potrąceń 30bis i eksport dla księgowego."
     }
   },
   "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny.",

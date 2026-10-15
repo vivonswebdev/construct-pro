@@ -105,6 +105,10 @@
     "signer": {
       "title": "Contract signature",
       "description": "Review and electronically sign your subcontract."
+    },
+    "exportsSousTraitants": {
+      "title": "Subcontracting exports",
+      "description": "30bis withholding register and accountant export."
     }
   },
   "indicatif": "Indicative — to be confirmed by your accountant / social secretariat.",

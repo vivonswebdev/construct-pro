@@ -305,5 +305,7 @@
     "totalHours_other": "{{count}} przepracowanej godziny",
     "totalHours_few": "{{count}} przepracowane godziny",
     "totalHours_many": "{{count}} przepracowanych godzin"
-  }
+  },
+  "exportsButton": "Eksporty",
+  "dossierButton": "Dokumentacja zgodności (PDF)"
 }

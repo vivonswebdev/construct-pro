@@ -105,6 +105,10 @@
     "signer": {
       "title": "Signature du contrat",
       "description": "Relisez et signez électroniquement votre contrat de sous-traitance."
+    },
+    "exportsSousTraitants": {
+      "title": "Exports de sous-traitance",
+      "description": "Registre des retenues 30bis et export pour le comptable."
     }
   },
   "indicatif": "Indicatif — à valider par votre comptable / secrétariat social.",

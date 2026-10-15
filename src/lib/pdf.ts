@@ -29,7 +29,8 @@ type Chantier = {
 const t = () => i18n.getFixedT(i18n.language, "pdf");
 const statutChantier = (s: string) => i18n.t(`statuts:chantier.${toCode(s)}`, { defaultValue: s });
 
-function header(doc: jsPDF, title: string, subtitle?: string) {
+/** En-tête commun des rapports internes (bandeau ConstructFlow, titre, sous-titre). */
+export function header(doc: jsPDF, title: string, subtitle?: string) {
   doc.setFillColor(15, 23, 42);
   doc.rect(0, 0, doc.internal.pageSize.getWidth(), 22, "F");
   doc.setTextColor(255, 255, 255);
