@@ -12,7 +12,7 @@ import type {
 const PAQUET = 1000;
 
 /** Lit toutes les lignes d'une requête, par paquets (Supabase renvoie 1 000 lignes au plus). */
-async function toutLire<T>(
+export async function toutLire<T>(
   requete: (de: number, a: number) => PromiseLike<{ data: T[] | null; error: unknown }>,
 ): Promise<T[]> {
   const tout: T[] = [];

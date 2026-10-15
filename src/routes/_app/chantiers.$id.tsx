@@ -412,7 +412,11 @@ function ChantierDetail() {
       </div>
 
       {/* Sous-traitants et prestations */}
-      <ChantierSousTraitants chantierId={id} />
+      <ChantierSousTraitants
+        chantierId={id}
+        chantierNom={chantier.name}
+        client={chantier.client_name}
+      />
     </div>
   );
 }

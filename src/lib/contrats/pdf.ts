@@ -23,11 +23,22 @@ export type AuditPDF = {
 // on garde Latin-1 + les signes WinAnsi usuels, et on retire les accents des autres lettres
 // (ex. « Wiśniewski » -> « Wisniewski ») plutôt que d'imprimer des caractères illisibles.
 const WINANSI = new Set("€‚ƒ„…†‡ˆ‰Š‹ŒŽ‘’“”•–—˜™š›œžŸ");
+// Lettres sans décomposition Unicode (ex. « Łukasz » -> « Lukasz »).
+const SANS_DIACRITIQUE: Record<string, string> = {
+  Ł: "L",
+  ł: "l",
+  Đ: "D",
+  đ: "d",
+  ı: "i",
+  Ħ: "H",
+  ħ: "h",
+};
 export function pdfSafe(s: string): string {
   let out = "";
   for (const ch of s.replace(/[\u202f\u00a0]/g, " ")) {
     const c = ch.codePointAt(0) ?? 0;
     if (c <= 0xff || WINANSI.has(ch)) out += ch;
+    else if (SANS_DIACRITIQUE[ch]) out += SANS_DIACRITIQUE[ch];
     else {
       const base = ch.normalize("NFD").replace(/[̀-ͯ]/g, "");
       out += [...base].every((b) => (b.codePointAt(0) ?? 0) <= 0xff) ? base : "?";
