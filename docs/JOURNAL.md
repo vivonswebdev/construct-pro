@@ -4,6 +4,30 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-15 — Dossier de relecture NL / RO / PL et note pour le juriste
+
+Branche : `docs-relecture-juridique`. Documentation uniquement : aucun code applicatif, aucune
+migration.
+
+- **Relecture native** : `docs/relecture/relecture-nl-ro-pl.xlsx`, généré par
+  `scripts/relecture/exporter_relecture.py` à partir des fichiers de traduction (2 025 lignes) :
+  langue, écran ou document, texte français, traduction actuelle, contexte, statut (liste : à
+  valider / correction proposée / validé), traduction corrigée, commentaire, clé technique.
+  Priorité 1 : mentions légales des PDF (autoliquidation, TVA 6 %, conditions, piste d'audit) ;
+  priorité 2 : page de signature et message au sous-traitant ; priorité 3 : écrans. Variables
+  `{{…}}` et formes plurielles signalées. Les PDF clients n'existant qu'en FR / NL / EN, les
+  mentions de priorité 1 en RO / PL sont signalées comme moins urgentes.
+- **Note juridique** : `docs/juridique/note-juriste-contrat-sous-traitance.md` — sans avis
+  juridique ; fonctionnement du logiciel (pré-remplissage, signature, piste d'audit, 30bis) ;
+  5 points à valider (pénalités, délais de paiement / loi du 2 août 2002, 30bis et responsabilité
+  solidaire, signature électronique simple, versions NL / EN) et 3 points facultatifs ; tableau de
+  réponses (23 lignes) ; texte exact du modèle v1 en annexe, généré par
+  `scripts/juridique/exporter_contrat.ts`.
+- Constat signalé au juriste : le délai de paiement saisi peut aller jusqu'à 365 jours dans le
+  logiciel ; un plafond sera ajouté selon sa réponse.
+
+---
+
 ## 2026-10-15 — Phase 9 : exports de conformité (registre 30bis, dossier PDF, export comptable)
 
 Branche : `phase-09-exports`. Plan : `docs/plans/phase-09-exports.md`. **Aucune migration, aucune
