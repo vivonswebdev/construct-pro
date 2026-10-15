@@ -18,7 +18,8 @@
     "vat": "Btw-nr.",
     "contact": "Contact",
     "check30bis": "Controle 30bis",
-    "status": "Status"
+    "status": "Status",
+    "compliance": "Conformiteit"
   },
   "conformity": {
     "a_jour": "Vandaag gecontroleerd",
@@ -168,7 +169,16 @@
       "annulation_seulement": "Bij een annulering mag geen enkel ander gegeven van de betaling wijzigen.",
       "motif_annulation_requis": "Geef de reden van de annulering op.",
       "contrat_signe_non_modifiable": "Dit contract is ondertekend: het kan niet meer worden gewijzigd. Maak een nieuw contract (aanhangsel).",
-      "validation_reservee_gestionnaire": "Enkel een beheerder of zaakvoerder kan een prestatie valideren."
+      "validation_reservee_gestionnaire": "Enkel een beheerder of zaakvoerder kan een prestatie valideren.",
+      "conformite_30bis_bloquante": "Toewijzing geblokkeerd: het 30bis-attest van de onderaannemer ontbreekt, is vervallen of ongeldig. Laad een geldig attest op of vraag een afwijking aan een zaakvoerder.",
+      "action_reservee_gestionnaire": "Actie voorbehouden aan een beheerder of zaakvoerder.",
+      "document_fige": "Dit document is ongeldig verklaard: het kan niet meer worden gewijzigd.",
+      "document_non_modifiable": "Een conformiteitsdocument kan niet worden gewijzigd: laad een nieuw document op.",
+      "motif_invalidation_requis": "Geef de reden van de ongeldigverklaring op.",
+      "derogation_duree_invalide": "De afwijking moet binnen 1 tot 30 dagen vervallen.",
+      "derogation_figee": "Deze afwijking is beëindigd of ingetrokken.",
+      "derogation_revocation_seulement": "Een afwijking kan enkel worden ingetrokken.",
+      "iban_absent": "Geen IBAN om te valideren."
     }
   },
   "prestations": {
@@ -194,5 +204,90 @@
       "workerName": "Geef de naam van elke arbeider op.",
       "hours": "Ongeldig aantal uren."
     }
+  },
+  "compliance": {
+    "title": "Conformiteit",
+    "blocked": "Toewijzing aan een werf geblokkeerd",
+    "blockedDetail": "30bis-attest: {{status}}. Geen enkel contract of prestatie kan aan een werf worden gekoppeld zolang er geen geldig attest is opgeladen.",
+    "liftBlock": "Blokkering opheffen",
+    "managersOnly": "Enkel een beheerder of zaakvoerder kan de blokkering opheffen.",
+    "derogationActive": "Afwijking actief tot {{date}}",
+    "revoke": "Afwijking intrekken",
+    "upload": "Opladen",
+    "expiresOn": "Vervalt op {{date}}",
+    "noExpiry": "Zonder vervaldatum",
+    "issuedOn": "uitgereikt op {{date}}",
+    "invalidatedOn": "Ongeldig verklaard op {{date}} — {{reason}}",
+    "view": "Bekijken",
+    "invalidate": "Ongeldig verklaren",
+    "invalidateReason": "Reden van ongeldigverklaring (bewaard als bewijs):",
+    "noIban": "geen IBAN",
+    "ibanValidatedOn": "IBAN gevalideerd op {{date}}",
+    "validateIban": "IBAN valideren",
+    "ibanConfirm": "Bevestigt u dat u het IBAN {{iban}} hebt gecontroleerd (bankdocument, telefoon naar de onderaannemer)?",
+    "revokeConfirm": "Deze afwijking intrekken? De blokkering geldt dan opnieuw.",
+    "contractHint": "ondertekend of verzonden ter ondertekening (actieve link)",
+    "derogationHistory": "Historiek van afwijkingen",
+    "derogationLine": "Van {{from}} tot {{to}} — {{reason}}",
+    "revokedOn": "ingetrokken op {{date}}",
+    "footer": "Statussen automatisch berekend. Documenten en afwijkingen zijn bewijzen: ze worden nooit verwijderd.",
+    "issueDate": "Uitgiftedatum",
+    "expiryDate": "Vervaldatum (facultatief)",
+    "expiryDateRequired": "Vervaldatum *",
+    "hint30bis": "Het 30bis-attest bepaalt de toewijzing aan een werf. De controle van de dag blijft verplicht vóór elke betaling.",
+    "hintTva": "Zonder vervaldatum blijft het attest geldig tot het ongeldig wordt verklaard.",
+    "derogationHint": "Afwijking enkel voor deze onderaannemer, maximaal 30 dagen, intrekbaar. De verantwoording wordt bewaard.",
+    "reason": "Verantwoording *",
+    "durationDays": "Duur (dagen, maximaal 30)",
+    "grant": "Afwijking toekennen",
+    "filterBlocked": "Toewijzing geblokkeerd",
+    "blockedShort": "Geblokkeerd",
+    "ibanChangeWarning": "Het IBAN wijzigen annuleert de validatie: het moet opnieuw worden gevalideerd.",
+    "status": {
+      "valide": "Geldig",
+      "expire_bientot": "Vervalt binnenkort",
+      "expire": "Vervallen",
+      "manquant": "Ontbreekt",
+      "invalide": "Ongeldig"
+    },
+    "requirement": {
+      "attestation_30bis": "30bis-attest",
+      "attestation_tva": "Btw-attest / btw-regelmatigheid",
+      "iban": "Gevalideerd IBAN",
+      "contrat": "Onderaannemingscontract"
+    },
+    "validation": {
+      "file": "Voeg het document toe (JPG, PNG of PDF).",
+      "expiry": "De vervaldatum is verplicht voor het 30bis-attest.",
+      "dates": "De vervaldatum moet na de uitgiftedatum liggen.",
+      "reason": "Verantwoord de afwijking (minstens 10 tekens).",
+      "duration": "Duur tussen 1 en 30 dagen."
+    },
+    "toasts": {
+      "invalidated": "Document ongeldig verklaard",
+      "ibanValidated": "IBAN gevalideerd",
+      "revoked": "Afwijking ingetrokken",
+      "uploaded": "Document opgeladen",
+      "derogationGranted": "Afwijking toegekend"
+    },
+    "alerts": {
+      "title": "Conformiteit van onderaannemers",
+      "none": "Niets te melden.",
+      "expiringItem": "{{name}} — {{document}}: {{date}}",
+      "blocked_one": "{{count}} onderaannemer geblokkeerd",
+      "blocked_other": "{{count}} onderaannemers geblokkeerd",
+      "expired_one": "{{count}} attest vervallen of ongeldig",
+      "expired_other": "{{count}} attesten vervallen of ongeldig",
+      "expiringSoon_one": "{{count}} attest vervalt binnen {{days}} dagen",
+      "expiringSoon_other": "{{count}} attesten vervallen binnen {{days}} dagen"
+    }
+  },
+  "site": {
+    "title": "Onderaannemers en prestaties",
+    "noContracts": "Geen onderaannemingscontract op deze werf.",
+    "subcontractor": "Onderaannemer",
+    "validated": "Gevalideerd",
+    "totalHours_one": "{{count}} gepresteerd uur",
+    "totalHours_other": "{{count}} gepresteerde uren"
   }
 }

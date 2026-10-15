@@ -22,7 +22,8 @@
     "vat": "Nr VAT",
     "contact": "Kontakt",
     "check30bis": "Weryfikacja 30bis",
-    "status": "Status"
+    "status": "Status",
+    "compliance": "Zgodność"
   },
   "conformity": {
     "a_jour": "Sprawdzono dziś",
@@ -174,7 +175,16 @@
       "annulation_seulement": "Podczas anulowania nie można zmieniać innych danych płatności.",
       "motif_annulation_requis": "Podaj powód anulowania.",
       "contrat_signe_non_modifiable": "Ta umowa jest podpisana: nie można jej już zmienić. Utwórz nową umowę (aneks).",
-      "validation_reservee_gestionnaire": "Tylko administrator lub kierownik może zatwierdzić wpis prac."
+      "validation_reservee_gestionnaire": "Tylko administrator lub kierownik może zatwierdzić wpis prac.",
+      "conformite_30bis_bloquante": "Przydział zablokowany: zaświadczenie 30bis podwykonawcy jest brakujące, wygasłe lub nieważne. Prześlij ważne zaświadczenie lub poproś kierownika o odstępstwo.",
+      "action_reservee_gestionnaire": "Działanie zarezerwowane dla administratora lub kierownika.",
+      "document_fige": "Ten dokument jest unieważniony: nie można go już zmienić.",
+      "document_non_modifiable": "Dokumentu zgodności nie można zmienić: prześlij nowy.",
+      "motif_invalidation_requis": "Podaj powód unieważnienia.",
+      "derogation_duree_invalide": "Odstępstwo musi wygasać w ciągu od 1 do 30 dni.",
+      "derogation_figee": "To odstępstwo zakończyło się lub zostało cofnięte.",
+      "derogation_revocation_seulement": "Odstępstwo można jedynie cofnąć.",
+      "iban_absent": "Brak IBAN do zatwierdzenia."
     }
   },
   "prestations": {
@@ -202,5 +212,98 @@
       "workerName": "Podaj imię i nazwisko każdego pracownika.",
       "hours": "Nieprawidłowa liczba godzin."
     }
+  },
+  "compliance": {
+    "title": "Zgodność",
+    "blocked": "Przydział do budowy zablokowany",
+    "blockedDetail": "Zaświadczenie 30bis: {{status}}. Żadnej umowy ani wpisu prac nie można powiązać z budową, dopóki nie zostanie przesłane ważne zaświadczenie.",
+    "liftBlock": "Znieś blokadę",
+    "managersOnly": "Tylko administrator lub kierownik może znieść blokadę.",
+    "derogationActive": "Odstępstwo aktywne do {{date}}",
+    "revoke": "Cofnij odstępstwo",
+    "upload": "Prześlij",
+    "expiresOn": "Wygasa {{date}}",
+    "noExpiry": "Bez daty ważności",
+    "issuedOn": "wydane {{date}}",
+    "invalidatedOn": "Unieważniono {{date}} — {{reason}}",
+    "view": "Zobacz",
+    "invalidate": "Unieważnij",
+    "invalidateReason": "Powód unieważnienia (zachowany jako dowód):",
+    "noIban": "brak IBAN",
+    "ibanValidatedOn": "IBAN zatwierdzony {{date}}",
+    "validateIban": "Zatwierdź IBAN",
+    "ibanConfirm": "Czy potwierdzasz, że sprawdziłeś IBAN {{iban}} (dokument bankowy, telefon do podwykonawcy)?",
+    "revokeConfirm": "Cofnąć to odstępstwo? Blokada znów zacznie obowiązywać.",
+    "contractHint": "podpisana lub wysłana do podpisu (aktywny link)",
+    "derogationHistory": "Historia odstępstw",
+    "derogationLine": "Od {{from}} do {{to}} — {{reason}}",
+    "revokedOn": "cofnięte {{date}}",
+    "footer": "Statusy obliczane automatycznie. Dokumenty i odstępstwa są dowodami: nigdy nie są usuwane.",
+    "issueDate": "Data wydania",
+    "expiryDate": "Data ważności (opcjonalnie)",
+    "expiryDateRequired": "Data ważności *",
+    "hint30bis": "Zaświadczenie 30bis warunkuje przydział do budowy. Weryfikacja w dniu płatności pozostaje obowiązkowa przed każdą płatnością.",
+    "hintTva": "Bez daty ważności zaświadczenie jest ważne do czasu unieważnienia.",
+    "derogationHint": "Odstępstwo tylko dla tego podwykonawcy, maksymalnie 30 dni, odwołalne. Uzasadnienie jest zapisywane.",
+    "reason": "Uzasadnienie *",
+    "durationDays": "Czas trwania (dni, maksymalnie 30)",
+    "grant": "Przyznaj odstępstwo",
+    "filterBlocked": "Przydział zablokowany",
+    "blockedShort": "Zablokowany",
+    "ibanChangeWarning": "Zmiana IBAN anuluje jego zatwierdzenie: trzeba będzie zatwierdzić go ponownie.",
+    "status": {
+      "valide": "Ważne",
+      "expire_bientot": "Wkrótce wygasa",
+      "expire": "Wygasło",
+      "manquant": "Brak",
+      "invalide": "Nieważne"
+    },
+    "requirement": {
+      "attestation_30bis": "Zaświadczenie 30bis",
+      "attestation_tva": "Zaświadczenie VAT / prawidłowość VAT",
+      "iban": "Zatwierdzony IBAN",
+      "contrat": "Umowa podwykonawcza"
+    },
+    "validation": {
+      "file": "Dołącz dokument (JPG, PNG lub PDF).",
+      "expiry": "Data ważności jest obowiązkowa dla zaświadczenia 30bis.",
+      "dates": "Data ważności musi być późniejsza niż data wydania.",
+      "reason": "Uzasadnij odstępstwo (co najmniej 10 znaków).",
+      "duration": "Czas trwania od 1 do 30 dni."
+    },
+    "toasts": {
+      "invalidated": "Unieważniono dokument",
+      "ibanValidated": "Zatwierdzono IBAN",
+      "revoked": "Cofnięto odstępstwo",
+      "uploaded": "Przesłano dokument",
+      "derogationGranted": "Przyznano odstępstwo"
+    },
+    "alerts": {
+      "title": "Zgodność podwykonawców",
+      "none": "Brak uwag.",
+      "expiringItem": "{{name}} — {{document}}: {{date}}",
+      "blocked_one": "{{count}} zablokowany podwykonawca",
+      "blocked_other": "{{count}} zablokowanego podwykonawcy",
+      "blocked_few": "{{count}} zablokowanych podwykonawców",
+      "blocked_many": "{{count}} zablokowanych podwykonawców",
+      "expired_one": "{{count}} zaświadczenie wygasłe lub nieważne",
+      "expired_other": "{{count}} zaświadczenia wygasłego lub nieważnego",
+      "expired_few": "{{count}} zaświadczenia wygasłe lub nieważne",
+      "expired_many": "{{count}} zaświadczeń wygasłych lub nieważnych",
+      "expiringSoon_one": "{{count}} zaświadczenie wygasa w ciągu {{days}} dni",
+      "expiringSoon_other": "{{count}} zaświadczenia wygasa w ciągu {{days}} dni",
+      "expiringSoon_few": "{{count}} zaświadczenia wygasają w ciągu {{days}} dni",
+      "expiringSoon_many": "{{count}} zaświadczeń wygasa w ciągu {{days}} dni"
+    }
+  },
+  "site": {
+    "title": "Podwykonawcy i prace",
+    "noContracts": "Brak umów podwykonawczych na tej budowie.",
+    "subcontractor": "Podwykonawca",
+    "validated": "Zatwierdzone",
+    "totalHours_one": "{{count}} przepracowana godzina",
+    "totalHours_other": "{{count}} przepracowanej godziny",
+    "totalHours_few": "{{count}} przepracowane godziny",
+    "totalHours_many": "{{count}} przepracowanych godzin"
   }
 }

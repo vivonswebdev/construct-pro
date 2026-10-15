@@ -18,7 +18,8 @@
     "vat": "N° TVA",
     "contact": "Contact",
     "check30bis": "Vérification 30bis",
-    "status": "Statut"
+    "status": "Statut",
+    "compliance": "Conformité"
   },
   "conformity": {
     "a_jour": "Vérifié aujourd'hui",
@@ -168,7 +169,16 @@
       "annulation_seulement": "Lors d'une annulation, aucune autre donnée du paiement ne peut changer.",
       "motif_annulation_requis": "Indiquez le motif de l'annulation.",
       "contrat_signe_non_modifiable": "Ce contrat est signé : il ne peut plus être modifié. Créez un nouveau contrat (avenant).",
-      "validation_reservee_gestionnaire": "Seuls un administrateur ou un gérant peuvent valider une prestation."
+      "validation_reservee_gestionnaire": "Seuls un administrateur ou un gérant peuvent valider une prestation.",
+      "conformite_30bis_bloquante": "Affectation bloquée : l'attestation 30bis du sous-traitant est absente, expirée ou invalide. Déposez une attestation valide ou demandez une dérogation à un gérant.",
+      "action_reservee_gestionnaire": "Action réservée à un administrateur ou un gérant.",
+      "document_fige": "Ce document est invalidé : il ne peut plus être modifié.",
+      "document_non_modifiable": "Un document de conformité ne peut pas être modifié : déposez-en un nouveau.",
+      "motif_invalidation_requis": "Indiquez le motif de l'invalidation.",
+      "derogation_duree_invalide": "La dérogation doit expirer dans 1 à 30 jours.",
+      "derogation_figee": "Cette dérogation est terminée ou révoquée.",
+      "derogation_revocation_seulement": "Une dérogation ne peut être que révoquée.",
+      "iban_absent": "Aucun IBAN à valider."
     }
   },
   "prestations": {
@@ -194,5 +204,90 @@
       "workerName": "Indiquez le nom de chaque ouvrier.",
       "hours": "Nombre d'heures invalide."
     }
+  },
+  "compliance": {
+    "title": "Conformité",
+    "blocked": "Affectation sur chantier bloquée",
+    "blockedDetail": "Attestation 30bis : {{status}}. Aucun contrat ni aucune prestation ne peut être rattaché à un chantier tant qu'une attestation valide n'est pas déposée.",
+    "liftBlock": "Lever le blocage",
+    "managersOnly": "Seuls un administrateur ou un gérant peuvent lever le blocage.",
+    "derogationActive": "Dérogation active jusqu'au {{date}}",
+    "revoke": "Révoquer la dérogation",
+    "upload": "Déposer",
+    "expiresOn": "Expire le {{date}}",
+    "noExpiry": "Sans date d'expiration",
+    "issuedOn": "émise le {{date}}",
+    "invalidatedOn": "Invalidée le {{date}} — {{reason}}",
+    "view": "Voir",
+    "invalidate": "Invalider",
+    "invalidateReason": "Motif de l'invalidation (conservé comme preuve) :",
+    "noIban": "aucun IBAN",
+    "ibanValidatedOn": "IBAN validé le {{date}}",
+    "validateIban": "Valider l'IBAN",
+    "ibanConfirm": "Confirmez-vous avoir vérifié l'IBAN {{iban}} (document bancaire, appel au sous-traitant) ?",
+    "revokeConfirm": "Révoquer cette dérogation ? Le blocage s'appliquera à nouveau.",
+    "contractHint": "signé ou envoyé en signature (lien actif)",
+    "derogationHistory": "Historique des dérogations",
+    "derogationLine": "Du {{from}} au {{to}} — {{reason}}",
+    "revokedOn": "révoquée le {{date}}",
+    "footer": "Statuts calculés automatiquement. Documents et dérogations sont des preuves : jamais supprimés.",
+    "issueDate": "Date d'émission",
+    "expiryDate": "Date d'expiration (facultative)",
+    "expiryDateRequired": "Date d'expiration *",
+    "hint30bis": "L'attestation 30bis conditionne l'affectation sur chantier. La vérification du jour reste obligatoire avant chaque paiement.",
+    "hintTva": "Sans date d'expiration, l'attestation reste valide jusqu'à son invalidation.",
+    "derogationHint": "Dérogation pour ce sous-traitant uniquement, 30 jours maximum, révocable. La justification est enregistrée.",
+    "reason": "Justification *",
+    "durationDays": "Durée (jours, 30 maximum)",
+    "grant": "Accorder la dérogation",
+    "filterBlocked": "Affectation bloquée",
+    "blockedShort": "Bloqué",
+    "ibanChangeWarning": "Modifier l'IBAN annule sa validation : il devra être validé à nouveau.",
+    "status": {
+      "valide": "Valide",
+      "expire_bientot": "Expire bientôt",
+      "expire": "Expiré",
+      "manquant": "Manquant",
+      "invalide": "Invalide"
+    },
+    "requirement": {
+      "attestation_30bis": "Attestation 30bis",
+      "attestation_tva": "Attestation TVA / régularité TVA",
+      "iban": "IBAN validé",
+      "contrat": "Contrat de sous-traitance"
+    },
+    "validation": {
+      "file": "Joignez le document (JPG, PNG ou PDF).",
+      "expiry": "La date d'expiration est obligatoire pour l'attestation 30bis.",
+      "dates": "La date d'expiration doit suivre la date d'émission.",
+      "reason": "Justifiez la dérogation (10 caractères minimum).",
+      "duration": "Durée entre 1 et 30 jours."
+    },
+    "toasts": {
+      "invalidated": "Document invalidé",
+      "ibanValidated": "IBAN validé",
+      "revoked": "Dérogation révoquée",
+      "uploaded": "Document déposé",
+      "derogationGranted": "Dérogation accordée"
+    },
+    "alerts": {
+      "title": "Conformité des sous-traitants",
+      "none": "Rien à signaler.",
+      "expiringItem": "{{name}} — {{document}} : {{date}}",
+      "blocked_one": "{{count}} sous-traitant bloqué",
+      "blocked_other": "{{count}} sous-traitants bloqués",
+      "expired_one": "{{count}} attestation expirée ou invalide",
+      "expired_other": "{{count}} attestations expirées ou invalides",
+      "expiringSoon_one": "{{count}} attestation expire dans {{days}} jours",
+      "expiringSoon_other": "{{count}} attestations expirent dans {{days}} jours"
+    }
+  },
+  "site": {
+    "title": "Sous-traitants et prestations",
+    "noContracts": "Aucun contrat de sous-traitance sur ce chantier.",
+    "subcontractor": "Sous-traitant",
+    "validated": "Validée",
+    "totalHours_one": "{{count}} heure prestée",
+    "totalHours_other": "{{count}} heures prestées"
   }
 }

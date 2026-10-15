@@ -28,6 +28,7 @@ import { formatEUR, daysUntil } from "@/lib/format";
 import { useTranslation } from "react-i18next";
 import { intlLocale } from "@/lib/i18n";
 import { toCode, CONTRATS_SALARIES } from "@/lib/statuts";
+import { ConformiteAlertes } from "@/components/sous-traitants/ConformiteAlertes";
 
 export const Route = createFileRoute("/_app/dashboard")({
   component: Dashboard,
@@ -430,6 +431,8 @@ function Dashboard() {
           })()}
         </div>
       </Card>
+
+      <ConformiteAlertes />
     </div>
   );
 }

@@ -117,5 +117,21 @@ ok(
   "14 000 € : ONSS plafonnée à 3 000 €, SPF pleine (dette SPF non saisie)",
 );
 
+const tot = calculerRetenuesPlafonnees({
+  montantHt: 1000,
+  verification: {
+    dette_sociale: true,
+    dette_fiscale: true,
+    montant_dette_onss: null,
+    montant_dette_spf: null,
+  },
+  dejaRetenu: { onss: 0, spf: 0 },
+  taux: { taux_retenue_onss: 0.8, taux_retenue_spf: 0.5 },
+});
+ok(
+  tot.onss === 800 && tot.spf === 200 && tot.total === 1000 && tot.plafondTotal,
+  "total plafonné au HTVA : SPF réduit d'abord (800 + 200)",
+);
+
 console.log(fails ? `\n✖ ${fails} échec(s)` : "\n✓ tous les tests passent");
 process.exit(fails ? 1 : 0);

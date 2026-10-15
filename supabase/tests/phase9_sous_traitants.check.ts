@@ -68,6 +68,10 @@ await db.exec(`
   INSERT INTO public.sous_traitants (id, company_id, raison_sociale, forme_juridique, numero_bce)
   VALUES ('aaaaaaaa-0000-0000-0000-0000000000a1', '${C1}', 'Plafonnage Martin SRL', 'srl', '0123.456.789'),
          ('aaaaaaaa-0000-0000-0000-0000000000a2', '${C1}', 'Toitures Dubois', 'independant', NULL);`);
+// Attestation 30bis valide (PR D : sans elle, pas de rattachement à un chantier).
+await db.exec(`
+  INSERT INTO public.documents_conformite (company_id, sous_traitant_id, type_document, date_expiration)
+  VALUES ('${C1}', 'aaaaaaaa-0000-0000-0000-0000000000a1', 'attestation_30bis', current_date + 200);`);
 await expectError(
   `INSERT INTO public.sous_traitants (company_id, raison_sociale, forme_juridique) VALUES ('${C1}', 'X', 'sprl')`,
   "check constraint",
@@ -157,6 +161,9 @@ await expectError(
 await db.exec(
   `INSERT INTO public.sous_traitants (id, company_id, raison_sociale) VALUES ('bbbbbbbb-0000-0000-0000-0000000000b1', '${C2}', 'ST de B')`,
 );
+await db.exec(`
+  INSERT INTO public.documents_conformite (company_id, sous_traitant_id, type_document, date_expiration)
+  VALUES ('${C2}', 'bbbbbbbb-0000-0000-0000-0000000000b1', 'attestation_30bis', current_date + 200);`);
 await expectError(
   `INSERT INTO public.sous_traitant_contrats (company_id, sous_traitant_id, chantier_id, descriptif_prestations, montant_forfait_ht) VALUES ('${C2}', 'bbbbbbbb-0000-0000-0000-0000000000b1', 'aaaaaaaa-0000-0000-0000-000000000001', 'Vol de chantier', 1)`,
   "foreign key",

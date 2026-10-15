@@ -18,7 +18,8 @@
     "vat": "VAT no.",
     "contact": "Contact",
     "check30bis": "30bis check",
-    "status": "Status"
+    "status": "Status",
+    "compliance": "Compliance"
   },
   "conformity": {
     "a_jour": "Checked today",
@@ -168,7 +169,16 @@
       "annulation_seulement": "When cancelling, no other payment data may change.",
       "motif_annulation_requis": "Enter the reason for the cancellation.",
       "contrat_signe_non_modifiable": "This contract is signed: it can no longer be changed. Create a new contract (amendment).",
-      "validation_reservee_gestionnaire": "Only an administrator or manager can validate a service entry."
+      "validation_reservee_gestionnaire": "Only an administrator or manager can validate a service entry.",
+      "conformite_30bis_bloquante": "Assignment blocked: the subcontractor's 30bis certificate is missing, expired or invalid. Upload a valid certificate or ask a manager for an exemption.",
+      "action_reservee_gestionnaire": "Action reserved for an administrator or manager.",
+      "document_fige": "This document is invalidated: it can no longer be changed.",
+      "document_non_modifiable": "A compliance document cannot be changed: upload a new one.",
+      "motif_invalidation_requis": "Enter the reason for the invalidation.",
+      "derogation_duree_invalide": "The exemption must expire within 1 to 30 days.",
+      "derogation_figee": "This exemption has ended or been revoked.",
+      "derogation_revocation_seulement": "An exemption can only be revoked.",
+      "iban_absent": "No IBAN to validate."
     }
   },
   "prestations": {
@@ -194,5 +204,90 @@
       "workerName": "Enter each worker's name.",
       "hours": "Invalid number of hours."
     }
+  },
+  "compliance": {
+    "title": "Compliance",
+    "blocked": "Site assignment blocked",
+    "blockedDetail": "30bis certificate: {{status}}. No contract or service entry can be linked to a site until a valid certificate is uploaded.",
+    "liftBlock": "Lift the block",
+    "managersOnly": "Only an administrator or manager can lift the block.",
+    "derogationActive": "Exemption active until {{date}}",
+    "revoke": "Revoke exemption",
+    "upload": "Upload",
+    "expiresOn": "Expires on {{date}}",
+    "noExpiry": "No expiry date",
+    "issuedOn": "issued on {{date}}",
+    "invalidatedOn": "Invalidated on {{date}} — {{reason}}",
+    "view": "View",
+    "invalidate": "Invalidate",
+    "invalidateReason": "Reason for invalidation (kept as evidence):",
+    "noIban": "no IBAN",
+    "ibanValidatedOn": "IBAN validated on {{date}}",
+    "validateIban": "Validate IBAN",
+    "ibanConfirm": "Do you confirm you have checked the IBAN {{iban}} (bank document, call to the subcontractor)?",
+    "revokeConfirm": "Revoke this exemption? The block will apply again.",
+    "contractHint": "signed or sent for signature (active link)",
+    "derogationHistory": "Exemption history",
+    "derogationLine": "From {{from}} to {{to}} — {{reason}}",
+    "revokedOn": "revoked on {{date}}",
+    "footer": "Statuses calculated automatically. Documents and exemptions are evidence: never deleted.",
+    "issueDate": "Issue date",
+    "expiryDate": "Expiry date (optional)",
+    "expiryDateRequired": "Expiry date *",
+    "hint30bis": "The 30bis certificate governs site assignment. The same-day check remains mandatory before each payment.",
+    "hintTva": "Without an expiry date, the certificate stays valid until invalidated.",
+    "derogationHint": "Exemption for this subcontractor only, 30 days maximum, revocable. The justification is recorded.",
+    "reason": "Justification *",
+    "durationDays": "Duration (days, 30 maximum)",
+    "grant": "Grant exemption",
+    "filterBlocked": "Assignment blocked",
+    "blockedShort": "Blocked",
+    "ibanChangeWarning": "Changing the IBAN cancels its validation: it will have to be validated again.",
+    "status": {
+      "valide": "Valid",
+      "expire_bientot": "Expiring soon",
+      "expire": "Expired",
+      "manquant": "Missing",
+      "invalide": "Invalid"
+    },
+    "requirement": {
+      "attestation_30bis": "30bis certificate",
+      "attestation_tva": "VAT certificate / VAT compliance",
+      "iban": "Validated IBAN",
+      "contrat": "Subcontract"
+    },
+    "validation": {
+      "file": "Attach the document (JPG, PNG or PDF).",
+      "expiry": "The expiry date is mandatory for the 30bis certificate.",
+      "dates": "The expiry date must be after the issue date.",
+      "reason": "Justify the exemption (at least 10 characters).",
+      "duration": "Duration between 1 and 30 days."
+    },
+    "toasts": {
+      "invalidated": "Document invalidated",
+      "ibanValidated": "IBAN validated",
+      "revoked": "Exemption revoked",
+      "uploaded": "Document uploaded",
+      "derogationGranted": "Exemption granted"
+    },
+    "alerts": {
+      "title": "Subcontractor compliance",
+      "none": "Nothing to report.",
+      "expiringItem": "{{name}} — {{document}}: {{date}}",
+      "blocked_one": "{{count}} subcontractor blocked",
+      "blocked_other": "{{count}} subcontractors blocked",
+      "expired_one": "{{count}} certificate expired or invalid",
+      "expired_other": "{{count}} certificates expired or invalid",
+      "expiringSoon_one": "{{count}} certificate expires within {{days}} days",
+      "expiringSoon_other": "{{count}} certificates expire within {{days}} days"
+    }
+  },
+  "site": {
+    "title": "Subcontractors and service log",
+    "noContracts": "No subcontract on this site.",
+    "subcontractor": "Subcontractor",
+    "validated": "Validated",
+    "totalHours_one": "{{count}} hour worked",
+    "totalHours_other": "{{count}} hours worked"
   }
 }

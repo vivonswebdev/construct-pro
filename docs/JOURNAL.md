@@ -4,6 +4,59 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-15 — Phase 9, PR D : conformité des sous-traitants, alertes, blocage d'affectation
+
+Branche : `phase-09-conformite` (depuis `main`, après les PR #12 et #13). Règles validées par
+Youssef les 14 et 15/10.
+
+### Migration `20261015090000_phase9_conformite.sql` (idempotente, rollback commenté complet)
+
+- `documents_conformite` (attestation 30bis — expiration obligatoire —, attestation TVA —
+  expiration facultative) : fichier dans `<société>/conformite/`, preuve jamais modifiée ni
+  supprimée ; invalidation seulement (admin / gérant, motif, auteur et date imposés).
+- Statut calculé (`statut_document_conformite`) : valide / expire_bientot (≤ 30 jours) / expire
+  / manquant / invalide ; `statut_attestation` retient le meilleur document non invalidé ;
+  `conformite_sous_traitants()` donne les 4 exigences et `bloque` pour toute la société.
+- IBAN : `iban_valide_le`, `iban_valide_par` ; validation par admin / gérant ; toute
+  modification de l'IBAN annule la validation.
+- Contrat : valide si signé ou envoyé en signature avec un lien actif.
+- `derogations_conformite` : admin / gérant, justification, échéance obligatoire ≤ 30 jours,
+  révocable (auteur, date), jamais supprimée.
+- Blocage (trigger) : rattacher un contrat ou une prestation à un chantier est refusé si
+  l'attestation 30bis est absente, expirée ou invalide, sauf dérogation active ; modifier un
+  contrat sans changer de chantier reste possible. Pas de désactivation globale.
+- Paiements : total retenu = min(ONSS + SPF, HTVA), SPF réduit d'abord, puis ONSS (même règle
+  dans `calculerRetenuesPlafonnees`).
+- Storage : un fichier cité par un document de conformité (ou une vérification) n'est ni
+  remplacé ni supprimé.
+- Droits par défaut de Supabase retirés sur les deux nouvelles tables.
+
+### Écrans
+
+- Fiche sous-traitant : section « Conformité » (4 exigences, dépôt d'attestation, invalidation,
+  validation de l'IBAN, bandeau de blocage, dérogation et révocation, historique).
+- Liste : colonne « Conformité » (pire statut + « Bloqué ») et filtre « Affectation bloquée ».
+- Tableau de bord : alertes (bloqués, expirées / invalides, expirent dans les 30 jours).
+- Fiche chantier : « Sous-traitants et prestations » (contrats rattachés, journal).
+- Formulaire sous-traitant : avertissement quand un IBAN validé est modifié.
+- Démo : attestations avant les contrats ; Peeters expire dans 18 jours (alerte), Ionescu
+  expirée + dérogation de 14 jours ; IBAN de Lambert validé.
+
+### Tests
+
+- `supabase/tests/phase9_conformite.check.ts` : 47 OK (bornes J−1 / J0 / J+30 / J+31, documents,
+  invalidation, IBAN, blocage, dérogations, isolation, storage, plafond total, parité du statut
+  JS / SQL sur 162 cas). Autres suites : OK (deux anciens tests reçoivent une attestation).
+- Contrôle en lecture seule : `supabase/tests/controle_conformite.sql` (11 lignes).
+- Non testé connecté (identifiants requis).
+
+### Attention à l'application de la migration
+
+- Les sous-traitants existants n'ont aucune attestation : ils seront **bloqués** pour toute
+  nouvelle affectation à un chantier jusqu'au dépôt d'une attestation 30bis (ou une dérogation).
+
+---
+
 ## 2026-10-14 — Phase 9, PR C : captures des vérifications 30bis (stockage privé)
 
 Branche : `phase-09-captures` (part de `phase-09-paiements`, PR #12 : même fenêtre de
