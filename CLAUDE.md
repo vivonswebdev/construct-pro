@@ -33,6 +33,10 @@ Langue de travail : **français**.
   select/insert/update/delete sur `company_id = public.get_user_company_id(auth.uid())`, index sur
   `company_id` et les clés étrangères.
 - Ressources publiques : policies `anon` strictement limitées ou RPC `security definer`.
+- Fonctions : Supabase (et PostgreSQL via `PUBLIC`) accordent EXECUTE à `anon` par défaut. Toute
+  nouvelle fonction : `REVOKE EXECUTE … FROM PUBLIC, anon` puis `GRANT … TO authenticated` ;
+  seules `contrat_a_signer` et `signer_contrat` restent ouvertes à `anon`
+  (contrôle : `supabase/tests/controle_droits_fonctions.sql`).
 - Tenir `src/integrations/supabase/types.ts` à jour après chaque migration (régénération Supabase,
   ou à la main au même format). **Pas de `as any`** : utiliser `Tables<"x">`, `TablesInsert<"x">`,
   `TablesUpdate<"x">`.

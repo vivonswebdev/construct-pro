@@ -1,5 +1,5 @@
 // Environnement Supabase minimal pour les tests PGlite : rôles, schéma auth (auth.uid() lu
-// dans request.jwt.claim.sub), droits par défaut de Supabase sur les nouvelles tables, et
+// dans request.jwt.claim.sub), droits par défaut de Supabase (tables et fonctions), et
 // schéma storage (buckets, objects, foldername) avec RLS, comme sur Supabase.
 
 import type { PGlite } from "@electric-sql/pglite";
@@ -14,6 +14,7 @@ export const SQL_SUPABASE_SIMULE = `
   GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated, anon;
   GRANT USAGE ON SCHEMA public TO authenticated, anon, service_role;
   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
+  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT EXECUTE ON FUNCTIONS TO anon, authenticated, service_role;
 
   CREATE SCHEMA storage;
   CREATE TABLE storage.buckets (
