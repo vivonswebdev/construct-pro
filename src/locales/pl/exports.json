@@ -14,7 +14,7 @@
   "exportPdf": "Eksport PDF",
   "empty": "Brak płatności dla wybranego okresu i filtrów.",
   "emptyAccountant": "Brak aktywności w tym okresie.",
-  "disclaimer": "Dokument wewnętrzny, orientacyjny — do potwierdzenia przez księgowego. Kwoty pochodzą z płatności zapisanych w ConstructFlow.",
+  "disclaimer": "Dokument wewnętrzny, orientacyjny — do potwierdzenia przez księgowego. Kwoty pochodzą z płatności zapisanych w ZidarPro.",
   "period": "Okres od {{from}} do {{to}}",
   "filters": "Filtry",
   "yes": "tak",

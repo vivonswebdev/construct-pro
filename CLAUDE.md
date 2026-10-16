@@ -1,4 +1,4 @@
-# ConstructFlow — consignes pour Claude Code
+# ZidarPro (ex-ConstructFlow) — consignes pour Claude Code
 
 SaaS de gestion pour PME belges de la construction. Spécification complète et plan par phases :
 [PASSATION.md](PASSATION.md). Journal des décisions et de l'avancement : [docs/JOURNAL.md](docs/JOURNAL.md).
@@ -102,6 +102,15 @@ comparer avec`toCode()` (`src/lib/statuts.ts`), jamais avec un libellé.
 - Accès public uniquement par jeton et RPC `security definer` (`contrat_a_signer`,
   `signer_contrat`) ; aucune policy `anon` sur les tables. Révoquer explicitement les droits par
   défaut de Supabase sur toute table de preuve (`REVOKE ALL … FROM anon, authenticated`).
+
+## Marque
+
+- Nom commercial **ZidarPro** (`common:appName`, `NOM_MARQUE`) ; le nom technique du dépôt, les
+  migrations et le compte de démonstration existant ne changent pas.
+- Logo : géométrie unique dans `src/lib/marque.ts` ; composant `ZidarProLogo` ; PDF via
+  `dessinerMarquePdf` ; fichiers régénérés par `bun scripts/marque/generer.ts` (charte :
+  `docs/marque/README.md`).
+- **Jamais de logo dans les contrats** (ni ZidarPro ni société).
 
 ## Fichiers
 

@@ -29,6 +29,29 @@ vérification sans trace `supabase/tests/verif_backoffice_admin.sql`.
 
 ---
 
+## 2026-10-16 — Marque ZidarPro : logo et renommage progressif
+
+Branche : `marque-zidarpro`. Plan : `docs/plans/marque-zidarpro.md`. **Aucune migration.**
+
+- **Logo** : Z en briques (`src/lib/marque.ts`), versions claire, sombre et icône simplifiée ;
+  composant `ZidarProLogo` ; fichiers `docs/marque/*.svg` et favicon (`public/`) générés par
+  `bun scripts/marque/generer.ts` (rastérisation et PNG/ICO sans dépendance) ; charte
+  `docs/marque/README.md`.
+- **Renommage** : `appName`, titres, copyright, pied des PDF, avertissement des exports, note
+  d'audit des contrats (5 langues) ; prompt de l'assistant ; User-Agent TVA. Barre latérale et
+  connexion avec le logo sombre, fond bleu de marque `#0F2A43`.
+- **PDF** : en-tête des rapports en version claire (logo de la société sinon ZidarPro vectoriel,
+  filet orange). Devis et factures : identité de la société (inchangé). **Contrats : aucun logo**
+  (vérifié : 0 image même avec un logo de société chargé) ; texte et empreintes inchangés.
+- **Inchangés** : nom du dépôt, migrations, historique, compte `demo@constructflow.be`.
+- **Domaines et réseaux** (rien de réservé) : `zidarpro.be`, `.com`, `.eu` disponibles (WHOIS
+  officiels) ; aucun compte « zidarpro » sur GitHub, Instagram, TikTok, YouTube, X, LinkedIn ;
+  aucune marque ZIDARPRO dans TMview (des marques ZIDAR existent : avis d'un conseil en marques).
+- À suivre : couleur principale des boutons vers le bleu de marque ; e-mails d'authentification à
+  renommer dans Supabase / Lovable.
+
+---
+
 ## 2026-10-16 — Logo, comptes sans démo, administrateur de la plateforme, « Bientôt disponible »
 
 Branche : `profil-logo-demo-admin`. Plan : `docs/plans/profil-demo-admin-bientot.md`.

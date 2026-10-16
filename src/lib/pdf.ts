@@ -4,6 +4,7 @@ import { formatEUR, formatDateBE } from "./format";
 import i18n, { intlLocale, joursSemaineCourts } from "./i18n";
 import { toCode } from "./statuts";
 import { logoPdfCourant, tailleDansBoite } from "./logo-pdf";
+import { couleurMarquePdf, dessinerMarquePdf } from "./marque-pdf";
 
 /**
  * Rapports internes (liste des chantiers, présences) : dans la langue de l'interface.
@@ -31,33 +32,30 @@ const t = () => i18n.getFixedT(i18n.language, "pdf");
 const statutChantier = (s: string) => i18n.t(`statuts:chantier.${toCode(s)}`, { defaultValue: s });
 
 /**
- * En-tête commun des rapports internes (bandeau, titre, sous-titre). Avec un logo de société :
- * logo sur fond blanc à gauche du bandeau ; sans logo : bandeau ConstructFlow (inchangé).
+ * En-tête commun des rapports internes, version claire : fond blanc, logo de la société s'il
+ * existe, sinon logo ZidarPro (vectoriel) ; date à droite ; filet orange. Titre et sous-titre
+ * dessous (positions inchangées : titre à 34 mm).
  */
 export function header(doc: jsPDF, title: string, subtitle?: string) {
-  doc.setFillColor(15, 23, 42);
-  doc.rect(0, 0, doc.internal.pageSize.getWidth(), 22, "F");
+  const W = doc.internal.pageSize.getWidth();
   const logo = logoPdfCourant();
-  let x = 14;
   if (logo) {
-    const { l, h } = tailleDansBoite(logo, 36, 14);
-    doc.setFillColor(255, 255, 255);
-    doc.roundedRect(12, 3, l + 4, 16, 1.5, 1.5, "F");
-    doc.addImage(logo.dataUrl, "PNG", 14, 3 + (16 - h) / 2, l, h);
-    x = 12 + l + 4 + 5;
+    const { l, h } = tailleDansBoite(logo, 45, 14);
+    doc.addImage(logo.dataUrl, "PNG", 14, 4 + (14 - h) / 2, l, h);
+  } else {
+    dessinerMarquePdf(doc, 14, 7, 9, "clair");
   }
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(14);
-  doc.setFont("helvetica", "bold");
-  doc.text("ConstructFlow", x, 14);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.text(
-    t()("reports.editedOn", { date: formatDateBE(new Date()) }),
-    doc.internal.pageSize.getWidth() - 14,
-    14,
-    { align: "right" },
-  );
+  doc.setTextColor(100, 116, 139);
+  doc.text(t()("reports.editedOn", { date: formatDateBE(new Date()) }), W - 14, 14, {
+    align: "right",
+  });
+  doc.setDrawColor(...couleurMarquePdf("orange"));
+  doc.setLineWidth(0.8);
+  doc.line(14, 21, W - 14, 21);
+  doc.setLineWidth(0.2);
+  doc.setDrawColor(0, 0, 0);
   doc.setTextColor(15, 23, 42);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");

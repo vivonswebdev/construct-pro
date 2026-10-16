@@ -47,7 +47,9 @@
   --radius: 0.625rem;
 
   /* Brand */
-  --sidebar-bg: oklch(0.225 0.035 252); /* #1a2332 */
+  --sidebar-bg: #0f2a43; /* bleu ZidarPro */
+  --brand-blue: #0f2a43;
+  --brand-orange: #f59e0b;
   --sidebar-text: oklch(0.66 0.025 250); /* #8892a4 */
   --sidebar-active: oklch(0.62 0.12 210); /* #0891b2 teal */
   --page-bg: oklch(0.985 0.002 250); /* #f8f9fa */

@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { HardHat } from "lucide-react";
+import { ZidarProLogo } from "@/components/marque/ZidarProLogo";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
@@ -101,10 +101,10 @@ function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-sidebar-bg px-4">
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-primary text-white shadow-lg">
-            <HardHat className="h-7 w-7" />
-          </div>
-          <h1 className="text-2xl font-bold text-white">{t("common:appName")}</h1>
+          <h1 className="flex justify-center">
+            <ZidarProLogo variante="sombre" taille="text-3xl" />
+            <span className="sr-only">{t("common:appName")}</span>
+          </h1>
           <p className="mt-1 text-sm text-sidebar-text">{t("tagline")}</p>
           <LanguageSelector className="mt-3 rounded-md border border-white/10 bg-white/5 px-2 py-1 text-xs text-sidebar-text outline-none [&>option]:text-foreground" />
         </div>
