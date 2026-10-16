@@ -31,6 +31,29 @@ contrôles : `supabase/tests/controle_logos_entreprise.sql`,
   clients réels, logos cloisonnés, droits anon) ; toutes les suites PGlite vertes, y compris avec
   la migration de sécurité des profils. Navigateur (sans base) : logo WebP converti, présent dans
   l'en-tête des rapports et des devis, absent sans logo.
+- **Vérification sur la base réelle sans rien y laisser** : `supabase/tests/verif_profils_champs_proteges.sql`
+  (PR #22) et `supabase/tests/verif_demo_et_admin_plateforme.sql` ; chaque script teste comme un
+  utilisateur puis se termine par une erreur volontaire qui annule tout et affiche les résultats.
+  Testés sur base simulée (avec et sans correctif ; rien n'est conservé).
+- Chargement de la société en `select("*")` : l'application reste utilisable si elle est publiée
+  avant la migration du logo (logo par défaut).
+
+---
+
+## 2026-10-16 — Sécurité : champs protégés du profil (faille existante corrigée)
+
+Branche : `securite-profils-champs-proteges`. **Migration à appliquer :**
+`20261016090000_profils_champs_proteges.sql` ; contrôle : `supabase/tests/controle_profils_champs_proteges.sql`.
+
+- **Faille** (policy d'origine « Users update own profile ») : chaque utilisateur pouvait modifier
+  toutes les colonnes de son profil, dont `company_id` (accès complet aux données d'une autre
+  société dont il connaît l'identifiant) et `role` (se donner le rôle admin). Démontrée sur base
+  simulée avec les migrations de `main`.
+- **Correction** : trigger `proteger_profil()` — par l'API, `id`, `company_id` et `role` ne
+  changent plus et un profil ne s'insère plus directement ; la création de compte
+  (`handle_new_user`, security definer) est inchangée ; nom, avatar et langue restent modifiables.
+- **Tests** : `supabase/tests/profils_champs_proteges.check.ts` (faille avant, fermée après,
+  création de compte, idempotence, droits anon) ; toutes les suites PGlite vertes.
 
 ---
 

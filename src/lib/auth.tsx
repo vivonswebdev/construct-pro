@@ -47,9 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(p);
     if (p && isLangue(p.langue)) applyLangue(p.langue, true);
     if (p?.company_id) {
+      // select("*") : reste compatible si logo_chemin n'est pas encore migrée (logo par défaut).
       const { data: c } = await supabase
         .from("companies")
-        .select("id, name, bce_number, address, logo_url, logo_chemin")
+        .select("*")
         .eq("id", p.company_id)
         .maybeSingle();
       setCompany(c);
