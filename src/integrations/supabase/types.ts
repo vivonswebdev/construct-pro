@@ -644,6 +644,21 @@ export type Database = {
           },
         ]
       }
+      erreurs_application: {
+        Row: {
+          code: string
+          company_id: string | null
+          cree_le: string
+          id: number
+          message: string | null
+          navigateur: string | null
+          page: string | null
+          user_id: string | null
+        }
+        Insert: never
+        Update: never
+        Relationships: []
+      }
       etapes: {
         Row: {
           chantier_id: string
@@ -809,6 +824,19 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      journal_plateforme: {
+        Row: {
+          acteur: string | null
+          company_id: string | null
+          cree_le: string
+          details: Json
+          id: number
+          type: string
+        }
+        Insert: never
+        Update: never
+        Relationships: []
       }
       materiaux: {
         Row: {
@@ -1728,9 +1756,52 @@ export type Database = {
           nom: string
         }[]
       }
+      admin_activite: {
+        Args: { _categorie?: string | null; _limite?: number }
+        Returns: {
+          categorie: string
+          details: Json | null
+          email: string | null
+          est_demo: boolean
+          quand: string | null
+          societe: string | null
+          societe_id: string | null
+          type: string
+        }[]
+      }
       admin_definir_demo: {
         Args: { _company_id: string; _demo: boolean }
         Returns: undefined
+      }
+      admin_conformite: {
+        Args: { _company_id: string }
+        Returns: {
+          attestation_30bis: string
+          attestation_tva: string
+          bloque: boolean
+          contrat: string
+          derogation_jusqua: string | null
+          iban: string
+          sous_traitant_id: string
+        }[]
+      }
+      admin_statistiques: {
+        Args: never
+        Returns: { demo: number; indicateur: string; reel: number }[]
+      }
+      admin_utilisateurs: {
+        Args: never
+        Returns: {
+          cree_le: string
+          derniere_connexion: string | null
+          email: string | null
+          est_demo: boolean
+          id: string
+          nom: string | null
+          role: string
+          societe: string | null
+          societe_id: string | null
+        }[]
       }
       contrat_a_signer: { Args: { _token: string }; Returns: Json }
       aujourdhui_bruxelles: { Args: never; Returns: string }
@@ -1753,6 +1824,10 @@ export type Database = {
       est_societe_demo: { Args: { _company_id: string }; Returns: boolean }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       seed_lock: { Args: { _company_id: string }; Returns: string }
+      signaler_erreur: {
+        Args: { _code: string; _message: string; _navigateur: string; _page: string }
+        Returns: undefined
+      }
       statut_attestation: {
         Args: { _sous_traitant_id: string; _type: string }
         Returns: string

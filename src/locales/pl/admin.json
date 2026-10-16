@@ -1,21 +1,21 @@
 {
   "title": "Administracja platformy",
-  "subtitle": "Konta i dane demonstracyjne. Dane prawdziwych klientów nie są dostępne.",
+  "subtitle": "Back-office tylko do odczytu. Dane prawdziwych klientów nie są dostępne: wyświetlane są tylko informacje o koncie i zagregowane sumy.",
   "denied": "Dostęp zastrzeżony dla administratora platformy.",
   "tabs": {
-    "accounts": "Konta",
-    "demo": "Demonstracja"
+    "apercu": "Przegląd",
+    "clients": "Klienci",
+    "utilisateurs": "Użytkownicy",
+    "activite": "Aktywność"
   },
   "accounts": {
     "hint": "Oznaczaj jako „demo” tylko swoje konta testowe: ich dane stają się tu widoczne (tylko odczyt). E-maile i budowy innych kont pozostają ukryte.",
     "company": "Firma",
     "created": "Utworzono",
     "users": "Użytkownicy",
-    "emails": "E-maile",
     "sites": "Budowy",
     "demo": "Demonstracja",
     "seeded": "dane demo",
-    "hidden": "ukryte (klient)",
     "isDemo": "Demo — usuń",
     "markDemo": "Oznacz jako demo",
     "confirmMark": "Oznaczyć „{{company}}” jako konto demonstracyjne? Jego dane staną się widoczne dla administratora.",
@@ -23,13 +23,81 @@
     "marked": "Konto oznaczone jako demonstracyjne",
     "unmarked": "Konto usunięte z demonstracji"
   },
-  "demo": {
-    "empty": "Brak konta demonstracyjnego. Oznacz konta testowe w zakładce Konta.",
-    "noSites": "Brak budów.",
-    "readOnly": "Tylko odczyt: administrator nie może zmieniać danych demonstracyjnych.",
-    "sites_one": "{{count}} budowa",
-    "sites_few": "{{count}} budowy",
-    "sites_many": "{{count}} budów",
-    "sites_other": "{{count}} budowy"
+  "demoBadge": "demo",
+  "readOnlyNotice": "Tylko odczyt. Jedyna możliwa akcja: oznaczenie lub usunięcie konta demonstracyjnego (potwierdzenie przez wpisanie nazwy, akcja rejestrowana).",
+  "stats": {
+    "societes": "Klienci",
+    "utilisateurs": "Użytkownicy",
+    "chantiers": "Budowy",
+    "sous_traitants": "Podwykonawcy",
+    "contrats": "Umowy",
+    "prestations": "Wpisy prac",
+    "verifications_30bis": "Weryfikacje 30bis",
+    "real": "prawdziwi klienci",
+    "demoCount_one": "{{count}} w demo",
+    "demoCount_few": "{{count}} w demo",
+    "demoCount_many": "{{count}} w demo",
+    "demoCount_other": "{{count}} w demo",
+    "hint": "Zagregowane sumy dla całej platformy; brak danych dla poszczególnych prawdziwych klientów."
+  },
+  "confirm": {
+    "titleMark": "Oznacz jako demonstracyjne",
+    "titleUnmark": "Usuń z demonstracji",
+    "typeName": "Aby potwierdzić, wpisz dokładną nazwę: {{company}}",
+    "button": "Potwierdź"
+  },
+  "users": {
+    "user": "Użytkownik",
+    "company": "Firma",
+    "role": "Rola",
+    "created": "Utworzono",
+    "lastLogin": "Ostatnie logowanie",
+    "hidden": "ukryte (prawdziwy klient)",
+    "never": "nigdy"
+  },
+  "activity": {
+    "when": "Data",
+    "event": "Zdarzenie",
+    "details": "Szczegóły",
+    "empty": "Brak zdarzeń.",
+    "hint": "Prawdziwi klienci: tylko data, typ i firma (strona przy błędach). Błędy są przechowywane 90 dni.",
+    "categories": {
+      "all": "Wszystko",
+      "connexion": "Logowania",
+      "creation_compte": "Nowe konta",
+      "changement": "Ważne zmiany",
+      "erreur": "Błędy"
+    },
+    "types": {
+      "login": "Logowanie",
+      "derniere_connexion": "Ostatnie logowanie",
+      "compte_cree": "Konto utworzone",
+      "societe_creee": "Firma utworzona",
+      "demo_activee": "Demo włączone",
+      "demo_retiree": "Demo usunięte",
+      "profil_modifie": "Zmieniono rolę lub firmę",
+      "contrat_envoye": "Umowa wysłana do podpisu",
+      "contrat_signe": "Umowa podpisana",
+      "signature_annulee": "Podpis anulowany",
+      "document_invalide": "Dokument zgodności unieważniony",
+      "derogation_accordee": "Odstępstwo przyznane",
+      "derogation_revoquee": "Odstępstwo cofnięte",
+      "paiement_annule": "Płatność anulowana"
+    }
+  },
+  "client": {
+    "back": "Powrót do back-office",
+    "createdOn": "Utworzono {{date}}",
+    "usersCount_one": "{{count}} użytkownik",
+    "usersCount_few": "{{count}} użytkowników",
+    "usersCount_many": "{{count}} użytkowników",
+    "usersCount_other": "{{count}} użytkownika",
+    "realNotice": "Prawdziwy klient: jego dane (budowy, podwykonawcy, umowy, wpisy prac, zgodność) nie są dostępne z back-office.",
+    "sites": "Budowy",
+    "subcontractors": "Podwykonawcy i zgodność",
+    "contracts": "Umowy",
+    "prestations": "Wpisy prac (ostatnie 50)",
+    "validated": "zatwierdzony",
+    "label30bis": "30bis: {{status}}"
   }
 }

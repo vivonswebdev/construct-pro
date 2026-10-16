@@ -5,6 +5,7 @@ import { useAuth } from "@/lib/auth";
 import { Sidebar } from "@/components/Sidebar";
 import { seedDataIfEmpty } from "@/lib/seed";
 import { useLogoEntreprise } from "@/hooks/useLogoEntreprise";
+import { installerSignalementErreurs } from "@/lib/erreurs";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
@@ -21,6 +22,9 @@ function AppLayout() {
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/login", replace: true });
   }, [session, loading, navigate]);
+
+  // Erreurs non gérées signalées au back-office (session requise).
+  useEffect(() => (session ? installerSignalementErreurs() : undefined), [session]);
 
   useEffect(() => {
     const cid = profile?.company_id;

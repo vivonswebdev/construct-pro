@@ -1,21 +1,21 @@
 {
   "title": "Platform administration",
-  "subtitle": "Accounts and demo data. Real customers' data is not accessible.",
+  "subtitle": "Read-only back office. Real customers' data is not accessible: only their account information and aggregated totals are shown.",
   "denied": "Access reserved for the platform administrator.",
   "tabs": {
-    "accounts": "Accounts",
-    "demo": "Demo"
+    "apercu": "Overview",
+    "clients": "Customers",
+    "utilisateurs": "Users",
+    "activite": "Activity"
   },
   "accounts": {
     "hint": "Mark only your test accounts as “demo”: their data becomes readable here (read-only). Other accounts' emails and sites remain hidden.",
     "company": "Company",
     "created": "Created on",
     "users": "Users",
-    "emails": "Emails",
     "sites": "Sites",
     "demo": "Demo",
     "seeded": "demo data",
-    "hidden": "hidden (customer)",
     "isDemo": "Demo — remove",
     "markDemo": "Mark as demo",
     "confirmMark": "Mark “{{company}}” as a demo account? Its data will become readable by the administrator.",
@@ -23,11 +23,77 @@
     "marked": "Account marked as demo",
     "unmarked": "Account removed from demo"
   },
-  "demo": {
-    "empty": "No demo account. Mark your test accounts in the Accounts tab.",
-    "noSites": "No sites.",
-    "readOnly": "Read-only: the administrator cannot change demo data.",
-    "sites_one": "{{count}} site",
-    "sites_other": "{{count}} sites"
+  "demoBadge": "demo",
+  "readOnlyNotice": "Read-only. Only possible action: mark or unmark a demo account (confirmed by typing the name, action logged).",
+  "stats": {
+    "societes": "Customers",
+    "utilisateurs": "Users",
+    "chantiers": "Sites",
+    "sous_traitants": "Subcontractors",
+    "contrats": "Contracts",
+    "prestations": "Work entries",
+    "verifications_30bis": "30bis checks",
+    "real": "real customers",
+    "demoCount_one": "{{count}} in demo",
+    "demoCount_other": "{{count}} in demo",
+    "hint": "Aggregated totals across the platform; no figures per real customer."
+  },
+  "confirm": {
+    "titleMark": "Mark as demo",
+    "titleUnmark": "Remove from demo",
+    "typeName": "To confirm, type the exact name: {{company}}",
+    "button": "Confirm"
+  },
+  "users": {
+    "user": "User",
+    "company": "Company",
+    "role": "Role",
+    "created": "Created on",
+    "lastLogin": "Last sign-in",
+    "hidden": "hidden (real customer)",
+    "never": "never"
+  },
+  "activity": {
+    "when": "Date",
+    "event": "Event",
+    "details": "Details",
+    "empty": "No events.",
+    "hint": "Real customers: date, type and company only (page for errors). Errors are kept for 90 days.",
+    "categories": {
+      "all": "All",
+      "connexion": "Sign-ins",
+      "creation_compte": "New accounts",
+      "changement": "Important changes",
+      "erreur": "Errors"
+    },
+    "types": {
+      "login": "Sign-in",
+      "derniere_connexion": "Last sign-in",
+      "compte_cree": "Account created",
+      "societe_creee": "Company created",
+      "demo_activee": "Demo enabled",
+      "demo_retiree": "Demo removed",
+      "profil_modifie": "Role or company changed",
+      "contrat_envoye": "Contract sent for signature",
+      "contrat_signe": "Contract signed",
+      "signature_annulee": "Signature cancelled",
+      "document_invalide": "Compliance document invalidated",
+      "derogation_accordee": "Exemption granted",
+      "derogation_revoquee": "Exemption revoked",
+      "paiement_annule": "Payment cancelled"
+    }
+  },
+  "client": {
+    "back": "Back to the back office",
+    "createdOn": "Created on {{date}}",
+    "usersCount_one": "{{count}} user",
+    "usersCount_other": "{{count}} users",
+    "realNotice": "Real customer: their data (sites, subcontractors, contracts, work entries, compliance) is not accessible from the back office.",
+    "sites": "Sites",
+    "subcontractors": "Subcontractors and compliance",
+    "contracts": "Contracts",
+    "prestations": "Work entries (latest 50)",
+    "validated": "validated",
+    "label30bis": "30bis: {{status}}"
   }
 }
