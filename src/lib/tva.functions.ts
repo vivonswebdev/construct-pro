@@ -27,7 +27,7 @@ export const checkTva = createServerFn({ method: "POST" })
       const res = await fetch(url, {
         method: "GET",
         headers: {
-          "User-Agent": "Mozilla/5.0 (compatible; ConstructFlow/1.0)",
+          "User-Agent": "Mozilla/5.0 (compatible; ZidarPro/1.0)",
           Accept: "text/html,application/xhtml+xml",
           "Accept-Language": "fr-BE,fr;q=0.9",
         },

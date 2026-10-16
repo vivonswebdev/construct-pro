@@ -14,7 +14,7 @@
   "exportPdf": "PDF export",
   "empty": "No payments for the selected period and filters.",
   "emptyAccountant": "No activity in this period.",
-  "disclaimer": "Internal document, indicative — to be confirmed by your accountant. Amounts come from the payments recorded in ConstructFlow.",
+  "disclaimer": "Internal document, indicative — to be confirmed by your accountant. Amounts come from the payments recorded in ZidarPro.",
   "period": "Period from {{from}} to {{to}}",
   "filters": "Filters",
   "yes": "yes",
