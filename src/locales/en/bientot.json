@@ -1,0 +1,61 @@
+{
+  "title": "Coming soon",
+  "subtitle": "Features in preparation. They will arrive gradually, with no announced date.",
+  "badge": "Coming soon",
+  "others": "Other planned features",
+  "disclaimer": "Indicative list: content and release order may change.",
+  "items": {
+    "achats": {
+      "title": "Purchasing module",
+      "description": "Supplier invoices, costs per site, restaurant expenses and cash book."
+    },
+    "facturation": {
+      "title": "Electronic invoicing",
+      "description": "Sales invoices sent and received over the Peppol network, payment tracking and reminders."
+    },
+    "itsme": {
+      "title": "itsme or eID signature",
+      "description": "Electronic signature with strong identification of the signatory."
+    },
+    "ficheChantier": {
+      "title": "Signature of each site sheet",
+      "description": "Each site sheet signed separately, in addition to the framework contract."
+    },
+    "contratNlEn": {
+      "title": "Contract in Dutch and English",
+      "description": "Legally binding NL and EN versions of the subcontracting contract, validated by a lawyer."
+    },
+    "siteWeb": {
+      "title": "Company website",
+      "description": "A showcase website generated from your sites and your information."
+    },
+    "avis": {
+      "title": "Customer reviews",
+      "description": "Request and publish reviews from your customers after handover."
+    },
+    "emails": {
+      "title": "Emails and calendar",
+      "description": "Send documents by email and a calendar for sites and appointments."
+    },
+    "planning": {
+      "title": "Estimates and planning",
+      "description": "Site estimates, crew planning and profitability tracking."
+    },
+    "journalMobile": {
+      "title": "Mobile site log",
+      "description": "Site log on your phone and tracking of additional work."
+    },
+    "materiel": {
+      "title": "Equipment and waste",
+      "description": "Equipment, rental, waste management and point-in-time inventory."
+    },
+    "primes": {
+      "title": "Renovation grants",
+      "description": "Help tracking renovation grants in the three regions."
+    },
+    "rapport": {
+      "title": "Monthly report",
+      "description": "An automatic monthly report on the company's activity."
+    }
+  }
+}

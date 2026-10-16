@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/lib/auth";
 import { Sidebar } from "@/components/Sidebar";
 import { seedDataIfEmpty } from "@/lib/seed";
+import { useLogoEntreprise } from "@/hooks/useLogoEntreprise";
 
 export const Route = createFileRoute("/_app")({
   component: AppLayout,
@@ -14,6 +15,8 @@ function AppLayout() {
   const navigate = useNavigate();
   const qc = useQueryClient();
   const seededFor = useRef<string | null>(null);
+  // Logo de la société préchargé pour les PDF (devis, factures, rapports).
+  useLogoEntreprise({ pourPdf: true });
 
   useEffect(() => {
     if (!loading && !session) navigate({ to: "/login", replace: true });

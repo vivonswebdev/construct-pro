@@ -111,6 +111,14 @@
     "exportsSousTraitants": {
       "title": "Eksporty podwykonawstwa",
       "description": "Rejestr potrąceń 30bis i eksport dla księgowego."
+    },
+    "admin": {
+      "title": "Administracja",
+      "description": "Administracja platformy: konta i dane demonstracyjne."
+    },
+    "comingSoon": {
+      "title": "Wkrótce dostępne",
+      "description": "Funkcje w przygotowaniu."
     }
   },
   "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny.",

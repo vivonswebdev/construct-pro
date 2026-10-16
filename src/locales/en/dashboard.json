@@ -48,5 +48,6 @@
     "ctExpired_other": "🚛 {{count}} vehicles with expired inspection",
     "insuranceSoon": "⚠️ Vehicle insurance to renew",
     "insuranceSoonItem": "{{plate}} ({{days}} d)"
-  }
+  },
+  "comingSoonLink": "Features coming soon"
 }

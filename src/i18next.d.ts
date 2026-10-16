@@ -20,6 +20,8 @@ import type tva from "./locales/fr/tva.json";
 import type assistant from "./locales/fr/assistant.json";
 import type profil from "./locales/fr/profil.json";
 import type pdf from "./locales/fr/pdf.json";
+import type admin from "./locales/fr/admin.json";
+import type bientot from "./locales/fr/bientot.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -44,6 +46,8 @@ declare module "i18next" {
       assistant: typeof assistant;
       profil: typeof profil;
       pdf: typeof pdf;
+      admin: typeof admin;
+      bientot: typeof bientot;
     };
   }
 }

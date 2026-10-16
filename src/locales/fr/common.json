@@ -109,6 +109,14 @@
     "exportsSousTraitants": {
       "title": "Exports de sous-traitance",
       "description": "Registre des retenues 30bis et export pour le comptable."
+    },
+    "admin": {
+      "title": "Administration",
+      "description": "Administration de la plateforme : comptes et données de démonstration."
+    },
+    "comingSoon": {
+      "title": "Bientôt disponible",
+      "description": "Les fonctionnalités en préparation."
     }
   },
   "indicatif": "Indicatif — à valider par votre comptable / secrétariat social.",

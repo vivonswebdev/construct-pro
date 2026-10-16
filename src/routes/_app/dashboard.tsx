@@ -12,6 +12,7 @@ import {
   Legend,
 } from "recharts";
 import {
+  Sparkles,
   TrendingUp,
   Euro,
   HardHat,
@@ -433,6 +434,15 @@ function Dashboard() {
       </Card>
 
       <ConformiteAlertes />
+
+      <div className="text-right">
+        <Link
+          to="/bientot-disponible"
+          className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary hover:underline"
+        >
+          <Sparkles className="h-3.5 w-3.5" /> {t("comingSoonLink")}
+        </Link>
+      </div>
     </div>
   );
 }

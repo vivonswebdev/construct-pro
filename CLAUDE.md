@@ -32,6 +32,10 @@ Langue de travail : **français**.
 - Chaque table : `company_id` (FK `companies`, `ON DELETE CASCADE`), RLS activée, 4 policies
   select/insert/update/delete sur `company_id = public.get_user_company_id(auth.uid())`, index sur
   `company_id` et les clés étrangères.
+- Nouvelle table à `company_id` : ajouter aussi la policy de lecture seule
+  `admin_plateforme_demo_select` (`(SELECT public.est_admin_plateforme()) AND
+  public.est_societe_demo(company_id)`), sinon l'administrateur de la plateforme ne la voit pas
+  dans les sociétés de démonstration. Jamais d'accès administrateur aux sociétés non « démo ».
 - Ressources publiques : policies `anon` strictement limitées ou RPC `security definer`.
 - Fonctions : Supabase (et PostgreSQL via `PUBLIC`) accordent EXECUTE à `anon` par défaut. Toute
   nouvelle fonction : `REVOKE EXECUTE … FROM PUBLIC, anon` puis `GRANT … TO authenticated` ;

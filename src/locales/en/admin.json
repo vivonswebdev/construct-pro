@@ -1,0 +1,33 @@
+{
+  "title": "Platform administration",
+  "subtitle": "Accounts and demo data. Real customers' data is not accessible.",
+  "denied": "Access reserved for the platform administrator.",
+  "tabs": {
+    "accounts": "Accounts",
+    "demo": "Demo"
+  },
+  "accounts": {
+    "hint": "Mark only your test accounts as “demo”: their data becomes readable here (read-only). Other accounts' emails and sites remain hidden.",
+    "company": "Company",
+    "created": "Created on",
+    "users": "Users",
+    "emails": "Emails",
+    "sites": "Sites",
+    "demo": "Demo",
+    "seeded": "demo data",
+    "hidden": "hidden (customer)",
+    "isDemo": "Demo — remove",
+    "markDemo": "Mark as demo",
+    "confirmMark": "Mark “{{company}}” as a demo account? Its data will become readable by the administrator.",
+    "confirmUnmark": "Remove “{{company}}” from demo accounts?",
+    "marked": "Account marked as demo",
+    "unmarked": "Account removed from demo"
+  },
+  "demo": {
+    "empty": "No demo account. Mark your test accounts in the Accounts tab.",
+    "noSites": "No sites.",
+    "readOnly": "Read-only: the administrator cannot change demo data.",
+    "sites_one": "{{count}} site",
+    "sites_other": "{{count}} sites"
+  }
+}

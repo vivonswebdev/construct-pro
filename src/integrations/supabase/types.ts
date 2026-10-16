@@ -295,7 +295,9 @@ export type Database = {
           bce_number: string | null
           created_at: string
           demo_seeded: boolean
+          est_demo: boolean
           id: string
+          logo_chemin: string | null
           logo_url: string | null
           name: string
         }
@@ -304,7 +306,9 @@ export type Database = {
           bce_number?: string | null
           created_at?: string
           demo_seeded?: boolean
+          est_demo?: boolean
           id?: string
+          logo_chemin?: string | null
           logo_url?: string | null
           name: string
         }
@@ -313,7 +317,9 @@ export type Database = {
           bce_number?: string | null
           created_at?: string
           demo_seeded?: boolean
+          est_demo?: boolean
           id?: string
+          logo_chemin?: string | null
           logo_url?: string | null
           name?: string
         }
@@ -1709,6 +1715,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_comptes: {
+        Args: never
+        Returns: {
+          cree_le: string
+          demo_seeded: boolean
+          emails: string[] | null
+          est_demo: boolean
+          id: string
+          nb_chantiers: number | null
+          nb_utilisateurs: number
+          nom: string
+        }[]
+      }
+      admin_definir_demo: {
+        Args: { _company_id: string; _demo: boolean }
+        Returns: undefined
+      }
       contrat_a_signer: { Args: { _token: string }; Returns: Json }
       aujourdhui_bruxelles: { Args: never; Returns: string }
       conformite_sous_traitants: {
@@ -1725,7 +1748,9 @@ export type Database = {
       }
       dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined }
       derogation_active: { Args: { _sous_traitant_id: string }; Returns: boolean }
+      est_admin_plateforme: { Args: never; Returns: boolean }
       est_gestionnaire: { Args: never; Returns: boolean }
+      est_societe_demo: { Args: { _company_id: string }; Returns: boolean }
       get_user_company_id: { Args: { _user_id: string }; Returns: string }
       seed_lock: { Args: { _company_id: string }; Returns: string }
       statut_attestation: {

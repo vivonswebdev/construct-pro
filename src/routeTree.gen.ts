@@ -17,7 +17,9 @@ import { Route as AppProfilRouteImport } from './routes/_app/profil'
 import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
+import { Route as AppBientotDisponibleRouteImport } from './routes/_app/bientot-disponible'
 import { Route as AppAssistantRouteImport } from './routes/_app/assistant'
+import { Route as AppAdminRouteImport } from './routes/_app/admin'
 import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
 import { Route as AppStockIndexRouteImport } from './routes/_app/stock.index'
 import { Route as AppSousTraitantsIndexRouteImport } from './routes/_app/sous-traitants.index'
@@ -72,9 +74,19 @@ const AppConformiteTvaRoute = AppConformiteTvaRouteImport.update({
   path: '/conformite-tva',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBientotDisponibleRoute = AppBientotDisponibleRouteImport.update({
+  id: '/bientot-disponible',
+  path: '/bientot-disponible',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
 const AppVehiculesIndexRoute = AppVehiculesIndexRouteImport.update({
@@ -151,7 +163,9 @@ const AppChantiersIdRoute = AppChantiersIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin': typeof AppAdminRoute
   '/assistant': typeof AppAssistantRoute
+  '/bientot-disponible': typeof AppBientotDisponibleRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
@@ -175,7 +189,9 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/admin': typeof AppAdminRoute
   '/assistant': typeof AppAssistantRoute
+  '/bientot-disponible': typeof AppBientotDisponibleRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
@@ -201,7 +217,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/_app/admin': typeof AppAdminRoute
   '/_app/assistant': typeof AppAssistantRoute
+  '/_app/bientot-disponible': typeof AppBientotDisponibleRoute
   '/_app/conformite-tva': typeof AppConformiteTvaRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/precompte': typeof AppPrecompteRoute
@@ -227,7 +245,9 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/admin'
     | '/assistant'
+    | '/bientot-disponible'
     | '/conformite-tva'
     | '/dashboard'
     | '/precompte'
@@ -251,7 +271,9 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/admin'
     | '/assistant'
+    | '/bientot-disponible'
     | '/conformite-tva'
     | '/dashboard'
     | '/precompte'
@@ -276,7 +298,9 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/login'
+    | '/_app/admin'
     | '/_app/assistant'
+    | '/_app/bientot-disponible'
     | '/_app/conformite-tva'
     | '/_app/dashboard'
     | '/_app/precompte'
@@ -363,11 +387,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConformiteTvaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/bientot-disponible': {
+      id: '/_app/bientot-disponible'
+      path: '/bientot-disponible'
+      fullPath: '/bientot-disponible'
+      preLoaderRoute: typeof AppBientotDisponibleRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/assistant': {
       id: '/_app/assistant'
       path: '/assistant'
       fullPath: '/assistant'
       preLoaderRoute: typeof AppAssistantRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/admin': {
+      id: '/_app/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/vehicules/': {
@@ -472,7 +510,9 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppAssistantRoute: typeof AppAssistantRoute
+  AppBientotDisponibleRoute: typeof AppBientotDisponibleRoute
   AppConformiteTvaRoute: typeof AppConformiteTvaRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppPrecompteRoute: typeof AppPrecompteRoute
@@ -494,7 +534,9 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppAssistantRoute: AppAssistantRoute,
+  AppBientotDisponibleRoute: AppBientotDisponibleRoute,
   AppConformiteTvaRoute: AppConformiteTvaRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppPrecompteRoute: AppPrecompteRoute,

@@ -110,6 +110,14 @@
     "exportsSousTraitants": {
       "title": "Exporturi subcontractare",
       "description": "Registrul reținerilor 30bis și export pentru contabil."
+    },
+    "admin": {
+      "title": "Administrare",
+      "description": "Administrarea platformei: conturi și date demonstrative."
+    },
+    "comingSoon": {
+      "title": "În curând",
+      "description": "Funcționalitățile în pregătire."
     }
   },
   "indicatif": "Orientativ — de confirmat cu contabilul / secretariatul social.",

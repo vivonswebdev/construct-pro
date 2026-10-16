@@ -62,5 +62,6 @@
     "ctExpired_other": "🚛 {{count}} pojazdu z nieważnym przeglądem",
     "insuranceSoon": "⚠️ Ubezpieczenie pojazdu do odnowienia",
     "insuranceSoonItem": "{{plate}} ({{days}} d)"
-  }
+  },
+  "comingSoonLink": "Funkcje wkrótce dostępne"
 }

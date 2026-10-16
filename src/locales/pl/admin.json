@@ -1,0 +1,35 @@
+{
+  "title": "Administracja platformy",
+  "subtitle": "Konta i dane demonstracyjne. Dane prawdziwych klientów nie są dostępne.",
+  "denied": "Dostęp zastrzeżony dla administratora platformy.",
+  "tabs": {
+    "accounts": "Konta",
+    "demo": "Demonstracja"
+  },
+  "accounts": {
+    "hint": "Oznaczaj jako „demo” tylko swoje konta testowe: ich dane stają się tu widoczne (tylko odczyt). E-maile i budowy innych kont pozostają ukryte.",
+    "company": "Firma",
+    "created": "Utworzono",
+    "users": "Użytkownicy",
+    "emails": "E-maile",
+    "sites": "Budowy",
+    "demo": "Demonstracja",
+    "seeded": "dane demo",
+    "hidden": "ukryte (klient)",
+    "isDemo": "Demo — usuń",
+    "markDemo": "Oznacz jako demo",
+    "confirmMark": "Oznaczyć „{{company}}” jako konto demonstracyjne? Jego dane staną się widoczne dla administratora.",
+    "confirmUnmark": "Usunąć „{{company}}” z kont demonstracyjnych?",
+    "marked": "Konto oznaczone jako demonstracyjne",
+    "unmarked": "Konto usunięte z demonstracji"
+  },
+  "demo": {
+    "empty": "Brak konta demonstracyjnego. Oznacz konta testowe w zakładce Konta.",
+    "noSites": "Brak budów.",
+    "readOnly": "Tylko odczyt: administrator nie może zmieniać danych demonstracyjnych.",
+    "sites_one": "{{count}} budowa",
+    "sites_few": "{{count}} budowy",
+    "sites_many": "{{count}} budów",
+    "sites_other": "{{count}} budowy"
+  }
+}

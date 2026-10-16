@@ -17,6 +17,8 @@ type Company = {
   bce_number?: string | null;
   address?: string | null;
   logo_url?: string | null;
+  /** Logo déposé dans Storage (bucket logos) ; null : logo par défaut. */
+  logo_chemin?: string | null;
 };
 
 type AuthCtx = {
@@ -47,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (p?.company_id) {
       const { data: c } = await supabase
         .from("companies")
-        .select("id, name, bce_number, address, logo_url")
+        .select("id, name, bce_number, address, logo_url, logo_chemin")
         .eq("id", p.company_id)
         .maybeSingle();
       setCompany(c);

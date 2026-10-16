@@ -11,10 +11,30 @@
   "companyName": "Company name",
   "address": "Address",
   "bce": "Company number",
-  "logoUrl": "Logo URL (optional)",
   "avatarAlt": "Avatar",
   "toasts": {
     "profileUpdated": "Profile updated",
     "companyUpdated": "Company updated"
+  },
+  "logo": {
+    "title": "Company logo",
+    "hint": "Shown in your profile, quotes, invoices and reports.",
+    "defaultHint": "No logo: the company's initials are used by default.",
+    "limits": "JPG, PNG or WebP, 2 MB maximum.",
+    "upload": "Upload a logo",
+    "replace": "Replace",
+    "confirmDelete": "Delete the logo? The default logo will be used.",
+    "saved": "Logo saved",
+    "deleted": "Logo deleted",
+    "alt": "{{company}} logo",
+    "defaultAlt": "Default logo",
+    "errors": {
+      "type": "Format not accepted: JPG, PNG or WebP only.",
+      "taille": "File too large: 2 MB maximum."
+    }
+  },
+  "links": {
+    "comingSoon": "Coming soon",
+    "admin": "Platform administration"
   }
 }

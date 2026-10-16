@@ -1,0 +1,33 @@
+{
+  "title": "Platformbeheer",
+  "subtitle": "Accounts en demonstratiegegevens. De gegevens van echte klanten zijn niet toegankelijk.",
+  "denied": "Toegang voorbehouden aan de platformbeheerder.",
+  "tabs": {
+    "accounts": "Accounts",
+    "demo": "Demonstratie"
+  },
+  "accounts": {
+    "hint": "Markeer alleen uw testaccounts als « demo »: hun gegevens worden hier leesbaar (alleen lezen). De e-mails en werven van andere accounts blijven verborgen.",
+    "company": "Bedrijf",
+    "created": "Aangemaakt op",
+    "users": "Gebruikers",
+    "emails": "E-mails",
+    "sites": "Werven",
+    "demo": "Demonstratie",
+    "seeded": "demogegevens",
+    "hidden": "verborgen (klant)",
+    "isDemo": "Demo — verwijderen",
+    "markDemo": "Als demo markeren",
+    "confirmMark": "« {{company}} » markeren als demonstratieaccount? Zijn gegevens worden leesbaar voor de beheerder.",
+    "confirmUnmark": "« {{company}} » verwijderen uit de demonstratieaccounts?",
+    "marked": "Account gemarkeerd als demonstratie",
+    "unmarked": "Account verwijderd uit de demonstratie"
+  },
+  "demo": {
+    "empty": "Geen demonstratieaccount. Markeer uw testaccounts in het tabblad Accounts.",
+    "noSites": "Geen werven.",
+    "readOnly": "Alleen lezen: de beheerder kan de demonstratiegegevens niet wijzigen.",
+    "sites_one": "{{count}} werf",
+    "sites_other": "{{count}} werven"
+  }
+}

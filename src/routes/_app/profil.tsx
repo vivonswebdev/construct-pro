@@ -1,12 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { User, Building2, Save } from "lucide-react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { User, Building2, Save, Upload, Trash2, Sparkles, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { initials, avatarColor } from "@/lib/format";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { LogoEntreprise } from "@/components/LogoEntreprise";
+import { useAdminPlateforme } from "@/hooks/useAdminPlateforme";
+import { deposerLogo, erreurLogo, LOGO_ACCEPT, supprimerLogo } from "@/lib/logo";
+import { errorMessage } from "@/lib/utils";
 
 export const Route = createFileRoute("/_app/profil")({
   component: ProfilPage,
@@ -21,7 +25,6 @@ function ProfilPage() {
   const [companyName, setCompanyName] = useState("");
   const [address, setAddress] = useState("");
   const [bce, setBce] = useState("");
-  const [logoUrl, setLogoUrl] = useState("");
   const [savingProfile, setSavingProfile] = useState(false);
   const [savingCompany, setSavingCompany] = useState(false);
 
@@ -33,7 +36,7 @@ function ProfilPage() {
     if (!company?.id) return;
     supabase
       .from("companies")
-      .select("name, address, bce_number, logo_url")
+      .select("name, address, bce_number")
       .eq("id", company.id)
       .maybeSingle()
       .then(({ data }) => {
@@ -41,7 +44,6 @@ function ProfilPage() {
         setCompanyName(data.name ?? "");
         setAddress(data.address ?? "");
         setBce(data.bce_number ?? "");
-        setLogoUrl(data.logo_url ?? "");
       });
     // also fetch avatar for current profile
     supabase
@@ -76,7 +78,6 @@ function ProfilPage() {
         name: companyName,
         address: address || null,
         bce_number: bce || null,
-        logo_url: logoUrl || null,
       })
       .eq("id", company.id);
     setSavingCompany(false);
@@ -161,6 +162,7 @@ function ProfilPage() {
           <Building2 className="h-5 w-5 text-primary" />
           <h2 className="text-lg font-semibold">{t("company")}</h2>
         </div>
+        <LogoSection />
         <div className="grid gap-3">
           <Field label={t("companyName")}>
             <input
@@ -185,14 +187,6 @@ function ProfilPage() {
                 onChange={(e) => setBce(e.target.value)}
               />
             </Field>
-            <Field label={t("logoUrl")}>
-              <input
-                className="pf-input"
-                placeholder="https://..."
-                value={logoUrl}
-                onChange={(e) => setLogoUrl(e.target.value)}
-              />
-            </Field>
           </div>
         </div>
         <div className="mt-5 flex justify-end">
@@ -206,6 +200,8 @@ function ProfilPage() {
         </div>
       </section>
 
+      <AutresLiens />
+
       <style>{`.pf-input{width:100%;padding:.5rem .75rem;border:1px solid var(--color-border);border-radius:.5rem;font-size:.875rem;background:white;outline:none}.pf-input:focus{border-color:var(--color-primary);box-shadow:0 0 0 3px color-mix(in oklab,var(--color-primary) 20%,transparent)}`}</style>
     </div>
   );
@@ -217,5 +213,109 @@ function Field({ label, children }: { label: string; children: React.ReactNode }
       <span className="mb-1 block text-xs font-medium">{label}</span>
       {children}
     </label>
+  );
+}
+
+/** Logo de la société : aperçu (ou logo par défaut), charger / remplacer / supprimer. */
+function LogoSection() {
+  const { t } = useTranslation(["profil", "common"]);
+  const { company, refreshProfile } = useAuth();
+  const input = useRef<HTMLInputElement>(null);
+  const [busy, setBusy] = useState(false);
+  const chemin = company?.logo_chemin ?? null;
+
+  const choisir = async (f: File | undefined) => {
+    if (!f || !company?.id) return;
+    const err = erreurLogo(f);
+    if (err) return toast.error(t(`logo.errors.${err}`));
+    setBusy(true);
+    try {
+      await deposerLogo(company.id, f, chemin);
+      await refreshProfile();
+      toast.success(t("logo.saved"));
+    } catch (e) {
+      toast.error(errorMessage(e));
+    } finally {
+      setBusy(false);
+      if (input.current) input.current.value = "";
+    }
+  };
+
+  const supprimer = async () => {
+    if (!company?.id || !chemin || !confirm(t("logo.confirmDelete"))) return;
+    setBusy(true);
+    try {
+      await supprimerLogo(company.id, chemin);
+      await refreshProfile();
+      toast.success(t("logo.deleted"));
+    } catch (e) {
+      toast.error(errorMessage(e));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <div className="mb-5 flex flex-wrap items-center gap-4 rounded-lg border border-border p-4">
+      <LogoEntreprise className="h-20 w-20" />
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-medium">{t("logo.title")}</p>
+        <p className="text-xs text-muted-foreground">
+          {chemin ? t("logo.hint") : t("logo.defaultHint")}
+        </p>
+        <p className="text-xs text-muted-foreground">{t("logo.limits")}</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <input
+            ref={input}
+            type="file"
+            accept={LOGO_ACCEPT}
+            className="hidden"
+            onChange={(e) => choisir(e.target.files?.[0])}
+          />
+          <button
+            type="button"
+            disabled={busy}
+            onClick={() => input.current?.click()}
+            className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted disabled:opacity-50"
+          >
+            <Upload className="h-3.5 w-3.5" /> {chemin ? t("logo.replace") : t("logo.upload")}
+          </button>
+          {chemin && (
+            <button
+              type="button"
+              disabled={busy}
+              onClick={supprimer}
+              className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+            >
+              <Trash2 className="h-3.5 w-3.5" /> {t("common:actions.delete")}
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/** Liens discrets : fonctionnalités à venir ; administration (administrateur de la plateforme). */
+function AutresLiens() {
+  const { t } = useTranslation("profil");
+  const { data: admin } = useAdminPlateforme();
+  return (
+    <div className="flex flex-wrap gap-3 text-sm">
+      <Link
+        to="/bientot-disponible"
+        className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary hover:underline"
+      >
+        <Sparkles className="h-4 w-4" /> {t("links.comingSoon")}
+      </Link>
+      {admin && (
+        <Link
+          to="/admin"
+          className="inline-flex items-center gap-1.5 text-muted-foreground hover:text-primary hover:underline"
+        >
+          <ShieldCheck className="h-4 w-4" /> {t("links.admin")}
+        </Link>
+      )}
+    </div>
   );
 }
