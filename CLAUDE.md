@@ -36,6 +36,10 @@ Langue de travail : **français**.
   `admin_plateforme_demo_select` (`(SELECT public.est_admin_plateforme()) AND
 public.est_societe_demo(company_id)`), sinon l'administrateur de la plateforme ne la voit pas
   dans les sociétés de démonstration. Jamais d'accès administrateur aux sociétés non « démo ».
+- Tables de **plateforme** (`journal_plateforme`, `erreurs_application`) : exception à la règle
+  ci-dessus — RLS active **sans aucune policy**, droits retirés à `anon` / `authenticated`, lecture
+  uniquement par les fonctions `admin_*` (`security definer`, `exiger_admin_plateforme()`). Les
+  fonctions `admin_*` ne renvoient **aucune donnée métier ni e-mail** des clients réels.
 - Ressources publiques : policies `anon` strictement limitées ou RPC `security definer`.
 - Fonctions : Supabase (et PostgreSQL via `PUBLIC`) accordent EXECUTE à `anon` par défaut. Toute
   nouvelle fonction : `REVOKE EXECUTE … FROM PUBLIC, anon` puis `GRANT … TO authenticated` ;

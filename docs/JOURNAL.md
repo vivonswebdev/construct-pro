@@ -4,6 +4,31 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-16 — Back-office administrateur (lecture seule)
+
+Branche : `backoffice-admin`. Plan : `docs/plans/backoffice-admin.md`. **Migration à appliquer :**
+`20261017090000_backoffice_admin.sql` ; contrôle `supabase/tests/controle_backoffice_admin.sql` ;
+vérification sans trace `supabase/tests/verif_backoffice_admin.sql`.
+
+- `/admin` en 4 onglets : vue d'ensemble (totaux réel / démo : clients, utilisateurs, chantiers,
+  sous-traitants, contrats, prestations, vérifications 30bis), clients (fiche
+  `/admin/clients/$id`), utilisateurs (rôle, société, création, dernière connexion), activité
+  (connexions, créations de comptes, changements importants, erreurs).
+- **Clients réels** : métadonnées de compte uniquement (aucun chantier, contrat, montant, e-mail
+  ni nom) ; **démos** : détail complet en lecture seule, conformité via `admin_conformite`
+  (security invoker). Contradiction de la demande tranchée dans ce sens (voir le plan).
+- `journal_plateforme` (triggers : société créée, démo activée/retirée, rôle ou société modifié,
+  contrat envoyé/signé/annulé, document invalidé, dérogation accordée/révoquée, paiement annulé) et
+  `erreurs_application` (`signaler_erreur`, gestionnaires globaux côté application, 20 / 10 min,
+  purge 90 jours) : RLS sans policy, lecture par fonctions `admin_*` uniquement.
+- Bascule démo : validation par saisie du nom de la société, action journalisée.
+- **Tests** : `supabase/tests/backoffice.check.ts` (refus non-admin et anon, aucune fuite de
+  données réelles dans aucune fonction, journal, limites et purge des erreurs, connexions via
+  `auth.audit_log_entries`) ; toutes les suites vertes ; scripts de contrôle et de vérification
+  testés sur base simulée (rien n'est conservé).
+
+---
+
 ## 2026-10-16 — Marque ZidarPro : logo et renommage progressif
 
 Branche : `marque-zidarpro`. Plan : `docs/plans/marque-zidarpro.md`. **Aucune migration.**

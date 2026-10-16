@@ -1,21 +1,21 @@
 {
   "title": "Platformbeheer",
-  "subtitle": "Accounts en demonstratiegegevens. De gegevens van echte klanten zijn niet toegankelijk.",
+  "subtitle": "Back-office alleen-lezen. De gegevens van echte klanten zijn niet toegankelijk: alleen hun accountgegevens en geaggregeerde totalen worden getoond.",
   "denied": "Toegang voorbehouden aan de platformbeheerder.",
   "tabs": {
-    "accounts": "Accounts",
-    "demo": "Demonstratie"
+    "apercu": "Overzicht",
+    "clients": "Klanten",
+    "utilisateurs": "Gebruikers",
+    "activite": "Activiteit"
   },
   "accounts": {
     "hint": "Markeer alleen uw testaccounts als « demo »: hun gegevens worden hier leesbaar (alleen lezen). De e-mails en werven van andere accounts blijven verborgen.",
     "company": "Bedrijf",
     "created": "Aangemaakt op",
     "users": "Gebruikers",
-    "emails": "E-mails",
     "sites": "Werven",
     "demo": "Demonstratie",
     "seeded": "demogegevens",
-    "hidden": "verborgen (klant)",
     "isDemo": "Demo — verwijderen",
     "markDemo": "Als demo markeren",
     "confirmMark": "« {{company}} » markeren als demonstratieaccount? Zijn gegevens worden leesbaar voor de beheerder.",
@@ -23,11 +23,77 @@
     "marked": "Account gemarkeerd als demonstratie",
     "unmarked": "Account verwijderd uit de demonstratie"
   },
-  "demo": {
-    "empty": "Geen demonstratieaccount. Markeer uw testaccounts in het tabblad Accounts.",
-    "noSites": "Geen werven.",
-    "readOnly": "Alleen lezen: de beheerder kan de demonstratiegegevens niet wijzigen.",
-    "sites_one": "{{count}} werf",
-    "sites_other": "{{count}} werven"
+  "demoBadge": "demo",
+  "readOnlyNotice": "Alleen lezen. Enige mogelijke actie: een account als demo markeren of verwijderen (bevestiging door de naam te typen, actie gelogd).",
+  "stats": {
+    "societes": "Klanten",
+    "utilisateurs": "Gebruikers",
+    "chantiers": "Werven",
+    "sous_traitants": "Onderaannemers",
+    "contrats": "Contracten",
+    "prestations": "Prestaties",
+    "verifications_30bis": "30bis-controles",
+    "real": "echte klanten",
+    "demoCount_one": "{{count}} in demo",
+    "demoCount_other": "{{count}} in demo",
+    "hint": "Geaggregeerde totalen voor het hele platform; geen cijfers per echte klant."
+  },
+  "confirm": {
+    "titleMark": "Als demonstratie markeren",
+    "titleUnmark": "Uit de demonstratie verwijderen",
+    "typeName": "Typ ter bevestiging de exacte naam: {{company}}",
+    "button": "Bevestigen"
+  },
+  "users": {
+    "user": "Gebruiker",
+    "company": "Bedrijf",
+    "role": "Rol",
+    "created": "Aangemaakt op",
+    "lastLogin": "Laatste aanmelding",
+    "hidden": "verborgen (echte klant)",
+    "never": "nooit"
+  },
+  "activity": {
+    "when": "Datum",
+    "event": "Gebeurtenis",
+    "details": "Details",
+    "empty": "Geen gebeurtenissen.",
+    "hint": "Echte klanten: alleen datum, type en bedrijf (pagina bij fouten). Fouten worden 90 dagen bewaard.",
+    "categories": {
+      "all": "Alles",
+      "connexion": "Aanmeldingen",
+      "creation_compte": "Nieuwe accounts",
+      "changement": "Belangrijke wijzigingen",
+      "erreur": "Fouten"
+    },
+    "types": {
+      "login": "Aanmelding",
+      "derniere_connexion": "Laatste aanmelding",
+      "compte_cree": "Account aangemaakt",
+      "societe_creee": "Bedrijf aangemaakt",
+      "demo_activee": "Demo geactiveerd",
+      "demo_retiree": "Demo verwijderd",
+      "profil_modifie": "Rol of bedrijf gewijzigd",
+      "contrat_envoye": "Contract ter ondertekening verzonden",
+      "contrat_signe": "Contract ondertekend",
+      "signature_annulee": "Ondertekening geannuleerd",
+      "document_invalide": "Conformiteitsdocument ongeldig verklaard",
+      "derogation_accordee": "Afwijking toegekend",
+      "derogation_revoquee": "Afwijking ingetrokken",
+      "paiement_annule": "Betaling geannuleerd"
+    }
+  },
+  "client": {
+    "back": "Terug naar de back-office",
+    "createdOn": "Aangemaakt op {{date}}",
+    "usersCount_one": "{{count}} gebruiker",
+    "usersCount_other": "{{count}} gebruikers",
+    "realNotice": "Echte klant: zijn gegevens (werven, onderaannemers, contracten, prestaties, conformiteit) zijn niet toegankelijk vanuit de back-office.",
+    "sites": "Werven",
+    "subcontractors": "Onderaannemers en conformiteit",
+    "contracts": "Contracten",
+    "prestations": "Prestaties (laatste 50)",
+    "validated": "gevalideerd",
+    "label30bis": "30bis: {{status}}"
   }
 }
