@@ -4,6 +4,23 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-16 — Sécurité : champs protégés du profil (faille existante corrigée)
+
+Branche : `securite-profils-champs-proteges`. **Migration à appliquer :**
+`20261016090000_profils_champs_proteges.sql` ; contrôle : `supabase/tests/controle_profils_champs_proteges.sql`.
+
+- **Faille** (policy d'origine « Users update own profile ») : chaque utilisateur pouvait modifier
+  toutes les colonnes de son profil, dont `company_id` (accès complet aux données d'une autre
+  société dont il connaît l'identifiant) et `role` (se donner le rôle admin). Démontrée sur base
+  simulée avec les migrations de `main`.
+- **Correction** : trigger `proteger_profil()` — par l'API, `id`, `company_id` et `role` ne
+  changent plus et un profil ne s'insère plus directement ; la création de compte
+  (`handle_new_user`, security definer) est inchangée ; nom, avatar et langue restent modifiables.
+- **Tests** : `supabase/tests/profils_champs_proteges.check.ts` (faille avant, fermée après,
+  création de compte, idempotence, droits anon) ; toutes les suites PGlite vertes.
+
+---
+
 ## 2026-10-15 — Contrats : rendu dans la version de modèle de l'envoi
 
 Branche : `contrat-rendu-par-modele`. Plan : `docs/plans/contrat-rendu-par-modele.md`. **Aucune
