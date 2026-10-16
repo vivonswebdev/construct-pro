@@ -11,10 +11,30 @@
   "companyName": "Numele firmei",
   "address": "Adresă",
   "bce": "Număr de întreprindere",
-  "logoUrl": "URL logo (opțional)",
   "avatarAlt": "Avatar",
   "toasts": {
     "profileUpdated": "Profil actualizat",
     "companyUpdated": "Firmă actualizată"
+  },
+  "logo": {
+    "title": "Sigla firmei",
+    "hint": "Afișată în profil, oferte, facturi și rapoarte.",
+    "defaultHint": "Nicio siglă: implicit se folosesc inițialele firmei.",
+    "limits": "JPG, PNG sau WebP, maximum 2 MB.",
+    "upload": "Încărcați o siglă",
+    "replace": "Înlocuire",
+    "confirmDelete": "Ștergeți sigla? Se va folosi sigla implicită.",
+    "saved": "Siglă salvată",
+    "deleted": "Siglă ștearsă",
+    "alt": "Sigla {{company}}",
+    "defaultAlt": "Siglă implicită",
+    "errors": {
+      "type": "Format neacceptat: doar JPG, PNG sau WebP.",
+      "taille": "Fișier prea mare: maximum 2 MB."
+    }
+  },
+  "links": {
+    "comingSoon": "În curând",
+    "admin": "Administrarea platformei"
   }
 }

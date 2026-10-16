@@ -1,0 +1,61 @@
+{
+  "title": "Binnenkort beschikbaar",
+  "subtitle": "De functies in voorbereiding. Ze komen geleidelijk, zonder aangekondigde datum.",
+  "badge": "Binnenkort beschikbaar",
+  "others": "Andere geplande functies",
+  "disclaimer": "Indicatieve lijst: inhoud en volgorde van beschikbaarheid kunnen wijzigen.",
+  "items": {
+    "achats": {
+      "title": "Module Aankopen",
+      "description": "Leveranciersfacturen, kosten per werf, restaurantkosten en kasboek."
+    },
+    "facturation": {
+      "title": "Elektronische facturatie",
+      "description": "Verkoopfacturen verzonden en ontvangen via het Peppol-netwerk, opvolging van betalingen en herinneringen."
+    },
+    "itsme": {
+      "title": "Ondertekening met itsme of eID",
+      "description": "Elektronische handtekening met sterke identificatie van de ondertekenaar."
+    },
+    "ficheChantier": {
+      "title": "Ondertekening van elke werffiche",
+      "description": "Elke werffiche afzonderlijk ondertekend, naast de raamovereenkomst."
+    },
+    "contratNlEn": {
+      "title": "Contract in het Nederlands en Engels",
+      "description": "Rechtsgeldige NL- en EN-versies van het onderaannemingscontract, gevalideerd door een jurist."
+    },
+    "siteWeb": {
+      "title": "Website van het bedrijf",
+      "description": "Een vitrinesite gegenereerd op basis van uw werven en gegevens."
+    },
+    "avis": {
+      "title": "Klantbeoordelingen",
+      "description": "Beoordelingen van uw klanten vragen en publiceren na de oplevering."
+    },
+    "emails": {
+      "title": "E-mails en agenda",
+      "description": "Documenten per e-mail versturen en agenda van werven en afspraken."
+    },
+    "planning": {
+      "title": "Raming en planning",
+      "description": "Raming van werven, planning van de ploegen en opvolging van de rendabiliteit."
+    },
+    "journalMobile": {
+      "title": "Mobiel werfdagboek",
+      "description": "Werfdagboek op de telefoon en opvolging van meerwerken."
+    },
+    "materiel": {
+      "title": "Materieel en afval",
+      "description": "Materieel, verhuur, afvalbeheer en inventaris op datum."
+    },
+    "primes": {
+      "title": "Renovatiepremies",
+      "description": "Hulp bij de opvolging van de renovatiepremies van de drie gewesten."
+    },
+    "rapport": {
+      "title": "Maandrapport",
+      "description": "Een automatisch maandrapport over de activiteit van het bedrijf."
+    }
+  }
+}

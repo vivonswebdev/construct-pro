@@ -1,0 +1,34 @@
+{
+  "title": "Administrarea platformei",
+  "subtitle": "Conturi și date demonstrative. Datele clienților reali nu sunt accesibile.",
+  "denied": "Acces rezervat administratorului platformei.",
+  "tabs": {
+    "accounts": "Conturi",
+    "demo": "Demonstrație"
+  },
+  "accounts": {
+    "hint": "Marcați ca „demo” doar conturile dumneavoastră de test: datele lor devin vizibile aici (doar citire). E-mailurile și șantierele celorlalte conturi rămân ascunse.",
+    "company": "Firmă",
+    "created": "Creată la",
+    "users": "Utilizatori",
+    "emails": "E-mailuri",
+    "sites": "Șantiere",
+    "demo": "Demonstrație",
+    "seeded": "date demo",
+    "hidden": "ascunse (client)",
+    "isDemo": "Demo — eliminare",
+    "markDemo": "Marcare demo",
+    "confirmMark": "Marcați „{{company}}” drept cont demonstrativ? Datele sale vor deveni vizibile pentru administrator.",
+    "confirmUnmark": "Eliminați „{{company}}” din conturile demonstrative?",
+    "marked": "Cont marcat ca demonstrativ",
+    "unmarked": "Cont eliminat din demonstrație"
+  },
+  "demo": {
+    "empty": "Niciun cont demonstrativ. Marcați conturile de test în fila Conturi.",
+    "noSites": "Niciun șantier.",
+    "readOnly": "Doar citire: administratorul nu poate modifica datele demonstrative.",
+    "sites_one": "{{count}} șantier",
+    "sites_few": "{{count}} șantiere",
+    "sites_other": "{{count}} de șantiere"
+  }
+}

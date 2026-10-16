@@ -1,0 +1,61 @@
+{
+  "title": "Bientôt disponible",
+  "subtitle": "Les fonctionnalités en préparation. Elles arriveront progressivement, sans date annoncée.",
+  "badge": "Bientôt disponible",
+  "others": "Autres fonctionnalités prévues",
+  "disclaimer": "Liste indicative : le contenu et l'ordre de mise à disposition peuvent évoluer.",
+  "items": {
+    "achats": {
+      "title": "Module Achats",
+      "description": "Factures fournisseurs, frais par chantier, frais de restaurant et livre de caisse."
+    },
+    "facturation": {
+      "title": "Facturation électronique",
+      "description": "Factures de vente envoyées et reçues par le réseau Peppol, suivi des paiements et relances."
+    },
+    "itsme": {
+      "title": "Signature itsme ou eID",
+      "description": "Signature électronique avec identification forte du signataire."
+    },
+    "ficheChantier": {
+      "title": "Signature de chaque fiche chantier",
+      "description": "Chaque fiche chantier signée séparément, en complément du contrat-cadre."
+    },
+    "contratNlEn": {
+      "title": "Contrat en néerlandais et en anglais",
+      "description": "Versions NL et EN du contrat de sous-traitance faisant foi, validées par un juriste."
+    },
+    "siteWeb": {
+      "title": "Site web de l'entreprise",
+      "description": "Un site vitrine généré à partir de vos chantiers et de vos informations."
+    },
+    "avis": {
+      "title": "Avis clients",
+      "description": "Demande et publication d'avis de vos clients après la réception des travaux."
+    },
+    "emails": {
+      "title": "E-mails et agenda",
+      "description": "Envoi des documents par e-mail et agenda des chantiers et des rendez-vous."
+    },
+    "planning": {
+      "title": "Estimation et planning",
+      "description": "Estimation des chantiers, planning des équipes et suivi de la rentabilité."
+    },
+    "journalMobile": {
+      "title": "Journal de chantier mobile",
+      "description": "Journal de chantier sur téléphone et suivi des travaux supplémentaires."
+    },
+    "materiel": {
+      "title": "Matériel et déchets",
+      "description": "Matériel, location, gestion des déchets et inventaire à date."
+    },
+    "primes": {
+      "title": "Primes rénovation",
+      "description": "Aide au suivi des primes rénovation des trois régions."
+    },
+    "rapport": {
+      "title": "Rapport mensuel",
+      "description": "Un rapport mensuel automatique de l'activité de l'entreprise."
+    }
+  }
+}

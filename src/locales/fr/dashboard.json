@@ -48,5 +48,6 @@
     "ctExpired_other": "🚛 {{count}} véhicules avec CT expiré",
     "insuranceSoon": "⚠️ Assurance véhicule à renouveler",
     "insuranceSoonItem": "{{plate}} ({{days}} j)"
-  }
+  },
+  "comingSoonLink": "Fonctionnalités bientôt disponibles"
 }

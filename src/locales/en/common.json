@@ -109,6 +109,14 @@
     "exportsSousTraitants": {
       "title": "Subcontracting exports",
       "description": "30bis withholding register and accountant export."
+    },
+    "admin": {
+      "title": "Administration",
+      "description": "Platform administration: accounts and demo data."
+    },
+    "comingSoon": {
+      "title": "Coming soon",
+      "description": "Features in preparation."
     }
   },
   "indicatif": "Indicative — to be confirmed by your accountant / social secretariat.",

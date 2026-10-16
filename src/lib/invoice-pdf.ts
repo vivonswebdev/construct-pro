@@ -4,6 +4,7 @@ import { formatEUR, formatDateBE } from "./format";
 import { lastTableY } from "./pdf";
 import i18n, { LANGUES_DOCUMENTS, type LangueDocument } from "./i18n";
 import { DEVIS_STATUTS, toCode, type DevisStatut } from "./statuts";
+import { logoPdfCourant, tailleDansBoite } from "./logo-pdf";
 
 const isDevisStatut = (s: string): s is DevisStatut =>
   (DEVIS_STATUTS as readonly string[]).includes(s);
@@ -79,14 +80,24 @@ export function exportFacturePDF(
   // Bandeau d'en-tête
   doc.setFillColor(15, 23, 42);
   doc.rect(0, 0, W, 28, "F");
+  // Logo de la société (fond blanc) ; sans logo, rendu inchangé.
+  const logo = logoPdfCourant();
+  let x = 14;
+  if (logo) {
+    const { l, h } = tailleDansBoite(logo, 40, 20);
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(12, 4, l + 4, 20, 1.5, 1.5, "F");
+    doc.addImage(logo.dataUrl, "PNG", 14, 4 + (20 - h) / 2, l, h);
+    x = 12 + l + 4 + 5;
+  }
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text(company.name || "ConstructFlow", 14, 14);
+  doc.text(company.name || "ConstructFlow", x, 14);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  if (company.address) doc.text(company.address, 14, 20);
-  if (company.bce_number) doc.text(t("bce", { value: company.bce_number }), 14, 24);
+  if (company.address) doc.text(company.address, x, 20);
+  if (company.bce_number) doc.text(t("bce", { value: company.bce_number }), x, 24);
 
   doc.setFontSize(20);
   doc.setFont("helvetica", "bold");

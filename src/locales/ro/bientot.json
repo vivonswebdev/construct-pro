@@ -1,0 +1,61 @@
+{
+  "title": "În curând",
+  "subtitle": "Funcționalitățile în pregătire. Vor sosi treptat, fără o dată anunțată.",
+  "badge": "În curând",
+  "others": "Alte funcționalități planificate",
+  "disclaimer": "Listă orientativă: conținutul și ordinea punerii la dispoziție se pot schimba.",
+  "items": {
+    "achats": {
+      "title": "Modul Achiziții",
+      "description": "Facturi de la furnizori, cheltuieli pe șantier, cheltuieli de restaurant și registru de casă."
+    },
+    "facturation": {
+      "title": "Facturare electronică",
+      "description": "Facturi de vânzare trimise și primite prin rețeaua Peppol, urmărirea plăților și reamintiri."
+    },
+    "itsme": {
+      "title": "Semnătură itsme sau eID",
+      "description": "Semnătură electronică cu identificarea puternică a semnatarului."
+    },
+    "ficheChantier": {
+      "title": "Semnarea fiecărei fișe de șantier",
+      "description": "Fiecare fișă de șantier semnată separat, pe lângă contractul-cadru."
+    },
+    "contratNlEn": {
+      "title": "Contract în neerlandeză și engleză",
+      "description": "Versiuni NL și EN ale contractului de subcontractare cu valoare juridică, validate de un jurist."
+    },
+    "siteWeb": {
+      "title": "Site web al firmei",
+      "description": "Un site de prezentare generat din șantierele și informațiile dumneavoastră."
+    },
+    "avis": {
+      "title": "Recenzii ale clienților",
+      "description": "Solicitarea și publicarea recenziilor clienților după recepția lucrărilor."
+    },
+    "emails": {
+      "title": "E-mailuri și agendă",
+      "description": "Trimiterea documentelor prin e-mail și agenda șantierelor și a întâlnirilor."
+    },
+    "planning": {
+      "title": "Estimare și planificare",
+      "description": "Estimarea șantierelor, planificarea echipelor și urmărirea rentabilității."
+    },
+    "journalMobile": {
+      "title": "Jurnal de șantier mobil",
+      "description": "Jurnal de șantier pe telefon și urmărirea lucrărilor suplimentare."
+    },
+    "materiel": {
+      "title": "Echipamente și deșeuri",
+      "description": "Echipamente, închiriere, gestionarea deșeurilor și inventar la zi."
+    },
+    "primes": {
+      "title": "Prime de renovare",
+      "description": "Ajutor la urmărirea primelor de renovare din cele trei regiuni."
+    },
+    "rapport": {
+      "title": "Raport lunar",
+      "description": "Un raport lunar automat privind activitatea firmei."
+    }
+  }
+}

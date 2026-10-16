@@ -11,10 +11,30 @@
   "companyName": "Nom de l'entreprise",
   "address": "Adresse",
   "bce": "Numéro BCE",
-  "logoUrl": "URL du logo (optionnel)",
   "avatarAlt": "Avatar",
   "toasts": {
     "profileUpdated": "Profil mis à jour",
     "companyUpdated": "Entreprise mise à jour"
+  },
+  "logo": {
+    "title": "Logo de l'entreprise",
+    "hint": "Affiché dans votre profil, vos devis, vos factures et vos rapports.",
+    "defaultHint": "Aucun logo : les initiales de l'entreprise sont utilisées par défaut.",
+    "limits": "JPG, PNG ou WebP, 2 Mo maximum.",
+    "upload": "Charger un logo",
+    "replace": "Remplacer",
+    "confirmDelete": "Supprimer le logo ? Le logo par défaut sera utilisé.",
+    "saved": "Logo enregistré",
+    "deleted": "Logo supprimé",
+    "alt": "Logo de {{company}}",
+    "defaultAlt": "Logo par défaut",
+    "errors": {
+      "type": "Format non accepté : JPG, PNG ou WebP uniquement.",
+      "taille": "Fichier trop lourd : 2 Mo maximum."
+    }
+  },
+  "links": {
+    "comingSoon": "Bientôt disponible",
+    "admin": "Administration de la plateforme"
   }
 }

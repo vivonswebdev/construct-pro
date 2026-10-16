@@ -14,7 +14,9 @@ const DEFAULT_PHASES = [
 ];
 
 /**
- * Seeds demo data exactly once per company.
+ * Seeds demo data exactly once per company — ONLY for demo companies (companies.est_demo, set
+ * by the platform administrator): seed_lock returns nothing for a regular account, so a new
+ * client starts with an empty database.
  * The DB function seed_lock atomically flips companies.demo_seeded
  * (false -> true) and only returns a row for the first caller, so parallel
  * calls can never duplicate data.

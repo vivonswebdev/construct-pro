@@ -11,10 +11,30 @@
   "companyName": "Naam van de onderneming",
   "address": "Adres",
   "bce": "Ondernemingsnummer",
-  "logoUrl": "URL van het logo (optioneel)",
   "avatarAlt": "Avatar",
   "toasts": {
     "profileUpdated": "Profiel bijgewerkt",
     "companyUpdated": "Onderneming bijgewerkt"
+  },
+  "logo": {
+    "title": "Bedrijfslogo",
+    "hint": "Weergegeven in uw profiel, offertes, facturen en rapporten.",
+    "defaultHint": "Geen logo: standaard worden de initialen van het bedrijf gebruikt.",
+    "limits": "JPG, PNG of WebP, maximaal 2 MB.",
+    "upload": "Logo uploaden",
+    "replace": "Vervangen",
+    "confirmDelete": "Logo verwijderen? Het standaardlogo wordt gebruikt.",
+    "saved": "Logo opgeslagen",
+    "deleted": "Logo verwijderd",
+    "alt": "Logo van {{company}}",
+    "defaultAlt": "Standaardlogo",
+    "errors": {
+      "type": "Formaat niet aanvaard: alleen JPG, PNG of WebP.",
+      "taille": "Bestand te groot: maximaal 2 MB."
+    }
+  },
+  "links": {
+    "comingSoon": "Binnenkort beschikbaar",
+    "admin": "Platformbeheer"
   }
 }

@@ -109,6 +109,14 @@
     "exportsSousTraitants": {
       "title": "Exports onderaanneming",
       "description": "Register van de 30bis-inhoudingen en export voor de boekhouder."
+    },
+    "admin": {
+      "title": "Beheer",
+      "description": "Platformbeheer: accounts en demonstratiegegevens."
+    },
+    "comingSoon": {
+      "title": "Binnenkort beschikbaar",
+      "description": "De functies in voorbereiding."
     }
   },
   "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat.",

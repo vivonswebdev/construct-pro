@@ -1,0 +1,33 @@
+{
+  "title": "Administration de la plateforme",
+  "subtitle": "Comptes et données de démonstration. Les données des clients réels ne sont pas accessibles.",
+  "denied": "Accès réservé à l'administrateur de la plateforme.",
+  "tabs": {
+    "accounts": "Comptes",
+    "demo": "Démonstration"
+  },
+  "accounts": {
+    "hint": "Marquez « démo » uniquement vos comptes de test : leurs données deviennent lisibles ici (lecture seule). Les e-mails et chantiers des autres comptes restent masqués.",
+    "company": "Société",
+    "created": "Créée le",
+    "users": "Utilisateurs",
+    "emails": "E-mails",
+    "sites": "Chantiers",
+    "demo": "Démonstration",
+    "seeded": "données de démo",
+    "hidden": "masqués (client)",
+    "isDemo": "Démo — retirer",
+    "markDemo": "Marquer démo",
+    "confirmMark": "Marquer « {{company}} » comme compte de démonstration ? Ses données deviendront lisibles par l'administrateur.",
+    "confirmUnmark": "Retirer « {{company}} » des comptes de démonstration ?",
+    "marked": "Compte marqué comme démonstration",
+    "unmarked": "Compte retiré de la démonstration"
+  },
+  "demo": {
+    "empty": "Aucun compte de démonstration. Marquez vos comptes de test dans l'onglet Comptes.",
+    "noSites": "Aucun chantier.",
+    "readOnly": "Lecture seule : l'administrateur ne peut pas modifier les données de démonstration.",
+    "sites_one": "{{count}} chantier",
+    "sites_other": "{{count}} chantiers"
+  }
+}

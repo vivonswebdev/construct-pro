@@ -4,6 +4,42 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-16 — Logo, comptes sans démo, administrateur de la plateforme, « Bientôt disponible »
+
+Branche : `profil-logo-demo-admin`. Plan : `docs/plans/profil-demo-admin-bientot.md`.
+**Migrations à appliquer** (après la PR de sécurité des profils) :
+`20261016100000_logos_entreprise.sql`, `20261016110000_demo_et_admin_plateforme.sql` ;
+contrôles : `supabase/tests/controle_logos_entreprise.sql`,
+`supabase/tests/controle_demo_et_admin_plateforme.sql`.
+
+- **Logo** : bucket privé `logos` (2 Mo, JPG / PNG / WebP), `companies.logo_chemin`, cloisonnement
+  par société ; profil : charger, remplacer, supprimer ; logo par défaut = initiales. Affiché dans
+  les devis, factures et rapports internes (converti en PNG pour jsPDF) ; pas dans les contrats.
+- **Démonstration** : `companies.est_demo` (faux par défaut, non modifiable par l'API) ;
+  `seed_lock()` ne peuple plus que les sociétés démo → un nouveau compte démarre vide. Rien n'est
+  supprimé ; requête d'identification des comptes déjà peuplés dans le contrôle SQL.
+- **Administrateur de la plateforme** (distinct du rôle `admin` d'une société) :
+  `est_admin_plateforme()` = e-mail `kaillaniyoussef@gmail.com` confirmé, contrôlé en base ; lecture
+  seule des sociétés démo (policy ajoutée sur chaque table à `company_id`) ; `admin_comptes()`
+  (e-mails et chantiers uniquement pour les sociétés démo) ; `admin_definir_demo()`. Page `/admin`
+  hors menu, lien dans le profil pour l'administrateur.
+- **« Bientôt disponible »** : page `/bientot-disponible` hors menu (liens dans le profil et en bas
+  du tableau de bord), 5 fonctionnalités demandées + 8 de la feuille de route, sans date ;
+  namespaces `admin` et `bientot` dans les 5 langues.
+- **Tests** : `supabase/tests/plateforme.check.ts` (32 tests : nouveau compte vide, démo non
+  modifiable, reconnaissance de l'administrateur, lecture seule des démos, aucun accès aux
+  clients réels, logos cloisonnés, droits anon) ; toutes les suites PGlite vertes, y compris avec
+  la migration de sécurité des profils. Navigateur (sans base) : logo WebP converti, présent dans
+  l'en-tête des rapports et des devis, absent sans logo.
+- **Vérification sur la base réelle sans rien y laisser** : `supabase/tests/verif_profils_champs_proteges.sql`
+  (PR #22) et `supabase/tests/verif_demo_et_admin_plateforme.sql` ; chaque script teste comme un
+  utilisateur puis se termine par une erreur volontaire qui annule tout et affiche les résultats.
+  Testés sur base simulée (avec et sans correctif ; rien n'est conservé).
+- Chargement de la société en `select("*")` : l'application reste utilisable si elle est publiée
+  avant la migration du logo (logo par défaut).
+
+---
+
 ## 2026-10-16 — Sécurité : champs protégés du profil (faille existante corrigée)
 
 Branche : `securite-profils-champs-proteges`. **Migration à appliquer :**
