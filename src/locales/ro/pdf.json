@@ -27,7 +27,7 @@
   "structuredCommunication": "Comunicare structurată: {{value}}",
   "reference": "Referință: {{value}}",
   "generalConditions": "Condiții",
-  "footer": "Document generat la {{date}} cu ConstructFlow",
+  "footer": "Document generat la {{date}} cu ZidarPro",
   "fileQuote": "Deviz",
   "fileInvoice": "Factura",
   "defaultConditions": "Deviz valabil 30 de zile. Avans de 30 % la comandă.",
@@ -97,7 +97,7 @@
     "auditUa": "Browserul semnatarului: {{value}}",
     "auditHashSent": "Amprenta SHA-256 a documentului trimis: {{value}}",
     "auditHashSigned": "Amprenta SHA-256 a documentului semnat: {{value}}",
-    "auditNote": "Semnătură electronică simplă în sensul Regulamentului (UE) nr. 910/2014 (eIDAS). Ora serverului (ora Bruxelles). Document generat cu ConstructFlow.",
+    "auditNote": "Semnătură electronică simplă în sensul Regulamentului (UE) nr. 910/2014 (eIDAS). Ora serverului (ora Bruxelles). Document generat cu ZidarPro.",
     "page": "Pagina {{page}} / {{total}}"
   }
 }

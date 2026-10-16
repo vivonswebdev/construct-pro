@@ -14,7 +14,7 @@
   "exportPdf": "PDF-export",
   "empty": "Geen betalingen voor de gekozen periode en filters.",
   "emptyAccountant": "Geen activiteit in deze periode.",
-  "disclaimer": "Intern document, indicatief — te laten bevestigen door uw boekhouder. De bedragen komen uit de betalingen die in ConstructFlow zijn geregistreerd.",
+  "disclaimer": "Intern document, indicatief — te laten bevestigen door uw boekhouder. De bedragen komen uit de betalingen die in ZidarPro zijn geregistreerd.",
   "period": "Periode van {{from}} tot {{to}}",
   "filters": "Filters",
   "yes": "ja",

@@ -1,4 +1,4 @@
-# ConstructFlow — consignes pour Claude Code
+# ZidarPro (ex-ConstructFlow) — consignes pour Claude Code
 
 SaaS de gestion pour PME belges de la construction. Spécification complète et plan par phases :
 [PASSATION.md](PASSATION.md). Journal des décisions et de l'avancement : [docs/JOURNAL.md](docs/JOURNAL.md).
@@ -34,7 +34,7 @@ Langue de travail : **français**.
   `company_id` et les clés étrangères.
 - Nouvelle table à `company_id` : ajouter aussi la policy de lecture seule
   `admin_plateforme_demo_select` (`(SELECT public.est_admin_plateforme()) AND
-  public.est_societe_demo(company_id)`), sinon l'administrateur de la plateforme ne la voit pas
+public.est_societe_demo(company_id)`), sinon l'administrateur de la plateforme ne la voit pas
   dans les sociétés de démonstration. Jamais d'accès administrateur aux sociétés non « démo ».
 - Ressources publiques : policies `anon` strictement limitées ou RPC `security definer`.
 - Fonctions : Supabase (et PostgreSQL via `PUBLIC`) accordent EXECUTE à `anon` par défaut. Toute
@@ -98,6 +98,15 @@ comparer avec`toCode()` (`src/lib/statuts.ts`), jamais avec un libellé.
 - Accès public uniquement par jeton et RPC `security definer` (`contrat_a_signer`,
   `signer_contrat`) ; aucune policy `anon` sur les tables. Révoquer explicitement les droits par
   défaut de Supabase sur toute table de preuve (`REVOKE ALL … FROM anon, authenticated`).
+
+## Marque
+
+- Nom commercial **ZidarPro** (`common:appName`, `NOM_MARQUE`) ; le nom technique du dépôt, les
+  migrations et le compte de démonstration existant ne changent pas.
+- Logo : géométrie unique dans `src/lib/marque.ts` ; composant `ZidarProLogo` ; PDF via
+  `dessinerMarquePdf` ; fichiers régénérés par `bun scripts/marque/generer.ts` (charte :
+  `docs/marque/README.md`).
+- **Jamais de logo dans les contrats** (ni ZidarPro ni société).
 
 ## Fichiers
 

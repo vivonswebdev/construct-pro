@@ -1,4 +1,8 @@
-# Construct Pro
+# ZidarPro (anciennement ConstructFlow / Construct Pro)
+
+> Nom commercial : **ZidarPro**. Le dépôt garde son nom technique (`construct-pro`). Charte et
+> logos : [docs/marque/README.md](docs/marque/README.md). Le texte ci-dessous est le prompt
+> d'origine (historique).
 
 Voici le prompt ultra-complet, optimisé spécifiquement pour Lovable.app :
 

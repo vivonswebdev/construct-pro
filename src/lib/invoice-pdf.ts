@@ -5,6 +5,7 @@ import { lastTableY } from "./pdf";
 import i18n, { LANGUES_DOCUMENTS, type LangueDocument } from "./i18n";
 import { DEVIS_STATUTS, toCode, type DevisStatut } from "./statuts";
 import { logoPdfCourant, tailleDansBoite } from "./logo-pdf";
+import { NOM_MARQUE } from "./marque";
 
 const isDevisStatut = (s: string): s is DevisStatut =>
   (DEVIS_STATUTS as readonly string[]).includes(s);
@@ -93,7 +94,7 @@ export function exportFacturePDF(
   doc.setTextColor(255, 255, 255);
   doc.setFontSize(16);
   doc.setFont("helvetica", "bold");
-  doc.text(company.name || "ConstructFlow", x, 14);
+  doc.text(company.name || NOM_MARQUE, x, 14);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   if (company.address) doc.text(company.address, x, 20);

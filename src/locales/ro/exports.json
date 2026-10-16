@@ -14,7 +14,7 @@
   "exportPdf": "Export PDF",
   "empty": "Nicio plată pentru perioada și filtrele alese.",
   "emptyAccountant": "Nicio activitate în această perioadă.",
-  "disclaimer": "Document intern, orientativ — de confirmat cu contabilul. Sumele provin din plățile înregistrate în ConstructFlow.",
+  "disclaimer": "Document intern, orientativ — de confirmat cu contabilul. Sumele provin din plățile înregistrate în ZidarPro.",
   "period": "Perioada {{from}} – {{to}}",
   "filters": "Filtre",
   "yes": "da",

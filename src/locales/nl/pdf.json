@@ -27,7 +27,7 @@
   "structuredCommunication": "Gestructureerde mededeling: {{value}}",
   "reference": "Referentie: {{value}}",
   "generalConditions": "Voorwaarden",
-  "footer": "Document aangemaakt op {{date}} via ConstructFlow",
+  "footer": "Document aangemaakt op {{date}} via ZidarPro",
   "fileQuote": "Offerte",
   "fileInvoice": "Factuur",
   "defaultConditions": "Offerte 30 dagen geldig. Voorschot van 30 % bij bestelling.",
@@ -97,7 +97,7 @@
     "auditUa": "Browser van de ondertekenaar: {{value}}",
     "auditHashSent": "SHA-256-vingerafdruk van het verzonden document: {{value}}",
     "auditHashSigned": "SHA-256-vingerafdruk van het ondertekende document: {{value}}",
-    "auditNote": "Gewone elektronische handtekening in de zin van Verordening (EU) nr. 910/2014 (eIDAS). Servertijd (Brusselse tijd). Document aangemaakt via ConstructFlow.",
+    "auditNote": "Gewone elektronische handtekening in de zin van Verordening (EU) nr. 910/2014 (eIDAS). Servertijd (Brusselse tijd). Document aangemaakt via ZidarPro.",
     "page": "Pagina {{page}} / {{total}}"
   }
 }
