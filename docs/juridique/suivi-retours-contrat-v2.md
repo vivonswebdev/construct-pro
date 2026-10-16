@@ -97,25 +97,27 @@ document liste ce qui est attendu, ce que chaque réponse changera, et la procé
 
 ## 4. Corrections à intégrer dans le contrat v2
 
-### Prérequis technique, à faire avant la v2 (sans changer de texte)
+### Prérequis technique — ✅ fait (PR #20, fusionnée le 15/10/2026)
 
-Le rendu du contrat (`rendreContrat`, utilisé par l'envoi, la page `/signer/$token` et le PDF)
-**ignore la colonne `modele`** et produit toujours le texte v1. Si la v2 était publiée telle quelle,
-voici ce qui se passerait pour un lien v1 encore ouvert :
+Constat de départ : le rendu du contrat (`rendreContrat`, utilisé par l'envoi, la page
+`/signer/$token` et le PDF) **ignorait la colonne `modele`** et produisait toujours le texte v1. Une
+v2 publiée telle quelle aurait :
 
-1. la page afficherait le texte v2 ;
-2. l'empreinte ne correspondrait plus à celle de l'envoi ;
-3. la signature serait **refusée**.
+1. affiché le texte v2 sur un lien v1 encore ouvert ;
+2. rendu l'empreinte différente de celle de l'envoi ;
+3. fait **refuser** la signature.
 
-Les PDF des contrats v1 déjà signés seraient aussi régénérés avec le mauvais texte.
+Les PDF des contrats v1 déjà signés auraient aussi été régénérés avec le mauvais texte.
 
-Ce qu'il faut faire, dans une PR distincte, sans migration et sans changer le texte v1 :
+Réglé par la PR #20 (`contrat-rendu-par-modele`), sans migration et sans changer le texte v1 :
 
-- **Registre des modèles** par code : `sous_traitance_cadre_v1` → fonction de rendu v1.
-- **Rendu selon `modele`** pour chaque demande (envoi, page publique, PDF).
-- **Erreur explicite** si le code est inconnu, au lieu d'un repli silencieux.
-- **Tests de non-régression** : l'empreinte de v1 est identique avant et après la refonte, sur des
-  données fictives.
+- **Registre des modèles** (`src/lib/contrats/modeles.ts`) : `sous_traitance_cadre_v1` → rendu v1 ;
+  `MODELE_COURANT` réservé aux nouveaux envois.
+- **Rendu selon `modele`** de chaque demande : envoi, page publique, PDF des deux côtés.
+- **Erreur explicite** `modele_inconnu` si le code est inconnu, sans repli silencieux.
+- **Tests de non-régression** sur données fictives (`bun scripts/tests/modeles-contrat.check.ts`) :
+  texte v1 et empreintes identiques à la référence capturée avant la refonte ; lien v1 ouvert,
+  contrat v2 et PDF v1 signé vérifiés.
 
 ### Procédure v2 (après les réponses du juriste)
 
