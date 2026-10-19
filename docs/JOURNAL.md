@@ -4,6 +4,28 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-19 — E-mails d'authentification ZidarPro : préparation
+
+Branche : `emails-zidarpro`. Plan : `docs/plans/emails-zidarpro.md`. **Aucune migration, base de
+production non touchée, modèles de contrat inchangés.**
+
+- **Constat** : aucun modèle d'e-mail dans le dépôt, donc ce sont les e-mails par défaut de Lovable
+  Cloud qui partent. Confirmation automatique probable (commentaire du code de connexion), et pas
+  de « Mot de passe oublié » : aucun e-mail d'authentification n'est sans doute envoyé aujourd'hui.
+- **Lovable Cloud** : l'expéditeur personnalisé exige un domaine vérifié (More → Cloud → Emails).
+  Les 6 modèles sont générés par Lovable dans le code (« Customize auth emails »). Le nom
+  d'expéditeur n'est pas documenté.
+- **Ajouts** :
+  - `docs/emails/README.md` : guide (vérification, domaine `zidarpro.be`, modèles, tests,
+    retour arrière) ;
+  - `docs/emails/textes-auth.md` : consigne pour Lovable et textes des 6 e-mails en 5 langues ;
+  - langue de l'interface enregistrée à l'inscription (`user_metadata.langue`) ;
+  - diagnostic en lecture seule `supabase/tests/controle_emails_auth.sql`.
+- **À faire par Youssef** : domaine, puis génération des modèles dans Lovable.
+- **PR suivante** : relecture des modèles générés et ajout de « Mot de passe oublié ».
+
+---
+
 ## 2026-10-19 — Tableau de bord : liens « Voir » des alertes
 
 Branche : `fix-alertes-dashboard`. **Aucune migration.**

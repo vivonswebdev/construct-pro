@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { errorMessage } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import i18n, { DEFAULT_LANGUE, isLangue } from "@/lib/i18n";
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
@@ -28,6 +29,10 @@ function LoginPage() {
     if (session) navigate({ to: "/dashboard", replace: true });
   }, [session, navigate]);
 
+  // Langue de l'interface à l'inscription : les e-mails d'authentification ZidarPro l'utilisent
+  // (user_metadata.langue, voir docs/emails/README.md).
+  const langueInscription = () => (isLangue(i18n.language) ? i18n.language : DEFAULT_LANGUE);
+
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -43,7 +48,7 @@ function LoginPage() {
           password,
           options: {
             emailRedirectTo: window.location.origin,
-            data: { full_name: fullName, company_name: companyName },
+            data: { full_name: fullName, company_name: companyName, langue: langueInscription() },
           },
         });
         if (error) throw error;
@@ -78,6 +83,7 @@ function LoginPage() {
             data: {
               full_name: "Jean Démo",
               company_name: "Démo Construction SRL",
+              langue: langueInscription(),
             },
           },
         });
