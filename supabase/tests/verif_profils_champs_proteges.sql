@@ -3,8 +3,8 @@
 --
 -- AUCUNE MODIFICATION N'EST CONSERVÉE : tout se passe dans un seul bloc qui se termine
 -- volontairement par une erreur ; PostgreSQL annule alors tout ce que le bloc a fait (y compris
--- le compte fictif). Le message d'erreur affiche le résultat :
---   « VERIFICATION TERMINEE (rien n'est conservé) : … » ; chaque test doit indiquer OK.
+-- le compte fictif). Le message d'erreur affiche un résultat court :
+-- « VERIF 1:OK 2:OK … » (KO = échec, NT = non testé).
 --
 -- Tests, en se faisant passer pour un utilisateur existant (rôle authenticated, comme l'API) :
 --   1. il ne peut pas changer son company_id ;
@@ -38,7 +38,7 @@ BEGIN
     ok := false;
   EXCEPTION WHEN others THEN ok := SQLERRM LIKE '%profil_champ_protege%';
   END;
-  res := res || format(E'\n1. company_id non modifiable : %s', CASE WHEN ok THEN 'OK' ELSE 'ÉCHEC' END);
+  res := res || format(' 1:%s', CASE WHEN ok THEN 'OK' ELSE 'KO' END);
 
   BEGIN
     UPDATE public.profiles SET role = CASE WHEN role = 'admin' THEN 'gerant' ELSE 'admin' END
@@ -46,7 +46,7 @@ BEGIN
     ok := false;
   EXCEPTION WHEN others THEN ok := SQLERRM LIKE '%profil_champ_protege%';
   END;
-  res := res || format(E'\n2. rôle non modifiable : %s', CASE WHEN ok THEN 'OK' ELSE 'ÉCHEC' END);
+  res := res || format(' 2:%s', CASE WHEN ok THEN 'OK' ELSE 'KO' END);
 
   BEGIN
     UPDATE public.profiles
@@ -57,7 +57,7 @@ BEGIN
     ok := n = 1;
   EXCEPTION WHEN others THEN ok := false;
   END;
-  res := res || format(E'\n3. nom, avatar et langue modifiables : %s', CASE WHEN ok THEN 'OK' ELSE 'ÉCHEC' END);
+  res := res || format(' 3:%s', CASE WHEN ok THEN 'OK' ELSE 'KO' END);
 
   EXECUTE 'RESET ROLE';
   INSERT INTO auth.users (id, email, raw_user_meta_data)
@@ -65,7 +65,7 @@ BEGIN
           '{"company_name": "Société fictive de vérification"}');
   SELECT count(*) INTO n FROM public.profiles p JOIN public.companies c ON c.id = p.company_id
   WHERE p.id = fictif AND p.role = 'admin' AND c.name = 'Société fictive de vérification';
-  res := res || format(E'\n4. création de compte (société + profil) : %s', CASE WHEN n = 1 THEN 'OK' ELSE 'ÉCHEC' END);
+  res := res || format(' 4:%s', CASE WHEN n = 1 THEN 'OK' ELSE 'KO' END);
 
-  RAISE EXCEPTION 'VERIFICATION TERMINEE (rien n''est conservé) :%', res;
+  RAISE EXCEPTION 'VERIF%', res;
 END $$;
