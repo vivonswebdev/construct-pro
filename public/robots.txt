@@ -1,0 +1,20 @@
+# ZidarPro — site vitrine public ; l'application (connexion requise) n'est pas indexée.
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /chantiers
+Disallow: /clients
+Disallow: /facturation
+Disallow: /personnel
+Disallow: /vehicules
+Disallow: /stock
+Disallow: /precompte
+Disallow: /conformite-tva
+Disallow: /assistant
+Disallow: /profil
+Disallow: /sous-traitants
+Disallow: /admin
+Disallow: /bientot-disponible
+Disallow: /signer/
+
+Sitemap: https://zidarpro.be/sitemap.xml

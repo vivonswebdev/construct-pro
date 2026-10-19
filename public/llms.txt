@@ -1,0 +1,37 @@
+# ZidarPro
+
+> Logiciel belge de gestion pour les PME de la construction : vérification de l'obligation de retenue (30bis) avant chaque paiement, contrats de sous-traitance signés en ligne, journal des prestations, retenues ONSS et SPF Finances calculées et plafonnées, preuves de conformité, devis avec mentions légales (TVA 6 %, autoliquidation). Interface en français, néerlandais, anglais, roumain et polonais.
+
+Les guides citent leurs sources officielles (ONSS, SPF Finances, sécurité sociale) avec leur date de consultation. Ils ne remplacent pas l'avis d'un comptable. Tarifs sur demande ; démonstration sur demande.
+
+## Pages principales (français)
+
+- [Vos sous-traitants en règle, chaque paiement prouvé](https://zidarpro.be/): Logiciel belge pour la construction : vérification 30bis avant chaque paiement, contrats signés en ligne, prestations, retenues et preuves de conformité.
+- [Vérification 30bis avant chaque paiement](https://zidarpro.be/fr/fonctionnalites/verification-30bis): Vérification de l'obligation de retenue le jour du paiement, capture conservée, retenue ONSS et SPF Finances calculée et plafonnée, registre des retenues.
+- [Devis avec TVA à 6 % et autoliquidation](https://zidarpro.be/fr/fonctionnalites/devis-autoliquidation): Devis en français, néerlandais ou anglais avec les mentions légales complètes : TVA 6 % en rénovation et autoliquidation (cocontractant).
+- [Gestion des chantiers](https://zidarpro.be/fr/fonctionnalites/gestion-chantiers): Chantiers, journal des prestations des sous-traitants, heures et ouvriers, totaux par sous-traitant, exports CSV et PDF du journal de chantier.
+- [Sous-traitants et conformité](https://zidarpro.be/fr/fonctionnalites/sous-traitants-conformite): Statut de conformité de chaque sous-traitant : attestations 30bis et TVA, IBAN validé, contrat signé en ligne, alertes d'échéance et blocage automatique.
+- [Tarifs](https://zidarpro.be/fr/tarifs): Tarifs ZidarPro sur demande, selon la taille de votre entreprise et le nombre de sous-traitants. Demandez une démo personnalisée.
+- [Questions fréquentes](https://zidarpro.be/fr/faq): Réponses courtes et sourcées : obligation de retenue 30bis, Checkinatwork, Limosa, autoliquidation de la TVA et calcul des retenues.
+
+## Guides (français)
+
+- [Vérifier un sous-traitant : les contrôles avant de signer et de payer](https://zidarpro.be/fr/guides/verifier-un-sous-traitant): Comment vérifier un sous-traitant en Belgique : obligation de retenue avant chaque paiement, preuves à conserver, Checkinatwork et Limosa. Checklist PDF.
+- [Facture avec TVA à 6 % : conditions et mention légale](https://zidarpro.be/fr/guides/facture-tva-6-pourcent): TVA à 6 % pour la rénovation d'un logement de plus de 10 ans : conditions, nature des travaux et mention officielle à reprendre sur la facture. Modèle PDF.
+- [Obligation de retenue (30bis) : taux, paiement et sanctions](https://zidarpro.be/fr/guides/obligation-de-retenue): Obligation de retenue sur facture : qui est concerné, taux ONSS, SPF Finances et INASTI, plafond, limitation, paiement et sanctions. Fiche de calcul PDF.
+
+## Hoofdpagina's (Nederlands)
+
+- [Uw onderaannemers in orde, elke betaling bewezen](https://zidarpro.be/nl): Belgische bouwsoftware: controle inhoudingsplicht voor elke betaling, online ondertekende contracten, prestaties, inhoudingen en conformiteitsbewijzen.
+- [Controle van de inhoudingsplicht voor elke betaling](https://zidarpro.be/nl/functies/controle-inhoudingsplicht): Controle van de inhoudingsplicht op de betaaldag, schermafdruk bewaard, inhouding RSZ en FOD Financiën berekend en begrensd, register van inhoudingen.
+- [Offertes met 6 % btw en btw-verlegging](https://zidarpro.be/nl/functies/offertes-btw-verlegging): Offertes in het Nederlands, Frans of Engels met de volledige wettelijke vermeldingen: 6 % btw bij renovatie en verlegging van heffing (medecontractant).
+- [Werfbeheer](https://zidarpro.be/nl/functies/werfbeheer): Werven, dagboek van de prestaties van onderaannemers, uren en arbeiders, totalen per onderaannemer, exports in csv en pdf van het werfdagboek.
+- [Onderaannemers en conformiteit](https://zidarpro.be/nl/functies/onderaannemers-conformiteit): Conformiteit van elke onderaannemer: attesten inhoudingsplicht en btw, gevalideerd IBAN, online ondertekend contract, waarschuwingen en blokkering.
+- [Prijzen](https://zidarpro.be/nl/prijzen): Prijzen van ZidarPro op aanvraag, volgens de grootte van uw bedrijf en het aantal onderaannemers. Vraag een gepersonaliseerde demo aan.
+- [Veelgestelde vragen](https://zidarpro.be/nl/veelgestelde-vragen): Korte antwoorden met bronnen: inhoudingsplicht, Checkinatwork, Limosa, verlegging van heffing en berekening van de inhoudingen.
+
+## Gidsen (Nederlands)
+
+- [Een onderaannemer controleren: de controles voor ondertekening en betaling](https://zidarpro.be/nl/gidsen/onderaannemer-controleren): Een onderaannemer controleren in België: inhoudingsplicht voor elke betaling, bewijzen om te bewaren, Checkinatwork en Limosa. Checklist in pdf.
+- [Factuur met 6 % btw: voorwaarden en wettelijke vermelding](https://zidarpro.be/nl/gidsen/factuur-btw-6-procent): 6 % btw voor de renovatie van een woning ouder dan 10 jaar: voorwaarden, aard van de werken en officiële vermelding op de factuur. Model in pdf.
+- [Inhoudingsplicht (30bis): percentages, betaling en sancties](https://zidarpro.be/nl/gidsen/inhoudingsplicht): Inhoudingsplicht op factuur: wie is betrokken, percentages RSZ, FOD Financiën en RSVZ, plafond, beperking, betaling en sancties. Berekeningsfiche in pdf.

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as LangueIndexRouteImport } from './routes/$langue/index'
 import { Route as SignerTokenRouteImport } from './routes/signer.$token'
 import { Route as AppProfilRouteImport } from './routes/_app/profil'
 import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
@@ -19,6 +20,7 @@ import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
 import { Route as AppBientotDisponibleRouteImport } from './routes/_app/bientot-disponible'
 import { Route as AppAssistantRouteImport } from './routes/_app/assistant'
+import { Route as LangueSplatRouteImport } from './routes/$langue/$'
 import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
 import { Route as AppStockIndexRouteImport } from './routes/_app/stock.index'
 import { Route as AppSousTraitantsIndexRouteImport } from './routes/_app/sous-traitants.index'
@@ -48,6 +50,11 @@ const AppRoute = AppRouteImport.update({
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LangueIndexRoute = LangueIndexRouteImport.update({
+  id: '/$langue/',
+  path: '/$langue/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SignerTokenRoute = SignerTokenRouteImport.update({
@@ -84,6 +91,11 @@ const AppAssistantRoute = AppAssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
   getParentRoute: () => AppRoute,
+} as any)
+const LangueSplatRoute = LangueSplatRouteImport.update({
+  id: '/$langue/$',
+  path: '/$langue/$',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AppVehiculesIndexRoute = AppVehiculesIndexRouteImport.update({
   id: '/vehicules/',
@@ -169,6 +181,7 @@ const AppAdminClientsIdRoute = AppAdminClientsIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/$langue/$': typeof LangueSplatRoute
   '/assistant': typeof AppAssistantRoute
   '/bientot-disponible': typeof AppBientotDisponibleRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
@@ -176,6 +189,7 @@ export interface FileRoutesByFullPath {
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/signer/$token': typeof SignerTokenRoute
+  '/$langue/': typeof LangueIndexRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/clients/$id': typeof AppClientsIdRoute
   '/facturation/$id': typeof AppFacturationIdRoute
@@ -196,6 +210,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/$langue/$': typeof LangueSplatRoute
   '/assistant': typeof AppAssistantRoute
   '/bientot-disponible': typeof AppBientotDisponibleRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
@@ -203,6 +218,7 @@ export interface FileRoutesByTo {
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
   '/signer/$token': typeof SignerTokenRoute
+  '/$langue': typeof LangueIndexRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/clients/$id': typeof AppClientsIdRoute
   '/facturation/$id': typeof AppFacturationIdRoute
@@ -225,6 +241,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
+  '/$langue/$': typeof LangueSplatRoute
   '/_app/assistant': typeof AppAssistantRoute
   '/_app/bientot-disponible': typeof AppBientotDisponibleRoute
   '/_app/conformite-tva': typeof AppConformiteTvaRoute
@@ -232,6 +249,7 @@ export interface FileRoutesById {
   '/_app/precompte': typeof AppPrecompteRoute
   '/_app/profil': typeof AppProfilRoute
   '/signer/$token': typeof SignerTokenRoute
+  '/$langue/': typeof LangueIndexRoute
   '/_app/chantiers/$id': typeof AppChantiersIdRoute
   '/_app/clients/$id': typeof AppClientsIdRoute
   '/_app/facturation/$id': typeof AppFacturationIdRoute
@@ -254,6 +272,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/$langue/$'
     | '/assistant'
     | '/bientot-disponible'
     | '/conformite-tva'
@@ -261,6 +280,7 @@ export interface FileRouteTypes {
     | '/precompte'
     | '/profil'
     | '/signer/$token'
+    | '/$langue/'
     | '/chantiers/$id'
     | '/clients/$id'
     | '/facturation/$id'
@@ -281,6 +301,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/$langue/$'
     | '/assistant'
     | '/bientot-disponible'
     | '/conformite-tva'
@@ -288,6 +309,7 @@ export interface FileRouteTypes {
     | '/precompte'
     | '/profil'
     | '/signer/$token'
+    | '/$langue'
     | '/chantiers/$id'
     | '/clients/$id'
     | '/facturation/$id'
@@ -309,6 +331,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/login'
+    | '/$langue/$'
     | '/_app/assistant'
     | '/_app/bientot-disponible'
     | '/_app/conformite-tva'
@@ -316,6 +339,7 @@ export interface FileRouteTypes {
     | '/_app/precompte'
     | '/_app/profil'
     | '/signer/$token'
+    | '/$langue/'
     | '/_app/chantiers/$id'
     | '/_app/clients/$id'
     | '/_app/facturation/$id'
@@ -338,7 +362,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AppRoute: typeof AppRouteWithChildren
   LoginRoute: typeof LoginRoute
+  LangueSplatRoute: typeof LangueSplatRoute
   SignerTokenRoute: typeof SignerTokenRoute
+  LangueIndexRoute: typeof LangueIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -362,6 +388,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/$langue/': {
+      id: '/$langue/'
+      path: '/$langue'
+      fullPath: '/$langue/'
+      preLoaderRoute: typeof LangueIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/signer/$token': {
@@ -412,6 +445,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/assistant'
       preLoaderRoute: typeof AppAssistantRouteImport
       parentRoute: typeof AppRoute
+    }
+    '/$langue/$': {
+      id: '/$langue/$'
+      path: '/$langue/$'
+      fullPath: '/$langue/$'
+      preLoaderRoute: typeof LangueSplatRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/_app/vehicules/': {
       id: '/_app/vehicules/'
@@ -584,7 +624,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
   LoginRoute: LoginRoute,
+  LangueSplatRoute: LangueSplatRoute,
   SignerTokenRoute: SignerTokenRoute,
+  LangueIndexRoute: LangueIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

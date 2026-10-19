@@ -1,5 +1,11 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Outlet, createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
+import {
+  Outlet,
+  createRootRouteWithContext,
+  HeadContent,
+  Scripts,
+  useRouterState,
+} from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
 import appCss from "../styles.css?url";
@@ -50,8 +56,12 @@ function NotFound() {
 }
 
 function RootShell({ children }: { children: ReactNode }) {
+  // Langue du document : celle du site vitrine (/nl/...), sinon le français (référence).
+  const lang = useRouterState({
+    select: (st) => (/^\/nl(\/|$)/.test(st.location.pathname) ? "nl" : "fr"),
+  });
   return (
-    <html lang="fr">
+    <html lang={lang}>
       <head>
         <HeadContent />
       </head>

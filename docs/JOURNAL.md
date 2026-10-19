@@ -4,6 +4,42 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-19 — Site vitrine : première version FR / NL
+
+Branche : `site-vitrine`. Aucune migration, aucun accès à la base.
+
+- **Contenu** (`src/site/contenu/fr.ts`, `nl.ts`) : 13 pages par langue — accueil, 4 pages
+  fonctionnalités (30bis, devis et autoliquidation, chantiers, sous-traitants et conformité),
+  tarifs (« sur demande »), FAQ (30bis, Checkinatwork, Limosa, autoliquidation, retenues), 3 guides
+  (réponse directe, étapes, modèle PDF, sources officielles datées), demande de démo, mentions
+  légales (noindex). Contenu éditorial hors i18next (FR / NL seulement).
+- **Routes** : `/` (FR, SSR ; session ouverte → `/dashboard`), `/nl`, `/$langue/$` ; `/fr` → 301
+  vers `/` ; `<html lang>` dynamique.
+- **SEO** (`src/site/seo.ts`, `fichiers-seo.ts`) : title, description, canonical, hreflang fr-BE /
+  nl-BE / x-default, Open Graph ; JSON-LD Organization, WebSite, SoftwareApplication, FAQPage,
+  Article, HowTo, BreadcrumbList. `public/robots.txt` (application exclue), `sitemap.xml`
+  (24 URL avec alternates), `llms.txt` — générés par `bun scripts/site/generer-seo.ts`.
+- **Modèles téléchargeables** : 6 PDF dans `public/modeles/{fr,nl}/`
+  (`bun scripts/site/generer-modeles.ts`).
+- **Contrôles** : `bun scripts/tests/site.check.ts` (parité FR / NL, title ≤ 60, description
+  70–155, liens internes, modèles présents, fichiers SEO à jour, JSON-LD) ;
+  `bun scripts/site/verifier-liens.ts` (liens externes : 12 / 12 en 200 au 19/10/2026).
+- **Objectifs PageSpeed** (mobile, à mesurer après mise en ligne) : LCP < 2,5 s, CLS < 0,1,
+  INP < 200 ms, score Performance ≥ 90, SEO et Accessibilité ≥ 95. Pages rendues côté serveur,
+  sans image lourde (illustrations en HTML/CSS).
+
+### À faire avant publication
+
+- [ ] Renseigner `ADRESSE_DEMO` et `EDITEUR` (`src/site/config.ts`) : sans eux, le formulaire de
+      démo affiche « indisponible » et les mentions légales sont « en attente ».
+- [ ] Domaine canonique `zidarpro.be` non encore réservé (`VITE_SITE_URL` sinon).
+- [ ] Captures d'écran du compte démo : à fournir par Youssef ou à faire avec son accord
+      (illustrations fictives en attendant).
+- [ ] Relecture des guides et de la FAQ par le comptable (dont le point INASTI 15 %).
+- [ ] Après mise en ligne : Search Console (sitemap), test des résultats enrichis, PageSpeed.
+
+---
+
 ## 2026-10-19 — Référencement : recherche de mots-clés et plan du site vitrine
 
 Branche : `seo-site-vitrine`. Documentation uniquement : aucun code, aucune migration.
