@@ -21,20 +21,6 @@ Branche : `fix-admin-comptes-email`. **Migration à appliquer :**
 
 ---
 
-## 2026-10-19 — Correctif : onglet « Clients » du back-office vide
-
-Branche : `fix-admin-comptes-email`. **Migration à appliquer :**
-`20261019090000_admin_comptes_email_text.sql`.
-
-- Cause : `admin_comptes()` échouait sur Supabase (`auth.users.email` est en `varchar(255)`, la
-  fonction annonce `text[]`) ; l'écran affichait une liste vide au lieu de l'erreur.
-- Correctif : conversion `u.email::text` (règles d'accès inchangées) ; les onglets du back-office
-  affichent désormais les erreurs de chargement.
-- Base simulée : `auth.users.email` en `varchar(255)` comme Supabase (le défaut est reproduit sans
-  le correctif) ; `plateforme.check.ts` réapplique les correctifs après son test d'idempotence.
-
----
-
 ## 2026-10-16 — Back-office administrateur (lecture seule)
 
 Branche : `backoffice-admin`. Plan : `docs/plans/backoffice-admin.md`. **Migration à appliquer :**
