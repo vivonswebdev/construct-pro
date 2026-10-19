@@ -430,7 +430,12 @@ function DevisDetail() {
                 checked={!!f.attestation_6}
                 onChange={(e) => setF({ ...f, attestation_6: e.target.checked })}
               />
-              <span>{mentionAttestation6(docLang)}</span>
+              <span>
+                {t("detail.mention6Label")}
+                <span className="mt-1 block text-xs text-amber-800/80">
+                  {mentionAttestation6(docLang)}
+                </span>
+              </span>
             </label>
           )}
         </div>

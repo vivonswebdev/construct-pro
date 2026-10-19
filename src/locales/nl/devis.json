@@ -78,7 +78,8 @@
     "siteNameDefault": "Werf {{client}}",
     "siteDescription": "Aangemaakt op basis van offerte {{number}}",
     "confirmDelete": "Deze offerte definitief verwijderen?",
-    "defaultCompany": "Mijn onderneming"
+    "defaultCompany": "Mijn onderneming",
+    "mention6Label": "Btw-tarief van 6 % toepassen (renovatie van een woning ouder dan 10 jaar): de wettelijke vermelding hieronder wordt op het document gedrukt"
   },
   "columnsLines": {
     "description": "Omschrijving",

@@ -78,7 +78,8 @@
     "siteNameDefault": "Chantier {{client}}",
     "siteDescription": "Créé depuis le devis {{number}}",
     "confirmDelete": "Supprimer définitivement ce devis ?",
-    "defaultCompany": "Mon entreprise"
+    "defaultCompany": "Mon entreprise",
+    "mention6Label": "Appliquer la TVA à 6 % (rénovation d'un logement de plus de 10 ans) : la mention légale ci-dessous sera imprimée sur le document"
   },
   "columnsLines": {
     "description": "Description",

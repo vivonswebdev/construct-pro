@@ -207,8 +207,21 @@ export function exportFacturePDF(
     doc.setFontSize(9);
     doc.text(t("legalMentions"), 14, y);
     doc.setFont("helvetica", "normal");
-    mentions.forEach((m, i) => doc.text(m, 14, y + 5 + i * 5));
-    y += 8 + mentions.length * 5;
+    // Mentions légales complètes (textes officiels, plusieurs lignes) : retour à la ligne et
+    // nouvelle page si nécessaire.
+    doc.setFontSize(7.5);
+    y += 4;
+    for (const m of mentions) {
+      const lignes = doc.splitTextToSize(m, W - 28) as string[];
+      if (y + lignes.length * 3.4 > 282) {
+        doc.addPage();
+        y = 20;
+      }
+      doc.text(lignes, 14, y);
+      y += lignes.length * 3.4 + 2;
+    }
+    doc.setFontSize(9);
+    y += 4;
   }
 
   // Notes, paiement, conditions
