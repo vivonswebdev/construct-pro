@@ -4,6 +4,18 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-19 — Tableau de bord : liens « Voir » des alertes
+
+Branche : `fix-alertes-dashboard`. **Aucune migration.**
+
+- Les boutons « Voir » des alertes (code d'origine) n'avaient aucune action. Chaque alerte ouvre
+  désormais la page où la traiter : fiche du chantier, de l'ouvrier ou du véhicule s'il n'y en a
+  qu'un, sinon la liste ; module Précompte & ONSS pour les salaires, le précompte et l'ONSS.
+- Recherche des autres boutons sans action dans l'application : aucun (le seul autre est
+  volontairement désactivé, module Précompte).
+
+---
+
 ## 2026-10-19 — Correctif : onglet « Clients » du back-office vide
 
 Branche : `fix-admin-comptes-email`. **Migration à appliquer :**
