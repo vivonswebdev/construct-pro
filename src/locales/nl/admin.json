@@ -95,5 +95,6 @@
     "prestations": "Prestaties (laatste 50)",
     "validated": "gevalideerd",
     "label30bis": "30bis: {{status}}"
-  }
+  },
+  "loadError": "Laden mislukt. Het technische bericht hieronder helpt de oorzaak te vinden."
 }

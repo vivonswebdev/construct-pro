@@ -95,5 +95,6 @@
     "prestations": "Work entries (latest 50)",
     "validated": "validated",
     "label30bis": "30bis: {{status}}"
-  }
+  },
+  "loadError": "Could not load. The technical message below helps identify the cause."
 }

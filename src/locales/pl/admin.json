@@ -99,5 +99,6 @@
     "prestations": "Wpisy prac (ostatnie 50)",
     "validated": "zatwierdzony",
     "label30bis": "30bis: {{status}}"
-  }
+  },
+  "loadError": "Nie udało się wczytać. Poniższy komunikat techniczny pomaga ustalić przyczynę."
 }

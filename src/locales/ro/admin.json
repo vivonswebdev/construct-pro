@@ -97,5 +97,6 @@
     "prestations": "Prestații (ultimele 50)",
     "validated": "validată",
     "label30bis": "30bis: {{status}}"
-  }
+  },
+  "loadError": "Încărcare imposibilă. Mesajul tehnic de mai jos ajută la identificarea cauzei."
 }
