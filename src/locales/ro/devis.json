@@ -79,7 +79,8 @@
     "siteNameDefault": "Șantier {{client}}",
     "siteDescription": "Creat din devizul {{number}}",
     "confirmDelete": "Ștergeți definitiv acest deviz?",
-    "defaultCompany": "Firma mea"
+    "defaultCompany": "Firma mea",
+    "mention6Label": "Aplicați TVA de 6 % (renovarea unei locuințe mai vechi de 10 ani): mențiunea legală de mai jos va fi tipărită pe document"
   },
   "columnsLines": {
     "description": "Descriere",

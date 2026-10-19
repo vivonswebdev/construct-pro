@@ -80,7 +80,8 @@
     "siteNameDefault": "Budowa {{client}}",
     "siteDescription": "Utworzona z oferty {{number}}",
     "confirmDelete": "Trwale usunąć tę ofertę?",
-    "defaultCompany": "Moja firma"
+    "defaultCompany": "Moja firma",
+    "mention6Label": "Zastosuj VAT 6 % (remont lokalu mieszkalnego starszego niż 10 lat): poniższa wzmianka prawna zostanie wydrukowana na dokumencie"
   },
   "columnsLines": {
     "description": "Opis",

@@ -78,7 +78,8 @@
     "siteNameDefault": "Site {{client}}",
     "siteDescription": "Created from quote {{number}}",
     "confirmDelete": "Permanently delete this quote?",
-    "defaultCompany": "My company"
+    "defaultCompany": "My company",
+    "mention6Label": "Apply 6% VAT (renovation of a dwelling over 10 years old): the legal statement below will be printed on the document"
   },
   "columnsLines": {
     "description": "Description",

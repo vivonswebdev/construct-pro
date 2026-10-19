@@ -4,6 +4,27 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-19 — Correctif légal : mentions TVA 6 % et autoliquidation des devis et factures
+
+Branche : `fix-mentions-legales`. **Aucune migration.** Modèle de contrat inchangé.
+
+- **Constat** (pendant la recherche pour le site vitrine) : les PDF imprimaient
+  « TVA 6 % … attestation client requise » (attestation supprimée depuis 2022) et
+  « Autoliquidation – Art. 20 AR n° 1 TVA » (formule courte insuffisante depuis le 01/01/2023).
+- **Correction** : mentions légales complètes.
+  - 6 % : texte officiel du SPF Finances (fin.belgium.be, FR et NL, consulté le 19/10/2026).
+  - Autoliquidation : texte de l'AR du 26/10/2022 (UCM en FR, Baker Tilly en NL).
+  - EN, RO, PL : traductions ; les documents ne sortent qu'en FR, NL ou EN.
+- PDF : les mentions reviennent à la ligne (plus de débordement) et passent à la page suivante si
+  nécessaire. Écran devis : libellé court pour la case 6 %, texte complet en dessous.
+- La pré-saisie « TVA » de la fiche des **nouveaux** contrats reprend la nouvelle mention
+  d'autoliquidation : ce sont des données saisies, le texte du modèle n'est pas modifié. Les contrats
+  déjà envoyés gardent leurs données figées et leur empreinte.
+- Vérifié dans le navigateur (devis fictif FR / NL / EN) : mentions complètes, dans les marges,
+  une page. À faire relire par le comptable.
+
+---
+
 ## 2026-10-19 — Référencement : recherche de mots-clés et plan du site vitrine
 
 Branche : `seo-site-vitrine`. Documentation uniquement : aucun code, aucune migration.
