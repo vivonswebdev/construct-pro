@@ -1,6 +1,8 @@
 -- Contrôle en LECTURE SEULE de la migration 20261017090000_backoffice_admin.sql.
--- À coller dans l'éditeur SQL Supabase après l'avoir appliquée. Chaque ligne doit afficher ok = true
--- (sauf la dernière, informative).
+-- À coller dans l'éditeur SQL Supabase après l'avoir appliquée.
+-- Résultat : UNE ligne (l'éditeur Supabase n'affiche que la dernière requête) ; attendu ko = 0.
+-- En cas d'échec, « en_echec » nomme les contrôles concernés.
+WITH controles (objet, ok) AS (
 SELECT 'tables journal_plateforme et erreurs_application (RLS active)' AS objet,
   (SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid = c.relnamespace
    WHERE n.nspname = 'public' AND c.relname IN ('journal_plateforme', 'erreurs_application')
@@ -39,4 +41,10 @@ SELECT 'anon : toujours seulement la signature publique',
                 AND p.proname NOT IN ('contrat_a_signer', 'signer_contrat'))
 UNION ALL
 SELECT '(information) journal d''audit Supabase pour les connexions ; faux = seule la dernière connexion est affichée',
-  to_regclass('auth.audit_log_entries') IS NOT NULL;
+  to_regclass('auth.audit_log_entries') IS NOT NULL
+)
+SELECT count(*) FILTER (WHERE ok AND objet NOT LIKE '(information)%') AS ok,
+  count(*) FILTER (WHERE NOT ok AND objet NOT LIKE '(information)%') AS ko,
+  string_agg(objet, ' | ') FILTER (WHERE NOT ok AND objet NOT LIKE '(information)%') AS en_echec,
+  string_agg(objet || ' = ' || ok, ' | ') FILTER (WHERE objet LIKE '(information)%') AS informations
+FROM controles;

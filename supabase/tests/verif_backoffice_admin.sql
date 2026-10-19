@@ -2,8 +2,11 @@
 -- l'éditeur SQL Supabase APRÈS l'avoir appliquée.
 --
 -- AUCUNE MODIFICATION N'EST CONSERVÉE : le bloc se termine volontairement par une erreur qui annule
--- tout (compte fictif, erreur fictive, entrées de journal). Le message d'erreur affiche le résultat :
--- « VERIFICATION TERMINEE (rien n'est conservé) : … » ; chaque test doit indiquer OK.
+-- tout (compte fictif, erreur fictive, entrées de journal). Le message d'erreur affiche un résultat
+-- court : « VERIF 1:OK 2:OK … » (KO = échec, NT = non testé).
+-- Légende : 1 création de société journalisée · 2 non-administrateur refusé · 3 signalement
+-- d'erreur enregistré · 4 statistiques (7 indicateurs) · 5 aucun e-mail ni nom de client réel
+-- (utilisateurs) · 6 aucun e-mail ni message de client réel (activité).
 DO $$
 DECLARE
   adm uuid;
@@ -23,11 +26,11 @@ BEGIN
   SELECT count(*) INTO n FROM public.journal_plateforme j
   JOIN public.profiles p ON p.company_id = j.company_id
   WHERE p.id = fictif AND j.type = 'societe_creee';
-  res := res || format(E'\n1. création de société journalisée : %s', CASE WHEN n = 1 THEN 'OK' ELSE 'ÉCHEC' END);
+  res := res || format(' 1:%s', CASE WHEN n = 1 THEN 'OK' ELSE 'KO' END);
 
   -- 2. Un utilisateur non administrateur est refusé.
   IF autre IS NULL THEN
-    res := res || E'\n2. refus d''un non-administrateur : NON TESTÉ (aucun autre utilisateur)';
+    res := res || ' 2:NT';
   ELSE
     PERFORM set_config('request.jwt.claim.sub', autre::text, true);
     PERFORM set_config('request.jwt.claims', json_build_object('sub', autre, 'role', 'authenticated')::text, true);
@@ -40,28 +43,28 @@ BEGIN
     -- 3. Signalement d'une erreur par cet utilisateur.
     PERFORM public.signaler_erreur('VerificationTest', 'message fictif', '/verification', 'script');
     EXECUTE 'RESET ROLE';
-    res := res || format(E'\n2. refus d''un non-administrateur : %s', CASE WHEN ok THEN 'OK' ELSE 'ÉCHEC' END);
+    res := res || format(' 2:%s', CASE WHEN ok THEN 'OK' ELSE 'KO' END);
     SELECT count(*) INTO n FROM public.erreurs_application WHERE code = 'VerificationTest';
-    res := res || format(E'\n3. signalement d''erreur enregistré : %s', CASE WHEN n = 1 THEN 'OK' ELSE 'ÉCHEC' END);
+    res := res || format(' 3:%s', CASE WHEN n = 1 THEN 'OK' ELSE 'KO' END);
   END IF;
 
   -- 4 à 6. L'administrateur : statistiques, utilisateurs, activité sans donnée de client réel.
   IF adm IS NULL THEN
-    res := res || E'\n4-6. administrateur : NON TESTÉ (compte administrateur absent ou non confirmé)';
+    res := res || ' 4:NT 5:NT 6:NT';
   ELSE
     PERFORM set_config('request.jwt.claim.sub', adm::text, true);
     PERFORM set_config('request.jwt.claims', json_build_object('sub', adm, 'role', 'authenticated')::text, true);
     EXECUTE 'SET LOCAL ROLE authenticated';
     SELECT count(*) INTO n FROM public.admin_statistiques();
-    res := res || format(E'\n4. statistiques (7 indicateurs) : %s', CASE WHEN n = 7 THEN 'OK' ELSE format('ÉCHEC (%s)', n) END);
+    res := res || format(' 4:%s', CASE WHEN n = 7 THEN 'OK' ELSE format('KO(%s)', n) END);
     SELECT count(*) INTO n FROM public.admin_utilisateurs() u
     WHERE NOT u.est_demo AND (u.email IS NOT NULL OR u.nom IS NOT NULL);
-    res := res || format(E'\n5. utilisateurs : aucun e-mail ni nom de client réel : %s', CASE WHEN n = 0 THEN 'OK' ELSE format('ÉCHEC (%s)', n) END);
+    res := res || format(' 5:%s', CASE WHEN n = 0 THEN 'OK' ELSE format('KO(%s)', n) END);
     SELECT count(*) INTO n FROM public.admin_activite(NULL, 1000) a
     WHERE NOT a.est_demo AND (a.email IS NOT NULL OR (a.details IS NOT NULL AND a.details ? 'message'));
-    res := res || format(E'\n6. activité : aucun e-mail ni message de client réel : %s', CASE WHEN n = 0 THEN 'OK' ELSE format('ÉCHEC (%s)', n) END);
+    res := res || format(' 6:%s', CASE WHEN n = 0 THEN 'OK' ELSE format('KO(%s)', n) END);
     EXECUTE 'RESET ROLE';
   END IF;
 
-  RAISE EXCEPTION 'VERIFICATION TERMINEE (rien n''est conservé) :%', res;
+  RAISE EXCEPTION 'VERIF%', res;
 END $$;

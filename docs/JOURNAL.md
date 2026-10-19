@@ -16,6 +16,23 @@ Branche : `fix-alertes-dashboard`. **Aucune migration.**
 
 ---
 
+## 2026-10-19 — Scripts de contrôle et de vérification compacts
+
+Branche : `scripts-controle-compacts`. **Aucune migration.**
+
+- Les résultats étaient coupés dans l'éditeur Supabase (longs messages d'erreur, plusieurs requêtes
+  dont seule la dernière s'affiche). Les 4 contrôles récents (`controle_profils_champs_proteges`,
+  `controle_logos_entreprise`, `controle_demo_et_admin_plateforme`, `controle_backoffice_admin`)
+  renvoient désormais **une ligne** : `ok`, `ko`, `en_echec`, `informations` ; les 3 vérifications
+  renvoient `VERIF 1:OK 2:OK …` (légende en tête de fichier). Requête d'identification des comptes
+  de démo passée en facultative (commentée).
+- **Incohérence corrigée** : depuis le back-office, le contrôle « policy de lecture démo sur chaque
+  table à company_id » échouait à cause des tables de plateforme (`journal_plateforme`,
+  `erreurs_application`, sans policy par conception) : elles sont exclues.
+- Les 7 scripts testés sur base simulée (rien n'est conservé) ; convention ajoutée à `CLAUDE.md`.
+
+---
+
 ## 2026-10-19 — Correctif : onglet « Clients » du back-office vide
 
 Branche : `fix-admin-comptes-email`. **Migration à appliquer :**

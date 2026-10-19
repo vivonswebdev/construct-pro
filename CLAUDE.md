@@ -50,6 +50,11 @@ public.est_societe_demo(company_id)`), sinon l'administrateur de la plateforme n
   `TablesUpdate<"x">`.
 - Les migrations sont appliquées par Youssef (Lovable / tableau de bord Supabase) : les signaler
   clairement dans le résumé de PR.
+- Chaque migration a un **contrôle** en lecture seule (`supabase/tests/controle_*.sql`) qui se
+  termine par **une seule ligne** de résumé (`ok`, `ko`, `en_echec`) — l'éditeur Supabase n'affiche
+  que la dernière requête — et, si utile, une **vérification sans trace** (`verif_*.sql` : bloc
+  `DO` terminé par une erreur volontaire au message court `VERIF 1:OK 2:OK …`, légende en tête).
+  Les tester sur PGlite avant de les remettre à Youssef.
 
 ## Conventions de code
 

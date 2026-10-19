@@ -1,5 +1,8 @@
 -- Contrôle en LECTURE SEULE de la migration 20261016090000_profils_champs_proteges.sql.
--- À coller dans l'éditeur SQL Supabase après l'avoir appliquée. Chaque ligne doit afficher ok = true.
+-- À coller dans l'éditeur SQL Supabase après l'avoir appliquée.
+-- Résultat : UNE ligne (l'éditeur Supabase n'affiche que la dernière requête) ; attendu ko = 0.
+-- En cas d'échec, « en_echec » nomme les contrôles concernés.
+WITH controles (objet, ok) AS (
 SELECT 'trigger de protection présent et actif' AS objet,
   EXISTS (SELECT 1 FROM pg_trigger
           WHERE tgname = 'trg_profils_champs_proteges'
@@ -10,7 +13,13 @@ SELECT 'fonction proteger_profil() non exécutable par anon / authenticated',
   AND NOT has_function_privilege('authenticated', 'public.proteger_profil()', 'EXECUTE')
 UNION ALL
 SELECT 'création de compte (handle_new_user) toujours en place',
-  EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'on_auth_user_created');
+  EXISTS (SELECT 1 FROM pg_trigger WHERE tgname = 'on_auth_user_created')
+)
+SELECT count(*) FILTER (WHERE ok AND objet NOT LIKE '(information)%') AS ok,
+  count(*) FILTER (WHERE NOT ok AND objet NOT LIKE '(information)%') AS ko,
+  string_agg(objet, ' | ') FILTER (WHERE NOT ok AND objet NOT LIKE '(information)%') AS en_echec,
+  string_agg(objet || ' = ' || ok, ' | ') FILTER (WHERE objet LIKE '(information)%') AS informations
+FROM controles;
 
 -- Facultatif — indices d'une exploitation passée de la faille (à examiner, pas forcément anormal) :
 -- utilisateurs rattachés à une société créée AVANT leur compte (la création de compte crée la

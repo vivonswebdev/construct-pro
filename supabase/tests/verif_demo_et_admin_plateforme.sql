@@ -4,8 +4,10 @@
 --
 -- AUCUNE MODIFICATION N'EST CONSERVÉE : tout se passe dans un seul bloc qui se termine
 -- volontairement par une erreur ; PostgreSQL annule alors tout (y compris le compte fictif).
--- Le message d'erreur affiche le résultat : « VERIFICATION TERMINEE (rien n'est conservé) : … » ;
--- chaque test doit indiquer OK.
+-- Le message d'erreur affiche un résultat court : « VERIF 1:OK 2:OK … » (KO = échec, NT = non testé).
+-- Légende : 1 compte administrateur existant et confirmé · 2 seul administrateur de la plateforme
+-- · 3 nouveau compte vide (pas de démo, 0 chantier) · 4 un utilisateur ne peut pas se marquer démo
+-- · 5 l'administrateur ne voit aucun chantier de client réel.
 DO $$
 DECLARE
   u record;
@@ -21,8 +23,8 @@ BEGIN
   -- 1. Le compte administrateur existe, e-mail confirmé.
   SELECT count(*) INTO n FROM auth.users
   WHERE lower(email) = 'kaillaniyoussef@gmail.com' AND email_confirmed_at IS NOT NULL;
-  res := res || format(E'\n1. compte kaillaniyoussef@gmail.com existant et confirmé : %s',
-    CASE WHEN n = 1 THEN 'OK' ELSE format('ÉCHEC (%s compte(s))', n) END);
+  res := res || format(' 1:%s',
+    CASE WHEN n = 1 THEN 'OK' ELSE format('KO(%s)', n) END);
 
   -- 2. est_admin_plateforme() n'est vraie que pour ce compte (évaluée pour chaque utilisateur).
   FOR u IN SELECT id, email FROM auth.users LOOP
@@ -33,9 +35,9 @@ BEGIN
       adm := u.id;
     END IF;
   END LOOP;
-  res := res || format(E'\n2. seul administrateur de la plateforme : %s (%s)',
-    CASE WHEN admins = ARRAY['kaillaniyoussef@gmail.com'] THEN 'OK' ELSE 'ÉCHEC' END,
-    coalesce(nullif(array_to_string(admins, ', '), ''), 'aucun'));
+  res := res || format(' 2:%s',
+    CASE WHEN admins = ARRAY['kaillaniyoussef@gmail.com'] THEN 'OK'
+    ELSE 'KO(' || coalesce(nullif(array_to_string(admins, ','), ''), 'aucun') || ')' END);
 
   -- 3. Un nouveau compte démarre vide (compte fictif, annulé à la fin).
   INSERT INTO auth.users (id, email, raw_user_meta_data)
@@ -48,8 +50,8 @@ BEGIN
   EXECUTE 'SET LOCAL ROLE authenticated';
   r := public.seed_lock(societe);
   SELECT count(*) INTO n FROM public.chantiers;
-  res := res || format(E'\n3. nouveau compte : pas de peuplement de démo, 0 chantier visible : %s',
-    CASE WHEN r IS NULL AND n = 0 THEN 'OK' ELSE format('ÉCHEC (seed=%s, chantiers=%s)', r, n) END);
+  res := res || format(' 3:%s',
+    CASE WHEN r IS NULL AND n = 0 THEN 'OK' ELSE format('KO(%s,%s)', r IS NOT NULL, n) END);
 
   -- 4. Un utilisateur ne peut pas se déclarer « démo ».
   BEGIN
@@ -57,12 +59,12 @@ BEGIN
     ok := false;
   EXCEPTION WHEN others THEN ok := SQLERRM LIKE '%est_demo_reserve_admin%';
   END;
-  res := res || format(E'\n4. un utilisateur ne peut pas se marquer démo : %s', CASE WHEN ok THEN 'OK' ELSE 'ÉCHEC' END);
+  res := res || format(' 4:%s', CASE WHEN ok THEN 'OK' ELSE 'KO' END);
   EXECUTE 'RESET ROLE';
 
   -- 5. L'administrateur ne voit aucun chantier d'une société non « démo » autre que la sienne.
   IF adm IS NULL THEN
-    res := res || E'\n5. accès de l''administrateur aux clients réels : NON TESTÉ (pas d''administrateur)';
+    res := res || ' 5:NT';
   ELSE
     PERFORM set_config('request.jwt.claim.sub', adm::text, true);
     PERFORM set_config('request.jwt.claims',
@@ -72,9 +74,9 @@ BEGIN
     WHERE ch.company_id <> public.get_user_company_id(adm)
       AND NOT public.est_societe_demo(ch.company_id);
     EXECUTE 'RESET ROLE';
-    res := res || format(E'\n5. administrateur : aucun chantier de client réel visible : %s',
-      CASE WHEN n = 0 THEN 'OK' ELSE format('ÉCHEC (%s)', n) END);
+    res := res || format(' 5:%s',
+      CASE WHEN n = 0 THEN 'OK' ELSE format('KO(%s)', n) END);
   END IF;
 
-  RAISE EXCEPTION 'VERIFICATION TERMINEE (rien n''est conservé) :%', res;
+  RAISE EXCEPTION 'VERIF%', res;
 END $$;
