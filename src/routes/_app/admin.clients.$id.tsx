@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { ArrowLeft, Lock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { GardeAdmin, TableUtilisateurs } from "@/components/admin/AdminCommun";
+import { ErreurChargement, GardeAdmin, TableUtilisateurs } from "@/components/admin/AdminCommun";
 import { useUtilisateurs } from "@/lib/admin";
 import { formatEURBE } from "@/lib/belgian";
 import { STYLES_CONFORMITE, type StatutConformite } from "@/lib/conformite";
@@ -24,7 +24,7 @@ export const Route = createFileRoute("/_app/admin/clients/$id")({
 function FicheClient() {
   const { t } = useTranslation(["admin", "common"]);
   const { id } = Route.useParams();
-  const { data: comptes } = useQuery({
+  const { data: comptes, error: erreurComptes } = useQuery({
     queryKey: ["admin-comptes"],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("admin_comptes");
@@ -44,7 +44,9 @@ function FicheClient() {
         >
           <ArrowLeft className="h-4 w-4" /> {t("client.back")}
         </Link>
-        {!compte ? (
+        {erreurComptes ? (
+          <ErreurChargement erreur={erreurComptes} />
+        ) : !compte ? (
           <div className="h-40 animate-pulse rounded-xl bg-muted" />
         ) : (
           <>
@@ -88,7 +90,7 @@ function FicheClient() {
 
 function DonneesDemo({ companyId }: { companyId: string }) {
   const { t } = useTranslation(["admin", "sousTraitants", "statuts"]);
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["admin-demo", companyId],
     queryFn: async () => {
       const [ch, st, ct, pr, cf] = await Promise.all([
@@ -124,6 +126,7 @@ function DonneesDemo({ companyId }: { companyId: string }) {
       };
     },
   });
+  if (error) return <ErreurChargement erreur={error} />;
   if (isLoading || !data) return <div className="h-40 animate-pulse rounded-xl bg-muted" />;
   const nomST = new Map(data.sousTraitants.map((s) => [s.id, s.raison_sociale]));
   const stDuContrat = new Map(data.contrats.map((c) => [c.id, c.sous_traitant_id]));

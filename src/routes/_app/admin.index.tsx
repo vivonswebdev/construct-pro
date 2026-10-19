@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Activity, BarChart3, Building2, ShieldCheck, Users, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { GardeAdmin, TableUtilisateurs } from "@/components/admin/AdminCommun";
+import { ErreurChargement, GardeAdmin, TableUtilisateurs } from "@/components/admin/AdminCommun";
 import { dateHeure, useUtilisateurs } from "@/lib/admin";
 import { formatDateBE } from "@/lib/format";
 import { pageHead } from "@/lib/head";
@@ -77,7 +77,7 @@ const INDICATEURS = [
 
 function Apercu() {
   const { t } = useTranslation("admin");
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     queryKey: ["admin-statistiques"],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("admin_statistiques");
@@ -85,6 +85,7 @@ function Apercu() {
       return new Map(data.map((l) => [l.indicateur, l]));
     },
   });
+  if (error) return <ErreurChargement erreur={error} />;
   if (isLoading || !data) return <div className="h-40 animate-pulse rounded-xl bg-muted" />;
   return (
     <div>
@@ -114,7 +115,11 @@ function Clients() {
   const { t } = useTranslation(["admin", "common"]);
   const qc = useQueryClient();
   const [bascule, setBascule] = useState<{ id: string; nom: string; demo: boolean } | null>(null);
-  const { data = [], isLoading } = useQuery({
+  const {
+    data = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["admin-comptes"],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("admin_comptes");
@@ -122,6 +127,7 @@ function Clients() {
       return data;
     },
   });
+  if (error) return <ErreurChargement erreur={error} />;
   if (isLoading) return <div className="h-40 animate-pulse rounded-xl bg-muted" />;
   return (
     <div className="rounded-xl border border-border bg-card">
@@ -271,7 +277,8 @@ function ConfirmationDemo({
 
 // ---------------------------------------------------------------- Utilisateurs
 function Utilisateurs() {
-  const { data = [], isLoading } = useUtilisateurs();
+  const { data = [], isLoading, error } = useUtilisateurs();
+  if (error) return <ErreurChargement erreur={error} />;
   if (isLoading) return <div className="h-40 animate-pulse rounded-xl bg-muted" />;
   return <TableUtilisateurs lignes={data} avecSociete />;
 }
@@ -282,7 +289,11 @@ const CATEGORIES = ["connexion", "creation_compte", "changement", "erreur"] as c
 function JournalActivite() {
   const { t } = useTranslation("admin");
   const [categorie, setCategorie] = useState<(typeof CATEGORIES)[number] | null>(null);
-  const { data = [], isLoading } = useQuery({
+  const {
+    data = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["admin-activite", categorie],
     queryFn: async () => {
       const { data, error } = await supabase.rpc("admin_activite", {
@@ -308,7 +319,9 @@ function JournalActivite() {
           </button>
         ))}
       </div>
-      {isLoading ? (
+      {error ? (
+        <ErreurChargement erreur={error} />
+      ) : isLoading ? (
         <div className="h-40 animate-pulse rounded-xl bg-muted" />
       ) : data.length === 0 ? (
         <p className="rounded-xl border border-border bg-card p-5 text-sm text-muted-foreground">

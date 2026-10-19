@@ -4,6 +4,23 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-19 — Correctif : onglet « Clients » du back-office vide
+
+Branche : `fix-admin-comptes-email`. **Migration à appliquer :**
+`20261019090000_admin_comptes_email_text.sql`.
+
+- **Cause** : `admin_comptes()` renvoyait `array_agg(u.email)` ; sur Supabase `auth.users.email`
+  est en `varchar(255)`, la fonction annonce `text[]` → erreur « structure of query does not
+  match function result type ». La vue d'ensemble (3 clients) fonctionnait, la liste non.
+- **Correction** : conversion `u.email::text` (règles d'accès inchangées).
+- **Écrans** : les onglets et la fiche client affichent désormais l'erreur de chargement au lieu
+  d'une liste vide silencieuse.
+- **Tests** : base simulée alignée sur Supabase (`email varchar(255)`) — le test échoue sans le
+  correctif et passe avec ; `plateforme.check.ts` rejoue les migrations plus récentes après son
+  contrôle d'idempotence.
+
+---
+
 ## 2026-10-16 — Back-office administrateur (lecture seule)
 
 Branche : `backoffice-admin`. Plan : `docs/plans/backoffice-admin.md`. **Migration à appliquer :**
