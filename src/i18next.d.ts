@@ -10,6 +10,7 @@ import type chantiers from "./locales/fr/chantiers.json";
 import type clients from "./locales/fr/clients.json";
 import type sousTraitants from "./locales/fr/sousTraitants.json";
 import type contrats from "./locales/fr/contrats.json";
+import type exportsNs from "./locales/fr/exports.json";
 import type devis from "./locales/fr/devis.json";
 import type personnel from "./locales/fr/personnel.json";
 import type vehicules from "./locales/fr/vehicules.json";
@@ -19,6 +20,8 @@ import type tva from "./locales/fr/tva.json";
 import type assistant from "./locales/fr/assistant.json";
 import type profil from "./locales/fr/profil.json";
 import type pdf from "./locales/fr/pdf.json";
+import type admin from "./locales/fr/admin.json";
+import type bientot from "./locales/fr/bientot.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -33,6 +36,7 @@ declare module "i18next" {
       clients: typeof clients;
       sousTraitants: typeof sousTraitants;
       contrats: typeof contrats;
+      exports: typeof exportsNs;
       devis: typeof devis;
       personnel: typeof personnel;
       vehicules: typeof vehicules;
@@ -42,6 +46,8 @@ declare module "i18next" {
       assistant: typeof assistant;
       profil: typeof profil;
       pdf: typeof pdf;
+      admin: typeof admin;
+      bientot: typeof bientot;
     };
   }
 }

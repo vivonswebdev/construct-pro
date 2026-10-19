@@ -1,7 +1,7 @@
 {
-  "appName": "ConstructFlow",
+  "appName": "ZidarPro",
   "meta": {
-    "title": "ConstructFlow — Werfbeheer",
+    "title": "ZidarPro — Werfbeheer",
     "description": "Platform voor werfbeheer voor Belgische bouwbedrijven."
   },
   "actions": {
@@ -105,6 +105,18 @@
     "signer": {
       "title": "Contract ondertekenen",
       "description": "Lees en onderteken uw onderaannemingscontract elektronisch."
+    },
+    "exportsSousTraitants": {
+      "title": "Exports onderaanneming",
+      "description": "Register van de 30bis-inhoudingen en export voor de boekhouder."
+    },
+    "admin": {
+      "title": "Beheer",
+      "description": "Platformbeheer: accounts en demonstratiegegevens."
+    },
+    "comingSoon": {
+      "title": "Binnenkort beschikbaar",
+      "description": "De functies in voorbereiding."
     }
   },
   "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat.",

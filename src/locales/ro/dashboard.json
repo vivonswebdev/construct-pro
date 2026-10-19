@@ -55,5 +55,6 @@
     "ctExpired_other": "🚛 {{count}} de vehicule cu ITP expirat",
     "insuranceSoon": "⚠️ Asigurare de vehicul de reînnoit",
     "insuranceSoonItem": "{{plate}} ({{days}} z)"
-  }
+  },
+  "comingSoonLink": "Funcționalități disponibile în curând"
 }

@@ -27,7 +27,8 @@
       "amount": "Introduceți o sumă pozitivă",
       "delay": "Termen de plată între 0 și 365 de zile",
       "dates": "Data de sfârșit trebuie să fie după data de început"
-    }
+    },
+    "editTitle": "Modifică contractul"
   },
   "send": {
     "title": "Trimite contractul spre semnare",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contract creat",
-    "cancelled": "Cerere anulată"
+    "cancelled": "Cerere anulată",
+    "contractUpdated": "Contract actualizat"
   },
   "sign": {
     "title": "Contract de subcontractare de semnat",
@@ -93,7 +95,8 @@
       "deja_signe": "Acest contract a fost deja semnat.",
       "document_modifie": "Modelul de contract s-a schimbat de la trimitere: cereți un link nou.",
       "champs_requis": "Introduceți numele, calitatea și locul semnării.",
-      "signature_invalide": "Semnătura nu a putut fi salvată. Desenați-o din nou."
+      "signature_invalide": "Semnătura nu a putut fi salvată. Desenați-o din nou.",
+      "modele_inconnu": "Acest contract folosește o versiune de model pe care această pagină nu o poate afișa. Cereți expeditorului un link nou."
     }
   },
   "fields": {

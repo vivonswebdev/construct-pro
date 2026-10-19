@@ -1,4 +1,4 @@
-# ConstructFlow — consignes pour Claude Code
+# ZidarPro (ex-ConstructFlow) — consignes pour Claude Code
 
 SaaS de gestion pour PME belges de la construction. Spécification complète et plan par phases :
 [PASSATION.md](PASSATION.md). Journal des décisions et de l'avancement : [docs/JOURNAL.md](docs/JOURNAL.md).
@@ -32,12 +32,29 @@ Langue de travail : **français**.
 - Chaque table : `company_id` (FK `companies`, `ON DELETE CASCADE`), RLS activée, 4 policies
   select/insert/update/delete sur `company_id = public.get_user_company_id(auth.uid())`, index sur
   `company_id` et les clés étrangères.
+- Nouvelle table à `company_id` : ajouter aussi la policy de lecture seule
+  `admin_plateforme_demo_select` (`(SELECT public.est_admin_plateforme()) AND
+public.est_societe_demo(company_id)`), sinon l'administrateur de la plateforme ne la voit pas
+  dans les sociétés de démonstration. Jamais d'accès administrateur aux sociétés non « démo ».
+- Tables de **plateforme** (`journal_plateforme`, `erreurs_application`) : exception à la règle
+  ci-dessus — RLS active **sans aucune policy**, droits retirés à `anon` / `authenticated`, lecture
+  uniquement par les fonctions `admin_*` (`security definer`, `exiger_admin_plateforme()`). Les
+  fonctions `admin_*` ne renvoient **aucune donnée métier ni e-mail** des clients réels.
 - Ressources publiques : policies `anon` strictement limitées ou RPC `security definer`.
+- Fonctions : Supabase (et PostgreSQL via `PUBLIC`) accordent EXECUTE à `anon` par défaut. Toute
+  nouvelle fonction : `REVOKE EXECUTE … FROM PUBLIC, anon` puis `GRANT … TO authenticated` ;
+  seules `contrat_a_signer` et `signer_contrat` restent ouvertes à `anon`
+  (contrôle : `supabase/tests/controle_droits_fonctions.sql`).
 - Tenir `src/integrations/supabase/types.ts` à jour après chaque migration (régénération Supabase,
   ou à la main au même format). **Pas de `as any`** : utiliser `Tables<"x">`, `TablesInsert<"x">`,
   `TablesUpdate<"x">`.
 - Les migrations sont appliquées par Youssef (Lovable / tableau de bord Supabase) : les signaler
   clairement dans le résumé de PR.
+- Chaque migration a un **contrôle** en lecture seule (`supabase/tests/controle_*.sql`) qui se
+  termine par **une seule ligne** de résumé (`ok`, `ko`, `en_echec`) — l'éditeur Supabase n'affiche
+  que la dernière requête — et, si utile, une **vérification sans trace** (`verif_*.sql` : bloc
+  `DO` terminé par une erreur volontaire au message court `VERIF 1:OK 2:OK …`, légende en tête).
+  Les tester sur PGlite avant de les remettre à Youssef.
 
 ## Conventions de code
 
@@ -90,6 +107,15 @@ comparer avec`toCode()` (`src/lib/statuts.ts`), jamais avec un libellé.
 - Accès public uniquement par jeton et RPC `security definer` (`contrat_a_signer`,
   `signer_contrat`) ; aucune policy `anon` sur les tables. Révoquer explicitement les droits par
   défaut de Supabase sur toute table de preuve (`REVOKE ALL … FROM anon, authenticated`).
+
+## Marque
+
+- Nom commercial **ZidarPro** (`common:appName`, `NOM_MARQUE`) ; le nom technique du dépôt, les
+  migrations et le compte de démonstration existant ne changent pas.
+- Logo : géométrie unique dans `src/lib/marque.ts` ; composant `ZidarProLogo` ; PDF via
+  `dessinerMarquePdf` ; fichiers régénérés par `bun scripts/marque/generer.ts` (charte :
+  `docs/marque/README.md`).
+- **Jamais de logo dans les contrats** (ni ZidarPro ni société).
 
 ## Fichiers
 

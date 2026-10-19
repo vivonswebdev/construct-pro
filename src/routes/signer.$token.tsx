@@ -8,13 +8,14 @@ import { ContratApercu } from "@/components/contrats/ContratApercu";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { SignaturePad } from "@/components/SignaturePad";
 import {
-  appliquerChamps,
+  ModeleInconnuError,
+  documentDemande,
   empreinteEnvoi,
   empreinteSignee,
-  faitA,
-  rendreContrat,
-  type ChampsSousTraitant,
-} from "@/lib/contrats/sous-traitance";
+  modeleConnu,
+  modeleContrat,
+} from "@/lib/contrats/modeles";
+import { appliquerChamps, type ChampsSousTraitant } from "@/lib/contrats/sous-traitance";
 import { donneesDe, telechargerContratPDF, type SignatureContrat } from "@/lib/contrats/signature";
 import { pageHead } from "@/lib/head";
 import { intlLocale } from "@/lib/i18n";
@@ -37,6 +38,7 @@ const ERREURS = [
   "document_modifie",
   "champs_requis",
   "signature_invalide",
+  "modele_inconnu",
 ] as const;
 const codeErreur = (err: unknown) => {
   const m = errorMessage(err, "");
@@ -57,7 +59,10 @@ function SignerPage() {
     queryFn: async () => {
       const { data, error } = await supabase.rpc("contrat_a_signer", { _token: token });
       if (error) throw error;
-      return data as unknown as SignatureContrat;
+      const sig = data as unknown as SignatureContrat;
+      // Le contrat est rendu dans le modèle de l'envoi ; inconnu de cette version : on refuse.
+      if (!modeleConnu(sig.modele)) throw new ModeleInconnuError(sig.modele);
+      return sig;
     },
   });
   const sig = signe ?? data ?? null;
@@ -103,9 +108,7 @@ function SignerPage() {
 
 function Signe({ sig }: { sig: SignatureContrat }) {
   const { t } = useTranslation("contrats");
-  const blocs = rendreContrat(
-    appliquerChamps(donneesDe(sig), sig.signataire_champs as Partial<ChampsSousTraitant> | null),
-  );
+  const { blocs, faitA } = documentDemande(sig);
   return (
     <>
       <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
@@ -127,7 +130,7 @@ function Signe({ sig }: { sig: SignatureContrat }) {
       </div>
       <div className="rounded-xl border border-border bg-card p-5">
         <ContratApercu blocs={blocs} />
-        <p className="mt-4 text-sm">{faitA(sig.signe_lieu, sig.signe_le)}</p>
+        <p className="mt-4 text-sm">{faitA}</p>
       </div>
     </>
   );
@@ -154,7 +157,8 @@ function FormulaireSignature({
   const [signature, setSignature] = useState<string | null>(null);
   const [accepte, setAccepte] = useState(false);
   const [saving, setSaving] = useState(false);
-  const blocs = useMemo(() => rendreContrat(appliquerChamps(d, champs)), [d, champs]);
+  const modele = modeleContrat(sig.modele);
+  const blocs = useMemo(() => modele.rendre(appliquerChamps(d, champs)), [modele, d, champs]);
 
   const signer = async () => {
     if (!champs.representant.trim() || !champs.qualite.trim() || !lieu.trim())
@@ -163,7 +167,7 @@ function FormulaireSignature({
     if (!accepte) return toast.error(t("sign.mustAccept"));
     setSaving(true);
     try {
-      const hashEnvoi = await empreinteEnvoi(d);
+      const hashEnvoi = await empreinteEnvoi(sig.modele, d);
       if (hashEnvoi !== sig.document_hash) throw new Error("document_modifie");
       const { data, error } = await supabase.rpc("signer_contrat", {
         _token: token,
@@ -173,7 +177,13 @@ function FormulaireSignature({
         _champs: champs,
         _signature: signature,
         _document_hash: hashEnvoi,
-        _signe_hash: await empreinteSignee(d, champs, lieu.trim(), new Date().toISOString()),
+        _signe_hash: await empreinteSignee(
+          sig.modele,
+          d,
+          champs,
+          lieu.trim(),
+          new Date().toISOString(),
+        ),
       });
       if (error) throw error;
       onSigne(data as unknown as SignatureContrat);

@@ -1,0 +1,100 @@
+{
+  "title": "Administration de la plateforme",
+  "subtitle": "Back-office en lecture seule. Les données des clients réels ne sont pas accessibles : seules leurs informations de compte et des totaux agrégés sont affichés.",
+  "denied": "Accès réservé à l'administrateur de la plateforme.",
+  "tabs": {
+    "apercu": "Vue d'ensemble",
+    "clients": "Clients",
+    "utilisateurs": "Utilisateurs",
+    "activite": "Activité"
+  },
+  "accounts": {
+    "hint": "Marquez « démo » uniquement vos comptes de test : leurs données deviennent lisibles ici (lecture seule). Les e-mails et chantiers des autres comptes restent masqués.",
+    "company": "Société",
+    "created": "Créée le",
+    "users": "Utilisateurs",
+    "sites": "Chantiers",
+    "demo": "Démonstration",
+    "seeded": "données de démo",
+    "isDemo": "Démo — retirer",
+    "markDemo": "Marquer démo",
+    "confirmMark": "Marquer « {{company}} » comme compte de démonstration ? Ses données deviendront lisibles par l'administrateur.",
+    "confirmUnmark": "Retirer « {{company}} » des comptes de démonstration ?",
+    "marked": "Compte marqué comme démonstration",
+    "unmarked": "Compte retiré de la démonstration"
+  },
+  "demoBadge": "démo",
+  "readOnlyNotice": "Lecture seule. Seule action possible : marquer ou retirer un compte de démonstration (validation par saisie du nom, action journalisée).",
+  "stats": {
+    "societes": "Clients",
+    "utilisateurs": "Utilisateurs",
+    "chantiers": "Chantiers",
+    "sous_traitants": "Sous-traitants",
+    "contrats": "Contrats",
+    "prestations": "Prestations",
+    "verifications_30bis": "Vérifications 30bis",
+    "real": "clients réels",
+    "demoCount_one": "{{count}} en démo",
+    "demoCount_other": "{{count}} en démo",
+    "hint": "Totaux agrégés sur toute la plateforme ; aucun chiffre par client réel."
+  },
+  "confirm": {
+    "titleMark": "Marquer comme démonstration",
+    "titleUnmark": "Retirer de la démonstration",
+    "typeName": "Pour confirmer, saisissez le nom exact : {{company}}",
+    "button": "Confirmer"
+  },
+  "users": {
+    "user": "Utilisateur",
+    "company": "Société",
+    "role": "Rôle",
+    "created": "Créé le",
+    "lastLogin": "Dernière connexion",
+    "hidden": "masqué (client réel)",
+    "never": "jamais"
+  },
+  "activity": {
+    "when": "Date",
+    "event": "Événement",
+    "details": "Détails",
+    "empty": "Aucun événement.",
+    "hint": "Clients réels : date, type et société uniquement (page pour les erreurs). Erreurs conservées 90 jours.",
+    "categories": {
+      "all": "Tout",
+      "connexion": "Connexions",
+      "creation_compte": "Créations de comptes",
+      "changement": "Changements importants",
+      "erreur": "Erreurs"
+    },
+    "types": {
+      "login": "Connexion",
+      "derniere_connexion": "Dernière connexion",
+      "compte_cree": "Compte créé",
+      "societe_creee": "Société créée",
+      "demo_activee": "Démo activée",
+      "demo_retiree": "Démo retirée",
+      "profil_modifie": "Rôle ou société modifié",
+      "contrat_envoye": "Contrat envoyé en signature",
+      "contrat_signe": "Contrat signé",
+      "signature_annulee": "Signature annulée",
+      "document_invalide": "Document de conformité invalidé",
+      "derogation_accordee": "Dérogation accordée",
+      "derogation_revoquee": "Dérogation révoquée",
+      "paiement_annule": "Paiement annulé"
+    }
+  },
+  "client": {
+    "back": "Retour au back-office",
+    "createdOn": "Créé le {{date}}",
+    "usersCount_one": "{{count}} utilisateur",
+    "usersCount_other": "{{count}} utilisateurs",
+    "realNotice": "Client réel : ses données (chantiers, sous-traitants, contrats, prestations, conformité) ne sont pas accessibles depuis le back-office.",
+    "sites": "Chantiers",
+    "subcontractors": "Sous-traitants et conformité",
+    "contracts": "Contrats",
+    "prestations": "Prestations (50 dernières)",
+    "validated": "validée",
+    "label30bis": "30bis : {{status}}"
+  },
+  "loadError": "Chargement impossible. Le message technique ci-dessous permet d'identifier la cause."
+}

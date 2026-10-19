@@ -1,0 +1,102 @@
+{
+  "title": "Administrarea platformei",
+  "subtitle": "Back-office doar pentru citire. Datele clienților reali nu sunt accesibile: sunt afișate doar informațiile de cont și totaluri agregate.",
+  "denied": "Acces rezervat administratorului platformei.",
+  "tabs": {
+    "apercu": "Privire de ansamblu",
+    "clients": "Clienți",
+    "utilisateurs": "Utilizatori",
+    "activite": "Activitate"
+  },
+  "accounts": {
+    "hint": "Marcați ca „demo” doar conturile dumneavoastră de test: datele lor devin vizibile aici (doar citire). E-mailurile și șantierele celorlalte conturi rămân ascunse.",
+    "company": "Firmă",
+    "created": "Creată la",
+    "users": "Utilizatori",
+    "sites": "Șantiere",
+    "demo": "Demonstrație",
+    "seeded": "date demo",
+    "isDemo": "Demo — eliminare",
+    "markDemo": "Marcare demo",
+    "confirmMark": "Marcați „{{company}}” drept cont demonstrativ? Datele sale vor deveni vizibile pentru administrator.",
+    "confirmUnmark": "Eliminați „{{company}}” din conturile demonstrative?",
+    "marked": "Cont marcat ca demonstrativ",
+    "unmarked": "Cont eliminat din demonstrație"
+  },
+  "demoBadge": "demo",
+  "readOnlyNotice": "Doar citire. Singura acțiune posibilă: marcarea sau eliminarea unui cont demonstrativ (confirmare prin tastarea numelui, acțiune jurnalizată).",
+  "stats": {
+    "societes": "Clienți",
+    "utilisateurs": "Utilizatori",
+    "chantiers": "Șantiere",
+    "sous_traitants": "Subcontractanți",
+    "contrats": "Contracte",
+    "prestations": "Prestații",
+    "verifications_30bis": "Verificări 30bis",
+    "real": "clienți reali",
+    "demoCount_one": "{{count}} în demo",
+    "demoCount_few": "{{count}} în demo",
+    "demoCount_other": "{{count}} în demo",
+    "hint": "Totaluri agregate pe întreaga platformă; nicio cifră pe client real."
+  },
+  "confirm": {
+    "titleMark": "Marcare ca demonstrativ",
+    "titleUnmark": "Eliminare din demonstrație",
+    "typeName": "Pentru confirmare, tastați numele exact: {{company}}",
+    "button": "Confirmare"
+  },
+  "users": {
+    "user": "Utilizator",
+    "company": "Firmă",
+    "role": "Rol",
+    "created": "Creat la",
+    "lastLogin": "Ultima conectare",
+    "hidden": "ascuns (client real)",
+    "never": "niciodată"
+  },
+  "activity": {
+    "when": "Data",
+    "event": "Eveniment",
+    "details": "Detalii",
+    "empty": "Niciun eveniment.",
+    "hint": "Clienți reali: doar data, tipul și firma (pagina pentru erori). Erorile sunt păstrate 90 de zile.",
+    "categories": {
+      "all": "Tot",
+      "connexion": "Conectări",
+      "creation_compte": "Conturi noi",
+      "changement": "Modificări importante",
+      "erreur": "Erori"
+    },
+    "types": {
+      "login": "Conectare",
+      "derniere_connexion": "Ultima conectare",
+      "compte_cree": "Cont creat",
+      "societe_creee": "Firmă creată",
+      "demo_activee": "Demo activat",
+      "demo_retiree": "Demo eliminat",
+      "profil_modifie": "Rol sau firmă modificată",
+      "contrat_envoye": "Contract trimis spre semnare",
+      "contrat_signe": "Contract semnat",
+      "signature_annulee": "Semnătură anulată",
+      "document_invalide": "Document de conformitate invalidat",
+      "derogation_accordee": "Derogare acordată",
+      "derogation_revoquee": "Derogare revocată",
+      "paiement_annule": "Plată anulată"
+    }
+  },
+  "client": {
+    "back": "Înapoi la back-office",
+    "createdOn": "Creat la {{date}}",
+    "usersCount_one": "{{count}} utilizator",
+    "usersCount_few": "{{count}} utilizatori",
+    "usersCount_other": "{{count}} de utilizatori",
+    "realNotice": "Client real: datele sale (șantiere, subcontractanți, contracte, prestații, conformitate) nu sunt accesibile din back-office.",
+    "sites": "Șantiere",
+    "subcontractors": "Subcontractanți și conformitate",
+    "contracts": "Contracte",
+    "prestations": "Prestații (ultimele 50)",
+    "validated": "validată",
+    "label30bis": "30bis: {{status}}"
+  },
+  "loadError": "Încărcare imposibilă. Mesajul tehnic de mai jos ajută la identificarea cauzei."
+}

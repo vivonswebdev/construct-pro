@@ -27,7 +27,8 @@
       "amount": "Geef een positief bedrag op",
       "delay": "Betalingstermijn tussen 0 en 365 dagen",
       "dates": "De einddatum moet na de begindatum liggen"
-    }
+    },
+    "editTitle": "Contract bewerken"
   },
   "send": {
     "title": "Contract ter ondertekening versturen",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contract aangemaakt",
-    "cancelled": "Aanvraag geannuleerd"
+    "cancelled": "Aanvraag geannuleerd",
+    "contractUpdated": "Contract bijgewerkt"
   },
   "sign": {
     "title": "Onderaannemingscontract te ondertekenen",
@@ -93,7 +95,8 @@
       "deja_signe": "Dit contract werd al ondertekend.",
       "document_modifie": "Het contractmodel is gewijzigd sinds de verzending: vraag een nieuwe link.",
       "champs_requis": "Vul uw naam, uw hoedanigheid en de plaats van ondertekening in.",
-      "signature_invalide": "De handtekening kon niet worden opgeslagen. Zet ze opnieuw."
+      "signature_invalide": "De handtekening kon niet worden opgeslagen. Zet ze opnieuw.",
+      "modele_inconnu": "Dit contract gebruikt een modelversie die deze pagina niet kan weergeven. Vraag de afzender om een nieuwe link."
     }
   },
   "fields": {

@@ -6,20 +6,12 @@
 import { PGlite } from "@electric-sql/pglite";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { initSupabaseSimule } from "./supabase_simule";
 
 const MIG = process.argv[2] ?? join(import.meta.dir, "..", "migrations");
 const db = new PGlite();
 
-await db.exec(`
-  CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN; CREATE ROLE service_role NOLOGIN;
-  CREATE SCHEMA auth;
-  CREATE TABLE auth.users (id uuid PRIMARY KEY, email text, raw_user_meta_data jsonb);
-  CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS
-    $$ SELECT nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-  GRANT USAGE ON SCHEMA auth TO authenticated, anon;
-  GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated, anon;
-  GRANT USAGE ON SCHEMA public TO authenticated, anon, service_role;
-`);
+await initSupabaseSimule(db);
 
 for (const f of readdirSync(MIG)
   .filter((f) => f.endsWith(".sql"))
@@ -76,6 +68,10 @@ await db.exec(`
   INSERT INTO public.sous_traitants (id, company_id, raison_sociale, forme_juridique, numero_bce)
   VALUES ('aaaaaaaa-0000-0000-0000-0000000000a1', '${C1}', 'Plafonnage Martin SRL', 'srl', '0123.456.789'),
          ('aaaaaaaa-0000-0000-0000-0000000000a2', '${C1}', 'Toitures Dubois', 'independant', NULL);`);
+// Attestation 30bis valide (PR D : sans elle, pas de rattachement à un chantier).
+await db.exec(`
+  INSERT INTO public.documents_conformite (company_id, sous_traitant_id, type_document, date_expiration)
+  VALUES ('${C1}', 'aaaaaaaa-0000-0000-0000-0000000000a1', 'attestation_30bis', current_date + 200);`);
 await expectError(
   `INSERT INTO public.sous_traitants (company_id, raison_sociale, forme_juridique) VALUES ('${C1}', 'X', 'sprl')`,
   "check constraint",
@@ -165,6 +161,9 @@ await expectError(
 await db.exec(
   `INSERT INTO public.sous_traitants (id, company_id, raison_sociale) VALUES ('bbbbbbbb-0000-0000-0000-0000000000b1', '${C2}', 'ST de B')`,
 );
+await db.exec(`
+  INSERT INTO public.documents_conformite (company_id, sous_traitant_id, type_document, date_expiration)
+  VALUES ('${C2}', 'bbbbbbbb-0000-0000-0000-0000000000b1', 'attestation_30bis', current_date + 200);`);
 await expectError(
   `INSERT INTO public.sous_traitant_contrats (company_id, sous_traitant_id, chantier_id, descriptif_prestations, montant_forfait_ht) VALUES ('${C2}', 'bbbbbbbb-0000-0000-0000-0000000000b1', 'aaaaaaaa-0000-0000-0000-000000000001', 'Vol de chantier', 1)`,
   "foreign key",

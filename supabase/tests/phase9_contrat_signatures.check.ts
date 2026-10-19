@@ -6,22 +6,12 @@
 import { PGlite } from "@electric-sql/pglite";
 import { readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
+import { initSupabaseSimule } from "./supabase_simule";
 
 const MIG = process.argv[2] ?? join(import.meta.dir, "..", "migrations");
 const db = new PGlite();
 
-await db.exec(`
-  CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN; CREATE ROLE service_role NOLOGIN;
-  CREATE SCHEMA auth;
-  CREATE TABLE auth.users (id uuid PRIMARY KEY, email text, raw_user_meta_data jsonb);
-  CREATE FUNCTION auth.uid() RETURNS uuid LANGUAGE sql STABLE AS
-    $$ SELECT nullif(current_setting('request.jwt.claim.sub', true), '')::uuid $$;
-  GRANT USAGE ON SCHEMA auth TO authenticated, anon;
-  GRANT EXECUTE ON FUNCTION auth.uid() TO authenticated, anon;
-  GRANT USAGE ON SCHEMA public TO authenticated, anon, service_role;
-  -- Comme Supabase : droits complets par défaut sur les nouvelles tables.
-  ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON TABLES TO anon, authenticated, service_role;
-`);
+await initSupabaseSimule(db);
 for (const f of readdirSync(MIG)
   .filter((f) => f.endsWith(".sql"))
   .sort()) {
@@ -129,10 +119,14 @@ await expectError(
   "lien_invalide",
   "jeton inconnu refusé",
 );
-const lu = await db.query<{ j: { statut: string; donnees: { x: number } } }>(
+const lu = await db.query<{ j: { statut: string; modele: string; donnees: { x: number } } }>(
   `SELECT public.contrat_a_signer('${T}') AS j`,
 );
 ok(lu.rows[0].j.statut === "envoye" && lu.rows[0].j.donnees.x === 1, "lecture par jeton");
+ok(
+  lu.rows[0].j.modele === "sous_traitance_cadre_v1",
+  "le lien renvoie le code du modèle de l'envoi (rendu dans ce modèle)",
+);
 await expectError(
   `SELECT public.signer_contrat('${T}', 'Piotr Nowak', 'Gérant', 'Bruxelles', '{}', '${PNG}', '${H2}', '${H2}')`,
   "document_modifie",

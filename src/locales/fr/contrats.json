@@ -27,7 +27,8 @@
       "amount": "Indiquez un montant positif",
       "delay": "Délai de paiement entre 0 et 365 jours",
       "dates": "La date de fin doit suivre la date de début"
-    }
+    },
+    "editTitle": "Modifier le contrat"
   },
   "send": {
     "title": "Envoyer le contrat à signer",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contrat créé",
-    "cancelled": "Demande annulée"
+    "cancelled": "Demande annulée",
+    "contractUpdated": "Contrat mis à jour"
   },
   "sign": {
     "title": "Contrat de sous-traitance à signer",
@@ -93,7 +95,8 @@
       "deja_signe": "Ce contrat a déjà été signé.",
       "document_modifie": "Le modèle de contrat a changé depuis l'envoi : demandez un nouveau lien.",
       "champs_requis": "Indiquez votre nom, votre qualité et le lieu de signature.",
-      "signature_invalide": "La signature n'a pas pu être enregistrée. Tracez-la à nouveau."
+      "signature_invalide": "La signature n'a pas pu être enregistrée. Tracez-la à nouveau.",
+      "modele_inconnu": "Ce contrat utilise une version de modèle que cette page ne sait pas afficher. Demandez un nouveau lien à l'expéditeur."
     }
   },
   "fields": {

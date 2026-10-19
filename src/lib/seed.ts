@@ -1,6 +1,7 @@
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables, TablesInsert } from "@/integrations/supabase/types";
 import { CONTRATS_SALARIES } from "@/lib/statuts";
+import { calculerRetenuesPlafonnees, tauxEnVigueur } from "@/lib/retenue-30bis";
 
 const DEFAULT_PHASES = [
   "Préparation du site",
@@ -13,7 +14,9 @@ const DEFAULT_PHASES = [
 ];
 
 /**
- * Seeds demo data exactly once per company.
+ * Seeds demo data exactly once per company — ONLY for demo companies (companies.est_demo, set
+ * by the platform administrator): seed_lock returns nothing for a regular account, so a new
+ * client starts with an empty database.
  * The DB function seed_lock atomically flips companies.demo_seeded
  * (false -> true) and only returns a row for the first caller, so parallel
  * calls can never duplicate data.
@@ -1014,7 +1017,7 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
     .from("parametres_30bis")
     .select("*")
     .order("date_debut", { ascending: false });
-  const tauxAu = (date: string) => taux?.find((r) => r.date_debut <= date);
+  const tauxAu = (date: string) => tauxEnVigueur(taux, date);
 
   const stSeed: TablesInsert<"sous_traitants">[] = [
     {
@@ -1092,6 +1095,39 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
   const costa = st("0876543270");
   const nowak = st("0654321913");
   const ionescu = st("0987612329");
+
+  // Conformité (PR D) — AVANT les contrats : sans attestation 30bis valide, un contrat ne peut
+  // pas être rattaché à un chantier. Ionescu : attestation expirée + dérogation (démo du blocage).
+  const doc = (stId: string, type: string, expiration: string | null) => ({
+    company_id: companyId,
+    sous_traitant_id: stId,
+    type_document: type,
+    date_emission: ilYa(150),
+    date_expiration: expiration,
+  });
+  const { error: dcErr } = await supabase.from("documents_conformite").insert([
+    doc(lambert, "attestation_30bis", ilYa(-180)),
+    doc(lambert, "attestation_tva", null),
+    doc(peeters, "attestation_30bis", ilYa(-18)), // expire dans 18 jours : alerte
+    doc(peeters, "attestation_tva", null),
+    doc(costa, "attestation_30bis", ilYa(-120)),
+    doc(nowak, "attestation_30bis", ilYa(-90)),
+    doc(nowak, "attestation_tva", null),
+    doc(ionescu, "attestation_30bis", ilYa(10)), // expirée depuis 10 jours
+  ]);
+  if (dcErr) throw dcErr;
+  const { error: dgErr } = await supabase.from("derogations_conformite").insert({
+    company_id: companyId,
+    sous_traitant_id: ionescu,
+    motif: "Fin de chantier en cours ; nouvelle attestation demandée au sous-traitant.",
+    expire_le: new Date(Date.now() + 14 * 86_400_000).toISOString(),
+  });
+  if (dgErr) throw dgErr;
+  // IBAN validé (Lambert) : validation par l'utilisateur connecté (admin à la création).
+  await supabase
+    .from("sous_traitants")
+    .update({ iban_valide_le: new Date().toISOString() })
+    .eq("id", lambert);
 
   // Contrats
   const contratsSeed: TablesInsert<"sous_traitant_contrats">[] = [
@@ -1200,17 +1236,19 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
   ]);
 
   // Vérifications 30bis : une au jour de chaque paiement, plus celle d'aujourd'hui pour Lambert.
+  // Nowak (il y a 15 jours) : dette ONSS de 3 000 € → retenue plafonnée (35 % = 4 900 €).
   const verifs = [
-    { st: lambert, date: ilYa(40), sociale: false, notes: null },
-    { st: lambert, date: ilYa(10), sociale: false, notes: null },
-    { st: lambert, date: ilYa(0), sociale: false, notes: null },
-    { st: peeters, date: ilYa(5), sociale: false, notes: null },
-    { st: nowak, date: ilYa(55), sociale: false, notes: null },
+    { st: lambert, date: ilYa(40), sociale: false, detteOnss: null, notes: null },
+    { st: lambert, date: ilYa(10), sociale: false, detteOnss: null, notes: null },
+    { st: lambert, date: ilYa(0), sociale: false, detteOnss: null, notes: null },
+    { st: peeters, date: ilYa(5), sociale: false, detteOnss: null, notes: null },
+    { st: nowak, date: ilYa(55), sociale: false, detteOnss: null, notes: null },
     {
       st: nowak,
       date: ilYa(15),
       sociale: true,
-      notes: "Dette ONSS constatée : retenue appliquée sur le paiement.",
+      detteOnss: 3000,
+      notes: "Dette ONSS constatée : retenue plafonnée à la dette restante.",
     },
   ];
   const { data: vfs, error: vfErr } = await supabase
@@ -1222,11 +1260,14 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
         verifie_le: verifieLe(v.date),
         dette_sociale: v.sociale,
         dette_fiscale: false,
+        montant_dette_onss: v.detteOnss,
         source_url: "https://www.checkobligationderetenue.be/",
         notes: v.notes,
       })),
     )
-    .select("id, sous_traitant_id, verifie_le, dette_sociale, dette_fiscale");
+    .select(
+      "id, sous_traitant_id, verifie_le, dette_sociale, dette_fiscale, montant_dette_onss, montant_dette_spf",
+    );
   if (vfErr) throw vfErr;
   const verifDu = (stId: string, date: string) =>
     vfs.find(
@@ -1236,8 +1277,8 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
           date,
     )!;
 
-  // Paiements : retenues calculées comme le trigger (montant HTVA × taux en vigueur).
-  const arrondi = (x: number) => Math.round(x * 100) / 100;
+  // Paiements : retenues calculées comme le trigger (HTVA × taux en vigueur, plafonnées à la
+  // dette saisie ; un seul paiement par vérification dans la démo).
   const paiement = (
     stId: string,
     date: string,
@@ -1246,14 +1287,22 @@ export async function seedSousTraitants(companyId: string): Promise<void> {
   ): TablesInsert<"achat_paiements"> => {
     const v = verifDu(stId, date);
     const t = tauxAu(date);
+    const r = t
+      ? calculerRetenuesPlafonnees({
+          montantHt,
+          verification: v,
+          dejaRetenu: { onss: 0, spf: 0 },
+          taux: t,
+        })
+      : { onss: 0, spf: 0 };
     return {
       company_id: companyId,
       contrat_id: contrat(stId),
       date_paiement: date,
       montant_ht: montantHt,
       montant_tva: 0, // autoliquidation (cocontractant)
-      retenue_onss: v.dette_sociale && t ? arrondi(montantHt * Number(t.taux_retenue_onss)) : 0,
-      retenue_spf: v.dette_fiscale && t ? arrondi(montantHt * Number(t.taux_retenue_spf)) : 0,
+      retenue_onss: r.onss,
+      retenue_spf: r.spf,
       reference,
       verification_30bis_id: v.id,
     };

@@ -3,6 +3,8 @@ import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { chat } from "./ai.server";
 import { toCode } from "./statuts";
+import { enPourcent, tauxEnVigueur, type Parametres30bis } from "@/lib/retenue-30bis";
+import { aujourdhuiBruxelles } from "@/lib/sous-traitants";
 
 const inputSchema = z.object({
   messages: z
@@ -26,6 +28,14 @@ const NOMS_LANGUES = {
   pl: "polonais",
 } as const;
 
+/** Taux de retenue lus dans parametres_30bis (jamais écrits en dur), présentés comme indicatifs. */
+function phraseRetenue30bis(taux: Parametres30bis | null): string {
+  if (!taux) {
+    return "obligation de retenue sur facture en cas de dettes sociales ou fiscales (checkobligationderetenue.be ; taux non disponibles dans les paramètres : n'en cite aucun)";
+  }
+  return `obligation de retenue sur facture en cas de dettes (checkobligationderetenue.be) : ${enPourcent(taux.taux_retenue_onss)} % ONSS (art. 30bis) et ${enPourcent(taux.taux_retenue_spf)} % SPF Finances (art. 402 CIR) du montant HTVA, taux indicatifs en vigueur depuis le ${taux.date_debut} (source : ${taux.source ?? "non précisée"})`;
+}
+
 function eur(n: number) {
   return `${Math.round(Number(n) || 0).toLocaleString("fr-BE")} €`;
 }
@@ -39,12 +49,13 @@ export const askAssistant = createServerFn({ method: "POST" })
   .inputValidator((data: unknown) => inputSchema.parse(data))
   .handler(async ({ data, context }) => {
     const sb = context.supabase;
-    const [chRes, prRes, veRes, deRes, maRes] = await Promise.all([
+    const [chRes, prRes, veRes, deRes, maRes, p30Res] = await Promise.all([
       sb.from("chantiers").select("*").limit(100),
       sb.from("personnel").select("*").limit(100),
       sb.from("vehicules").select("*").limit(100),
       sb.from("factures").select("*").eq("type", "devis").limit(200),
       sb.from("materiaux").select("*").limit(200),
+      sb.from("parametres_30bis").select("*"),
     ]);
 
     const chantiers = chRes.data ?? [];
@@ -52,6 +63,7 @@ export const askAssistant = createServerFn({ method: "POST" })
     const vehicules = veRes.data ?? [];
     const devis = deRes.data ?? [];
     const materiaux = maRes.data ?? [];
+    const taux30bis = tauxEnVigueur(p30Res.data, aujourdhuiBruxelles());
 
     const devisAttente = devis.filter((f) => ["envoye", "brouillon"].includes(toCode(f.status)));
     const devisAcc = devis.filter((f) => toCode(f.status) === "accepte").length;
@@ -87,10 +99,10 @@ export const askAssistant = createServerFn({ method: "POST" })
       `STOCK BAS (${lowStock.length}): ${lowStock.map((m) => `${m.name} (${m.stock_quantity} ${m.unit})`).join(", ") || "aucun"}`,
     ].join("\n");
 
-    const system = `Tu es l'assistant IA de ConstructFlow, un logiciel de gestion pour entreprises de construction belges.
+    const system = `Tu es l'assistant IA de ZidarPro, un logiciel de gestion pour entreprises de construction belges.
 Tu réponds TOUJOURS en ${NOMS_LANGUES[data.langue]}, de façon concise et opérationnelle (listes à puces, chiffres précis), même si les données ci-dessous sont en français. Les statuts sont des codes (en_cours, accepte…) : traduis-les dans ta réponse.
 Formats belges : montants "245 000 €", dates JJ/MM/AAAA.
-Tu connais la réglementation belge du secteur : TVA 21/12/6/0 %, autoliquidation entre assujettis, obligation de retenue 15 % (checkobligationderetenue.be), précompte professionnel, ONSS trimestriel, commission paritaire 124.
+Tu connais la réglementation belge du secteur : TVA 21/12/6/0 %, autoliquidation entre assujettis, ${phraseRetenue30bis(taux30bis)}, précompte professionnel, ONSS trimestriel, commission paritaire 124.
 Base tes réponses UNIQUEMENT sur les données ci-dessous. Si une information manque, dis-le clairement.
 Rappelle que les calculs fiscaux sont indicatifs et à valider avec le comptable.
 

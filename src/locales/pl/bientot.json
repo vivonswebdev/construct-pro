@@ -1,0 +1,61 @@
+{
+  "title": "Wkrótce dostępne",
+  "subtitle": "Funkcje w przygotowaniu. Będą pojawiać się stopniowo, bez zapowiedzianej daty.",
+  "badge": "Wkrótce dostępne",
+  "others": "Inne planowane funkcje",
+  "disclaimer": "Lista orientacyjna: zakres i kolejność udostępniania mogą się zmienić.",
+  "items": {
+    "achats": {
+      "title": "Moduł Zakupy",
+      "description": "Faktury dostawców, koszty według budowy, wydatki restauracyjne i księga kasowa."
+    },
+    "facturation": {
+      "title": "Fakturowanie elektroniczne",
+      "description": "Faktury sprzedaży wysyłane i odbierane przez sieć Peppol, śledzenie płatności i przypomnienia."
+    },
+    "itsme": {
+      "title": "Podpis itsme lub eID",
+      "description": "Podpis elektroniczny z silną identyfikacją podpisującego."
+    },
+    "ficheChantier": {
+      "title": "Podpis każdej karty budowy",
+      "description": "Każda karta budowy podpisywana osobno, jako uzupełnienie umowy ramowej."
+    },
+    "contratNlEn": {
+      "title": "Umowa po niderlandzku i angielsku",
+      "description": "Wiążące wersje NL i EN umowy o podwykonawstwo, zatwierdzone przez prawnika."
+    },
+    "siteWeb": {
+      "title": "Strona internetowa firmy",
+      "description": "Strona wizytówka generowana na podstawie Twoich budów i danych."
+    },
+    "avis": {
+      "title": "Opinie klientów",
+      "description": "Zbieranie i publikowanie opinii klientów po odbiorze prac."
+    },
+    "emails": {
+      "title": "E-maile i kalendarz",
+      "description": "Wysyłanie dokumentów e-mailem oraz kalendarz budów i spotkań."
+    },
+    "planning": {
+      "title": "Wycena i planowanie",
+      "description": "Wycena budów, planowanie ekip i śledzenie rentowności."
+    },
+    "journalMobile": {
+      "title": "Mobilny dziennik budowy",
+      "description": "Dziennik budowy w telefonie i śledzenie prac dodatkowych."
+    },
+    "materiel": {
+      "title": "Sprzęt i odpady",
+      "description": "Sprzęt, wynajem, gospodarka odpadami i inwentarz na dany dzień."
+    },
+    "primes": {
+      "title": "Premie remontowe",
+      "description": "Pomoc w śledzeniu premii remontowych w trzech regionach."
+    },
+    "rapport": {
+      "title": "Raport miesięczny",
+      "description": "Automatyczny miesięczny raport z działalności firmy."
+    }
+  }
+}

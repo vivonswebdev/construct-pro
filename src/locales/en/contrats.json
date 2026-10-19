@@ -27,7 +27,8 @@
       "amount": "Enter a positive amount",
       "delay": "Payment term between 0 and 365 days",
       "dates": "The end date must be after the start date"
-    }
+    },
+    "editTitle": "Edit contract"
   },
   "send": {
     "title": "Send contract for signature",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Contract created",
-    "cancelled": "Request cancelled"
+    "cancelled": "Request cancelled",
+    "contractUpdated": "Contract updated"
   },
   "sign": {
     "title": "Subcontract to sign",
@@ -93,7 +95,8 @@
       "deja_signe": "This contract has already been signed.",
       "document_modifie": "The contract template has changed since it was sent: ask for a new link.",
       "champs_requis": "Enter your name, your title and the place of signing.",
-      "signature_invalide": "The signature could not be saved. Please draw it again."
+      "signature_invalide": "The signature could not be saved. Please draw it again.",
+      "modele_inconnu": "This contract uses a template version this page cannot display. Ask the sender for a new link."
     }
   },
   "fields": {

@@ -1,7 +1,7 @@
 {
-  "appName": "ConstructFlow",
+  "appName": "ZidarPro",
   "meta": {
-    "title": "ConstructFlow — Gestion de chantiers",
+    "title": "ZidarPro — Gestion de chantiers",
     "description": "Plateforme de gestion de chantiers pour entreprises de construction belges."
   },
   "actions": {
@@ -105,6 +105,18 @@
     "signer": {
       "title": "Signature du contrat",
       "description": "Relisez et signez électroniquement votre contrat de sous-traitance."
+    },
+    "exportsSousTraitants": {
+      "title": "Exports de sous-traitance",
+      "description": "Registre des retenues 30bis et export pour le comptable."
+    },
+    "admin": {
+      "title": "Administration",
+      "description": "Administration de la plateforme : comptes et données de démonstration."
+    },
+    "comingSoon": {
+      "title": "Bientôt disponible",
+      "description": "Les fonctionnalités en préparation."
     }
   },
   "indicatif": "Indicatif — à valider par votre comptable / secrétariat social.",

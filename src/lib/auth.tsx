@@ -17,6 +17,8 @@ type Company = {
   bce_number?: string | null;
   address?: string | null;
   logo_url?: string | null;
+  /** Logo déposé dans Storage (bucket logos) ; null : logo par défaut. */
+  logo_chemin?: string | null;
 };
 
 type AuthCtx = {
@@ -45,9 +47,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(p);
     if (p && isLangue(p.langue)) applyLangue(p.langue, true);
     if (p?.company_id) {
+      // select("*") : reste compatible si logo_chemin n'est pas encore migrée (logo par défaut).
       const { data: c } = await supabase
         .from("companies")
-        .select("id, name, bce_number, address, logo_url")
+        .select("*")
         .eq("id", p.company_id)
         .maybeSingle();
       setCompany(c);

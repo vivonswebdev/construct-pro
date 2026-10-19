@@ -283,6 +283,11 @@ export function SousTraitantFormModal({
               onChange={(e) => set({ iban: e.target.value })}
               placeholder="BE68 5390 0754 7034"
             />
+            {st?.iban_valide_le && f.iban.replace(/\s/g, "").toUpperCase() !== (st.iban ?? "") && (
+              <span className="mt-1 block text-xs text-amber-700">
+                {t("compliance.ibanChangeWarning")}
+              </span>
+            )}
           </L>
           <L label={t("form.conditions")} full>
             <textarea

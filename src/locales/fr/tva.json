@@ -44,7 +44,11 @@
     "netToClient": "Net au client",
     "balance": "Solde à verser",
     "gross": "Montant brut",
-    "invoiced": "Total facturé"
+    "invoiced": "Total facturé",
+    "rateUnavailable": "Taux de retenue indisponible (paramètres 30bis non chargés) : aucun calcul affiché.",
+    "rateInfo": "Taux SPF (art. 402 CIR) en vigueur depuis le {{since}} : {{rate}} % — source : {{source}}.",
+    "verifiedOn": "Vérifié le {{date}}.",
+    "notVerified": "Date de vérification à compléter."
   },
   "history": {
     "title": "Historique des vérifications",

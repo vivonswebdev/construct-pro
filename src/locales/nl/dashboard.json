@@ -48,5 +48,6 @@
     "ctExpired_other": "🚛 {{count}} voertuigen met vervallen keuring",
     "insuranceSoon": "⚠️ Voertuigverzekering te vernieuwen",
     "insuranceSoonItem": "{{plate}} ({{days}} d)"
-  }
+  },
+  "comingSoonLink": "Binnenkort beschikbare functies"
 }

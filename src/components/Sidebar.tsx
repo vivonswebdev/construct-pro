@@ -22,6 +22,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { useAuth } from "@/lib/auth";
 import { initials } from "@/lib/format";
 import { backdropClose } from "@/lib/modal";
+import { ZidarProLogo } from "@/components/marque/ZidarProLogo";
 
 const ACTIVE_NAV = [
   { to: "/dashboard", key: "dashboard", icon: LayoutDashboard },
@@ -56,14 +57,9 @@ export function Sidebar() {
     <>
       <aside className="fixed inset-y-0 left-0 z-30 flex w-60 flex-col bg-sidebar-bg text-sidebar-text">
         {/* Logo */}
-        <div className="flex items-center gap-3 px-5 py-5">
-          <div className="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-sm font-bold text-white">
-            CF {/* i18n-ignore : monogramme */}
-          </div>
-          <div className="leading-tight">
-            <div className="text-sm font-bold text-white">{t("common:appName")}</div>
-            <div className="truncate text-xs text-sidebar-text">{company?.name ?? "—"}</div>
-          </div>
+        <div className="px-5 py-5 leading-tight">
+          <ZidarProLogo variante="sombre" taille="text-lg" />
+          <div className="mt-1 truncate text-xs text-sidebar-text">{company?.name ?? "—"}</div>
         </div>
 
         {/* Nav */}

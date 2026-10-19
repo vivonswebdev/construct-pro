@@ -17,6 +17,7 @@ import { Route as AppProfilRouteImport } from './routes/_app/profil'
 import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppConformiteTvaRouteImport } from './routes/_app/conformite-tva'
+import { Route as AppBientotDisponibleRouteImport } from './routes/_app/bientot-disponible'
 import { Route as AppAssistantRouteImport } from './routes/_app/assistant'
 import { Route as AppVehiculesIndexRouteImport } from './routes/_app/vehicules.index'
 import { Route as AppStockIndexRouteImport } from './routes/_app/stock.index'
@@ -25,12 +26,15 @@ import { Route as AppPersonnelIndexRouteImport } from './routes/_app/personnel.i
 import { Route as AppFacturationIndexRouteImport } from './routes/_app/facturation.index'
 import { Route as AppClientsIndexRouteImport } from './routes/_app/clients.index'
 import { Route as AppChantiersIndexRouteImport } from './routes/_app/chantiers.index'
+import { Route as AppAdminIndexRouteImport } from './routes/_app/admin.index'
 import { Route as AppVehiculesIdRouteImport } from './routes/_app/vehicules.$id'
+import { Route as AppSousTraitantsExportsRouteImport } from './routes/_app/sous-traitants.exports'
 import { Route as AppSousTraitantsIdRouteImport } from './routes/_app/sous-traitants.$id'
 import { Route as AppPersonnelIdRouteImport } from './routes/_app/personnel.$id'
 import { Route as AppFacturationIdRouteImport } from './routes/_app/facturation.$id'
 import { Route as AppClientsIdRouteImport } from './routes/_app/clients.$id'
 import { Route as AppChantiersIdRouteImport } from './routes/_app/chantiers.$id'
+import { Route as AppAdminClientsIdRouteImport } from './routes/_app/admin.clients.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -69,6 +73,11 @@ const AppDashboardRoute = AppDashboardRouteImport.update({
 const AppConformiteTvaRoute = AppConformiteTvaRouteImport.update({
   id: '/conformite-tva',
   path: '/conformite-tva',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBientotDisponibleRoute = AppBientotDisponibleRouteImport.update({
+  id: '/bientot-disponible',
+  path: '/bientot-disponible',
   getParentRoute: () => AppRoute,
 } as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
@@ -111,9 +120,19 @@ const AppChantiersIndexRoute = AppChantiersIndexRouteImport.update({
   path: '/chantiers/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminIndexRoute = AppAdminIndexRouteImport.update({
+  id: '/admin/',
+  path: '/admin/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppVehiculesIdRoute = AppVehiculesIdRouteImport.update({
   id: '/vehicules/$id',
   path: '/vehicules/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSousTraitantsExportsRoute = AppSousTraitantsExportsRouteImport.update({
+  id: '/sous-traitants/exports',
+  path: '/sous-traitants/exports',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSousTraitantsIdRoute = AppSousTraitantsIdRouteImport.update({
@@ -141,11 +160,17 @@ const AppChantiersIdRoute = AppChantiersIdRouteImport.update({
   path: '/chantiers/$id',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdminClientsIdRoute = AppAdminClientsIdRouteImport.update({
+  id: '/admin/clients/$id',
+  path: '/admin/clients/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/assistant': typeof AppAssistantRoute
+  '/bientot-disponible': typeof AppBientotDisponibleRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
@@ -156,7 +181,9 @@ export interface FileRoutesByFullPath {
   '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/sous-traitants/$id': typeof AppSousTraitantsIdRoute
+  '/sous-traitants/exports': typeof AppSousTraitantsExportsRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
+  '/admin/': typeof AppAdminIndexRoute
   '/chantiers/': typeof AppChantiersIndexRoute
   '/clients/': typeof AppClientsIndexRoute
   '/facturation/': typeof AppFacturationIndexRoute
@@ -164,11 +191,13 @@ export interface FileRoutesByFullPath {
   '/sous-traitants/': typeof AppSousTraitantsIndexRoute
   '/stock/': typeof AppStockIndexRoute
   '/vehicules/': typeof AppVehiculesIndexRoute
+  '/admin/clients/$id': typeof AppAdminClientsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/assistant': typeof AppAssistantRoute
+  '/bientot-disponible': typeof AppBientotDisponibleRoute
   '/conformite-tva': typeof AppConformiteTvaRoute
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
@@ -179,7 +208,9 @@ export interface FileRoutesByTo {
   '/facturation/$id': typeof AppFacturationIdRoute
   '/personnel/$id': typeof AppPersonnelIdRoute
   '/sous-traitants/$id': typeof AppSousTraitantsIdRoute
+  '/sous-traitants/exports': typeof AppSousTraitantsExportsRoute
   '/vehicules/$id': typeof AppVehiculesIdRoute
+  '/admin': typeof AppAdminIndexRoute
   '/chantiers': typeof AppChantiersIndexRoute
   '/clients': typeof AppClientsIndexRoute
   '/facturation': typeof AppFacturationIndexRoute
@@ -187,6 +218,7 @@ export interface FileRoutesByTo {
   '/sous-traitants': typeof AppSousTraitantsIndexRoute
   '/stock': typeof AppStockIndexRoute
   '/vehicules': typeof AppVehiculesIndexRoute
+  '/admin/clients/$id': typeof AppAdminClientsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -194,6 +226,7 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/_app/assistant': typeof AppAssistantRoute
+  '/_app/bientot-disponible': typeof AppBientotDisponibleRoute
   '/_app/conformite-tva': typeof AppConformiteTvaRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/precompte': typeof AppPrecompteRoute
@@ -204,7 +237,9 @@ export interface FileRoutesById {
   '/_app/facturation/$id': typeof AppFacturationIdRoute
   '/_app/personnel/$id': typeof AppPersonnelIdRoute
   '/_app/sous-traitants/$id': typeof AppSousTraitantsIdRoute
+  '/_app/sous-traitants/exports': typeof AppSousTraitantsExportsRoute
   '/_app/vehicules/$id': typeof AppVehiculesIdRoute
+  '/_app/admin/': typeof AppAdminIndexRoute
   '/_app/chantiers/': typeof AppChantiersIndexRoute
   '/_app/clients/': typeof AppClientsIndexRoute
   '/_app/facturation/': typeof AppFacturationIndexRoute
@@ -212,6 +247,7 @@ export interface FileRoutesById {
   '/_app/sous-traitants/': typeof AppSousTraitantsIndexRoute
   '/_app/stock/': typeof AppStockIndexRoute
   '/_app/vehicules/': typeof AppVehiculesIndexRoute
+  '/_app/admin/clients/$id': typeof AppAdminClientsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -219,6 +255,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/assistant'
+    | '/bientot-disponible'
     | '/conformite-tva'
     | '/dashboard'
     | '/precompte'
@@ -229,7 +266,9 @@ export interface FileRouteTypes {
     | '/facturation/$id'
     | '/personnel/$id'
     | '/sous-traitants/$id'
+    | '/sous-traitants/exports'
     | '/vehicules/$id'
+    | '/admin/'
     | '/chantiers/'
     | '/clients/'
     | '/facturation/'
@@ -237,11 +276,13 @@ export interface FileRouteTypes {
     | '/sous-traitants/'
     | '/stock/'
     | '/vehicules/'
+    | '/admin/clients/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/assistant'
+    | '/bientot-disponible'
     | '/conformite-tva'
     | '/dashboard'
     | '/precompte'
@@ -252,7 +293,9 @@ export interface FileRouteTypes {
     | '/facturation/$id'
     | '/personnel/$id'
     | '/sous-traitants/$id'
+    | '/sous-traitants/exports'
     | '/vehicules/$id'
+    | '/admin'
     | '/chantiers'
     | '/clients'
     | '/facturation'
@@ -260,12 +303,14 @@ export interface FileRouteTypes {
     | '/sous-traitants'
     | '/stock'
     | '/vehicules'
+    | '/admin/clients/$id'
   id:
     | '__root__'
     | '/'
     | '/_app'
     | '/login'
     | '/_app/assistant'
+    | '/_app/bientot-disponible'
     | '/_app/conformite-tva'
     | '/_app/dashboard'
     | '/_app/precompte'
@@ -276,7 +321,9 @@ export interface FileRouteTypes {
     | '/_app/facturation/$id'
     | '/_app/personnel/$id'
     | '/_app/sous-traitants/$id'
+    | '/_app/sous-traitants/exports'
     | '/_app/vehicules/$id'
+    | '/_app/admin/'
     | '/_app/chantiers/'
     | '/_app/clients/'
     | '/_app/facturation/'
@@ -284,6 +331,7 @@ export interface FileRouteTypes {
     | '/_app/sous-traitants/'
     | '/_app/stock/'
     | '/_app/vehicules/'
+    | '/_app/admin/clients/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -351,6 +399,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppConformiteTvaRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/bientot-disponible': {
+      id: '/_app/bientot-disponible'
+      path: '/bientot-disponible'
+      fullPath: '/bientot-disponible'
+      preLoaderRoute: typeof AppBientotDisponibleRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/assistant': {
       id: '/_app/assistant'
       path: '/assistant'
@@ -407,11 +462,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChantiersIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/': {
+      id: '/_app/admin/'
+      path: '/admin'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AppAdminIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/vehicules/$id': {
       id: '/_app/vehicules/$id'
       path: '/vehicules/$id'
       fullPath: '/vehicules/$id'
       preLoaderRoute: typeof AppVehiculesIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/sous-traitants/exports': {
+      id: '/_app/sous-traitants/exports'
+      path: '/sous-traitants/exports'
+      fullPath: '/sous-traitants/exports'
+      preLoaderRoute: typeof AppSousTraitantsExportsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/sous-traitants/$id': {
@@ -449,11 +518,19 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChantiersIdRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/admin/clients/$id': {
+      id: '/_app/admin/clients/$id'
+      path: '/admin/clients/$id'
+      fullPath: '/admin/clients/$id'
+      preLoaderRoute: typeof AppAdminClientsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
   AppAssistantRoute: typeof AppAssistantRoute
+  AppBientotDisponibleRoute: typeof AppBientotDisponibleRoute
   AppConformiteTvaRoute: typeof AppConformiteTvaRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppPrecompteRoute: typeof AppPrecompteRoute
@@ -463,7 +540,9 @@ interface AppRouteChildren {
   AppFacturationIdRoute: typeof AppFacturationIdRoute
   AppPersonnelIdRoute: typeof AppPersonnelIdRoute
   AppSousTraitantsIdRoute: typeof AppSousTraitantsIdRoute
+  AppSousTraitantsExportsRoute: typeof AppSousTraitantsExportsRoute
   AppVehiculesIdRoute: typeof AppVehiculesIdRoute
+  AppAdminIndexRoute: typeof AppAdminIndexRoute
   AppChantiersIndexRoute: typeof AppChantiersIndexRoute
   AppClientsIndexRoute: typeof AppClientsIndexRoute
   AppFacturationIndexRoute: typeof AppFacturationIndexRoute
@@ -471,10 +550,12 @@ interface AppRouteChildren {
   AppSousTraitantsIndexRoute: typeof AppSousTraitantsIndexRoute
   AppStockIndexRoute: typeof AppStockIndexRoute
   AppVehiculesIndexRoute: typeof AppVehiculesIndexRoute
+  AppAdminClientsIdRoute: typeof AppAdminClientsIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppAssistantRoute: AppAssistantRoute,
+  AppBientotDisponibleRoute: AppBientotDisponibleRoute,
   AppConformiteTvaRoute: AppConformiteTvaRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppPrecompteRoute: AppPrecompteRoute,
@@ -484,7 +565,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppFacturationIdRoute: AppFacturationIdRoute,
   AppPersonnelIdRoute: AppPersonnelIdRoute,
   AppSousTraitantsIdRoute: AppSousTraitantsIdRoute,
+  AppSousTraitantsExportsRoute: AppSousTraitantsExportsRoute,
   AppVehiculesIdRoute: AppVehiculesIdRoute,
+  AppAdminIndexRoute: AppAdminIndexRoute,
   AppChantiersIndexRoute: AppChantiersIndexRoute,
   AppClientsIndexRoute: AppClientsIndexRoute,
   AppFacturationIndexRoute: AppFacturationIndexRoute,
@@ -492,6 +575,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSousTraitantsIndexRoute: AppSousTraitantsIndexRoute,
   AppStockIndexRoute: AppStockIndexRoute,
   AppVehiculesIndexRoute: AppVehiculesIndexRoute,
+  AppAdminClientsIdRoute: AppAdminClientsIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

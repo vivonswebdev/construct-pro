@@ -1,7 +1,7 @@
 {
-  "appName": "ConstructFlow",
+  "appName": "ZidarPro",
   "meta": {
-    "title": "ConstructFlow — Zarządzanie budowami",
+    "title": "ZidarPro — Zarządzanie budowami",
     "description": "Platforma do zarządzania budowami dla belgijskich firm budowlanych."
   },
   "actions": {
@@ -107,6 +107,18 @@
     "signer": {
       "title": "Podpis umowy",
       "description": "Przeczytaj i podpisz elektronicznie umowę podwykonawczą."
+    },
+    "exportsSousTraitants": {
+      "title": "Eksporty podwykonawstwa",
+      "description": "Rejestr potrąceń 30bis i eksport dla księgowego."
+    },
+    "admin": {
+      "title": "Administracja",
+      "description": "Administracja platformy: konta i dane demonstracyjne."
+    },
+    "comingSoon": {
+      "title": "Wkrótce dostępne",
+      "description": "Funkcje w przygotowaniu."
     }
   },
   "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny.",

@@ -27,7 +27,8 @@
       "amount": "Podaj kwotę dodatnią",
       "delay": "Termin płatności od 0 do 365 dni",
       "dates": "Data zakończenia musi być późniejsza niż data rozpoczęcia"
-    }
+    },
+    "editTitle": "Edytuj umowę"
   },
   "send": {
     "title": "Wyślij umowę do podpisu",
@@ -69,7 +70,8 @@
   },
   "toasts": {
     "contractCreated": "Utworzono umowę",
-    "cancelled": "Anulowano prośbę"
+    "cancelled": "Anulowano prośbę",
+    "contractUpdated": "Zaktualizowano umowę"
   },
   "sign": {
     "title": "Umowa podwykonawcza do podpisu",
@@ -93,7 +95,8 @@
       "deja_signe": "Ta umowa została już podpisana.",
       "document_modifie": "Wzór umowy zmienił się od wysłania: poproś o nowy link.",
       "champs_requis": "Podaj imię i nazwisko, stanowisko i miejsce podpisania.",
-      "signature_invalide": "Nie udało się zapisać podpisu. Złóż go ponownie."
+      "signature_invalide": "Nie udało się zapisać podpisu. Złóż go ponownie.",
+      "modele_inconnu": "Ta umowa korzysta z wersji wzoru, której ta strona nie potrafi wyświetlić. Poproś nadawcę o nowy link."
     }
   },
   "fields": {

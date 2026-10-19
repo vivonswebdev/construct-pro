@@ -44,7 +44,11 @@
     "netToClient": "Netto dla klienta",
     "balance": "Saldo do zapłaty",
     "gross": "Kwota brutto",
-    "invoiced": "Suma zafakturowana"
+    "invoiced": "Suma zafakturowana",
+    "rateUnavailable": "Stawka potrącenia niedostępna (nie wczytano parametrów 30bis): brak obliczeń.",
+    "rateInfo": "Stawka SPF (art. 402 CIR) obowiązująca od {{since}}: {{rate}} % — źródło: {{source}}.",
+    "verifiedOn": "Zweryfikowano {{date}}.",
+    "notVerified": "Data weryfikacji do uzupełnienia."
   },
   "history": {
     "title": "Historia sprawdzeń",

@@ -11,10 +11,30 @@
   "companyName": "Nazwa firmy",
   "address": "Adres",
   "bce": "Numer przedsiębiorstwa",
-  "logoUrl": "URL logo (opcjonalnie)",
   "avatarAlt": "Awatar",
   "toasts": {
     "profileUpdated": "Profil zaktualizowany",
     "companyUpdated": "Firma zaktualizowana"
+  },
+  "logo": {
+    "title": "Logo firmy",
+    "hint": "Wyświetlane w profilu, ofertach, fakturach i raportach.",
+    "defaultHint": "Brak logo: domyślnie używane są inicjały firmy.",
+    "limits": "JPG, PNG lub WebP, maksymalnie 2 MB.",
+    "upload": "Prześlij logo",
+    "replace": "Zastąp",
+    "confirmDelete": "Usunąć logo? Zostanie użyte logo domyślne.",
+    "saved": "Logo zapisane",
+    "deleted": "Logo usunięte",
+    "alt": "Logo {{company}}",
+    "defaultAlt": "Logo domyślne",
+    "errors": {
+      "type": "Nieobsługiwany format: tylko JPG, PNG lub WebP.",
+      "taille": "Plik za duży: maksymalnie 2 MB."
+    }
+  },
+  "links": {
+    "comingSoon": "Wkrótce dostępne",
+    "admin": "Administracja platformy"
   }
 }

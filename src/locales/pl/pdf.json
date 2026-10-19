@@ -27,7 +27,7 @@
   "structuredCommunication": "Komunikat strukturalny: {{value}}",
   "reference": "Numer: {{value}}",
   "generalConditions": "Warunki",
-  "footer": "Dokument wygenerowany {{date}} w ConstructFlow",
+  "footer": "Dokument wygenerowany {{date}} w ZidarPro",
   "fileQuote": "Oferta",
   "fileInvoice": "Faktura",
   "defaultConditions": "Oferta ważna 30 dni. Zaliczka 30 % przy zamówieniu.",
@@ -97,7 +97,7 @@
     "auditUa": "Przeglądarka podpisującego: {{value}}",
     "auditHashSent": "Odcisk SHA-256 wysłanego dokumentu: {{value}}",
     "auditHashSigned": "Odcisk SHA-256 podpisanego dokumentu: {{value}}",
-    "auditNote": "Zwykły podpis elektroniczny w rozumieniu rozporządzenia (UE) nr 910/2014 (eIDAS). Czas serwera (czas brukselski). Dokument wygenerowany w ConstructFlow.",
+    "auditNote": "Zwykły podpis elektroniczny w rozumieniu rozporządzenia (UE) nr 910/2014 (eIDAS). Czas serwera (czas brukselski). Dokument wygenerowany w ZidarPro.",
     "page": "Strona {{page}} / {{total}}"
   }
 }
