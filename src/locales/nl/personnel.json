@@ -19,7 +19,8 @@
     "email": "E-mail",
     "contract": "Soort contract",
     "hourlyRate": "Uurloon (€/u)",
-    "language": "Taal van de arbeider"
+    "language": "Taal van de arbeider",
+    "function": "Functie"
   },
   "toasts": {
     "added": "Arbeider toegevoegd",
@@ -39,5 +40,26 @@
     "sites": "Toegewezen werven",
     "noAssignment": "Geen lopende toewijzing.",
     "since": "sinds {{date}}"
+  },
+  "fiche": {
+    "edit": "Fiche bewerken",
+    "title": "Fiche van de werknemer",
+    "function": "Functie",
+    "functionPlaceholder": "Metselaar, ploegbaas…",
+    "status": "Status",
+    "startDate": "Datum in dienst",
+    "endDate": "Datum uit dienst",
+    "endDateHelp": "Dient om de bewaartermijn van de HR-documenten te berekenen.",
+    "account": "Gekoppeld gebruikersaccount",
+    "accountHelp": "Het gekoppelde account (rol Arbeider) ziet zijn eigen uren in de urenregistratie.",
+    "noAccount": "Geen gekoppeld account",
+    "saved": "Fiche opgeslagen",
+    "since": "In dienst sinds {{date}}",
+    "left": "Uit dienst op {{date}}",
+    "validation": {
+      "name": "De naam is verplicht.",
+      "email": "Ongeldig e-mailadres.",
+      "dates": "De datum uit dienst moet na de datum in dienst liggen."
+    }
   }
 }

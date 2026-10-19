@@ -117,6 +117,10 @@
     "comingSoon": {
       "title": "Bientôt disponible",
       "description": "Les fonctionnalités en préparation."
+    },
+    "timesheet": {
+      "title": "Timesheet de l'équipe",
+      "description": "Pointages de l'équipe interne : heures par travailleur, chantier et période."
     }
   },
   "indicatif": "Indicatif — à valider par votre comptable / secrétariat social.",

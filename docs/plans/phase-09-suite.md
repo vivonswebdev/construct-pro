@@ -31,16 +31,18 @@ Ordre : **A → B → C → D**, une PR chacune, testable seule.
 ## PR B — Contrats, prestations, paiements + calcul de la retenue
 
 **Migration** `…_phase9_retenue_plafond.sql` (nécessaire pour la règle 1) :
+
 - `verifications_30bis` + `montant_dette_sociale`, `montant_dette_fiscale` (numeric, facultatifs) :
   montants lus sur le service officiel et saisis avec le résultat. Vide = non communiqué → pas de
   plafond (retenue pleine).
 - `check_paiement_30bis` remplacé : retenue attendue par type =
   `min(montant HTVA × taux, dette du type − retenues de ce type déjà appliquées sur les paiements
-  liés à la même vérification)`. Les autres contrôles (vérification du jour, même
+liés à la même vérification)`. Les autres contrôles (vérification du jour, même
   sous-traitant) sont inchangés.
 - Rollback commenté (rétablit l'ancienne fonction).
 
 **Écrans** (fiche sous-traitant) :
+
 1. **Contrats** : modification tant qu'aucune demande de signature n'est signée ; ensuite,
    lecture seule (un changement = nouveau contrat / avenant).
 2. **Journal des prestations** : date, description, heures, ouvriers présents (nom, fonction,
@@ -63,6 +65,7 @@ vérification, parité JS / SQL du calcul plafonné).
 ## PR C — Captures de vérification (Storage)
 
 **Migration** `…_storage_documents.sql` :
+
 - bucket **privé** `documents` : `file_size_limit` 5 Mo, `allowed_mime_types` JPEG, PNG, PDF ;
 - policies `storage.objects` : chemin `<company_id>/…` obligatoire
   (`(storage.foldername(name))[1] = get_user_company_id(auth.uid())::text`) ; dossier
@@ -80,6 +83,7 @@ preuve 30bis refusée).
 ## PR D — Documents de conformité, alertes, blocage
 
 **Migration** `…_phase9_conformite.sql` :
+
 - `documents_conformite` (générique : `entite_type` sous_traitant / personnel / dirigeant /
   société, `entite_id`, `type_document`, fichier, `date_emission`, `date_expiration`,
   `valide_par`, `valide_le`). Statut **calculé** : valide / expire bientôt (≤ 30 jours) / expiré /

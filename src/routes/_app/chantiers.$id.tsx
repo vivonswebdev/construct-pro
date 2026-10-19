@@ -21,6 +21,7 @@ import { toCode } from "@/lib/statuts";
 import { statutChantierStyle } from "@/lib/chantiers";
 import { TranslatableText } from "@/components/TranslatableText";
 import { ChantierSousTraitants } from "@/components/sous-traitants/ChantierSousTraitants";
+import { HeuresEquipe } from "@/components/timesheet/HeuresEquipe";
 
 export const Route = createFileRoute("/_app/chantiers/$id")({
   component: ChantierDetail,
@@ -282,6 +283,8 @@ function ChantierDetail() {
           </div>
         )}
       </div>
+
+      <HeuresEquipe chantierId={id} />
 
       {/* Véhicules */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">

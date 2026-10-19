@@ -19,7 +19,8 @@
     "email": "Email",
     "contract": "Type de contrat",
     "hourlyRate": "Taux horaire (€/h)",
-    "language": "Langue de l'ouvrier"
+    "language": "Langue de l'ouvrier",
+    "function": "Fonction"
   },
   "toasts": {
     "added": "Ouvrier ajouté",
@@ -39,5 +40,26 @@
     "sites": "Chantiers affectés",
     "noAssignment": "Aucune affectation en cours.",
     "since": "depuis le {{date}}"
+  },
+  "fiche": {
+    "edit": "Modifier la fiche",
+    "title": "Fiche du travailleur",
+    "function": "Fonction",
+    "functionPlaceholder": "Maçon, chef d'équipe…",
+    "status": "Statut",
+    "startDate": "Date d'entrée",
+    "endDate": "Date de sortie",
+    "endDateHelp": "Sert à calculer la durée de conservation des documents RH.",
+    "account": "Compte utilisateur lié",
+    "accountHelp": "Le compte lié (rôle Ouvrier) voit ses propres heures dans le timesheet.",
+    "noAccount": "Aucun compte lié",
+    "saved": "Fiche enregistrée",
+    "since": "Entré le {{date}}",
+    "left": "Sorti le {{date}}",
+    "validation": {
+      "name": "Le nom est obligatoire.",
+      "email": "Adresse e-mail invalide.",
+      "dates": "La date de sortie doit suivre la date d'entrée."
+    }
   }
 }

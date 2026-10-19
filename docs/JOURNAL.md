@@ -4,6 +4,42 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-20 — Équipe interne : timesheet (PR A)
+
+Branche : `equipe-timesheet-dossiers`. Plan complet et décisions :
+[docs/plans/equipe-timesheet-dossiers.md](plans/equipe-timesheet-dossiers.md) (3 PR : A timesheet,
+B scans carte d'identité et contrats, C dossiers client et équipe).
+
+- **Migration** `20261020090000_equipe_pointages.sql` (à appliquer par Youssef) :
+  - `personnel` + `fonction`, `date_entree`, `date_sortie`, `profile_id` (compte lié, défini par
+    un gestionnaire uniquement, même société) ;
+  - table `pointages` (travailleur, chantier, date, arrivée, départ, pause, durée calculée) ;
+    pas de chevauchement, travailleur inactif refusé, travailleur et chantier de la même société ;
+  - table `pointage_corrections` : toute modification ou suppression passe par
+    `corriger_pointage()` / `supprimer_pointage()` avec motif ; avant / après, auteur et date
+    écrits par trigger ; historique non modifiable par l'API ;
+  - droits : saisie et correction par admin / gérant ; l'ouvrier lié lit ses seules heures ;
+    `comptes_societe()` (gestionnaires, sa société) pour lier un compte ; policies démo.
+- **Interface** : page `/timesheet` (jour / semaine / mois, filtres, grille de la semaine,
+  totaux par travailleur et par chantier, détail, correction avec motif, historique, export CSV
+  et PDF paginé) ; fiche travailleur (fonction, statut, dates, compte lié, heures du mois) ;
+  fiche chantier (heures de l'équipe interne, séparées des sous-traitants). 5 langues.
+- **Contrôles** : `supabase/tests/equipe_pointages.check.ts` (33 tests PGlite : cloisonnement,
+  droits, motif, historique, cascade) ; `controle_equipe_pointages.sql` (une ligne, 10 contrôles) ;
+  `verif_equipe_pointages.sql` (sans trace, `VERIF 1:OK … 7:OK` sur PGlite) ;
+  `scripts/tests/timesheet.check.ts` (périodes, durées, totaux).
+- `presence` (absences du jour) est conservée telle quelle.
+
+### À faire
+
+- [ ] Appliquer la migration, puis exécuter le contrôle et la vérification.
+- [ ] PR B (scans, bucket privé `rh`, journal d'accès) puis PR C (dossiers + PDF).
+- [ ] Faire valider par un juriste la base légale de la copie de la carte d'identité.
+- [ ] Hors périmètre, relevé : les policies existantes de `personnel` laissent tout utilisateur
+      de la société (y compris un ouvrier) modifier les fiches ; à restreindre aux gestionnaires.
+
+---
+
 ## 2026-10-19 — Correctif légal : mentions TVA 6 % et autoliquidation des devis et factures
 
 Branche : `fix-mentions-legales`. **Aucune migration.** Modèle de contrat inchangé.

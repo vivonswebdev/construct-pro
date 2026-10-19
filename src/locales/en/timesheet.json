@@ -1,0 +1,143 @@
+{
+  "title": "Team timesheet",
+  "subtitle": "Clock-ins of your in-house team (subcontractors have their own services).",
+  "readOnly": "Read only: you see your own hours.",
+  "notLinked": "Your account is not linked to any team record. Ask a manager to link it.",
+  "views": {
+    "jour": "Day",
+    "semaine": "Week",
+    "mois": "Month"
+  },
+  "nav": {
+    "previous": "Previous period",
+    "next": "Next period",
+    "today": "Today",
+    "week": "Week {{n}}"
+  },
+  "filters": {
+    "worker": "Worker",
+    "site": "Site",
+    "allWorkers": "All workers",
+    "allSites": "All sites"
+  },
+  "stats": {
+    "total": "Total hours",
+    "workers": "Workers",
+    "sites": "Sites",
+    "open": "Open clock-ins"
+  },
+  "actions": {
+    "new": "New clock-in",
+    "correct": "Correct",
+    "delete": "Delete",
+    "history": "History",
+    "clockOut": "Clock out",
+    "exportCsv": "CSV",
+    "exportPdf": "PDF"
+  },
+  "columns": {
+    "date": "Date",
+    "worker": "Worker",
+    "role": "Role",
+    "site": "Site",
+    "arrival": "Arrival",
+    "departure": "Departure",
+    "break": "Break",
+    "duration": "Duration",
+    "hours": "Hours",
+    "note": "Note",
+    "total": "Total",
+    "actions": "Actions"
+  },
+  "inProgress": "in progress",
+  "corrected": "corrected",
+  "breakMinutes_one": "{{count}} min",
+  "breakMinutes_other": "{{count}} min",
+  "empty": "No clock-ins in this period.",
+  "byWorker": "Totals per worker",
+  "bySite": "Totals per site",
+  "grid": "Week grid",
+  "detail": "Clock-in details",
+  "form": {
+    "newTitle": "New clock-in",
+    "correctTitle": "Correct clock-in",
+    "worker": "Worker",
+    "site": "Site",
+    "date": "Date",
+    "arrival": "Arrival",
+    "departure": "Departure (empty if in progress)",
+    "break": "Break (minutes)",
+    "note": "Note (optional)",
+    "reason": "Reason for the correction",
+    "reasonHelp": "Required: it is kept in the history with your name and the date.",
+    "duration": "Duration: {{duree}}",
+    "choose": "Choose…",
+    "noActiveWorker": "No active worker. Add one in Staff.",
+    "noSite": "No site. Create one in Sites."
+  },
+  "validation": {
+    "worker": "Choose a worker.",
+    "site": "Choose a site.",
+    "date": "Enter the date.",
+    "arrival": "Enter the arrival time.",
+    "times": "Departure must follow arrival and the break must be shorter than the day.",
+    "break": "Break between 0 and 720 minutes.",
+    "reason": "The reason is required."
+  },
+  "delete": {
+    "title": "Delete clock-in",
+    "text": "The clock-in of {{date}} ({{worker}}, {{site}}) will be deleted. A trace is kept in the history.",
+    "confirm": "Delete"
+  },
+  "history": {
+    "title": "Clock-in history",
+    "empty": "No corrections.",
+    "modification": "Change",
+    "suppression": "Deletion",
+    "by": "by {{nom}}",
+    "unknown": "unknown user",
+    "reason": "Reason: “{{motif}}”",
+    "before": "Before: {{valeur}}",
+    "after": "After: {{valeur}}"
+  },
+  "toasts": {
+    "created": "Clock-in saved",
+    "corrected": "Correction saved",
+    "deleted": "Clock-in deleted",
+    "clockedOut": "Departure saved"
+  },
+  "errors": {
+    "pointage_motif_obligatoire": "The reason for the correction is required.",
+    "pointage_chevauchement": "This worker already has a clock-in in this time slot.",
+    "pointage_travailleur_inactif": "This worker is inactive: clocking in is not possible.",
+    "pointage_champ_protege": "The worker of a clock-in cannot be changed.",
+    "pointage_introuvable": "Clock-in not found or not allowed.",
+    "pointages_horaires_chk": "Inconsistent times: departure must follow arrival.",
+    "personnel_lien_compte_reserve": "Reserved for administrators and managers.",
+    "personnel_lien_compte_autre_societe": "This account does not belong to your company."
+  },
+  "pdf": {
+    "title": "Team timesheet",
+    "period": "Period from {{debut}} to {{fin}}",
+    "filters": "Filters: {{filtres}}",
+    "disclaimer": "Internal document, for information only: payroll remains with the social secretariat.",
+    "page": "Page {{page}} / {{total}}"
+  },
+  "csv": {
+    "file": "timesheet {{debut}} {{fin}}",
+    "breakMinutes": "Break (min)",
+    "hoursDecimal": "Hours (decimal)"
+  },
+  "site": {
+    "title": "In-house team hours",
+    "subtitle": "Clock-ins of your workers on this site (excluding subcontractors).",
+    "empty": "No clock-ins on this site.",
+    "open": "Open timesheet"
+  },
+  "worker": {
+    "title": "Clock-ins",
+    "month": "Hours this month",
+    "empty": "No clock-ins this month.",
+    "open": "Open timesheet"
+  }
+}

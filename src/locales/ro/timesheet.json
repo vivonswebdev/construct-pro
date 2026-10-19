@@ -1,0 +1,144 @@
+{
+  "title": "Pontajul echipei",
+  "subtitle": "Pontajele echipei interne (subcontractorii au prestațiile lor).",
+  "readOnly": "Doar citire: vedeți propriile ore.",
+  "notLinked": "Contul dvs. nu este legat de nicio fișă din echipă. Cereți unui administrator să îl lege.",
+  "views": {
+    "jour": "Zi",
+    "semaine": "Săptămână",
+    "mois": "Lună"
+  },
+  "nav": {
+    "previous": "Perioada anterioară",
+    "next": "Perioada următoare",
+    "today": "Astăzi",
+    "week": "Săptămâna {{n}}"
+  },
+  "filters": {
+    "worker": "Lucrător",
+    "site": "Șantier",
+    "allWorkers": "Toți lucrătorii",
+    "allSites": "Toate șantierele"
+  },
+  "stats": {
+    "total": "Total ore",
+    "workers": "Lucrători",
+    "sites": "Șantiere",
+    "open": "Pontaje în curs"
+  },
+  "actions": {
+    "new": "Pontaj nou",
+    "correct": "Corectează",
+    "delete": "Șterge",
+    "history": "Istoric",
+    "clockOut": "Înregistrează plecarea",
+    "exportCsv": "CSV",
+    "exportPdf": "PDF"
+  },
+  "columns": {
+    "date": "Data",
+    "worker": "Lucrător",
+    "role": "Funcție",
+    "site": "Șantier",
+    "arrival": "Sosire",
+    "departure": "Plecare",
+    "break": "Pauză",
+    "duration": "Durată",
+    "hours": "Ore",
+    "note": "Notă",
+    "total": "Total",
+    "actions": "Acțiuni"
+  },
+  "inProgress": "în curs",
+  "corrected": "corectat",
+  "breakMinutes_one": "{{count}} min",
+  "breakMinutes_few": "{{count}} min",
+  "breakMinutes_other": "{{count}} min",
+  "empty": "Niciun pontaj în această perioadă.",
+  "byWorker": "Totaluri pe lucrător",
+  "bySite": "Totaluri pe șantier",
+  "grid": "Grila săptămânii",
+  "detail": "Detaliul pontajelor",
+  "form": {
+    "newTitle": "Pontaj nou",
+    "correctTitle": "Corectează pontajul",
+    "worker": "Lucrător",
+    "site": "Șantier",
+    "date": "Data",
+    "arrival": "Sosire",
+    "departure": "Plecare (gol dacă e în curs)",
+    "break": "Pauză (minute)",
+    "note": "Notă (opțional)",
+    "reason": "Motivul corectării",
+    "reasonHelp": "Obligatoriu: este păstrat în istoric cu numele dvs. și data.",
+    "duration": "Durată: {{duree}}",
+    "choose": "Alegeți…",
+    "noActiveWorker": "Niciun lucrător activ. Adăugați unul în Personal.",
+    "noSite": "Niciun șantier. Creați unul în Șantiere."
+  },
+  "validation": {
+    "worker": "Alegeți un lucrător.",
+    "site": "Alegeți un șantier.",
+    "date": "Indicați data.",
+    "arrival": "Indicați ora de sosire.",
+    "times": "Plecarea trebuie să urmeze sosirii, iar pauza să fie mai scurtă decât ziua.",
+    "break": "Pauză între 0 și 720 de minute.",
+    "reason": "Motivul este obligatoriu."
+  },
+  "delete": {
+    "title": "Șterge pontajul",
+    "text": "Pontajul din {{date}} ({{worker}}, {{site}}) va fi șters. O urmă este păstrată în istoric.",
+    "confirm": "Șterge"
+  },
+  "history": {
+    "title": "Istoricul pontajului",
+    "empty": "Nicio corectare.",
+    "modification": "Modificare",
+    "suppression": "Ștergere",
+    "by": "de {{nom}}",
+    "unknown": "utilizator necunoscut",
+    "reason": "Motiv: „{{motif}}”",
+    "before": "Înainte: {{valeur}}",
+    "after": "După: {{valeur}}"
+  },
+  "toasts": {
+    "created": "Pontaj înregistrat",
+    "corrected": "Corectare înregistrată",
+    "deleted": "Pontaj șters",
+    "clockedOut": "Plecare înregistrată"
+  },
+  "errors": {
+    "pointage_motif_obligatoire": "Motivul corectării este obligatoriu.",
+    "pointage_chevauchement": "Acest lucrător are deja un pontaj în acest interval.",
+    "pointage_travailleur_inactif": "Acest lucrător este inactiv: pontajul nu este posibil.",
+    "pointage_champ_protege": "Lucrătorul unui pontaj nu poate fi schimbat.",
+    "pointage_introuvable": "Pontaj negăsit sau nepermis.",
+    "pointages_horaires_chk": "Ore incoerente: plecarea trebuie să urmeze sosirii.",
+    "personnel_lien_compte_reserve": "Rezervat administratorilor și managerilor.",
+    "personnel_lien_compte_autre_societe": "Acest cont nu aparține societății dvs."
+  },
+  "pdf": {
+    "title": "Pontajul echipei",
+    "period": "Perioada {{debut}} – {{fin}}",
+    "filters": "Filtre: {{filtres}}",
+    "disclaimer": "Document intern, orientativ: salarizarea rămâne la secretariatul social.",
+    "page": "Pagina {{page}} / {{total}}"
+  },
+  "csv": {
+    "file": "pontaj {{debut}} {{fin}}",
+    "breakMinutes": "Pauză (min)",
+    "hoursDecimal": "Ore (zecimal)"
+  },
+  "site": {
+    "title": "Orele echipei interne",
+    "subtitle": "Pontajele lucrătorilor dvs. pe acest șantier (fără subcontractori).",
+    "empty": "Niciun pontaj pe acest șantier.",
+    "open": "Deschide pontajul"
+  },
+  "worker": {
+    "title": "Pontaje",
+    "month": "Orele lunii",
+    "empty": "Niciun pontaj luna aceasta.",
+    "open": "Deschide pontajul"
+  }
+}

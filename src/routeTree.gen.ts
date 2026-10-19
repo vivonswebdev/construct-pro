@@ -13,6 +13,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SignerTokenRouteImport } from './routes/signer.$token'
+import { Route as AppTimesheetRouteImport } from './routes/_app/timesheet'
 import { Route as AppProfilRouteImport } from './routes/_app/profil'
 import { Route as AppPrecompteRouteImport } from './routes/_app/precompte'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
@@ -54,6 +55,11 @@ const SignerTokenRoute = SignerTokenRouteImport.update({
   id: '/signer/$token',
   path: '/signer/$token',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppTimesheetRoute = AppTimesheetRouteImport.update({
+  id: '/timesheet',
+  path: '/timesheet',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppProfilRoute = AppProfilRouteImport.update({
   id: '/profil',
@@ -175,6 +181,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
+  '/timesheet': typeof AppTimesheetRoute
   '/signer/$token': typeof SignerTokenRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/clients/$id': typeof AppClientsIdRoute
@@ -202,6 +209,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AppDashboardRoute
   '/precompte': typeof AppPrecompteRoute
   '/profil': typeof AppProfilRoute
+  '/timesheet': typeof AppTimesheetRoute
   '/signer/$token': typeof SignerTokenRoute
   '/chantiers/$id': typeof AppChantiersIdRoute
   '/clients/$id': typeof AppClientsIdRoute
@@ -231,6 +239,7 @@ export interface FileRoutesById {
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/precompte': typeof AppPrecompteRoute
   '/_app/profil': typeof AppProfilRoute
+  '/_app/timesheet': typeof AppTimesheetRoute
   '/signer/$token': typeof SignerTokenRoute
   '/_app/chantiers/$id': typeof AppChantiersIdRoute
   '/_app/clients/$id': typeof AppClientsIdRoute
@@ -260,6 +269,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/precompte'
     | '/profil'
+    | '/timesheet'
     | '/signer/$token'
     | '/chantiers/$id'
     | '/clients/$id'
@@ -287,6 +297,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/precompte'
     | '/profil'
+    | '/timesheet'
     | '/signer/$token'
     | '/chantiers/$id'
     | '/clients/$id'
@@ -315,6 +326,7 @@ export interface FileRouteTypes {
     | '/_app/dashboard'
     | '/_app/precompte'
     | '/_app/profil'
+    | '/_app/timesheet'
     | '/signer/$token'
     | '/_app/chantiers/$id'
     | '/_app/clients/$id'
@@ -370,6 +382,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/signer/$token'
       preLoaderRoute: typeof SignerTokenRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/timesheet': {
+      id: '/_app/timesheet'
+      path: '/timesheet'
+      fullPath: '/timesheet'
+      preLoaderRoute: typeof AppTimesheetRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/profil': {
       id: '/_app/profil'
@@ -535,6 +554,7 @@ interface AppRouteChildren {
   AppDashboardRoute: typeof AppDashboardRoute
   AppPrecompteRoute: typeof AppPrecompteRoute
   AppProfilRoute: typeof AppProfilRoute
+  AppTimesheetRoute: typeof AppTimesheetRoute
   AppChantiersIdRoute: typeof AppChantiersIdRoute
   AppClientsIdRoute: typeof AppClientsIdRoute
   AppFacturationIdRoute: typeof AppFacturationIdRoute
@@ -560,6 +580,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppDashboardRoute: AppDashboardRoute,
   AppPrecompteRoute: AppPrecompteRoute,
   AppProfilRoute: AppProfilRoute,
+  AppTimesheetRoute: AppTimesheetRoute,
   AppChantiersIdRoute: AppChantiersIdRoute,
   AppClientsIdRoute: AppClientsIdRoute,
   AppFacturationIdRoute: AppFacturationIdRoute,

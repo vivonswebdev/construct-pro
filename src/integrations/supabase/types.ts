@@ -951,7 +951,10 @@ export type Database = {
           company_id: string
           contract_type: string | null
           created_at: string
+          date_entree: string | null
+          date_sortie: string | null
           email: string | null
+          fonction: string | null
           full_name: string
           hourly_rate: number | null
           id: string
@@ -959,13 +962,17 @@ export type Database = {
           nrn: string | null
           phone: string | null
           photo_url: string | null
+          profile_id: string | null
           status: string
         }
         Insert: {
           company_id: string
           contract_type?: string | null
           created_at?: string
+          date_entree?: string | null
+          date_sortie?: string | null
           email?: string | null
+          fonction?: string | null
           full_name: string
           hourly_rate?: number | null
           id?: string
@@ -973,13 +980,17 @@ export type Database = {
           nrn?: string | null
           phone?: string | null
           photo_url?: string | null
+          profile_id?: string | null
           status?: string
         }
         Update: {
           company_id?: string
           contract_type?: string | null
           created_at?: string
+          date_entree?: string | null
+          date_sortie?: string | null
           email?: string | null
+          fonction?: string | null
           full_name?: string
           hourly_rate?: number | null
           id?: string
@@ -987,15 +998,167 @@ export type Database = {
           nrn?: string | null
           phone?: string | null
           photo_url?: string | null
+          profile_id?: string | null
           status?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "personnel_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "personnel_company_id_fkey"
             columns: ["company_id"]
             isOneToOne: false
             referencedRelation: "companies"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      pointage_corrections: {
+        Row: {
+          action: string
+          apres: Json | null
+          avant: Json
+          company_id: string
+          id: string
+          le: string
+          motif: string
+          par: string | null
+          par_nom: string | null
+          personnel_id: string
+          pointage_id: string
+        }
+        Insert: {
+          action: string
+          apres?: Json | null
+          avant: Json
+          company_id: string
+          id?: string
+          le?: string
+          motif: string
+          par?: string | null
+          par_nom?: string | null
+          personnel_id: string
+          pointage_id: string
+        }
+        Update: {
+          action?: string
+          apres?: Json | null
+          avant?: Json
+          company_id?: string
+          id?: string
+          le?: string
+          motif?: string
+          par?: string | null
+          par_nom?: string | null
+          personnel_id?: string
+          pointage_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pointage_corrections_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pointage_corrections_par_fkey"
+            columns: ["par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pointages: {
+        Row: {
+          arrivee: string
+          chantier_id: string
+          company_id: string
+          created_at: string
+          created_by: string | null
+          date: string
+          depart: string | null
+          id: string
+          minutes_travaillees: number | null
+          modifie_le: string | null
+          modifie_par: string | null
+          note: string | null
+          pause_minutes: number
+          personnel_id: string
+        }
+        Insert: {
+          arrivee: string
+          chantier_id: string
+          company_id: string
+          created_at?: string
+          created_by?: string | null
+          date: string
+          depart?: string | null
+          id?: string
+          minutes_travaillees?: never
+          modifie_le?: string | null
+          modifie_par?: string | null
+          note?: string | null
+          pause_minutes?: number
+          personnel_id: string
+        }
+        Update: {
+          arrivee?: string
+          chantier_id?: string
+          company_id?: string
+          created_at?: string
+          created_by?: string | null
+          date?: string
+          depart?: string | null
+          id?: string
+          minutes_travaillees?: never
+          modifie_le?: string | null
+          modifie_par?: string | null
+          note?: string | null
+          pause_minutes?: number
+          personnel_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pointages_chantier_fk"
+            columns: ["chantier_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "chantiers"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "pointages_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pointages_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pointages_modifie_par_fkey"
+            columns: ["modifie_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pointages_personnel_fk"
+            columns: ["personnel_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "personnel"
+            referencedColumns: ["id", "company_id"]
           },
         ]
       }
@@ -1817,6 +1980,23 @@ export type Database = {
           sous_traitant_id: string
         }[]
       }
+      comptes_societe: {
+        Args: never
+        Returns: { email: string; id: string; nom: string; role: string }[]
+      }
+      corriger_pointage: {
+        Args: {
+          _arrivee: string
+          _chantier_id: string
+          _date: string
+          _depart: string | null
+          _id: string
+          _motif: string
+          _note: string | null
+          _pause_minutes: number
+        }
+        Returns: undefined
+      }
       dedupe_demo_data: { Args: { _company_id: string }; Returns: undefined }
       derogation_active: { Args: { _sous_traitant_id: string }; Returns: boolean }
       est_admin_plateforme: { Args: never; Returns: boolean }
@@ -1836,6 +2016,7 @@ export type Database = {
         Args: { _date_expiration: string; _invalide_le: string; _jour: string }
         Returns: string
       }
+      supprimer_pointage: { Args: { _id: string; _motif: string }; Returns: undefined }
       signer_contrat: {
         Args: {
           _champs: Json

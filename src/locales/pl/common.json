@@ -119,6 +119,10 @@
     "comingSoon": {
       "title": "Wkrótce dostępne",
       "description": "Funkcje w przygotowaniu."
+    },
+    "timesheet": {
+      "title": "Ewidencja czasu pracy zespołu",
+      "description": "Rejestracja czasu pracy własnego zespołu: godziny według pracownika, budowy i okresu."
     }
   },
   "indicatif": "Orientacyjnie — do potwierdzenia przez księgowego / sekretariat socjalny.",

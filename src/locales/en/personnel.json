@@ -19,7 +19,8 @@
     "email": "Email",
     "contract": "Contract type",
     "hourlyRate": "Hourly rate (€/h)",
-    "language": "Worker's language"
+    "language": "Worker's language",
+    "function": "Role"
   },
   "toasts": {
     "added": "Worker added",
@@ -39,5 +40,26 @@
     "sites": "Assigned sites",
     "noAssignment": "No current assignment.",
     "since": "since {{date}}"
+  },
+  "fiche": {
+    "edit": "Edit record",
+    "title": "Worker record",
+    "function": "Role",
+    "functionPlaceholder": "Bricklayer, team leader…",
+    "status": "Status",
+    "startDate": "Start date",
+    "endDate": "End date",
+    "endDateHelp": "Used to compute the retention period of HR documents.",
+    "account": "Linked user account",
+    "accountHelp": "The linked account (Worker role) sees its own hours in the timesheet.",
+    "noAccount": "No linked account",
+    "saved": "Record saved",
+    "since": "Joined on {{date}}",
+    "left": "Left on {{date}}",
+    "validation": {
+      "name": "The name is required.",
+      "email": "Invalid email address.",
+      "dates": "The end date must follow the start date."
+    }
   }
 }

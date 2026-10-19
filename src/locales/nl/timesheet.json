@@ -1,0 +1,143 @@
+{
+  "title": "Urenregistratie van het team",
+  "subtitle": "Prikklok van het eigen team (onderaannemers hebben hun prestaties).",
+  "readOnly": "Alleen lezen: u ziet uw eigen uren.",
+  "notLinked": "Uw account is aan geen enkele teamfiche gekoppeld. Vraag een beheerder om het te koppelen.",
+  "views": {
+    "jour": "Dag",
+    "semaine": "Week",
+    "mois": "Maand"
+  },
+  "nav": {
+    "previous": "Vorige periode",
+    "next": "Volgende periode",
+    "today": "Vandaag",
+    "week": "Week {{n}}"
+  },
+  "filters": {
+    "worker": "Werknemer",
+    "site": "Werf",
+    "allWorkers": "Alle werknemers",
+    "allSites": "Alle werven"
+  },
+  "stats": {
+    "total": "Totaal uren",
+    "workers": "Werknemers",
+    "sites": "Werven",
+    "open": "Lopende registraties"
+  },
+  "actions": {
+    "new": "Nieuwe registratie",
+    "correct": "Corrigeren",
+    "delete": "Verwijderen",
+    "history": "Historiek",
+    "clockOut": "Vertrek registreren",
+    "exportCsv": "CSV",
+    "exportPdf": "PDF"
+  },
+  "columns": {
+    "date": "Datum",
+    "worker": "Werknemer",
+    "role": "Functie",
+    "site": "Werf",
+    "arrival": "Aankomst",
+    "departure": "Vertrek",
+    "break": "Pauze",
+    "duration": "Duur",
+    "hours": "Uren",
+    "note": "Opmerking",
+    "total": "Totaal",
+    "actions": "Acties"
+  },
+  "inProgress": "lopend",
+  "corrected": "gecorrigeerd",
+  "breakMinutes_one": "{{count}} min",
+  "breakMinutes_other": "{{count}} min",
+  "empty": "Geen registraties in deze periode.",
+  "byWorker": "Totalen per werknemer",
+  "bySite": "Totalen per werf",
+  "grid": "Weekoverzicht",
+  "detail": "Detail van de registraties",
+  "form": {
+    "newTitle": "Nieuwe registratie",
+    "correctTitle": "Registratie corrigeren",
+    "worker": "Werknemer",
+    "site": "Werf",
+    "date": "Datum",
+    "arrival": "Aankomst",
+    "departure": "Vertrek (leeg indien lopend)",
+    "break": "Pauze (minuten)",
+    "note": "Opmerking (optioneel)",
+    "reason": "Reden van de correctie",
+    "reasonHelp": "Verplicht: ze wordt bewaard in de historiek met uw naam en de datum.",
+    "duration": "Duur: {{duree}}",
+    "choose": "Kiezen…",
+    "noActiveWorker": "Geen actieve werknemer. Voeg er een toe bij Personeel.",
+    "noSite": "Geen werf. Maak er een aan bij Werven."
+  },
+  "validation": {
+    "worker": "Kies een werknemer.",
+    "site": "Kies een werf.",
+    "date": "Geef de datum op.",
+    "arrival": "Geef het aankomstuur op.",
+    "times": "Het vertrek moet na de aankomst liggen en de pauze korter zijn dan de werkdag.",
+    "break": "Pauze tussen 0 en 720 minuten.",
+    "reason": "De reden is verplicht."
+  },
+  "delete": {
+    "title": "Registratie verwijderen",
+    "text": "De registratie van {{date}} ({{worker}}, {{site}}) wordt verwijderd. Een spoor blijft bewaard in de historiek.",
+    "confirm": "Verwijderen"
+  },
+  "history": {
+    "title": "Historiek van de registratie",
+    "empty": "Geen correcties.",
+    "modification": "Wijziging",
+    "suppression": "Verwijdering",
+    "by": "door {{nom}}",
+    "unknown": "onbekende gebruiker",
+    "reason": "Reden: « {{motif}} »",
+    "before": "Voor: {{valeur}}",
+    "after": "Na: {{valeur}}"
+  },
+  "toasts": {
+    "created": "Registratie opgeslagen",
+    "corrected": "Correctie opgeslagen",
+    "deleted": "Registratie verwijderd",
+    "clockedOut": "Vertrek geregistreerd"
+  },
+  "errors": {
+    "pointage_motif_obligatoire": "De reden van de correctie is verplicht.",
+    "pointage_chevauchement": "Deze werknemer heeft al een registratie in dit tijdvak.",
+    "pointage_travailleur_inactif": "Deze werknemer is inactief: registreren is niet mogelijk.",
+    "pointage_champ_protege": "De werknemer van een registratie kan niet gewijzigd worden.",
+    "pointage_introuvable": "Registratie niet gevonden of niet toegestaan.",
+    "pointages_horaires_chk": "Onlogische uren: het vertrek moet na de aankomst liggen.",
+    "personnel_lien_compte_reserve": "Voorbehouden aan beheerders en zaakvoerders.",
+    "personnel_lien_compte_autre_societe": "Dit account behoort niet tot uw onderneming."
+  },
+  "pdf": {
+    "title": "Urenregistratie van het team",
+    "period": "Periode van {{debut}} tot {{fin}}",
+    "filters": "Filters: {{filtres}}",
+    "disclaimer": "Intern document, indicatief: de loonverwerking blijft bij het sociaal secretariaat.",
+    "page": "Pagina {{page}} / {{total}}"
+  },
+  "csv": {
+    "file": "urenregistratie {{debut}} {{fin}}",
+    "breakMinutes": "Pauze (min)",
+    "hoursDecimal": "Uren (decimaal)"
+  },
+  "site": {
+    "title": "Uren van het eigen team",
+    "subtitle": "Registraties van uw werknemers op deze werf (zonder onderaannemers).",
+    "empty": "Geen registraties op deze werf.",
+    "open": "Urenregistratie openen"
+  },
+  "worker": {
+    "title": "Registraties",
+    "month": "Uren van de maand",
+    "empty": "Geen registraties deze maand.",
+    "open": "Urenregistratie openen"
+  }
+}

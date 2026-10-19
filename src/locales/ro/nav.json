@@ -19,7 +19,8 @@
     "assistant": "Asistent AI",
     "profil": "Profilul meu",
     "belcotax": "Belcotax",
-    "peppol": "Facturare (Peppol)"
+    "peppol": "Facturare (Peppol)",
+    "timesheet": "Pontaj"
   },
   "roles": {
     "admin": "Administrator",

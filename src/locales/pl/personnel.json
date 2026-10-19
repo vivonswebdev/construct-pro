@@ -19,7 +19,8 @@
     "email": "E-mail",
     "contract": "Rodzaj umowy",
     "hourlyRate": "Stawka godzinowa (€/h)",
-    "language": "Język pracownika"
+    "language": "Język pracownika",
+    "function": "Stanowisko"
   },
   "toasts": {
     "added": "Pracownik dodany",
@@ -39,5 +40,26 @@
     "sites": "Przydzielone budowy",
     "noAssignment": "Brak bieżącego przydziału.",
     "since": "od {{date}}"
+  },
+  "fiche": {
+    "edit": "Edytuj kartę",
+    "title": "Karta pracownika",
+    "function": "Stanowisko",
+    "functionPlaceholder": "Murarz, brygadzista…",
+    "status": "Status",
+    "startDate": "Data zatrudnienia",
+    "endDate": "Data odejścia",
+    "endDateHelp": "Służy do obliczenia okresu przechowywania dokumentów kadrowych.",
+    "account": "Powiązane konto użytkownika",
+    "accountHelp": "Powiązane konto (rola Robotnik) widzi własne godziny w ewidencji.",
+    "noAccount": "Brak powiązanego konta",
+    "saved": "Karta zapisana",
+    "since": "Zatrudniony od {{date}}",
+    "left": "Odszedł {{date}}",
+    "validation": {
+      "name": "Imię i nazwisko jest obowiązkowe.",
+      "email": "Nieprawidłowy adres e-mail.",
+      "dates": "Data odejścia musi być późniejsza niż data zatrudnienia."
+    }
   }
 }
