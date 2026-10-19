@@ -95,5 +95,6 @@
     "prestations": "Prestations (50 dernières)",
     "validated": "validée",
     "label30bis": "30bis : {{status}}"
-  }
+  },
+  "loadError": "Chargement impossible. Le message technique ci-dessous permet d'identifier la cause."
 }

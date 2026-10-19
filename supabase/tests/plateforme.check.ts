@@ -27,6 +27,16 @@ for (const f of readdirSync(MIG)
   .sort())
   await db.exec(readFileSync(join(MIG, f), "utf8"));
 for (const f of MIGRATIONS) await db.exec(readFileSync(join(MIG, f), "utf8"));
+// Les migrations postérieures (correctifs) sont réappliquées après la seconde exécution.
+for (const f of readdirSync(MIG)
+  .filter((f) => f.endsWith(".sql") && f > MIGRATIONS[MIGRATIONS.length - 1])
+  .sort())
+  await db.exec(readFileSync(join(MIG, f), "utf8"));
+// Les migrations plus récentes (correctifs) sont rejouées après, comme en production.
+for (const f of readdirSync(MIG)
+  .filter((f) => f.endsWith(".sql") && f > MIGRATIONS[MIGRATIONS.length - 1])
+  .sort())
+  await db.exec(readFileSync(join(MIG, f), "utf8"));
 ok(true, "migrations rejouées une seconde fois sans erreur (idempotentes)");
 
 const ADM = "00000000-0000-0000-0000-0000000000a1"; // kaillaniyoussef@gmail.com, confirmé

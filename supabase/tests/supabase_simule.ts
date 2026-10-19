@@ -8,7 +8,7 @@ export const SQL_SUPABASE_SIMULE = `
   CREATE ROLE anon NOLOGIN; CREATE ROLE authenticated NOLOGIN; CREATE ROLE service_role NOLOGIN;
   CREATE SCHEMA auth;
   CREATE TABLE auth.users (
-    id uuid PRIMARY KEY, email text, raw_user_meta_data jsonb,
+    id uuid PRIMARY KEY, email varchar(255), raw_user_meta_data jsonb, -- varchar comme Supabase
     email_confirmed_at timestamptz, created_at timestamptz DEFAULT now(),
     last_sign_in_at timestamptz
   );

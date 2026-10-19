@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { ShieldCheck } from "lucide-react";
+import { AlertTriangle, ShieldCheck } from "lucide-react";
 import { useAdminPlateforme } from "@/hooks/useAdminPlateforme";
 import { formatDateBE } from "@/lib/format";
 import { dateHeure } from "@/lib/admin";
+import { errorMessage } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 
 /** Garde commune : rien n'est affiché si la base ne reconnaît pas l'administrateur. */
@@ -94,6 +95,20 @@ export function TableUtilisateurs({
           ))}
         </tbody>
       </table>
+    </div>
+  );
+}
+
+/** Erreur de chargement visible (jamais de liste vide silencieuse). */
+export function ErreurChargement({ erreur }: { erreur: unknown }) {
+  const { t } = useTranslation("admin");
+  return (
+    <div className="flex gap-2 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+      <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" />
+      <div>
+        <p className="font-semibold">{t("loadError")}</p>
+        <p className="text-xs">{errorMessage(erreur)}</p>
+      </div>
     </div>
   );
 }
