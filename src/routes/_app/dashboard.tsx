@@ -345,7 +345,21 @@ function Dashboard() {
           <h3 className="text-base font-semibold">{t("alerts.title")}</h3>
         </div>
         <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-          <AlertCard tone="danger" title={t("alerts.lateSites", { count: late.length })}>
+          <AlertCard
+            tone="danger"
+            title={t("alerts.lateSites", { count: late.length })}
+            voir={
+              late.length === 1 ? (
+                <Link to="/chantiers/$id" params={{ id: late[0].id }} className={VOIR}>
+                  <TexteVoir />
+                </Link>
+              ) : (
+                <Link to="/chantiers" className={VOIR}>
+                  <TexteVoir />
+                </Link>
+              )
+            }
+          >
             {late.length === 0
               ? t("alerts.noLate")
               : late
@@ -353,7 +367,21 @@ function Dashboard() {
                   .map((c) => c.name)
                   .join(", ")}
           </AlertCard>
-          <AlertCard tone="warning" title={t("alerts.unassigned", { count: unassigned.length })}>
+          <AlertCard
+            tone="warning"
+            title={t("alerts.unassigned", { count: unassigned.length })}
+            voir={
+              unassigned.length === 1 ? (
+                <Link to="/personnel/$id" params={{ id: unassigned[0].id }} className={VOIR}>
+                  <TexteVoir />
+                </Link>
+              ) : (
+                <Link to="/personnel" className={VOIR}>
+                  <TexteVoir />
+                </Link>
+              )
+            }
+          >
             {unassigned.length === 0
               ? t("alerts.allAssigned")
               : unassigned
@@ -362,13 +390,26 @@ function Dashboard() {
                   .join(", ")}
           </AlertCard>
           {unpaidSalaries > 0 && (
-            <AlertCard tone="warning" title={t("alerts.unpaidSalaries", { count: unpaidSalaries })}>
+            <AlertCard
+              tone="warning"
+              title={t("alerts.unpaidSalaries", { count: unpaidSalaries })}
+              voir={
+                <Link to="/precompte" className={VOIR}>
+                  <TexteVoir />
+                </Link>
+              }
+            >
               {t("alerts.unpaidSalariesText")}
             </AlertCard>
           )}
           {unpaidPrecompte > 0 && (
             <AlertCard
               tone="danger"
+              voir={
+                <Link to="/precompte" className={VOIR}>
+                  <TexteVoir />
+                </Link>
+              }
               title={t("alerts.precompteDue", {
                 date: nextMonth.toLocaleDateString(intlLocale(), {
                   day: "2-digit",
@@ -382,6 +423,11 @@ function Dashboard() {
           {onssDue && (
             <AlertCard
               tone="danger"
+              voir={
+                <Link to="/precompte" className={VOIR}>
+                  <TexteVoir />
+                </Link>
+              }
               title={t("alerts.onssDue", {
                 quarter,
                 date: onssDueDate.toLocaleDateString(intlLocale(), {
@@ -407,6 +453,17 @@ function Dashboard() {
                   <AlertCard
                     tone="danger"
                     title={t("alerts.ctExpired", { count: ctExpired.length })}
+                    voir={
+                      ctExpired.length === 1 ? (
+                        <Link to="/vehicules/$id" params={{ id: ctExpired[0].id }} className={VOIR}>
+                          <TexteVoir />
+                        </Link>
+                      ) : (
+                        <Link to="/vehicules" className={VOIR}>
+                          <TexteVoir />
+                        </Link>
+                      )
+                    }
                   >
                     {ctExpired
                       .slice(0, 2)
@@ -415,7 +472,21 @@ function Dashboard() {
                   </AlertCard>
                 )}
                 {insSoon.length > 0 && (
-                  <AlertCard tone="warning" title={t("alerts.insuranceSoon")}>
+                  <AlertCard
+                    tone="warning"
+                    title={t("alerts.insuranceSoon")}
+                    voir={
+                      insSoon.length === 1 ? (
+                        <Link to="/vehicules/$id" params={{ id: insSoon[0].id }} className={VOIR}>
+                          <TexteVoir />
+                        </Link>
+                      ) : (
+                        <Link to="/vehicules" className={VOIR}>
+                          <TexteVoir />
+                        </Link>
+                      )
+                    }
+                  >
                     {insSoon
                       .slice(0, 2)
                       .map((v) =>
@@ -500,14 +571,28 @@ function KpiCard({
   );
 }
 
+/** Classe et libellé communs du lien « Voir » des alertes. */
+const VOIR = "mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline";
+function TexteVoir() {
+  const { t } = useTranslation("common");
+  return (
+    <>
+      {t("actions.see")} <ArrowRight className="h-3 w-3" />
+    </>
+  );
+}
+
 function AlertCard({
   tone,
   title,
   children,
+  voir,
 }: {
   tone: "danger" | "warning" | "info";
   title: string;
   children: React.ReactNode;
+  /** Lien « Voir » (page où traiter l'alerte). */
+  voir: React.ReactNode;
 }) {
   const map = {
     danger: { border: "border-l-danger", bg: "bg-red-50/50", text: "text-danger" },
@@ -515,14 +600,11 @@ function AlertCard({
     info: { border: "border-l-info", bg: "bg-blue-50/50", text: "text-info" },
   } as const;
   const s = map[tone];
-  const { t } = useTranslation("common");
   return (
     <div className={`rounded-lg border border-border ${s.bg} border-l-4 ${s.border} p-3`}>
       <p className={`text-sm font-semibold ${s.text}`}>{title}</p>
       <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{children}</p>
-      <button className="mt-2 inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline">
-        {t("actions.see")} <ArrowRight className="h-3 w-3" />
-      </button>
+      {voir}
     </div>
   );
 }
