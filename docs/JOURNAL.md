@@ -442,6 +442,22 @@ Branche : `phase-09-taux-30bis`.
 
 ---
 
+## 2026-10-13 (nuit) — Mise en production phase 9, nettoyage Vercel, plan de la suite
+
+- La PR #8 avait été fusionnée dans la branche de la #7 (déjà fusionnée) : son code n'était pas
+  sur `main`. Rattrapé par la PR #9 (fusionnée). `main` : build, types, i18n OK ; types Supabase
+  avec `contrat_signatures`, `contrat_a_signer`, `signer_contrat`.
+- Migration `20261013160000_phase9_contrat_signatures.sql` appliquée (vérifié : RPC présente,
+  table refusée à `anon`).
+- Vercel : projet supprimé et dépôt retiré de l'application GitHub (Youssef) ; aucun contrôle ni
+  déploiement sur la fusion de la #9 ; environnements GitHub « Production » et « Preview »
+  supprimés. Hébergement : Lovable uniquement.
+- Leçon : une PR « empilée » doit viser `main` dès que la PR de base est fusionnée.
+- Suite de la phase 9 planifiée : [docs/plans/phase-09-suite.md](plans/phase-09-suite.md)
+  (4 PR, 5 questions ouvertes).
+
+---
+
 ## 2026-10-13 (soir) — Phase 9 : contrat de sous-traitance signé par lien
 
 Branche : `phase-09-contrat-signature` (part de `phase-09-sous-traitants-ui`, PR #7).
