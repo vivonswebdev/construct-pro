@@ -4,6 +4,29 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-19 — Référencement : recherche de mots-clés et plan du site vitrine
+
+Branche : `seo-site-vitrine`. Documentation uniquement : aucun code, aucune migration.
+
+- `docs/seo/recherche-mots-cles.md` : Google Trends Belgique sur 5 ans (indices relatifs,
+  « checkinatwork » = 100) et recherches associées.
+  - Les recherches de « logiciel » sont quasi nulles ; les obligations dominent :
+    inhoudingsplicht 218, Limosa 90, obligation de retenue 78, btw verlegd 64.
+  - Le néerlandais pèse plus que le français.
+  - Intentions « check inhoudingsplicht », « factuur btw verlegd ».
+  - Concurrence : sites français et institutionnels, Smartbeam côté belge.
+- `docs/plans/site-vitrine.md` : pages publiques FR / NL (puis EN) rendues côté serveur, guides
+  orientés obligations, technique SEO (balises, JSON-LD, robots, sitemap, llms.txt), mesure via
+  Search Console (comptes de Youssef), 4 PR prévues, 5 questions.
+- Constats : `/` est vide pour Google (redirection vers la connexion) ; aucun robots, sitemap ni
+  donnée structurée ; `<html lang="fr">` fixe.
+- Diagnostic e-mails (lancé par Youssef) : 3 comptes, confirmation automatique active, aucune
+  langue enregistrée (comptes antérieurs à la PR #29).
+- **Point métier à valider** : extension de l'inhoudingsplicht aux cotisations sociales des
+  indépendants (15 %) annoncée pour mi-2026 ; ZidarPro gère ONSS et SPF uniquement.
+
+---
+
 ## 2026-10-19 — E-mails d'authentification ZidarPro : préparation
 
 Branche : `emails-zidarpro`. Plan : `docs/plans/emails-zidarpro.md`. **Aucune migration, base de
