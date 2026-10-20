@@ -1,6 +1,6 @@
 # Plan — Équipe interne, timesheet, scans et dossiers
 
-Branche : `equipe-timesheet-dossiers`. Statut : **plan validé le 20/10/2026** (décisions au § 8) ; PR A ouverte (timesheet).
+Branche : `equipe-timesheet-dossiers`. Statut : **plan validé le 20/10/2026** (décisions au § 8) ; PR A fusionnée (timesheet) ; PR B ouverte (scans RH).
 Rien n'est appliqué à la base de production : les migrations seront remises à Youssef avec leur
 contrôle SQL et leur vérification sans trace.
 
@@ -73,6 +73,15 @@ contrôle SQL et leur vérification sans trace.
   dans les fonctions `admin_*`, jamais visible par l'administrateur plateforme (même en démo).
 - Prise de vue : `<input type="file" accept="image/*,application/pdf" capture="environment">`
   (appareil photo sur téléphone / tablette).
+
+### Réalisé (PR B, 20/10/2026)
+
+Pour garantir « aucune lecture directe » **et** un journal de chaque consultation sans dépendre
+de la clé de service, la lecture passe par un ticket de 60 s en base : `ouvrir_document_rh()`
+écrit dans le journal, crée le ticket, puis l'application demande une URL signée de 60 s. Le
+stockage refuse toute lecture sans ticket. Supabase interdisant d'effacer un fichier en SQL,
+l'échéance « sortie + 1 an » produit une alerte au tableau de bord et la suppression se fait en
+un clic (avec motif) depuis la fiche du travailleur.
 
 ## 3. Scan de contrat papier — PR B
 

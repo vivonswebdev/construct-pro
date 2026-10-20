@@ -1,0 +1,102 @@
+{
+  "title": "Zeskanowane dokumenty",
+  "subtitle": "Prywatne przechowywanie: każde otwarcie jest rejestrowane. Tylko dla administratorów i kierowników.",
+  "empty": "Brak dokumentów.",
+  "deposited": "Dodano {{date}}",
+  "keepUntil": "do usunięcia {{date}}",
+  "keepUntilExit": "przechowywana do odejścia + 1 rok",
+  "deletedOn": "usunięto {{date}} ({{motif}})",
+  "showHistory_one": "Pokaż historię ({{count}} dokument)",
+  "showHistory_few": "Pokaż historię ({{count}} dokumenty)",
+  "showHistory_many": "Pokaż historię ({{count}} dokumentów)",
+  "showHistory_other": "Pokaż historię ({{count}} dokumentu)",
+  "hideHistory": "Ukryj historię",
+  "types": {
+    "carte_identite": "Dowód osobisty",
+    "contrat_travail": "Umowa o pracę",
+    "contrat_sous_traitance": "Umowa podwykonawcza",
+    "autre_contractuel": "Inny dokument umowny"
+  },
+  "statuts": {
+    "remplace": "zastąpiony",
+    "supprime": "usunięty"
+  },
+  "actions": {
+    "add": "Dodaj dokument",
+    "view": "Otwórz",
+    "replace": "Zastąp",
+    "log": "Dziennik dostępu",
+    "delete": "Usuń",
+    "eraseAgain": "Usuń plik ponownie"
+  },
+  "deposit": {
+    "title": "Dodaj dokument",
+    "replaceTitle": "Zastąp dokument",
+    "type": "Rodzaj dokumentu",
+    "label": "Nazwa (opcjonalnie)",
+    "file": "Plik (zdjęcie lub skan)",
+    "fileHelp": "JPG, PNG lub PDF, maksymalnie 5 MB. Na telefonie lub tablecie otworzy się aparat.",
+    "replaceCard": "Stara kopia dowodu zostanie oznaczona do usunięcia.",
+    "replaceContract": "Stara wersja pozostaje dostępna w historii.",
+    "submit": "Dodaj"
+  },
+  "gdpr": {
+    "title": "Ochrona danych (RODO)",
+    "purpose": "Jedyny cel: utworzenie akt osobowych pracownika.",
+    "retention": "Przechowywanie do daty odejścia + 1 rok, potem usunięcie.",
+    "access": "Dostęp tylko dla administratorów i kierowników; każde otwarcie jest rejestrowane.",
+    "noProcessing": "Brak automatycznego odczytu treści (bez rozpoznawania tekstu, bez AI).",
+    "consent": "Pracownik wyraził zgodę na kopię swojego dowodu osobistego.",
+    "note": "Szczegóły zgody (opcjonalnie)",
+    "notePlaceholder": "Pisemna zgoda podpisana dnia …"
+  },
+  "delete": {
+    "title": "Usuń dokument",
+    "text": "Plik ({{type}}) zostanie trwale usunięty. Ślad (data, autor, powód) zostaje zachowany.",
+    "reason": "Powód usunięcia",
+    "confirm": "Usuń"
+  },
+  "log": {
+    "title": "Dziennik dostępu",
+    "empty": "Brak zarejestrowanych dostępów.",
+    "unknown": "nieznany użytkownik",
+    "actions": {
+      "depot": "Dodanie",
+      "consultation": "Otwarcie",
+      "remplacement": "Zastąpienie",
+      "suppression": "Usunięcie"
+    }
+  },
+  "validation": {
+    "file": "Wybierz plik.",
+    "consent": "Zgoda pracownika jest obowiązkowa.",
+    "reason": "Powód jest obowiązkowy."
+  },
+  "toasts": {
+    "deposited": "Dokument dodany",
+    "deleted": "Dokument usunięty"
+  },
+  "errors": {
+    "taille": "Plik jest za duży (maksymalnie 5 MB).",
+    "format": "Odrzucony format: tylko JPG, PNG lub PDF.",
+    "rh_acces_refuse": "Tylko dla administratorów i kierowników firmy.",
+    "rh_consentement_obligatoire": "Zgoda pracownika jest obowiązkowa.",
+    "rh_carte_deja_active": "Kopia dowodu już istnieje: użyj „Zastąp”.",
+    "rh_remplacement_impossible": "Tego dokumentu nie można już zastąpić.",
+    "rh_format_refuse": "Odrzucony format: tylko JPG, PNG lub PDF.",
+    "rh_fichier_absent": "Plik nie został odebrany. Spróbuj ponownie.",
+    "rh_document_introuvable": "Nie znaleziono dokumentu lub brak uprawnień.",
+    "rh_motif_obligatoire": "Powód jest obowiązkowy.",
+    "documents_rh_type_chk": "Ten rodzaj dokumentu musi być powiązany z pracownikiem (lub z podwykonawcą w przypadku umowy podwykonawczej)."
+  },
+  "alerts": {
+    "title_one": "{{count}} dokument kadrowy do obsłużenia",
+    "title_few": "{{count}} dokumenty kadrowe do obsłużenia",
+    "title_many": "{{count}} dokumentów kadrowych do obsłużenia",
+    "title_other": "{{count}} dokumentu kadrowego do obsłużenia",
+    "text": "Kopie dowodów osobistych, których okres przechowywania minął: usuń je z karty pracownika.",
+    "expired": "kopia dowodu do usunięcia od {{date}}",
+    "fileLeft": "usunięty plik nadal istnieje, usuń go ponownie",
+    "open": "Otwórz kartę"
+  }
+}

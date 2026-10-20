@@ -24,6 +24,7 @@ import { toCode, type PresenceStatut } from "@/lib/statuts";
 import { isoJour } from "@/lib/timesheet";
 import { HeuresEquipe } from "@/components/timesheet/HeuresEquipe";
 import { FicheTravailleurModal } from "@/components/personnel/FicheTravailleurModal";
+import { DocumentsRhSection } from "@/components/rh/DocumentsRhSection";
 
 export const Route = createFileRoute("/_app/personnel/$id")({
   component: PersonnelDetail,
@@ -308,6 +309,11 @@ function PersonnelDetail() {
         personnelId={id}
         debut={isoJour(new Date(viewMonth.year, viewMonth.month, 1, 12))}
         fin={isoJour(new Date(viewMonth.year, viewMonth.month + 1, 0, 12))}
+      />
+
+      <DocumentsRhSection
+        cible={{ personnel_id: id }}
+        types={["carte_identite", "contrat_travail", "autre_contractuel"]}
       />
 
       {/* Affectations */}

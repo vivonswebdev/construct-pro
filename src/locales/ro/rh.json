@@ -1,0 +1,100 @@
+{
+  "title": "Documente scanate",
+  "subtitle": "Stocare privată: fiecare consultare este înregistrată. Rezervat administratorilor și managerilor.",
+  "empty": "Niciun document.",
+  "deposited": "Depus pe {{date}}",
+  "keepUntil": "de șters pe {{date}}",
+  "keepUntilExit": "păstrată până la plecare + 1 an",
+  "deletedOn": "șters pe {{date}} ({{motif}})",
+  "showHistory_one": "Afișează istoricul ({{count}} document)",
+  "showHistory_few": "Afișează istoricul ({{count}} documente)",
+  "showHistory_other": "Afișează istoricul ({{count}} de documente)",
+  "hideHistory": "Ascunde istoricul",
+  "types": {
+    "carte_identite": "Carte de identitate",
+    "contrat_travail": "Contract de muncă",
+    "contrat_sous_traitance": "Contract de subcontractare",
+    "autre_contractuel": "Alt document contractual"
+  },
+  "statuts": {
+    "remplace": "înlocuit",
+    "supprime": "șters"
+  },
+  "actions": {
+    "add": "Depune un document",
+    "view": "Consultă",
+    "replace": "Înlocuiește",
+    "log": "Jurnal de acces",
+    "delete": "Șterge",
+    "eraseAgain": "Șterge din nou fișierul"
+  },
+  "deposit": {
+    "title": "Depune un document",
+    "replaceTitle": "Înlocuiește documentul",
+    "type": "Tip de document",
+    "label": "Titlu (opțional)",
+    "file": "Fișier (fotografie sau scanare)",
+    "fileHelp": "JPG, PNG sau PDF, maximum 5 MB. Pe telefon sau tabletă se deschide camera.",
+    "replaceCard": "Vechea copie a cărții va fi marcată pentru ștergere.",
+    "replaceContract": "Vechea versiune rămâne consultabilă în istoric.",
+    "submit": "Depune"
+  },
+  "gdpr": {
+    "title": "Protecția datelor (GDPR)",
+    "purpose": "Scop unic: constituirea dosarului de personal al lucrătorului.",
+    "retention": "Păstrare până la data plecării + 1 an, apoi ștergere.",
+    "access": "Acces rezervat administratorilor și managerilor; fiecare consultare este înregistrată.",
+    "noProcessing": "Nicio citire automată a conținutului (fără recunoaștere de text, fără IA).",
+    "consent": "Lucrătorul și-a dat consimțământul pentru copia cărții sale de identitate.",
+    "note": "Precizare privind consimțământul (opțional)",
+    "notePlaceholder": "Consimțământ scris semnat pe …"
+  },
+  "delete": {
+    "title": "Șterge documentul",
+    "text": "Fișierul ({{type}}) va fi șters definitiv. Se păstrează o urmă (dată, autor, motiv).",
+    "reason": "Motivul ștergerii",
+    "confirm": "Șterge"
+  },
+  "log": {
+    "title": "Jurnal de acces",
+    "empty": "Niciun acces înregistrat.",
+    "unknown": "utilizator necunoscut",
+    "actions": {
+      "depot": "Depunere",
+      "consultation": "Consultare",
+      "remplacement": "Înlocuire",
+      "suppression": "Ștergere"
+    }
+  },
+  "validation": {
+    "file": "Alegeți un fișier.",
+    "consent": "Consimțământul lucrătorului este obligatoriu.",
+    "reason": "Motivul este obligatoriu."
+  },
+  "toasts": {
+    "deposited": "Document depus",
+    "deleted": "Document șters"
+  },
+  "errors": {
+    "taille": "Fișier prea mare (maximum 5 MB).",
+    "format": "Format refuzat: doar JPG, PNG sau PDF.",
+    "rh_acces_refuse": "Rezervat administratorilor și managerilor societății.",
+    "rh_consentement_obligatoire": "Consimțământul lucrătorului este obligatoriu.",
+    "rh_carte_deja_active": "Există deja o copie a cărții: folosiți „Înlocuiește”.",
+    "rh_remplacement_impossible": "Acest document nu mai poate fi înlocuit.",
+    "rh_format_refuse": "Format refuzat: doar JPG, PNG sau PDF.",
+    "rh_fichier_absent": "Fișierul nu a fost primit. Încercați din nou.",
+    "rh_document_introuvable": "Document negăsit sau nepermis.",
+    "rh_motif_obligatoire": "Motivul este obligatoriu.",
+    "documents_rh_type_chk": "Acest tip de document trebuie legat de un lucrător (sau de un subcontractor pentru un contract de subcontractare)."
+  },
+  "alerts": {
+    "title_one": "{{count}} document HR de tratat",
+    "title_few": "{{count}} documente HR de tratat",
+    "title_other": "{{count}} de documente HR de tratat",
+    "text": "Copii ale cărților de identitate a căror durată de păstrare a expirat: de șters din fișa lucrătorului.",
+    "expired": "copie a cărții de șters din {{date}}",
+    "fileLeft": "fișier șters încă prezent, de șters din nou",
+    "open": "Deschide fișa"
+  }
+}

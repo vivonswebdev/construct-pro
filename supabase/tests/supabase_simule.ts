@@ -28,7 +28,7 @@ export const SQL_SUPABASE_SIMULE = `
   CREATE TABLE storage.objects (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     bucket_id text REFERENCES storage.buckets (id),
-    name text NOT NULL, owner uuid, created_at timestamptz DEFAULT now(),
+    name text NOT NULL, owner uuid, created_at timestamptz DEFAULT now(), metadata jsonb,
     UNIQUE (bucket_id, name)
   );
   CREATE FUNCTION storage.foldername(name text) RETURNS text[] LANGUAGE plpgsql IMMUTABLE AS $$

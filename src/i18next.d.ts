@@ -23,6 +23,7 @@ import type pdf from "./locales/fr/pdf.json";
 import type admin from "./locales/fr/admin.json";
 import type bientot from "./locales/fr/bientot.json";
 import type timesheet from "./locales/fr/timesheet.json";
+import type rh from "./locales/fr/rh.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -50,6 +51,7 @@ declare module "i18next" {
       admin: typeof admin;
       bientot: typeof bientot;
       timesheet: typeof timesheet;
+      rh: typeof rh;
     };
   }
 }

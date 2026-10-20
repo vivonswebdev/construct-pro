@@ -22,6 +22,7 @@ import { statutChantierStyle } from "@/lib/chantiers";
 import { TranslatableText } from "@/components/TranslatableText";
 import { ChantierSousTraitants } from "@/components/sous-traitants/ChantierSousTraitants";
 import { HeuresEquipe } from "@/components/timesheet/HeuresEquipe";
+import { DocumentsRhSection } from "@/components/rh/DocumentsRhSection";
 
 export const Route = createFileRoute("/_app/chantiers/$id")({
   component: ChantierDetail,
@@ -285,6 +286,8 @@ function ChantierDetail() {
       </div>
 
       <HeuresEquipe chantierId={id} />
+
+      <DocumentsRhSection cible={{ chantier_id: id }} types={["autre_contractuel"]} />
 
       {/* Véhicules */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">

@@ -1,0 +1,98 @@
+{
+  "title": "Scanned documents",
+  "subtitle": "Private storage: every view is logged. Reserved for administrators and managers.",
+  "empty": "No documents.",
+  "deposited": "Uploaded on {{date}}",
+  "keepUntil": "to delete on {{date}}",
+  "keepUntilExit": "kept until departure + 1 year",
+  "deletedOn": "deleted on {{date}} ({{motif}})",
+  "showHistory_one": "Show history ({{count}} document)",
+  "showHistory_other": "Show history ({{count}} documents)",
+  "hideHistory": "Hide history",
+  "types": {
+    "carte_identite": "Identity card",
+    "contrat_travail": "Employment contract",
+    "contrat_sous_traitance": "Subcontracting contract",
+    "autre_contractuel": "Other contractual document"
+  },
+  "statuts": {
+    "remplace": "replaced",
+    "supprime": "deleted"
+  },
+  "actions": {
+    "add": "Upload a document",
+    "view": "View",
+    "replace": "Replace",
+    "log": "Access log",
+    "delete": "Delete",
+    "eraseAgain": "Erase the file again"
+  },
+  "deposit": {
+    "title": "Upload a document",
+    "replaceTitle": "Replace the document",
+    "type": "Document type",
+    "label": "Title (optional)",
+    "file": "File (photo or scan)",
+    "fileHelp": "JPG, PNG or PDF, 5 MB maximum. On a phone or tablet, the camera opens.",
+    "replaceCard": "The old copy of the card will be flagged for deletion.",
+    "replaceContract": "The old version stays available in the history.",
+    "submit": "Upload"
+  },
+  "gdpr": {
+    "title": "Data protection (GDPR)",
+    "purpose": "Single purpose: building the worker's HR file.",
+    "retention": "Kept until the departure date + 1 year, then deleted.",
+    "access": "Access reserved for administrators and managers; every view is logged.",
+    "noProcessing": "No automatic reading of the content (no text recognition, no AI).",
+    "consent": "The worker has consented to the copy of their identity card.",
+    "note": "Details of the consent (optional)",
+    "notePlaceholder": "Written consent signed on …"
+  },
+  "delete": {
+    "title": "Delete the document",
+    "text": "The file ({{type}}) will be permanently erased. A trace (date, author, reason) is kept.",
+    "reason": "Reason for deletion",
+    "confirm": "Delete"
+  },
+  "log": {
+    "title": "Access log",
+    "empty": "No access recorded.",
+    "unknown": "unknown user",
+    "actions": {
+      "depot": "Upload",
+      "consultation": "View",
+      "remplacement": "Replacement",
+      "suppression": "Deletion"
+    }
+  },
+  "validation": {
+    "file": "Choose a file.",
+    "consent": "The worker's consent is required.",
+    "reason": "The reason is required."
+  },
+  "toasts": {
+    "deposited": "Document uploaded",
+    "deleted": "Document deleted"
+  },
+  "errors": {
+    "taille": "File too large (5 MB maximum).",
+    "format": "Format refused: JPG, PNG or PDF only.",
+    "rh_acces_refuse": "Reserved for the company's administrators and managers.",
+    "rh_consentement_obligatoire": "The worker's consent is required.",
+    "rh_carte_deja_active": "A copy of the card already exists: use “Replace”.",
+    "rh_remplacement_impossible": "This document can no longer be replaced.",
+    "rh_format_refuse": "Format refused: JPG, PNG or PDF only.",
+    "rh_fichier_absent": "The file was not received. Try again.",
+    "rh_document_introuvable": "Document not found or not allowed.",
+    "rh_motif_obligatoire": "The reason is required.",
+    "documents_rh_type_chk": "This document type must be linked to a worker (or to a subcontractor for a subcontracting contract)."
+  },
+  "alerts": {
+    "title_one": "{{count}} HR document to handle",
+    "title_other": "{{count}} HR documents to handle",
+    "text": "Identity card copies whose retention period has ended: delete them from the worker's record.",
+    "expired": "card copy to delete since {{date}}",
+    "fileLeft": "deleted file still present, erase it again",
+    "open": "Open record"
+  }
+}
