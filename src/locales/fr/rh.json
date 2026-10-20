@@ -1,0 +1,98 @@
+{
+  "title": "Documents scannés",
+  "subtitle": "Stockage privé : chaque consultation est journalisée. Réservé aux administrateurs et gérants.",
+  "empty": "Aucun document.",
+  "deposited": "Déposé le {{date}}",
+  "keepUntil": "à supprimer le {{date}}",
+  "keepUntilExit": "conservée jusqu'à la sortie + 1 an",
+  "deletedOn": "supprimé le {{date}} ({{motif}})",
+  "showHistory_one": "Afficher l'historique ({{count}} document)",
+  "showHistory_other": "Afficher l'historique ({{count}} documents)",
+  "hideHistory": "Masquer l'historique",
+  "types": {
+    "carte_identite": "Carte d'identité",
+    "contrat_travail": "Contrat de travail",
+    "contrat_sous_traitance": "Contrat de sous-traitance",
+    "autre_contractuel": "Autre document contractuel"
+  },
+  "statuts": {
+    "remplace": "remplacé",
+    "supprime": "supprimé"
+  },
+  "actions": {
+    "add": "Déposer un document",
+    "view": "Consulter",
+    "replace": "Remplacer",
+    "log": "Journal d'accès",
+    "delete": "Supprimer",
+    "eraseAgain": "Effacer le fichier à nouveau"
+  },
+  "deposit": {
+    "title": "Déposer un document",
+    "replaceTitle": "Remplacer le document",
+    "type": "Type de document",
+    "label": "Intitulé (facultatif)",
+    "file": "Fichier (photo ou scan)",
+    "fileHelp": "JPG, PNG ou PDF, 5 Mo maximum. Sur téléphone ou tablette, l'appareil photo s'ouvre.",
+    "replaceCard": "L'ancienne copie de la carte sera signalée à supprimer.",
+    "replaceContract": "L'ancienne version reste consultable dans l'historique.",
+    "submit": "Déposer"
+  },
+  "gdpr": {
+    "title": "Protection des données (RGPD)",
+    "purpose": "Finalité unique : constitution du dossier RH du travailleur.",
+    "retention": "Conservation jusqu'à la date de sortie + 1 an, puis suppression.",
+    "access": "Accès réservé aux administrateurs et gérants ; chaque consultation est journalisée.",
+    "noProcessing": "Aucune lecture automatique du contenu (ni reconnaissance de texte, ni IA).",
+    "consent": "Le travailleur a donné son consentement à la copie de sa carte d'identité.",
+    "note": "Précision sur le consentement (facultatif)",
+    "notePlaceholder": "Consentement écrit signé le …"
+  },
+  "delete": {
+    "title": "Supprimer le document",
+    "text": "Le fichier ({{type}}) sera effacé définitivement. Une trace (date, auteur, motif) est conservée.",
+    "reason": "Motif de la suppression",
+    "confirm": "Supprimer"
+  },
+  "log": {
+    "title": "Journal d'accès",
+    "empty": "Aucun accès enregistré.",
+    "unknown": "utilisateur inconnu",
+    "actions": {
+      "depot": "Dépôt",
+      "consultation": "Consultation",
+      "remplacement": "Remplacement",
+      "suppression": "Suppression"
+    }
+  },
+  "validation": {
+    "file": "Choisissez un fichier.",
+    "consent": "Le consentement du travailleur est obligatoire.",
+    "reason": "Le motif est obligatoire."
+  },
+  "toasts": {
+    "deposited": "Document déposé",
+    "deleted": "Document supprimé"
+  },
+  "errors": {
+    "taille": "Fichier trop volumineux (5 Mo maximum).",
+    "format": "Format refusé : JPG, PNG ou PDF uniquement.",
+    "rh_acces_refuse": "Réservé aux administrateurs et gérants de la société.",
+    "rh_consentement_obligatoire": "Le consentement du travailleur est obligatoire.",
+    "rh_carte_deja_active": "Une copie de la carte existe déjà : utilisez « Remplacer ».",
+    "rh_remplacement_impossible": "Ce document ne peut plus être remplacé.",
+    "rh_format_refuse": "Format refusé : JPG, PNG ou PDF uniquement.",
+    "rh_fichier_absent": "Le fichier n'a pas été reçu. Réessayez.",
+    "rh_document_introuvable": "Document introuvable ou non autorisé.",
+    "rh_motif_obligatoire": "Le motif est obligatoire.",
+    "documents_rh_type_chk": "Ce type de document doit être rattaché à un travailleur (ou à un sous-traitant pour un contrat de sous-traitance)."
+  },
+  "alerts": {
+    "title_one": "{{count}} document RH à traiter",
+    "title_other": "{{count}} documents RH à traiter",
+    "text": "Copies de carte d'identité dont la durée de conservation est écoulée : à supprimer depuis la fiche du travailleur.",
+    "expired": "copie de carte à supprimer depuis le {{date}}",
+    "fileLeft": "fichier supprimé encore présent, à effacer à nouveau",
+    "open": "Ouvrir la fiche"
+  }
+}

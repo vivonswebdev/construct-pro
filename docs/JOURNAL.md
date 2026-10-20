@@ -4,6 +4,44 @@ Fait, décidé, reste à faire. Entrées les plus récentes en haut.
 
 ---
 
+## 2026-10-20 — Équipe interne : scans RH (PR B)
+
+Branche : `equipe-scans-rh`. PR A (timesheet, #33) fusionnée le même jour.
+
+- **Migration** `20261020120000_documents_rh.sql` (à appliquer par Youssef, après
+  `20261020090000_equipe_pointages.sql`) :
+  - bucket privé `rh` (5 Mo, JPG / PNG / PDF), chemins `<company_id>/<uuid>.<ext>` ;
+  - `documents_rh` : carte d'identité, contrat de travail, contrat de sous-traitance, autre
+    document contractuel ; rattachement à un travailleur, un sous-traitant, un chantier ou un
+    client (clés composites, même société) ;
+  - dépôt en deux temps (`preparer_depot_rh` → téléversement → `confirmer_depot_rh`) ; le
+    stockage n'accepte que les fichiers préparés ; abandon propre (`annuler_depot_rh`) ;
+  - **aucune lecture directe** : lecture et effacement sur ticket de 60 s
+    (`ouvrir_document_rh`, `supprimer_document_rh`), jamais de remplacement en place ;
+  - `journal_acces_rh` : dépôt, consultation, remplacement, suppression (auteur, date) ;
+  - carte d'identité : consentement obligatoire (date, auteur, note), une seule copie active,
+    conservation jusqu'à la sortie + 1 an (recalculée si la date de sortie change), copie
+    remplacée à supprimer tout de suite ; `documents_rh_a_traiter()` pour l'alerte ;
+  - gestionnaires seulement (ouvrier : rien) ; écritures uniquement par les fonctions ;
+    policy démo sur les métadonnées seulement (jamais les fichiers).
+- **Interface** : section « Documents scannés » sur les fiches travailleur, sous-traitant,
+  chantier et client (dépôt photo ou scan, bloc RGPD et consentement pour la carte,
+  consultation, remplacement, suppression avec motif, journal d'accès, historique) ; alerte
+  « documents RH à traiter » au tableau de bord. 5 langues.
+- **Contrôles** : `supabase/tests/documents_rh.check.ts` (37 tests PGlite) ;
+  `controle_documents_rh.sql` (11 contrôles, une ligne) ; `verif_documents_rh.sql` (sans trace,
+  `VERIF 1:OK … 7:OK` sur PGlite). Base simulée : colonne `storage.objects.metadata` ajoutée.
+- CLAUDE.md : règle du bucket `rh` ajoutée.
+
+### À faire
+
+- [ ] Appliquer la migration, puis le contrôle et la vérification.
+- [ ] Faire valider par un juriste la base légale de la copie de la carte d'identité.
+- [ ] PR C : dossier client et dossier travailleur (PDF : mention « carte d'identité déposée
+      le … » seulement, jamais l'image).
+
+---
+
 ## 2026-10-20 — Équipe interne : timesheet (PR A)
 
 Branche : `equipe-timesheet-dossiers`. Plan complet et décisions :

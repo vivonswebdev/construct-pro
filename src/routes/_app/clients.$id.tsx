@@ -13,6 +13,7 @@ import { useTranslation } from "react-i18next";
 import { pageHead } from "@/lib/head";
 import { toCode } from "@/lib/statuts";
 import { TranslatableText } from "@/components/TranslatableText";
+import { DocumentsRhSection } from "@/components/rh/DocumentsRhSection";
 
 export const Route = createFileRoute("/_app/clients/$id")({
   head: () => pageHead("client"),
@@ -182,6 +183,8 @@ function ClientDetail() {
           </div>
         </div>
       </div>
+
+      <DocumentsRhSection cible={{ client_id: id }} types={["autre_contractuel"]} />
 
       {edit && (
         <ClientFormModal

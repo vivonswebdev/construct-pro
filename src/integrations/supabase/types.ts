@@ -644,6 +644,142 @@ export type Database = {
           },
         ]
       }
+      documents_rh: {
+        Row: {
+          chantier_id: string | null
+          client_id: string | null
+          company_id: string
+          consentement_le: string | null
+          consentement_note: string | null
+          consentement_par: string | null
+          conserver_jusqu_au: string | null
+          depose_le: string
+          depose_par: string | null
+          fichier: string
+          id: string
+          motif_suppression: string | null
+          personnel_id: string | null
+          remplace_id: string | null
+          sous_traitant_id: string | null
+          statut: string
+          supprime_le: string | null
+          supprime_par: string | null
+          taille: number | null
+          titre: string | null
+          type: string
+        }
+        Insert: {
+          chantier_id?: string | null
+          client_id?: string | null
+          company_id: string
+          consentement_le?: string | null
+          consentement_note?: string | null
+          consentement_par?: string | null
+          conserver_jusqu_au?: string | null
+          depose_le?: string
+          depose_par?: string | null
+          fichier: string
+          id?: string
+          motif_suppression?: string | null
+          personnel_id?: string | null
+          remplace_id?: string | null
+          sous_traitant_id?: string | null
+          statut?: string
+          supprime_le?: string | null
+          supprime_par?: string | null
+          taille?: number | null
+          titre?: string | null
+          type: string
+        }
+        Update: {
+          chantier_id?: string | null
+          client_id?: string | null
+          company_id?: string
+          consentement_le?: string | null
+          consentement_note?: string | null
+          consentement_par?: string | null
+          conserver_jusqu_au?: string | null
+          depose_le?: string
+          depose_par?: string | null
+          fichier?: string
+          id?: string
+          motif_suppression?: string | null
+          personnel_id?: string | null
+          remplace_id?: string | null
+          sous_traitant_id?: string | null
+          statut?: string
+          supprime_le?: string | null
+          supprime_par?: string | null
+          taille?: number | null
+          titre?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_rh_chantier_fk"
+            columns: ["chantier_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "chantiers"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "documents_rh_client_fk"
+            columns: ["client_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "documents_rh_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_rh_consentement_par_fkey"
+            columns: ["consentement_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_rh_depose_par_fkey"
+            columns: ["depose_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_rh_personnel_fk"
+            columns: ["personnel_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "personnel"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "documents_rh_remplace_id_fkey"
+            columns: ["remplace_id"]
+            isOneToOne: false
+            referencedRelation: "documents_rh"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_rh_sous_traitant_fk"
+            columns: ["sous_traitant_id", "company_id"]
+            isOneToOne: false
+            referencedRelation: "sous_traitants"
+            referencedColumns: ["id", "company_id"]
+          },
+          {
+            foreignKeyName: "documents_rh_supprime_par_fkey"
+            columns: ["supprime_par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       erreurs_application: {
         Row: {
           code: string
@@ -837,6 +973,54 @@ export type Database = {
         Insert: never
         Update: never
         Relationships: []
+      }
+      journal_acces_rh: {
+        Row: {
+          action: string
+          company_id: string
+          details: Json
+          document_id: string
+          id: number
+          le: string
+          par: string | null
+          par_nom: string | null
+        }
+        Insert: {
+          action: string
+          company_id: string
+          details?: Json
+          document_id: string
+          id?: never
+          le?: string
+          par?: string | null
+          par_nom?: string | null
+        }
+        Update: {
+          action?: string
+          company_id?: string
+          details?: Json
+          document_id?: string
+          id?: never
+          le?: string
+          par?: string | null
+          par_nom?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journal_acces_rh_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "journal_acces_rh_par_fkey"
+            columns: ["par"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       materiaux: {
         Row: {
@@ -1671,6 +1855,32 @@ export type Database = {
         }
         Relationships: []
       }
+      tickets_fichiers_rh: {
+        Row: {
+          action: string
+          expire_le: string
+          fichier: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          action: string
+          expire_le: string
+          fichier: string
+          id?: never
+          user_id: string
+        }
+        Update: {
+          action?: string
+          expire_le?: string
+          fichier?: string
+          id?: never
+          user_id?: string
+        }
+        Relationships: [
+
+        ]
+      }
       traductions: {
         Row: {
           company_id: string
@@ -1906,6 +2116,40 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      annuler_depot_rh: { Args: { _id: string }; Returns: string }
+      confirmer_depot_rh: { Args: { _id: string }; Returns: undefined }
+      documents_rh_a_traiter: {
+        Args: never
+        Returns: {
+          conserver_jusqu_au: string
+          fichier_present: boolean
+          id: string
+          personnel_id: string
+          statut: string
+          type: string
+        }[]
+      }
+      ouvrir_document_rh: { Args: { _id: string }; Returns: string }
+      preparer_depot_rh: {
+        Args: {
+          _chantier_id: string | null
+          _client_id: string | null
+          _consentement: boolean
+          _consentement_note: string | null
+          _format: string
+          _personnel_id: string | null
+          _remplace_id: string | null
+          _sous_traitant_id: string | null
+          _titre: string | null
+          _type: string
+        }
+        Returns: { fichier: string; id: string }[]
+      }
+      supprimer_document_rh: { Args: { _id: string; _motif: string }; Returns: string }
+      ticket_fichier_rh_valide: {
+        Args: { _action: string; _fichier: string }
+        Returns: boolean
+      }
       admin_comptes: {
         Args: never
         Returns: {

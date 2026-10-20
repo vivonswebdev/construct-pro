@@ -30,6 +30,7 @@ import { useTranslation } from "react-i18next";
 import { intlLocale } from "@/lib/i18n";
 import { toCode, CONTRATS_SALARIES } from "@/lib/statuts";
 import { ConformiteAlertes } from "@/components/sous-traitants/ConformiteAlertes";
+import { DocumentsRhAlertes } from "@/components/rh/DocumentsRhAlertes";
 
 export const Route = createFileRoute("/_app/dashboard")({
   component: Dashboard,
@@ -505,6 +506,8 @@ function Dashboard() {
       </Card>
 
       <ConformiteAlertes />
+
+      <DocumentsRhAlertes />
 
       <div className="text-right">
         <Link

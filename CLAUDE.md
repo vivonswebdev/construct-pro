@@ -119,8 +119,12 @@ comparer avec`toCode()` (`src/lib/statuts.ts`), jamais avec un libellé.
 
 ## Fichiers
 
-- Supabase Storage, un bucket par usage (`logos`, `sites`, `chantiers`, `documents`, `achats`),
-  chemins préfixés par `company_id`.
+- Supabase Storage, un bucket par usage (`logos`, `sites`, `chantiers`, `documents`, `achats`,
+  `rh`), chemins préfixés par `company_id`.
+- Bucket `rh` (cartes d'identité, contrats papier) : **aucune lecture directe**. Lecture et
+  effacement uniquement sur ticket de 60 s délivré par `ouvrir_document_rh()` /
+  `supprimer_document_rh()`, qui journalisent (`journal_acces_rh`). Gestionnaires seulement ;
+  jamais d'OCR ni d'IA sur ces fichiers ; jamais l'image d'une carte d'identité dans un PDF.
 
 ## Git (poste Windows)
 

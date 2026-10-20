@@ -1,0 +1,98 @@
+{
+  "title": "Gescande documenten",
+  "subtitle": "Privéopslag: elke raadpleging wordt gelogd. Voorbehouden aan beheerders en zaakvoerders.",
+  "empty": "Geen documenten.",
+  "deposited": "Neergelegd op {{date}}",
+  "keepUntil": "te verwijderen op {{date}}",
+  "keepUntilExit": "bewaard tot uitdiensttreding + 1 jaar",
+  "deletedOn": "verwijderd op {{date}} ({{motif}})",
+  "showHistory_one": "Historiek tonen ({{count}} document)",
+  "showHistory_other": "Historiek tonen ({{count}} documenten)",
+  "hideHistory": "Historiek verbergen",
+  "types": {
+    "carte_identite": "Identiteitskaart",
+    "contrat_travail": "Arbeidsovereenkomst",
+    "contrat_sous_traitance": "Onderaannemingscontract",
+    "autre_contractuel": "Ander contractueel document"
+  },
+  "statuts": {
+    "remplace": "vervangen",
+    "supprime": "verwijderd"
+  },
+  "actions": {
+    "add": "Document neerleggen",
+    "view": "Raadplegen",
+    "replace": "Vervangen",
+    "log": "Toegangslog",
+    "delete": "Verwijderen",
+    "eraseAgain": "Bestand opnieuw wissen"
+  },
+  "deposit": {
+    "title": "Document neerleggen",
+    "replaceTitle": "Document vervangen",
+    "type": "Soort document",
+    "label": "Omschrijving (optioneel)",
+    "file": "Bestand (foto of scan)",
+    "fileHelp": "JPG, PNG of PDF, maximaal 5 MB. Op telefoon of tablet opent de camera.",
+    "replaceCard": "De oude kopie van de kaart wordt gemarkeerd om te verwijderen.",
+    "replaceContract": "De oude versie blijft raadpleegbaar in de historiek.",
+    "submit": "Neerleggen"
+  },
+  "gdpr": {
+    "title": "Gegevensbescherming (AVG)",
+    "purpose": "Enig doel: samenstelling van het personeelsdossier van de werknemer.",
+    "retention": "Bewaring tot de datum van uitdiensttreding + 1 jaar, daarna verwijdering.",
+    "access": "Toegang voorbehouden aan beheerders en zaakvoerders; elke raadpleging wordt gelogd.",
+    "noProcessing": "Geen automatische lezing van de inhoud (geen tekstherkenning, geen AI).",
+    "consent": "De werknemer heeft toestemming gegeven voor de kopie van zijn identiteitskaart.",
+    "note": "Toelichting bij de toestemming (optioneel)",
+    "notePlaceholder": "Schriftelijke toestemming ondertekend op …"
+  },
+  "delete": {
+    "title": "Document verwijderen",
+    "text": "Het bestand ({{type}}) wordt definitief gewist. Een spoor (datum, auteur, reden) blijft bewaard.",
+    "reason": "Reden van de verwijdering",
+    "confirm": "Verwijderen"
+  },
+  "log": {
+    "title": "Toegangslog",
+    "empty": "Geen toegang geregistreerd.",
+    "unknown": "onbekende gebruiker",
+    "actions": {
+      "depot": "Neerlegging",
+      "consultation": "Raadpleging",
+      "remplacement": "Vervanging",
+      "suppression": "Verwijdering"
+    }
+  },
+  "validation": {
+    "file": "Kies een bestand.",
+    "consent": "De toestemming van de werknemer is verplicht.",
+    "reason": "De reden is verplicht."
+  },
+  "toasts": {
+    "deposited": "Document neergelegd",
+    "deleted": "Document verwijderd"
+  },
+  "errors": {
+    "taille": "Bestand te groot (maximaal 5 MB).",
+    "format": "Formaat geweigerd: alleen JPG, PNG of PDF.",
+    "rh_acces_refuse": "Voorbehouden aan beheerders en zaakvoerders van de onderneming.",
+    "rh_consentement_obligatoire": "De toestemming van de werknemer is verplicht.",
+    "rh_carte_deja_active": "Er bestaat al een kopie van de kaart: gebruik « Vervangen ».",
+    "rh_remplacement_impossible": "Dit document kan niet meer vervangen worden.",
+    "rh_format_refuse": "Formaat geweigerd: alleen JPG, PNG of PDF.",
+    "rh_fichier_absent": "Het bestand is niet ontvangen. Probeer opnieuw.",
+    "rh_document_introuvable": "Document niet gevonden of niet toegestaan.",
+    "rh_motif_obligatoire": "De reden is verplicht.",
+    "documents_rh_type_chk": "Dit soort document moet aan een werknemer gekoppeld zijn (of aan een onderaannemer voor een onderaannemingscontract)."
+  },
+  "alerts": {
+    "title_one": "{{count}} HR-document te behandelen",
+    "title_other": "{{count}} HR-documenten te behandelen",
+    "text": "Kopieën van identiteitskaarten waarvan de bewaartermijn verstreken is: te verwijderen via de fiche van de werknemer.",
+    "expired": "kopie van de kaart te verwijderen sinds {{date}}",
+    "fileLeft": "verwijderd bestand nog aanwezig, opnieuw te wissen",
+    "open": "Fiche openen"
+  }
+}

@@ -45,6 +45,7 @@ import {
   type ContratSousTraitance,
 } from "@/lib/sous-traitants";
 import { useTranslation } from "react-i18next";
+import { DocumentsRhSection } from "@/components/rh/DocumentsRhSection";
 
 export const Route = createFileRoute("/_app/sous-traitants/$id")({
   head: () => pageHead("sousTraitant"),
@@ -526,6 +527,10 @@ function SousTraitantDetail() {
             verifications={data.verifications}
             paiements={data.paiements}
             onChange={refresh}
+          />
+          <DocumentsRhSection
+            cible={{ sous_traitant_id: st.id }}
+            types={["contrat_sous_traitance", "autre_contractuel"]}
           />
         </div>
       </div>
