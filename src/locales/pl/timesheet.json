@@ -1,0 +1,145 @@
+{
+  "title": "Ewidencja czasu pracy zespołu",
+  "subtitle": "Rejestracje czasu własnego zespołu (podwykonawcy mają swoje usługi).",
+  "readOnly": "Tylko odczyt: widzisz własne godziny.",
+  "notLinked": "Twoje konto nie jest powiązane z żadną kartą pracownika. Poproś kierownika o powiązanie.",
+  "views": {
+    "jour": "Dzień",
+    "semaine": "Tydzień",
+    "mois": "Miesiąc"
+  },
+  "nav": {
+    "previous": "Poprzedni okres",
+    "next": "Następny okres",
+    "today": "Dzisiaj",
+    "week": "Tydzień {{n}}"
+  },
+  "filters": {
+    "worker": "Pracownik",
+    "site": "Budowa",
+    "allWorkers": "Wszyscy pracownicy",
+    "allSites": "Wszystkie budowy"
+  },
+  "stats": {
+    "total": "Suma godzin",
+    "workers": "Pracownicy",
+    "sites": "Budowy",
+    "open": "Otwarte rejestracje"
+  },
+  "actions": {
+    "new": "Nowa rejestracja",
+    "correct": "Popraw",
+    "delete": "Usuń",
+    "history": "Historia",
+    "clockOut": "Zarejestruj wyjście",
+    "exportCsv": "CSV",
+    "exportPdf": "PDF"
+  },
+  "columns": {
+    "date": "Data",
+    "worker": "Pracownik",
+    "role": "Stanowisko",
+    "site": "Budowa",
+    "arrival": "Przyjście",
+    "departure": "Wyjście",
+    "break": "Przerwa",
+    "duration": "Czas",
+    "hours": "Godziny",
+    "note": "Uwaga",
+    "total": "Razem",
+    "actions": "Działania"
+  },
+  "inProgress": "w toku",
+  "corrected": "poprawione",
+  "breakMinutes_one": "{{count}} min",
+  "breakMinutes_few": "{{count}} min",
+  "breakMinutes_many": "{{count}} min",
+  "breakMinutes_other": "{{count}} min",
+  "empty": "Brak rejestracji w tym okresie.",
+  "byWorker": "Sumy według pracownika",
+  "bySite": "Sumy według budowy",
+  "grid": "Siatka tygodnia",
+  "detail": "Szczegóły rejestracji",
+  "form": {
+    "newTitle": "Nowa rejestracja",
+    "correctTitle": "Popraw rejestrację",
+    "worker": "Pracownik",
+    "site": "Budowa",
+    "date": "Data",
+    "arrival": "Przyjście",
+    "departure": "Wyjście (puste, jeśli w toku)",
+    "break": "Przerwa (minuty)",
+    "note": "Uwaga (opcjonalnie)",
+    "reason": "Powód poprawki",
+    "reasonHelp": "Obowiązkowy: jest zapisywany w historii z Twoim nazwiskiem i datą.",
+    "duration": "Czas: {{duree}}",
+    "choose": "Wybierz…",
+    "noActiveWorker": "Brak aktywnego pracownika. Dodaj go w Personelu.",
+    "noSite": "Brak budowy. Utwórz ją w Budowach."
+  },
+  "validation": {
+    "worker": "Wybierz pracownika.",
+    "site": "Wybierz budowę.",
+    "date": "Podaj datę.",
+    "arrival": "Podaj godzinę przyjścia.",
+    "times": "Wyjście musi nastąpić po przyjściu, a przerwa musi być krótsza niż dzień pracy.",
+    "break": "Przerwa od 0 do 720 minut.",
+    "reason": "Powód jest obowiązkowy."
+  },
+  "delete": {
+    "title": "Usuń rejestrację",
+    "text": "Rejestracja z {{date}} ({{worker}}, {{site}}) zostanie usunięta. Ślad zostaje w historii.",
+    "confirm": "Usuń"
+  },
+  "history": {
+    "title": "Historia rejestracji",
+    "empty": "Brak poprawek.",
+    "modification": "Zmiana",
+    "suppression": "Usunięcie",
+    "by": "przez {{nom}}",
+    "unknown": "nieznany użytkownik",
+    "reason": "Powód: „{{motif}}”",
+    "before": "Przed: {{valeur}}",
+    "after": "Po: {{valeur}}"
+  },
+  "toasts": {
+    "created": "Rejestracja zapisana",
+    "corrected": "Poprawka zapisana",
+    "deleted": "Rejestracja usunięta",
+    "clockedOut": "Wyjście zarejestrowane"
+  },
+  "errors": {
+    "pointage_motif_obligatoire": "Powód poprawki jest obowiązkowy.",
+    "pointage_chevauchement": "Ten pracownik ma już rejestrację w tym przedziale czasu.",
+    "pointage_travailleur_inactif": "Ten pracownik jest nieaktywny: rejestracja nie jest możliwa.",
+    "pointage_champ_protege": "Nie można zmienić pracownika rejestracji.",
+    "pointage_introuvable": "Nie znaleziono rejestracji lub brak uprawnień.",
+    "pointages_horaires_chk": "Niespójne godziny: wyjście musi nastąpić po przyjściu.",
+    "personnel_lien_compte_reserve": "Zarezerwowane dla administratorów i kierowników.",
+    "personnel_lien_compte_autre_societe": "To konto nie należy do Twojej firmy."
+  },
+  "pdf": {
+    "title": "Ewidencja czasu pracy zespołu",
+    "period": "Okres od {{debut}} do {{fin}}",
+    "filters": "Filtry: {{filtres}}",
+    "disclaimer": "Dokument wewnętrzny, orientacyjny: płace nadal rozlicza sekretariat socjalny.",
+    "page": "Strona {{page}} / {{total}}"
+  },
+  "csv": {
+    "file": "ewidencja {{debut}} {{fin}}",
+    "breakMinutes": "Przerwa (min)",
+    "hoursDecimal": "Godziny (dziesiętnie)"
+  },
+  "site": {
+    "title": "Godziny własnego zespołu",
+    "subtitle": "Rejestracje Twoich pracowników na tej budowie (bez podwykonawców).",
+    "empty": "Brak rejestracji na tej budowie.",
+    "open": "Otwórz ewidencję"
+  },
+  "worker": {
+    "title": "Rejestracje",
+    "month": "Godziny w miesiącu",
+    "empty": "Brak rejestracji w tym miesiącu.",
+    "open": "Otwórz ewidencję"
+  }
+}

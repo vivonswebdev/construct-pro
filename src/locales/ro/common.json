@@ -118,6 +118,10 @@
     "comingSoon": {
       "title": "În curând",
       "description": "Funcționalitățile în pregătire."
+    },
+    "timesheet": {
+      "title": "Pontajul echipei",
+      "description": "Pontajele echipei interne: ore pe lucrător, șantier și perioadă."
     }
   },
   "indicatif": "Orientativ — de confirmat cu contabilul / secretariatul social.",

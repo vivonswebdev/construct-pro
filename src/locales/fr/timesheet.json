@@ -1,0 +1,143 @@
+{
+  "title": "Timesheet de l'équipe",
+  "subtitle": "Pointages de l'équipe interne (les sous-traitants ont leurs prestations).",
+  "readOnly": "Lecture seule : vous voyez vos propres heures.",
+  "notLinked": "Votre compte n'est lié à aucune fiche de l'équipe. Demandez à un gestionnaire de le lier.",
+  "views": {
+    "jour": "Jour",
+    "semaine": "Semaine",
+    "mois": "Mois"
+  },
+  "nav": {
+    "previous": "Période précédente",
+    "next": "Période suivante",
+    "today": "Aujourd'hui",
+    "week": "Semaine {{n}}"
+  },
+  "filters": {
+    "worker": "Travailleur",
+    "site": "Chantier",
+    "allWorkers": "Tous les travailleurs",
+    "allSites": "Tous les chantiers"
+  },
+  "stats": {
+    "total": "Total des heures",
+    "workers": "Travailleurs",
+    "sites": "Chantiers",
+    "open": "Pointages en cours"
+  },
+  "actions": {
+    "new": "Nouveau pointage",
+    "correct": "Corriger",
+    "delete": "Supprimer",
+    "history": "Historique",
+    "clockOut": "Pointer le départ",
+    "exportCsv": "CSV",
+    "exportPdf": "PDF"
+  },
+  "columns": {
+    "date": "Date",
+    "worker": "Travailleur",
+    "role": "Fonction",
+    "site": "Chantier",
+    "arrival": "Arrivée",
+    "departure": "Départ",
+    "break": "Pause",
+    "duration": "Durée",
+    "hours": "Heures",
+    "note": "Note",
+    "total": "Total",
+    "actions": "Actions"
+  },
+  "inProgress": "en cours",
+  "corrected": "corrigé",
+  "breakMinutes_one": "{{count}} min",
+  "breakMinutes_other": "{{count}} min",
+  "empty": "Aucun pointage sur cette période.",
+  "byWorker": "Totaux par travailleur",
+  "bySite": "Totaux par chantier",
+  "grid": "Grille de la semaine",
+  "detail": "Détail des pointages",
+  "form": {
+    "newTitle": "Nouveau pointage",
+    "correctTitle": "Corriger le pointage",
+    "worker": "Travailleur",
+    "site": "Chantier",
+    "date": "Date",
+    "arrival": "Arrivée",
+    "departure": "Départ (vide si en cours)",
+    "break": "Pause (minutes)",
+    "note": "Note (facultatif)",
+    "reason": "Motif de la correction",
+    "reasonHelp": "Obligatoire : il est conservé dans l'historique avec votre nom et la date.",
+    "duration": "Durée : {{duree}}",
+    "choose": "Choisir…",
+    "noActiveWorker": "Aucun travailleur actif. Ajoutez-en dans Personnel.",
+    "noSite": "Aucun chantier. Créez-en un dans Chantiers."
+  },
+  "validation": {
+    "worker": "Choisissez un travailleur.",
+    "site": "Choisissez un chantier.",
+    "date": "Indiquez la date.",
+    "arrival": "Indiquez l'heure d'arrivée.",
+    "times": "Le départ doit suivre l'arrivée et la pause être plus courte que la journée.",
+    "break": "Pause entre 0 et 720 minutes.",
+    "reason": "Le motif est obligatoire."
+  },
+  "delete": {
+    "title": "Supprimer le pointage",
+    "text": "Le pointage du {{date}} ({{worker}}, {{site}}) sera supprimé. Une trace est conservée dans l'historique.",
+    "confirm": "Supprimer"
+  },
+  "history": {
+    "title": "Historique du pointage",
+    "empty": "Aucune correction.",
+    "modification": "Modification",
+    "suppression": "Suppression",
+    "by": "par {{nom}}",
+    "unknown": "utilisateur inconnu",
+    "reason": "Motif : « {{motif}} »",
+    "before": "Avant : {{valeur}}",
+    "after": "Après : {{valeur}}"
+  },
+  "toasts": {
+    "created": "Pointage enregistré",
+    "corrected": "Correction enregistrée",
+    "deleted": "Pointage supprimé",
+    "clockedOut": "Départ enregistré"
+  },
+  "errors": {
+    "pointage_motif_obligatoire": "Le motif de correction est obligatoire.",
+    "pointage_chevauchement": "Ce travailleur a déjà un pointage sur ce créneau.",
+    "pointage_travailleur_inactif": "Ce travailleur est inactif : impossible de le pointer.",
+    "pointage_champ_protege": "Le travailleur d'un pointage ne peut pas être changé.",
+    "pointage_introuvable": "Pointage introuvable ou non autorisé.",
+    "pointages_horaires_chk": "Horaires incohérents : le départ doit suivre l'arrivée.",
+    "personnel_lien_compte_reserve": "Réservé aux administrateurs et gérants.",
+    "personnel_lien_compte_autre_societe": "Ce compte n'appartient pas à votre société."
+  },
+  "pdf": {
+    "title": "Timesheet de l'équipe",
+    "period": "Période du {{debut}} au {{fin}}",
+    "filters": "Filtres : {{filtres}}",
+    "disclaimer": "Document interne, indicatif : la paie reste établie par le secrétariat social.",
+    "page": "Page {{page}} / {{total}}"
+  },
+  "csv": {
+    "file": "timesheet {{debut}} {{fin}}",
+    "breakMinutes": "Pause (min)",
+    "hoursDecimal": "Heures (décimal)"
+  },
+  "site": {
+    "title": "Heures de l'équipe interne",
+    "subtitle": "Pointages de vos travailleurs sur ce chantier (hors sous-traitants).",
+    "empty": "Aucun pointage sur ce chantier.",
+    "open": "Ouvrir le timesheet"
+  },
+  "worker": {
+    "title": "Pointages",
+    "month": "Heures du mois",
+    "empty": "Aucun pointage ce mois-ci.",
+    "open": "Ouvrir le timesheet"
+  }
+}

@@ -19,7 +19,8 @@
     "email": "E-mail",
     "contract": "Tip de contract",
     "hourlyRate": "Tarif orar (€/h)",
-    "language": "Limba muncitorului"
+    "language": "Limba muncitorului",
+    "function": "Funcție"
   },
   "toasts": {
     "added": "Muncitor adăugat",
@@ -39,5 +40,26 @@
     "sites": "Șantiere alocate",
     "noAssignment": "Nicio alocare în curs.",
     "since": "din {{date}}"
+  },
+  "fiche": {
+    "edit": "Modifică fișa",
+    "title": "Fișa lucrătorului",
+    "function": "Funcție",
+    "functionPlaceholder": "Zidar, șef de echipă…",
+    "status": "Stare",
+    "startDate": "Data angajării",
+    "endDate": "Data plecării",
+    "endDateHelp": "Servește la calculul duratei de păstrare a documentelor HR.",
+    "account": "Cont de utilizator legat",
+    "accountHelp": "Contul legat (rol Muncitor) își vede propriile ore în pontaj.",
+    "noAccount": "Niciun cont legat",
+    "saved": "Fișă înregistrată",
+    "since": "Angajat pe {{date}}",
+    "left": "Plecat pe {{date}}",
+    "validation": {
+      "name": "Numele este obligatoriu.",
+      "email": "Adresă de e-mail invalidă.",
+      "dates": "Data plecării trebuie să urmeze datei angajării."
+    }
   }
 }

@@ -117,6 +117,10 @@
     "comingSoon": {
       "title": "Binnenkort beschikbaar",
       "description": "De functies in voorbereiding."
+    },
+    "timesheet": {
+      "title": "Urenregistratie van het team",
+      "description": "Prikklok van het eigen team: uren per werknemer, werf en periode."
     }
   },
   "indicatif": "Indicatief — te laten bevestigen door uw boekhouder / sociaal secretariaat.",

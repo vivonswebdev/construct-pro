@@ -19,7 +19,8 @@
     "assistant": "AI-assistent",
     "profil": "Mijn profiel",
     "belcotax": "Belcotax",
-    "peppol": "Facturatie (Peppol)"
+    "peppol": "Facturatie (Peppol)",
+    "timesheet": "Urenregistratie"
   },
   "roles": {
     "admin": "Beheerder",

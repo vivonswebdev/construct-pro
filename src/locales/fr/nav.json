@@ -19,7 +19,8 @@
     "assistant": "Assistant IA",
     "profil": "Mon profil",
     "belcotax": "Belcotax",
-    "peppol": "Facturation (Peppol)"
+    "peppol": "Facturation (Peppol)",
+    "timesheet": "Timesheet"
   },
   "roles": {
     "admin": "Administrateur",

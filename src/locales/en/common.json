@@ -117,6 +117,10 @@
     "comingSoon": {
       "title": "Coming soon",
       "description": "Features in preparation."
+    },
+    "timesheet": {
+      "title": "Team timesheet",
+      "description": "Clock-ins of your in-house team: hours per worker, site and period."
     }
   },
   "indicatif": "Indicative — to be confirmed by your accountant / social secretariat.",

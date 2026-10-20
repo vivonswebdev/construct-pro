@@ -22,6 +22,7 @@ import type profil from "./locales/fr/profil.json";
 import type pdf from "./locales/fr/pdf.json";
 import type admin from "./locales/fr/admin.json";
 import type bientot from "./locales/fr/bientot.json";
+import type timesheet from "./locales/fr/timesheet.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -48,6 +49,7 @@ declare module "i18next" {
       pdf: typeof pdf;
       admin: typeof admin;
       bientot: typeof bientot;
+      timesheet: typeof timesheet;
     };
   }
 }

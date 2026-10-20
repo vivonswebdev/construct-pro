@@ -10,6 +10,7 @@ import {
   Euro,
   IdCard,
   FileDown,
+  Pencil,
   type LucideIcon,
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +21,9 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { LANGUES, intlLocale, isLangue, joursSemaineCourts } from "@/lib/i18n";
 import { toCode, type PresenceStatut } from "@/lib/statuts";
+import { isoJour } from "@/lib/timesheet";
+import { HeuresEquipe } from "@/components/timesheet/HeuresEquipe";
+import { FicheTravailleurModal } from "@/components/personnel/FicheTravailleurModal";
 
 export const Route = createFileRoute("/_app/personnel/$id")({
   component: PersonnelDetail,
@@ -28,8 +32,10 @@ export const Route = createFileRoute("/_app/personnel/$id")({
 function PersonnelDetail() {
   const { t } = useTranslation(["personnel", "common", "statuts"]);
   const { id } = Route.useParams();
-  const { company } = useAuth();
+  const { company, profile } = useAuth();
+  const gestionnaire = profile?.role === "admin" || profile?.role === "gerant";
   const qc = useQueryClient();
+  const [editer, setEditer] = useState(false);
   const [viewMonth, setViewMonth] = useState(() => {
     const d = new Date();
     return { year: d.getFullYear(), month: d.getMonth() };
@@ -137,6 +143,9 @@ function PersonnelDetail() {
           <div className="min-w-0 flex-1">
             <h1 className="text-2xl font-bold tracking-tight">{person.full_name}</h1>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+              {person.fonction && (
+                <span className="font-medium text-foreground">{person.fonction}</span>
+              )}
               <span>
                 {person.contract_type
                   ? t(`statuts:contrat.${toCode(person.contract_type)}`, {
@@ -163,7 +172,26 @@ function PersonnelDetail() {
                 ))}
               </select>
             </div>
+            {(person.date_entree || person.date_sortie) && (
+              <p className="mt-1 text-xs text-muted-foreground">
+                {[
+                  person.date_entree &&
+                    t("fiche.since", { date: formatDateBE(person.date_entree) }),
+                  person.date_sortie && t("fiche.left", { date: formatDateBE(person.date_sortie) }),
+                ]
+                  .filter(Boolean)
+                  .join(" · ")}
+              </p>
+            )}
           </div>
+          {gestionnaire && (
+            <button
+              onClick={() => setEditer(true)}
+              className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-semibold hover:bg-muted"
+            >
+              <Pencil className="h-4 w-4" /> {t("fiche.edit")}
+            </button>
+          )}
         </div>
         <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
           <InfoItem icon={IdCard} label={t("form.nrn")} value={person.nrn ?? "—"} />
@@ -276,6 +304,12 @@ function PersonnelDetail() {
         </div>
       </div>
 
+      <HeuresEquipe
+        personnelId={id}
+        debut={isoJour(new Date(viewMonth.year, viewMonth.month, 1, 12))}
+        fin={isoJour(new Date(viewMonth.year, viewMonth.month + 1, 0, 12))}
+      />
+
       {/* Affectations */}
       <div className="rounded-xl border border-border bg-card p-6 shadow-sm">
         <h2 className="mb-4 text-lg font-semibold">{t("detail.sites")}</h2>
@@ -299,6 +333,18 @@ function PersonnelDetail() {
           </div>
         )}
       </div>
+
+      {editer && (
+        <FicheTravailleurModal
+          personne={person}
+          gestionnaire={gestionnaire}
+          onClose={() => setEditer(false)}
+          onSaved={() => {
+            setEditer(false);
+            void qc.invalidateQueries({ queryKey: ["personnel-detail"] });
+          }}
+        />
+      )}
     </div>
   );
 }

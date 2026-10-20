@@ -15,6 +15,7 @@ import {
   Contact,
   Receipt,
   Handshake,
+  Clock,
 } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -30,6 +31,7 @@ const ACTIVE_NAV = [
   { to: "/clients", key: "clients", icon: Contact },
   { to: "/sous-traitants", key: "sousTraitants", icon: Handshake },
   { to: "/personnel", key: "personnel", icon: Users },
+  { to: "/timesheet", key: "timesheet", icon: Clock },
   { to: "/vehicules", key: "vehicules", icon: Truck },
   { to: "/stock", key: "stock", icon: Package },
   { to: "/facturation", key: "devis", icon: FileText },

@@ -138,6 +138,7 @@ function PersonnelList() {
                 </div>
                 <h3 className="mt-3 font-semibold">{p.full_name}</h3>
                 <p className="text-xs text-muted-foreground">
+                  {p.fonction ? `${p.fonction} · ` : ""}
                   {p.contract_type
                     ? t(`statuts:contrat.${toCode(p.contract_type)}`, {
                         defaultValue: p.contract_type,
@@ -208,6 +209,7 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
   const { profile } = useAuth();
   const [form, setForm] = useState({
     full_name: "",
+    fonction: "",
     nrn: "",
     email: "",
     phone: "",
@@ -225,6 +227,7 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
       const { error } = await supabase.from("personnel").insert({
         company_id: profile.company_id,
         full_name: form.full_name,
+        fonction: form.fonction.trim() || null,
         nrn: form.nrn || null,
         email: form.email || null,
         phone: form.phone || null,
@@ -266,6 +269,14 @@ function NewPersonnelModal({ onClose, onCreated }: { onClose: () => void; onCrea
               className="mi"
               value={form.full_name}
               onChange={(e) => setForm({ ...form, full_name: e.target.value })}
+            />
+          </F>
+          <F label={t("form.function")}>
+            <input
+              className="mi"
+              placeholder={t("fiche.functionPlaceholder")}
+              value={form.fonction}
+              onChange={(e) => setForm({ ...form, fonction: e.target.value })}
             />
           </F>
           <div className="grid grid-cols-2 gap-3">
